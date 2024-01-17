@@ -1,35 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.h                                            :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/16 04:19:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/17 03:12:19 by frapp            ###   ########.fr       */
+/*   Created: 2024/01/16 04:46:56 by frapp             #+#    #+#             */
+/*   Updated: 2024/01/17 03:12:25 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LEXER_H
-# define LEXER_H
+#include <lexer.h>
 
-# include <minishell.h>
-# include <tokens.h>
-
-
-typedef struct s_lexer
+// reads the next char into the lexer and updates indexes
+void	read_char(t_lexer *lexer)
 {
-	char	*str;
-	int		position;
-	int		read_position;
-	char	cur_char;
-}	t_lexer;
-
-t_token		next_token(t_lexer *lexer);
-t_lexer		new_lexer(char *str);
-
-
-// utils
-void		read_char(t_lexer *lexer);
-
-#endif
+	if (((int)ft_strlen(lexer->str)) <= lexer->read_position)
+	{
+		lexer->cur_char = 0;
+	}
+	else
+	{
+		lexer->cur_char = (lexer->str)[lexer->read_position];
+	}
+	lexer->position = lexer->read_position;
+	(lexer->read_position)++;
+}

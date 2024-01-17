@@ -1,35 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.h                                            :+:      :+:    :+:   */
+/*   ft_lstnew_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/16 04:19:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/17 03:12:19 by frapp            ###   ########.fr       */
+/*   Created: 2023/10/09 12:47:42 by frapp             #+#    #+#             */
+/*   Updated: 2023/10/09 16:11:29 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LEXER_H
-# define LEXER_H
+#include "libft.h"
 
-# include <minishell.h>
-# include <tokens.h>
-
-
-typedef struct s_lexer
+t_list	*ft_lstnew(void *content)
 {
-	char	*str;
-	int		position;
-	int		read_position;
-	char	cur_char;
-}	t_lexer;
+	t_list	*new;
 
-t_token		next_token(t_lexer *lexer);
-t_lexer		new_lexer(char *str);
-
-
-// utils
-void		read_char(t_lexer *lexer);
-
-#endif
+	new = (t_list *)malloc(sizeof(t_list));
+	if (!new)
+		return (new);
+	new->content = content;
+	new->next = NULL;
+	return (new);
+}

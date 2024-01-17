@@ -1,35 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.h                                            :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/16 04:19:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/17 03:12:19 by frapp            ###   ########.fr       */
+/*   Created: 2023/10/06 00:55:40 by frapp             #+#    #+#             */
+/*   Updated: 2024/01/17 02:31:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LEXER_H
-# define LEXER_H
+#include "libft.h"
 
-# include <minishell.h>
-# include <tokens.h>
-
-
-typedef struct s_lexer
+size_t	ft_strlen(const char *s)
 {
-	char	*str;
-	int		position;
-	int		read_position;
-	char	cur_char;
-}	t_lexer;
+	size_t	i;
 
-t_token		next_token(t_lexer *lexer);
-t_lexer		new_lexer(char *str);
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
 
+size_t	ft_strnlen(const char *s, size_t max)
+{
+	size_t	i;
 
-// utils
-void		read_char(t_lexer *lexer);
-
-#endif
+	i = 0;
+	while (s[i] && i < max)
+		i++;
+	return (i);
+}

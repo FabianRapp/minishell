@@ -1,35 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.h                                            :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/16 04:19:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/17 03:12:19 by frapp            ###   ########.fr       */
+/*   Created: 2023/10/06 23:58:00 by frapp             #+#    #+#             */
+/*   Updated: 2023/10/07 00:07:21 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LEXER_H
-# define LEXER_H
-
-# include <minishell.h>
-# include <tokens.h>
-
-
-typedef struct s_lexer
+char	*ft_strrchr(const char *s, int c)
 {
-	char	*str;
-	int		position;
-	int		read_position;
-	char	cur_char;
-}	t_lexer;
+	const char	*start;
 
-t_token		next_token(t_lexer *lexer);
-t_lexer		new_lexer(char *str);
-
-
-// utils
-void		read_char(t_lexer *lexer);
-
-#endif
+	start = s;
+	while (*s)
+		s++;
+	while (*s != (char)c && s != start)
+		s--;
+	if (*s == (char)c)
+		return ((char *)s);
+	return (0);
+}

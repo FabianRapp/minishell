@@ -1,35 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.h                                            :+:      :+:    :+:   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/16 04:19:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/17 03:12:19 by frapp            ###   ########.fr       */
+/*   Created: 2023/10/06 14:30:35 by frapp             #+#    #+#             */
+/*   Updated: 2023/10/09 16:15:50 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LEXER_H
-# define LEXER_H
+#include "libft.h"
 
-# include <minishell.h>
-# include <tokens.h>
-
-
-typedef struct s_lexer
+void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
-	char	*str;
-	int		position;
-	int		read_position;
-	char	cur_char;
-}	t_lexer;
+	char		*restrict	d;
+	const char	*restrict	s;
 
-t_token		next_token(t_lexer *lexer);
-t_lexer		new_lexer(char *str);
-
-
-// utils
-void		read_char(t_lexer *lexer);
-
-#endif
+	if (!dst && !src && n)
+		return (dst);
+	d = (char *restrict)dst;
+	s = (const char *restrict)src;
+	while (n--)
+		*d++ = *s++;
+	return (dst);
+}

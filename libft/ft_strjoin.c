@@ -1,35 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.h                                            :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/16 04:19:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/17 03:12:19 by frapp            ###   ########.fr       */
+/*   Created: 2023/10/08 00:47:03 by frapp             #+#    #+#             */
+/*   Updated: 2023/10/08 00:56:09 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LEXER_H
-# define LEXER_H
+#include "libft.h"
 
-# include <minishell.h>
-# include <tokens.h>
-
-
-typedef struct s_lexer
+//untested
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	char	*str;
-	int		position;
-	int		read_position;
-	char	cur_char;
-}	t_lexer;
+	size_t	size1;
+	size_t	size2;
+	char	*new_str;
 
-t_token		next_token(t_lexer *lexer);
-t_lexer		new_lexer(char *str);
-
-
-// utils
-void		read_char(t_lexer *lexer);
-
-#endif
+	size1 = ft_strlen(s1);
+	size2 = ft_strlen(s2);
+	new_str = (char *) malloc(sizeof(char) * (size1 + size2 + 1));
+	if (!new_str)
+		return (NULL);
+	ft_strlcpy(new_str, s1, size1 + 1);
+	ft_strlcpy(new_str + size1, s2, size2 + 1);
+	return (new_str);
+}
