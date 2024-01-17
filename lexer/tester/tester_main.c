@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:44:23 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/17 08:06:04 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/17 10:47:09 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,12 @@ const char *type_to_string(t_type type)
 		case UNKNOWN: return "UNKNOWN";
 		case T_EOF: return "T_EOF";
 		case WHITE_SPACE: return "WHITE_SPACE";
-		case STRING: return "STRING";
+		case WORD: return "WORD";
 		//case LESS_THAN: return "LESS_THAN";
 		//case GREATER_THAN: return "GREATER_THAN";
 
 		case EXIT_STATUS_REQUEST: return "EXIT_STATUS_REQUEST";
-		case PATH: return "PATH";
 		case FT_BUILDIN: return "FT_BUILDIN";
-		case PATH_FUNCTION: return "PATH_FUNCTION";
 		case PIPE: return "PIPE";
 		case OR: return "OR";
 		case AND: return "AND";
@@ -33,12 +31,13 @@ const char *type_to_string(t_type type)
 		case CTRL_C: return "CTRL_C";
 		case CTRL_D: return "CTRL_D";
 		case CTRL_BACKSLASH: return "CTRL_BACKSLASH";
-		case INTEGER: return "INTEGER";
+		//case INTEGER: return "INTEGER";
 		case LITERAL: return "LITERAL";
 		case INTERPRETED: return "INTERPRETED";
 		case REDIR: return "REDIR";
 		case ENV_VAR: return "ENV_VAR";
 		case SUBSHELL: return "SUBSHELL";
+		case FLAG: return "FLAG";
 		default: return "INVALID_TYPE";
 	}
 }
@@ -48,12 +47,10 @@ void	print_token(t_token token)
 	if (token.type == UNKNOWN) printf("UNKNOWN %c", token.unknown);
 	else if (token.type == T_EOF) printf("T_EOF");
 	else if (token.type == WHITE_SPACE) printf("WHITE_SPACE");
-	else if (token.type == STRING) printf("STRING  : %s", token.str);
+	else if (token.type == WORD) printf("WORD  : %s", token.str);
 	else if (token.type == ENV_VAR) printf("ENV_VAR  : %s", token.str);
 	else if (token.type == EXIT_STATUS_REQUEST) printf("EXIT_STATUS_REQUEST");
-	else if (token.type == PATH) printf("PATH");
 	else if (token.type == FT_BUILDIN) printf("FT_BUILDIN %s", token.str);
-	else if (token.type == PATH_FUNCTION) printf("PATH_FUNCTION");
 	else if (token.type == PIPE) printf("PIPE");
 	else if (token.type == OR) printf("OR");
 	else if (token.type == AND) printf("AND");
@@ -61,11 +58,12 @@ void	print_token(t_token token)
 	else if (token.type == CTRL_C) printf("CTRL_C");
 	else if (token.type == CTRL_D) printf("CTRL_D");
 	else if (token.type == CTRL_BACKSLASH) printf("CTRL_BACKSLASH");
-	else if (token.type == INTEGER) printf("INTEGER: %lld", token.int_val);
+	//else if (token.type == INTEGER) printf("INTEGER: %lld", token.int_val);
 	else if (token.type == LITERAL) printf("LITERAL: %s", token.str);
 	else if (token.type == INTERPRETED) printf("INTERPRETED: %s", token.str);
 	else if (token.type == REDIR) printf("REDIR: %lld", token.int_val);
 	else if (token.type == SUBSHELL) printf("SUBSHELL: %s", token.str);
+	else if (token.type == FLAG) printf("FLAG: %s", token.str);
 	else printf("Type not found");
 }
 
@@ -120,9 +118,9 @@ void fixed_tests()
     lexer = new_lexer("");
     test_token(&lexer, T_EOF, NULL, &passed, &failed, &test_nb);
 
-    // Test integer type
-    lexer = new_lexer("123");
-    test_token(&lexer, INTEGER, NULL, &passed, &failed, &test_nb);
+    // // Test integer type
+    // lexer = new_lexer("123");
+    // test_token(&lexer, INTEGER, NULL, &passed, &failed, &test_nb);
 
     // Test literal type
     lexer = new_lexer("'abc'");
@@ -137,16 +135,14 @@ void fixed_tests()
     test_token(&lexer, FT_BUILDIN, "echo", &passed, &failed, &test_nb);
 
     // Test combinations
-    lexer = new_lexer("echo 'abc'123");
+    lexer = new_lexer("echo 'abc'");
     test_token(&lexer, FT_BUILDIN, "echo", &passed, &failed, &test_nb);
     test_token(&lexer, LITERAL, "abc", &passed, &failed, &test_nb);
-    test_token(&lexer, INTEGER, NULL, &passed, &failed, &test_nb);
 
-    lexer = new_lexer("echo 'abc' 123");
+    lexer = new_lexer("echo 'abc' ");
     test_token(&lexer, FT_BUILDIN, "echo", &passed, &failed, &test_nb);
     test_token(&lexer, LITERAL, "abc", &passed, &failed, &test_nb);
 	test_token(&lexer, WHITE_SPACE, NULL, &passed, &failed, &test_nb);
-    test_token(&lexer, INTEGER, NULL, &passed, &failed, &test_nb);
 
 
     // Test REDIR type with '<'

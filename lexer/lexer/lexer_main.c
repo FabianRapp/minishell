@@ -6,11 +6,23 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/17 08:24:58 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/17 10:41:28 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <lexer.h>
+
+bool	is_termination(char c)
+{
+	if (c == 0 || c == '(' || c == ')' || c == '|' || c == '\'' || c == '\"' 
+		|| c == '>' || c == '<' || c == '*' || c == '?'
+		|| c == '$' || c == '&'
+		|| ft_iswhitespace(c))
+	{
+		return (true);
+	}
+	return (false);
+}
 
 int	name_len(char *str)
 {
@@ -77,28 +89,28 @@ bool	basic_sign_type(t_lexer *lexer, t_token *token)
 	return (token->type);
 }
 
-// TODO:
-// handle >INT_MAX and < INT_MIN
-bool	integer_type(t_lexer *lexer, t_token *token)
-{
-	if (lexer->cur_char == '0')
-	{
-		token->type = INTEGER;
-		token->int_val = 0;
-		return (token->type);
-	}
-	if (ft_atoi(lexer->str + lexer->position))
-	{
-		token->type = INTEGER;
-		token->int_val = ft_atoi(lexer->str + lexer->position);
-		while (ft_isdigit((lexer->str)[lexer->read_position]))
-		{
-			(lexer->read_position)++;
-		}
-		return (token->type);
-	}
-	return (token->type);
-}
+// // TODO:
+// // handle >INT_MAX and < INT_MIN
+// bool	integer_type(t_lexer *lexer, t_token *token)
+// {
+// 	if (lexer->cur_char == '0')
+// 	{
+// 		token->type = INTEGER;
+// 		token->int_val = 0;
+// 		return (token->type);
+// 	}
+// 	if (ft_atoi(lexer->str + lexer->position))
+// 	{
+// 		token->type = INTEGER;
+// 		token->int_val = ft_atoi(lexer->str + lexer->position);
+// 		while (ft_isdigit((lexer->str)[lexer->read_position]))
+// 		{
+// 			(lexer->read_position)++;
+// 		}
+// 		return (token->type);
+// 	}
+// 	return (token->type);
+//}
 
 bool	literal_type(t_lexer *lexer, t_token *token)
 {
@@ -131,13 +143,12 @@ bool	interpreted_type(t_lexer *lexer, t_token *token)
 	}
 	if (!(lexer->str)[lexer->read_position])
 		return (token->type);
-	len = lexer->read_position - lexer->position - 1; // -1 to remove the double quite
+	(lexer->read_position)++;
+	len = lexer->read_position - lexer->position - 2; // -1 to remove the double quite
 	token->type = INTERPRETED;
 	token->str =  ft_strndup(lexer->str + lexer->position + 1, len); // +1 to remove the double quite
 	return (token->type);
 }
-
-#include <string.h>
 
 bool	ft_buildin_type(t_lexer *lexer, t_token *token)
 {
@@ -146,6 +157,8 @@ bool	ft_buildin_type(t_lexer *lexer, t_token *token)
 	len = 0;
 	if (!ft_strncmp(lexer->str + lexer->position, "echo -n", ft_strlen("echo -n")))
 		len = ft_strlen("echo -n");
+	else if (!ft_strncmp(lexer->str + lexer->position, "echo -", ft_strlen("echo -")))
+		return (false);
 	else if (!ft_strncmp(lexer->str + lexer->position, "echo", ft_strlen("echo")))
 		len = ft_strlen("echo");
 	else if (!ft_strncmp(lexer->str + lexer->position, "cd", ft_strlen("cd")))
@@ -222,6 +235,34 @@ bool	subshell_type(t_lexer *lexer, t_token *token)
 	return (token->type);
 }
 
+bool	flag_type(t_lexer *lexer, t_token *token)
+{
+	if (lexer->cur_char != '-')
+		return (false);
+	if (is_termination(lexer->str[lexer->read_position]))
+		return (0);
+	token->type = FLAG;
+	while (!is_termination(lexer->str[lexer->read_position]))
+	{
+		(lexer->read_position)++;
+	}
+	token->str = ft_strndup(lexer->str + lexer->position, lexer->read_position - lexer->position);
+	return (token->type);
+}
+
+// has to run after all other typechecks
+bool	word_type(t_lexer *lexer, t_token *token)
+{
+	if (is_termination(lexer->cur_char))
+		return (0);
+	while (!is_termination((lexer->str)[lexer->read_position]))
+	{
+		(lexer->read_position)++;
+	}
+	token->type = WORD;
+	token->str = ft_strndup(lexer->str + lexer->position, lexer->read_position - lexer->position);
+	return (token->type);
+}
 /*
 	for cleanup:
 	token.str has to be checked for NULL
@@ -236,10 +277,6 @@ t_token	next_token(t_lexer *lexer)
 	if (basic_sign_type(lexer, &token))
 	{
 		if (DEBUG) printf("basic_sign_type\n");
-	}
-	else if (integer_type(lexer, &token))
-	{
-		if (DEBUG) printf("integer_type\n");
 	}
 	else if (literal_type(lexer, &token))
 	{
@@ -265,10 +302,23 @@ t_token	next_token(t_lexer *lexer)
 	{
 		if (DEBUG) printf("subshell_type\n");
 	}
+	// else if (integer_type(lexer, &token))
+	// {
+	// 	if (DEBUG) printf("integer_type\n");
+	// }
+	else if (flag_type(lexer, &token))
+	{
+		if (DEBUG) printf("flag_type\n");
+	}
+	else if (word_type(lexer, &token))
+	{
+		if (DEBUG) printf("word_type\n");
+	}
 	else if (DEBUG)
 	{
 		printf("no function IDed the type\n");
 	}
+
 	if (token.type == UNKNOWN)
 		token.unknown = lexer->cur_char;
 	read_char(lexer);

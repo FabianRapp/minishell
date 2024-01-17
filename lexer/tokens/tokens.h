@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:16:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/17 08:58:09 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/17 10:04:23 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ typedef enum e_type
 	UNKNOWN = false, // the variable unknow in the token must be filled with the unknown char
 	T_EOF,
 	WHITE_SPACE,
-	STRING, // the string variable must be filled with the string (not yet implemented)
 	PIPE,// '|' might be bugged with externam commands->figure out later
 	OR, // '||' might be bugged with externam commands->figure out later
 	AND, // '&&'
@@ -41,11 +40,13 @@ typedef enum e_type
 	CTRL_C,
 	CTRL_D,
 	CTRL_BACKSLASH,
-	INTEGER,
 	LITERAL, // the tokens str varialbe must hold the correct string
 	INTERPRETED, // the tokens str varialbe must hold the correct uninterpreted string
 	REDIR,
 	SUBSHELL,
+	FLAG,
+	WORD,
+	//INTEGER,
 }	t_type;
 
 typedef struct s_token
