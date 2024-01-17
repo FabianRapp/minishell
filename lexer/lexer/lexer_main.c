@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/17 08:06:42 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/17 08:24:58 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,27 +144,27 @@ bool	ft_buildin_type(t_lexer *lexer, t_token *token)
 	int	len;
 
 	len = 0;
-	if (!ft_strncmp(lexer->str + lexer->position, "echo", ft_strlen("echo")))
-		len = ft_strlen("echo");
-	else if (!ft_strncmp(lexer->str + lexer->position, "echo -n", ft_strlen("echo -n")))
+	if (!ft_strncmp(lexer->str + lexer->position, "echo -n", ft_strlen("echo -n")))
+		len = ft_strlen("echo -n");
+	else if (!ft_strncmp(lexer->str + lexer->position, "echo", ft_strlen("echo")))
 		len = ft_strlen("echo");
 	else if (!ft_strncmp(lexer->str + lexer->position, "cd", ft_strlen("cd")))
-		len = ft_strlen("echo");
+		len = ft_strlen("cd");
 	else if (!ft_strncmp(lexer->str + lexer->position, "pwd", ft_strlen("pwd")))
-		len = ft_strlen("echo");
+		len = ft_strlen("pwd");
 	else if (!ft_strncmp(lexer->str + lexer->position, "export", ft_strlen("export")))
-		len = ft_strlen("echo");
+		len = ft_strlen("export");
 	else if (!ft_strncmp(lexer->str + lexer->position, "unset", ft_strlen("unset")))
-		len = ft_strlen("echo");
+		len = ft_strlen("unset");
 	else if (!ft_strncmp(lexer->str + lexer->position, "env", ft_strlen("env")))
-		len = ft_strlen("echo");
+		len = ft_strlen("env");
 	else if (!ft_strncmp(lexer->str + lexer->position, "exit", ft_strlen("exit")))
-		len = ft_strlen("echo");
+		len = ft_strlen("exit");
 	if (len)
 	{
 		token->type = FT_BUILDIN;
 		token->str = ft_strndup(lexer->str + lexer->position, len);
-		lexer->read_position += lexer->position + len;
+		lexer->read_position = lexer->position + len;
 	}
 	return (token->type);
 }
@@ -234,30 +234,41 @@ t_token	next_token(t_lexer *lexer)
 
 	zero_token(&token);
 	if (basic_sign_type(lexer, &token))
-	{if (DEBUG) printf("basic_sign_type\n");
+	{
+		if (DEBUG) printf("basic_sign_type\n");
 	}
 	else if (integer_type(lexer, &token))
-	{if (DEBUG) printf("integer_type\n");
+	{
+		if (DEBUG) printf("integer_type\n");
 	}
 	else if (literal_type(lexer, &token))
-	{if (DEBUG) printf("literal_type\n");
+	{
+		if (DEBUG) printf("literal_type\n");
 	}
 	else if (interpreted_type(lexer, &token))
-	{if (DEBUG) printf("interpreted_type\n");
+	{
+		if (DEBUG) printf("interpreted_type\n");
 	}
 	else if (ft_buildin_type(lexer, &token))
-	{if (DEBUG) printf("ft_buildin_type\n");
+	{
+		if (DEBUG) printf("ft_buildin_type\n");
 	}
 	else if (redir_type(lexer, &token))
-	{if (DEBUG) printf("redir_type\n");
+	{
+		if (DEBUG) printf("redir_type\n");
 	}
 	else if (env_var_type(lexer, &token))
-	{if (DEBUG) printf("env_var_type\n");
+	{
+		if (DEBUG) printf("env_var_type\n");
 	}
 	else if (subshell_type(lexer, &token))
-	{if (DEBUG) printf("subshell_type\n");
+	{
+		if (DEBUG) printf("subshell_type\n");
 	}
-	else if (DEBUG) printf("no function IDed type\n");
+	else if (DEBUG)
+	{
+		printf("no function IDed the type\n");
+	}
 	if (token.type == UNKNOWN)
 		token.unknown = lexer->cur_char;
 	read_char(lexer);
