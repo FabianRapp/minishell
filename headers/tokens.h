@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:16:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/18 11:35:05 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/18 13:35:29 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ typedef enum e_type
 	SUBSHELL,
 	FLAG,
 	WORD,
-	//INTEGER,
+	COMMAND,
+	ARGUMENT,
 }	t_type;
 
 typedef struct s_token	t_token;

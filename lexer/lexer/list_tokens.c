@@ -6,17 +6,19 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 09:26:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/18 11:53:36 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/18 13:33:52 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/lexer.h"
 #include "internals.h"
-
-// this will leak if (*last) leads to an existing list but (*first) == NULL
+/*
+TODO: test the connections of the last pointer
+this will leak if (*last) leads to an existing list but (*first) == NULL
+*/
 void	circ_lst_add_back(t_token **last, t_token **first, t_token *cur)
 {
-	if (!last)
+	if (!last || !cur)
 		return ;
 	if (!*first)
 	{
@@ -55,7 +57,10 @@ t_token	*token_list(char *str)
 	return (first);
 }
 
-// returns false if the T_EOF token is reached
+/*
+TODO: TEST THIS
+returns false if the T_EOF token is reached
+*/
 bool	list_right(t_token **token)
 {
 	*token = (*token)->next;
@@ -63,8 +68,10 @@ bool	list_right(t_token **token)
 		return (false);
 	return (true);
 }
-
-// returns false if the T_EOF token is reached
+/*
+TODO: TEST THIS
+returns false if the T_EOF token is reached
+*/
 bool	list_left(t_token **token)
 {
 	*token = (*token)->last;
@@ -82,8 +89,9 @@ void	free_token(t_token *token)
 	free(token);
 }
 /*
+TODO: TEST  THIS
 	- returns 1 on success, unless:
-	- returns 0 if the token list is empty afterwards
+	- returns 0 if the token list is empty afterwards (can be changed if needed)
 	- returns -1 if the list is corrupted and does not free in that case
 		(does not activly check for list intagret)
 */
@@ -108,4 +116,38 @@ int	remove_token(t_token *token)
 	token->next->last = token->last;
 	free_token(token);
 	return (1);
+}
+
+/*
+TODO: TEST THIS
+	when insert == NULL RETURNS TRUE and does NOTHING (can be changed if needed)
+	if this returns false either insert_fater or *insert_after was NULL, (can be changed if needed)
+	in the later case it sets *insert_after to insert (can be changed if needed)
+	otherwise returns true
+*/
+bool	insert_token(t_token **insert_after, t_token *insert)
+{
+	if (!insert)
+		return (true);
+	if (!insert_after)
+		return (false);
+	if (!*insert_after)
+	{
+		*insert_after = insert;
+		return (false);
+	}
+	insert->next = (*insert_after)->next;
+	(*insert_after)->next = insert;
+	insert->last = (*insert_after);
+	if (insert->next)
+		insert->next->last = insert;
+	return (true);
+}
+
+void	skip_whitespace(t_token **cur)
+{
+	if (!cur || !(*cur))
+		return ;
+	while ((*cur)->type == WHITE_SPACE)
+		*cur = (*cur)->next;
 }
