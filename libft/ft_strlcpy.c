@@ -6,11 +6,11 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 17:03:14 by frapp             #+#    #+#             */
-/*   Updated: 2023/10/09 15:43:31 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/18 07:24:41 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../headers/libft.h"
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {

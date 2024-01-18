@@ -6,11 +6,11 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/14 17:12:34 by frapp             #+#    #+#             */
-/*   Updated: 2023/10/22 13:55:00 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/18 09:01:58 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../headers/libft.h"
 
 char	*reading(t_file	*file)
 {
@@ -50,14 +50,14 @@ char	*shrink_out(int fd, t_file *first_file)
 	output = reading(current_file);
 	size = current_file->output_size;
 	if (current_file->buffer1_chars <= 0)
-		cleanup(current_file, first_file);
+		cleanup_libft(current_file, first_file);
 	if (!output)
 		return (NULL);
 	new_output = (char *)malloc(sizeof(char) * (size + 1));
 	if (!new_output)
 	{
 		free(output);
-		return (cleanup(current_file, first_file));
+		return (cleanup_libft(current_file, first_file));
 	}
 	*new_output = 0;
 	my_str_cpy(new_output, output, NULL);

@@ -1,21 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_tester.h                                     :+:      :+:    :+:   */
+/*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/16 04:18:57 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/17 04:32:30 by frapp            ###   ########.fr       */
+/*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
+/*   Updated: 2024/01/18 09:25:53 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LEXER_TESTER_H
-# define LEXER_TESTER_H
+#include "../headers/parser.h"
 
-# include <lexer.h>
-# include <minishell.h>
 
-void	print_token(t_token token);
-
-#endif

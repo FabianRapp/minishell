@@ -6,11 +6,11 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 15:09:21 by frapp             #+#    #+#             */
-/*   Updated: 2023/10/09 18:06:50 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/18 07:24:41 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../headers/libft.h"
 
 // if (!dst && !src && len)
 	// 	return (dst);

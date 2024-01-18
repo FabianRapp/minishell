@@ -6,11 +6,11 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 14:30:35 by frapp             #+#    #+#             */
-/*   Updated: 2023/10/09 16:15:50 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/18 07:24:41 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../headers/libft.h"
 
 void	*ft_memcpy(void *dst, const void *src, size_t n)
 {

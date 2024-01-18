@@ -6,14 +6,12 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:16:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/17 10:04:23 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/18 11:35:05 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TOKENS_H
 # define TOKENS_H
-
-# include <minishell.h>
 
 typedef	enum e_redir
 {
@@ -49,12 +47,15 @@ typedef enum e_type
 	//INTEGER,
 }	t_type;
 
+typedef struct s_token	t_token;
 typedef struct s_token
 {
 	t_type		type;
 	int64_t		int_val;
 	char		*str;
 	char		unknown;
+	t_token		*last;
+	t_token		*next;
 }	t_token;
 
 void		zero_token(t_token *token);

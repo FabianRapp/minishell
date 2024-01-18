@@ -6,14 +6,14 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 16:00:08 by frapp             #+#    #+#             */
-/*   Updated: 2023/10/23 05:31:02 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/18 07:27:54 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
 
-# include "libft.h"
+# include "../headers/libft.h"
 # include <stdarg.h>
 
 int	ft_printf(const char *format_str, ...);

@@ -6,11 +6,11 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 04:16:33 by frapp             #+#    #+#             */
-/*   Updated: 2023/11/25 20:47:58 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/18 07:24:41 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../headers/libft.h"
 
 int	ft_expo(int base, int expo)
 {

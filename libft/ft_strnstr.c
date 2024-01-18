@@ -6,11 +6,11 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 19:24:46 by frapp             #+#    #+#             */
-/*   Updated: 2023/10/08 23:00:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/18 07:27:13 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../headers/libft.h"
 
 char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
 {

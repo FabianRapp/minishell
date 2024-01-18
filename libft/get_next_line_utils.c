@@ -6,13 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/14 17:12:31 by frapp             #+#    #+#             */
-/*   Updated: 2023/10/22 13:55:08 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/18 09:01:14 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../headers/libft.h"
 
-char	*cleanup(t_file *current_file, t_file *first_file)
+char	*cleanup_libft(t_file *current_file, t_file *first_file)
 {
 	t_file		*temp;
 

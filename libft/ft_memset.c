@@ -6,11 +6,11 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 01:20:00 by frapp             #+#    #+#             */
-/*   Updated: 2023/10/08 00:08:50 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/18 07:26:03 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../headers/libft.h"
 
 void	*ft_memset(void *b, int c, size_t len)
 {

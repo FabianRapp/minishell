@@ -18,23 +18,20 @@ OBJECTS_BONUS = $(BONUS_SOURCES:.c=.o)
 
 $(NAME): all
 
-all: bonus
-#$(OBJECTS)
-#ar rcs $(NAME) $(OBJECTS)
+all: $(OBJECTS_BONUS) $(OBJECTS)
+	@ar rcs $(NAME) $< $^
+	@echo "\033[32mlibft build\033[0m"
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJECTS) $(OBJECTS_BONUS)
+	@rm -f $(OBJECTS) $(OBJECTS_BONUS)
+	@echo "\033[33mlibft objects cleaned\033[0m"
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
+	@echo "\033[33mlibft fclean\033[0m"
 
 re: fclean all
-
-bonus: $(OBJECTS_BONUS) $(OBJECTS)
-	@ar rcs $(NAME) $< $^
-	@rm -f $(OBJECTS) $(OBJECTS_BONUS)
-#remove later^^
 

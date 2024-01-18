@@ -6,11 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/16 08:07:30 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/18 09:37:42 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void	placeholder()
+#include "../headers/minishell.h"
+
+void	cleanup()
 {
-	printf("do nothing\n");
+	printf("clean up placeholder\n");
 }

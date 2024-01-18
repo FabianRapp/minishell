@@ -21,9 +21,10 @@ Breaks down user input into tokens, such as commands, special chars, or integers
 
 Interfac functions:
 	t_lexer		new_lexer(char *str); creates a nex lexer object, needs a NULL terminated string
-	t_token		next_token(t_lexer *lexer); returns the next token by value
+	t_token		next_new_token(t_lexer *lexer); returns the next token by value
 
-
-
+# REPL (“Read Eval Print Loop”)
+Includes the main function
+Calls the diffrent modules
 
 

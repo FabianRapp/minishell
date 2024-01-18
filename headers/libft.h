@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 22:22:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/17 02:33:42 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/18 09:01:35 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ struct s_file
 	int		return_now;
 };
 
-char	*cleanup(t_file *current_file, t_file *first_file);
+char	*cleanup_libft(t_file *current_file, t_file *first_file);
 t_file	*get_current_file(int fd, t_file *first_file);
 int		my_str_cpy(char *dest, char *src, char *src2);
 void	sort_buffer(t_file *current_file);
