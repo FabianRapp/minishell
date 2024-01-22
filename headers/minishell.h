@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/22 15:07:01 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/22 19:15:51 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ TODO:
 	23
 -simplify lexer by using pointers instead of indexes
 -maybe add a type to token (like a bool for command terminator)
-
+-if the FT_BUILDIN type stays it needs capital char handleing (eChO is vlaid..)
 */
 
 #ifndef MINISHELL_H
@@ -38,6 +38,7 @@ TODO:
 # include "utils.h"
 # include "lexer.h"
 # include "tokens.h"
+# include "parser.h"
 
 typedef	enum e_redir	t_redir;
 typedef enum e_type		t_type;
@@ -52,5 +53,9 @@ t_lexer		new_lexer(char *str);
 void		print_token(t_token token);
 bool		test_lexer_manualy(char *str);
 
+
+//parser
+typedef struct s_parser	t_parser;
+t_parser	*parser(char *str);
 
 #endif

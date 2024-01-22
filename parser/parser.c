@@ -6,13 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/22 18:07:47 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/22 20:57:35 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/parser.h"
 #include "internals_parser.h"
-
+#include "../headers/lexer.h"
 
 bool	stop_lexing(t_type type)
 {
@@ -80,15 +80,15 @@ bool	valid_path_syntax(t_token *token)
 {
 	int	len;
 
-	if (!token->str)
+	if (!token->str_data)
 		return (0);
-	len = ft_strlen(token->str);
-	if (!token->str || *(token->str) == 0 || len > PATH_MAX)
+	len = ft_strlen(token->str_data);
+	if (!token->str_data || *(token->str_data) == 0 || len > PATH_MAX)
 		return (false);
 	// check max individual file name length:
-	while (len && (token->str)[len - 1] != '/')
+	while (len && (token->str_data)[len - 1] != '/')
 		len--;
-	if (ft_strlen(token->str) - len > NAME_MAX)
+	if (ft_strlen(token->str_data) - len > NAME_MAX)
 		return (false);
 	return (true);
 }
@@ -147,7 +147,7 @@ bool	valid_path_syntax(t_token *token)
 // 		cur_token = add_token(&cur_token, &command, next_new_token(lexer));
 // 		if (is_redir(last_type) && (cur_token->type == WORD || cur_token->type == FLAG))
 // 		{
-// 			cur_token->type == PATH;
+// 			cur_token->type == REDIR_ARG;
 // 			while (peek_next_lexer_type(lexer) == FLAG)
 // 			{
 // 				temp = next_new_token(lexer);
@@ -171,16 +171,17 @@ void	trim_whitespace(t_parser *parser)
 	bool	was_whitespace;
 
 	was_whitespace = true;
-	while(parser->type != EOF)
+	while(parser->type != T_EOF)
 	{
 		if (parser->type == WHITE_SPACE)
 		{
 			if (was_whitespace)
-				remove_parser_node(parser);
+				remove_parser_node(&parser);
 			was_whitespace = true;
 		}
 		else
 			was_whitespace = false;
+		parser = parser->next;
 	}
 }
 
@@ -189,14 +190,14 @@ void	validate_flags(t_parser *parser)
 	bool	was_whitespace;
 
 	was_whitespace = true;
-	while(parser->type != EOF)
+	while(parser->type != T_EOF)
 	{
 		if (parser->type == FLAG)
 		{
-			if (!was_whitespace && parser->last->token->str)
+			if (!was_whitespace && parser->last->token->str_data)
 			{
-				ft_strjoin_inplace(&(parser->last->token->str), parser->token->str);
-				remove_parser_node(parser);
+				ft_strjoin_inplace(&(parser->last->token->str_data), parser->token->str_data);
+				remove_parser_node(&parser);
 			}
 		}
 		if (parser->type == WHITE_SPACE)
@@ -207,54 +208,79 @@ void	validate_flags(t_parser *parser)
 	}
 }
 
-// does not handle multi line commands ('\' at the end)
-char	*parse_here_doc(t_parser *parser)
+// assumes parser is currently at a redir type node
+// parses all supported redir arugments (for HERE_DOC parses the termination)
+// the string will be stored in the str var of the token
+// returns false on invalid input
+bool	parse_redir_arg(t_parser *parser)
 {
-	int		start_terminator_index;
-	t_lexer	temp_lexer;
-	t_token	*path_token;
+	int			len;
+	t_parser	*arg_node;
+	bool		found;
+	char		*new_str_data;
 
-	while (parser->type != T_EOF && parser->type != HERE_DOC)
+	arg_node = parser;
+	len = 0;
+	if (parser->type == WHITE_SPACE)
 	{
 		parser = parser->next;
-	}
-	if (parser->type == T_EOF)
-		return (NULL);
-	while (parser->type == WHITE_SPACE)
-	{
-		parser = parser->next;
+		found = true;
+		(arg_node->token->input_position)++;
 	}
 	if (parser->type == T_EOF || parser->type == OR || parser->type == AND
-		|| parser->type == T_EOF || parser->type == OR || parser->type == OR)
+		|| parser->type == T_EOF || parser->type == REDIR_IN || parser->type == REDIR_OUT
+		|| parser->type == REDIR_APPEND || parser->type == HERE_DOC)
 	{
-		// invalid input (no file)
+		printf("invalid path:\t");
+		print_token(*(parser->token));
+		printf("\n");
+		return (false);
 	}
-	temp_lexer = new_lexer(parser->token->input_str);
-	temp_lexer.position = parser->token->input_position;
-	temp_lexer.read_position = temp_lexer.position;
-	path_token = ft_calloc(1, sizeof(t_token));
-	init_token(path_token, &temp_lexer);
-	path_token->type = PATH;
-	
-	while (parser->type != WHITE_SPACE || parser->type != T_EOF)
+	while (parser->type != T_EOF && parser->type != OR && parser->type != AND
+		&& parser->type != REDIR_IN && parser->type != REDIR_OUT
+		&& parser->type != REDIR_APPEND && parser->type != HERE_DOC && parser->type != WHITE_SPACE)
 	{
+		if (found)
+		{
+			remove_parser_node(&parser);
+		}
+		parser = parser->next;
+		found = true;
+	}
+	len += parser->token->input_position - arg_node->token->input_position;
+	new_str_data = ft_strndup(arg_node->token->input_str + arg_node->token->input_position, len);
+	if (!new_str_data)
+		return (cleanup(), false);
+	update_parser_node(arg_node, REDIR_ARG, new_str_data);
+	return (true);
+}
+
+bool	parse_redir_paths(t_parser *parser)
+{
+	bool	return_val;
+
+	return_val = true;
+	while (parser->type != T_EOF)
+	{
+		if (is_redir(parser->type))
+		{
+			if (!parse_redir_arg(parser->next))
+				return_val = false;
+		}
 		parser = parser->next;
 	}
-	
+	return (return_val);
 }
 
-void	check_here_doc(t_parser *parser)
-{
-	
-}
-
-void	parse(char *str)
+t_parser	*parser(char *str)
 {
 	t_parser	*parser;
 
 	parser = init_parser(str);
-	parse_here_doc(parser);
-	trim_whitespace(parser);
-	//parse_redir(parser);
+	//trim_whitespace(parser);
+	if (!parse_redir_paths(parser))
+		printf("invlid path found\n");
+
 	//validate_flags(list);
+	return (parser);
 }

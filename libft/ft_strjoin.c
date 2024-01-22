@@ -6,13 +6,12 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/08 00:47:03 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/21 20:17:54 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/22 18:57:56 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/libft.h"
 
-//untested
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	size_t	size1;

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/22 17:55:56 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/22 21:03:05 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ bool	env_var_type(t_lexer *lexer, t_token *token)
 	if (len == 0)
 		return (false);
 	token->type = ENV_VAR;
-	token->str = ft_strndup((lexer->str) + lexer->position + 1 , len);
-	if (!token->str)
+	token->str_data = ft_strndup((lexer->str) + lexer->position + 1 , len);
+	if (!token->str_data)
 		return (cleanup(), 0);
 	lexer->read_position = lexer->position + 1 + len;
 	return (token->type);
@@ -102,7 +102,7 @@ bool	literal_type(t_lexer *lexer, t_token *token)
 	(lexer->read_position)++; // +1 to remove the signle quote
 	len = lexer->read_position - lexer->position - 2; // -2 to remove the quotes
 	token->type = LITERAL;
-	token->str =  ft_strndup(lexer->str + lexer->position + 1, len); // +1 to skip the initial quote
+	token->str_data =  ft_strndup(lexer->str + lexer->position + 1, len); // +1 to skip the initial quote
 	return (token->type);
 }
 
@@ -121,7 +121,8 @@ bool	interpreted_type(t_lexer *lexer, t_token *token)
 	(lexer->read_position)++;
 	len = lexer->read_position - lexer->position - 2; // -1 to remove the double quite
 	token->type = INTERPRETED;
-	token->str =  ft_strndup(lexer->str + lexer->position + 1, len); // +1 to remove the double quite
+	printf("len: %lu\n", len);
+	token->str_data =  ft_strndup(lexer->str + lexer->position + 1, len); // +1 to remove the double quite
 	return (token->type);
 }
 
@@ -147,7 +148,7 @@ bool	ft_buildin_type(t_lexer *lexer, t_token *token)
 	if (len)
 	{
 		token->type = FT_BUILDIN;
-		token->str = ft_strndup(lexer->str + lexer->position, len);
+		token->str_data = ft_strndup(lexer->str + lexer->position, len);
 		lexer->read_position = lexer->position + len;
 	}
 	return (token->type);
@@ -199,7 +200,7 @@ bool	subshell_type(t_lexer *lexer, t_token *token)
 		return (false);
 	}
 	token->type = SUBSHELL;
-	token->str = ft_strndup(lexer->str + lexer->position + 1, lexer->read_position - lexer->position - 2);
+	token->str_data = ft_strndup(lexer->str + lexer->position + 1, lexer->read_position - lexer->position - 2);
 	return (token->type);
 }
 
@@ -214,7 +215,7 @@ bool	flag_type(t_lexer *lexer, t_token *token)
 	{
 		(lexer->read_position)++;
 	}
-	token->str = ft_strndup(lexer->str + lexer->position, lexer->read_position - lexer->position);
+	token->str_data = ft_strndup(lexer->str + lexer->position, lexer->read_position - lexer->position);
 	return (token->type);
 }
 
@@ -228,6 +229,6 @@ bool	word_type(t_lexer *lexer, t_token *token)
 		(lexer->read_position)++;
 	}
 	token->type = WORD;
-	token->str = ft_strndup(lexer->str + lexer->position, lexer->read_position - lexer->position);
+	token->str_data = ft_strndup(lexer->str + lexer->position, lexer->read_position - lexer->position);
 	return (token->type);
 }

@@ -6,12 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 09:26:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/22 18:08:02 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/22 20:44:35 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/parser.h"
 #include "../headers/minishell.h"
+#include "../headers/parser.h"
+#include "../headers/lexer.h"
 #include "internals_parser.h"
 
 bool	add_token(t_parser **parser, t_token *token)
@@ -111,8 +112,8 @@ void	free_token(t_token *token)
 {
 	if (!token)
 		return ;
-	if (token->str) ////??? WHY CAN I NOT FREE THIS IF ITS NOT NULL
-		free(token->str);
+	if (token->str_data)
+		free(token->str_data);
 	free(token);
 }
 /*
@@ -209,3 +210,16 @@ bool	insert_token(t_parser **insert_after, t_token *insert_token)
 	return (true);
 }
 
+// only allows changes to type and str_data
+void	update_parser_node(t_parser *parser, t_type new_type, char *new_str_data)
+{
+	parser->token->type = new_type;
+	if (parser->token->str_data)
+		free(parser->token->str_data);
+	parser->token->str_data = new_str_data;
+	parser->type = new_type;
+	if (parser->last)
+		parser->last->next_type = new_type;
+	if (parser->next)
+		parser->next->last_type = new_type;
+}

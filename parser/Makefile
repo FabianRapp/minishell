@@ -5,7 +5,7 @@ CFLAGS=-Wall -Wextra -Werror -fsanitize=address
 LDFLAGS = -fsanitize=address
 LIB_PARSER=parser
 LIB_PARSER_NAME = parser.a
-SOURCES= list_tokens.c parser.c
+SOURCES= list_tokens.c parser.c ../utils/utils1.c
 OBJECTS= $(SOURCES:.c=.o)
 
 NAME_TESTER=test
@@ -23,7 +23,7 @@ build: $(OBJECTS)
 	@echo "\033[32mparser build\033[0m"
 
 $(NAME_TESTER): libs $(LIB_PARSER) $(OBJECTS_TESTER) $(OBJECTS)
-	@$(CC) $(OBJECTS_TESTER) $(OBJECTS) $(LIBFT_NAME) $(LIB_PARSER_NAME) -o $(NAME_TESTER) $(CFLAGS) $(LDFLAGS)
+	@$(CC) $(OBJECTS_TESTER) $(LIB_PARSER_NAME) $(LIBFT_NAME) $(LIB_LEXER_NAME) -o $(NAME_TESTER) $(CFLAGS) $(LDFLAGS)
 	@echo "\033[32mparser_tester build\033[0m"
 
 re$(NAME_TESTER): fclean $(NAME_TESTER)

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:46:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/22 17:49:33 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/22 21:25:24 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,31 +32,18 @@
 // reads the next char into the lexer and updates indexes
 void	read_char(t_lexer *lexer)
 {
-	if (((int)ft_strlen(lexer->str)) <= lexer->read_position)
-	{
-		lexer->cur_char = 0;
-		lexer->read_position = ft_strlen(lexer->str);
-	}
-	else
-	{
-		lexer->cur_char = (lexer->str)[lexer->read_position];
-		lexer->position = lexer->read_position;
+	lexer->cur_char = (lexer->str)[lexer->read_position];
+	lexer->position = lexer->read_position;
+	if (lexer->read_position < ((int)ft_strlen(lexer->str)))
 		(lexer->read_position)++;
-	}
-	lexer->position = lexer->read_position - 1;
-	if (((int)ft_strlen(lexer->str)) <= lexer->read_position)
-	{
-		lexer->cur_char = 0;
-		lexer->read_position = ft_strlen(lexer->str);
-	}
 }
 
 void	init_token(t_token *token, t_lexer *lexer)
 {
 	token->type = 0;
 	token->int_val = 0;
-	token->lexer_position = 0;
-	token->str = NULL;
+	token->str_data = NULL;
+	token->command_terminator = false;
 	token->unknown = 0;
 	token->input_str = lexer->str;
 	token->input_position = lexer->position;

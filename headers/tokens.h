@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:16:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/22 17:43:51 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/22 20:54:00 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ typedef enum e_type
 	WORD,
 	COMMAND, // not identified by lexer. during execution the system path must be check for this on runtime
 	ARGUMENT, // not identified by lexer
-	PATH,
+	REDIR_ARG,
 }	t_type;
 
 typedef struct s_token	t_token;
@@ -51,8 +51,7 @@ typedef struct s_token
 {
 	t_type		type;
 	int32_t		int_val;
-	char		*str;
-	int64_t		lexer_position;
+	char		*str_data;
 	char		unknown;
 	bool		command_terminator; // next token is a new command
 	char		*input_str;
