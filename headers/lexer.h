@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:19:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/18 13:33:46 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/22 17:43:35 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,8 @@ typedef struct s_lexer
 }	t_lexer;
 
 t_lexer			new_lexer(char *str);
-t_token			*token_list(char *str);
-int				remove_token(t_token *token);
-bool			list_right(t_token **token);
-bool			list_left(t_token **token);
-void			skip_whitespace(t_token **cur);
-
 
 //debug lexer
 void			print_token(t_token token);
-bool			test_lexer_manualy(char *str);
-void			print_list(t_token *first);
 
 #endif

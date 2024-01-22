@@ -6,13 +6,12 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:44:23 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/18 09:51:02 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/21 10:38:17 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../headers/minishell.h"
 #include "../../headers/lexer.h"
-
-
 
 int	main(int ac, char **av)
 {

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 00:55:40 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/18 07:24:41 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/21 19:02:30 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ size_t	ft_strlen(const char *s)
 {
 	size_t	i;
 
+	if (!s)
+		return (0);
 	i = 0;
 	while (s[i])
 		i++;
@@ -26,6 +28,8 @@ size_t	ft_strnlen(const char *s, size_t max)
 {
 	size_t	i;
 
+	if (!s)
+		return (0);
 	i = 0;
 	while (s[i] && i < max)
 		i++;

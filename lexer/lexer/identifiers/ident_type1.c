@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/18 12:23:24 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/22 17:55:56 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ bool	env_var_type(t_lexer *lexer, t_token *token)
 		return (false);
 	token->type = ENV_VAR;
 	token->str = ft_strndup((lexer->str) + lexer->position + 1 , len);
+	if (!token->str)
+		return (cleanup(), 0);
 	lexer->read_position = lexer->position + 1 + len;
 	return (token->type);
 }
@@ -128,11 +130,7 @@ bool	ft_buildin_type(t_lexer *lexer, t_token *token)
 	int	len;
 
 	len = 0;
-	if (!ft_strncmp(lexer->str + lexer->position, "echo -n", ft_strlen("echo -n")))
-		len = ft_strlen("echo -n");
-	else if (!ft_strncmp(lexer->str + lexer->position, "echo -", ft_strlen("echo -"))) // does not work if more than 1 space
-		return (false);
-	else if (!ft_strncmp(lexer->str + lexer->position, "echo", ft_strlen("echo")))
+	if (!ft_strncmp(lexer->str + lexer->position, "echo", ft_strlen("echo")))
 		len = ft_strlen("echo");
 	else if (!ft_strncmp(lexer->str + lexer->position, "cd", ft_strlen("cd")))
 		len = ft_strlen("cd");
@@ -157,28 +155,25 @@ bool	ft_buildin_type(t_lexer *lexer, t_token *token)
 
 bool	redir_type(t_lexer *lexer, t_token *token)
 {
-	if (lexer->cur_char != '<' && lexer->cur_char != '>')
-		return (false);
-	token->type = REDIR;
 	if (lexer->cur_char == '<')
 	{
 		if ((lexer->str)[lexer->position + 1] == '<')
 		{
-			token->int_val = 2;
+			token->type = HERE_DOC;
 			lexer->read_position += 1;
 		}
 		else
-			token->int_val = 0;
+			token->type = REDIR_IN;
 	}
 	else if (lexer->cur_char == '>')
 	{
 		if ((lexer->str)[lexer->position + 1] == '>')
 		{
-			token->int_val = 3;
+			token->type = REDIR_APPEND;
 			lexer->read_position += 1;
 		}
 		else
-			token->int_val = 1;
+			token->type = REDIR_OUT;
 	}
 	return (token->type);
 }
@@ -212,10 +207,10 @@ bool	flag_type(t_lexer *lexer, t_token *token)
 {
 	if (lexer->cur_char != '-')
 		return (false);
-	if (is_termination(lexer->str[lexer->read_position]))
+	if (is_termination_char(lexer->str[lexer->read_position]))
 		return (0);
 	token->type = FLAG;
-	while (!is_termination(lexer->str[lexer->read_position]))
+	while (!is_termination_char(lexer->str[lexer->read_position]))
 	{
 		(lexer->read_position)++;
 	}
@@ -226,9 +221,9 @@ bool	flag_type(t_lexer *lexer, t_token *token)
 // has to run after all other typechecks
 bool	word_type(t_lexer *lexer, t_token *token)
 {
-	if (is_termination(lexer->cur_char))
+	if (is_termination_char(lexer->cur_char))
 		return (0);
-	while (!is_termination((lexer->str)[lexer->read_position]))
+	while (!is_termination_char((lexer->str)[lexer->read_position]))
 	{
 		(lexer->read_position)++;
 	}

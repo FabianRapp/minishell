@@ -6,11 +6,28 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:46:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/18 11:26:24 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/22 17:49:33 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../headers/lexer.h"
+
+// // TODO: make this less stupid
+// // reads the next char into the lexer and updates indexes
+// void	read_char(t_lexer *lexer)
+// {
+// 	if (((int)ft_strlen(lexer->str)) <= lexer->read_position)
+// 	{
+// 		lexer->cur_char = 0;
+// 		lexer->read_position = (int)ft_strlen(lexer->str);
+// 	}
+// 	else
+// 	{
+// 		lexer->cur_char = (lexer->str)[lexer->read_position];
+// 		(lexer->read_position)++;
+// 	}
+// 	lexer->position = lexer->read_position - 1;
+// }
 
 // reads the next char into the lexer and updates indexes
 void	read_char(t_lexer *lexer)
@@ -18,45 +35,42 @@ void	read_char(t_lexer *lexer)
 	if (((int)ft_strlen(lexer->str)) <= lexer->read_position)
 	{
 		lexer->cur_char = 0;
+		lexer->read_position = ft_strlen(lexer->str);
 	}
 	else
 	{
 		lexer->cur_char = (lexer->str)[lexer->read_position];
+		lexer->position = lexer->read_position;
+		(lexer->read_position)++;
 	}
-	lexer->position = lexer->read_position;
-	(lexer->read_position)++;
+	lexer->position = lexer->read_position - 1;
+	if (((int)ft_strlen(lexer->str)) <= lexer->read_position)
+	{
+		lexer->cur_char = 0;
+		lexer->read_position = ft_strlen(lexer->str);
+	}
 }
 
-void	zero_token(t_token *token)
+void	init_token(t_token *token, t_lexer *lexer)
 {
-	token->type = UNKNOWN;
+	token->type = 0;
 	token->int_val = 0;
+	token->lexer_position = 0;
 	token->str = NULL;
 	token->unknown = 0;
-	token->last = NULL;
-	token->next = NULL;
-}
-
-bool	is_termination(char c)
-{
-	if (c == 0 || c == '(' || c == ')' || c == '|' || c == '\'' || c == '\"' 
-		|| c == '>' || c == '<' || c == '*' || c == '?'
-		|| c == '$' || c == '&'
-		|| ft_iswhitespace(c))
-	{
-		return (true);
-	}
-	return (false);
+	token->input_str = lexer->str;
+	token->input_position = lexer->position;
 }
 
 int	name_len(char *str)
 {
 	int		len;
 
-	if (*str != '_' && !ft_isalpha(*str))
+	// if (*str && *str != '_' && !ft_isalpha(*str))
+	if (*str && *str != '_' && !ft_isalnum(*str))
 		return (0);
-	len = 0;
-	while (ft_isalnum(str[len]) || str[len] == '_')
+	len = 1;
+	while (str[len] && (ft_isalnum(str[len]) || str[len] == '_'))
 	{
 		len++;
 	}
