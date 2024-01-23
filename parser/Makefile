@@ -1,18 +1,22 @@
 
 CC=cc
-CFLAGS=-Wall -Wextra -Werror -fsanitize=address
-# -g -fsanitize=undefined 
-LDFLAGS = -fsanitize=address
+CFLAGS=-Wall -Wextra -Werror 
+#-fsanitize=address
+# -g -fsanitize=undefined
+LDFLAGS = 
+#-fsanitize=address
 LIB_PARSER=parser
 LIB_PARSER_NAME = parser.a
-SOURCES= list_tokens.c parser.c ../utils/utils1.c
+SOURCES= list_tokens.c parser.c ../utils/utils1.c groups1.c
 OBJECTS= $(SOURCES:.c=.o)
 
 NAME_TESTER=test
 SOURCES_TESTER= test.c
 OBJECTS_TESTER=$(SOURCES_TESTER:.c=.o)
 
+LIBFT=libft
 LIBFT_NAME = libft.a
+LIB_LEXER=lexer
 LIB_LEXER_NAME = lexer.a
 .PHONY: all clean fclean re libs $ $(LIB_PARSER)
 
@@ -44,13 +48,13 @@ re: fclean $(LIB_PARSER)
 norm:
 	norminette $(SOURCES)
 
-$(LIBFT_NAME):
-	@$(MAKE) -C .. $(LIBFT_NAME)
+libs: $(LIBFT) $(LIB_LEXER)
+
+$(LIBFT):
+	@$(MAKE) -C .. $(LIBFT)
 	@cp ../$(LIBFT_NAME) $(LIBFT_NAME)
 
-$(LIB_LEXER_NAME):
-	@$(MAKE) -C .. $(LIB_LEXER_NAME)
+$(LIB_LEXER):
+	@$(MAKE) -C .. $(LIB_LEXER)
 	@cp ../$(LIB_LEXER_NAME) $(LIB_LEXER_NAME)
-
-libs: $(LIBFT_NAME) $(LIB_LEXER_NAME)
 

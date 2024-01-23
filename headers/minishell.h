@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/22 19:15:51 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/23 18:52:31 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,23 @@ TODO:
 -$123 is unkown type and buggy ($is a terminator)
 	bash-3.2$ echo "$123"
 	23
+-need to parse '=' diffrent for ft_export()
 -simplify lexer by using pointers instead of indexes
 -maybe add a type to token (like a bool for command terminator)
 -if the FT_BUILDIN type stays it needs capital char handleing (eChO is vlaid..)
+*/
+
+/*
+weird stuff to keep in mind
+
+1.:
+bash-3.2$ echo $test
+a b
+bash-3.2$ $test
+bash: a: command not found
+bash-3.2$ >$test
+bash: $test: ambiguous redirect
+
 */
 
 #ifndef MINISHELL_H
@@ -43,14 +57,14 @@ TODO:
 typedef	enum e_redir	t_redir;
 typedef enum e_type		t_type;
 typedef struct s_lexer	t_lexer;
-
+typedef struct s_parser	t_parser;
 
 // lexer
 t_token		*next_new_token(t_lexer *lexer);
 t_lexer		new_lexer(char *str);
 
 // debug lexer
-void		print_token(t_token token);
+void		print_token(t_token *token, t_parser *parser);
 bool		test_lexer_manualy(char *str);
 
 

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/22 21:03:05 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/23 21:16:04 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,20 +204,20 @@ bool	subshell_type(t_lexer *lexer, t_token *token)
 	return (token->type);
 }
 
-bool	flag_type(t_lexer *lexer, t_token *token)
-{
-	if (lexer->cur_char != '-')
-		return (false);
-	if (is_termination_char(lexer->str[lexer->read_position]))
-		return (0);
-	token->type = FLAG;
-	while (!is_termination_char(lexer->str[lexer->read_position]))
-	{
-		(lexer->read_position)++;
-	}
-	token->str_data = ft_strndup(lexer->str + lexer->position, lexer->read_position - lexer->position);
-	return (token->type);
-}
+// bool	flag_type(t_lexer *lexer, t_token *token)
+// {
+// 	if (lexer->cur_char != '-')
+// 		return (false);
+// 	if (is_termination_char(lexer->str[lexer->read_position]))
+// 		return (0);
+// 	token->type = FLAG;
+// 	while (!is_termination_char(lexer->str[lexer->read_position]))
+// 	{
+// 		(lexer->read_position)++;
+// 	}
+// 	token->str_data = ft_strndup(lexer->str + lexer->position, lexer->read_position - lexer->position);
+// 	return (token->type);
+// }
 
 // has to run after all other typechecks
 bool	word_type(t_lexer *lexer, t_token *token)

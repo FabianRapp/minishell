@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/22 20:46:34 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/23 21:16:23 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,10 @@ t_token	*next_new_token(t_lexer *lexer)
 	// {
 	// 	if (DEBUG) printf("integer_type\n");
 	// }
-	else if (flag_type(lexer, token))
-	{
-		if (DEBUG) printf("flag_type\n");
-	}
+	// else if (flag_type(lexer, token))
+	// {
+	// 	if (DEBUG) printf("flag_type\n");
+	// }
 	else if (word_type(lexer, token))
 	{
 		if (DEBUG) printf("word_type\n");

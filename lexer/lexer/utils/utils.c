@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:46:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/22 21:25:24 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/23 19:16:50 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ void	read_char(t_lexer *lexer)
 void	init_token(t_token *token, t_lexer *lexer)
 {
 	token->type = 0;
-	token->int_val = 0;
 	token->str_data = NULL;
 	token->command_terminator = false;
 	token->unknown = 0;

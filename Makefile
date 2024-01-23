@@ -1,7 +1,9 @@
 CC=cc
-CFLAGS=-Wall -Wextra -Werror -fsanitize=address
+CFLAGS=-Wall -Wextra -Werror 
+#-fsanitize=address
 # -g  -fsanitize=undefined
-LDFLAGS = -fsanitize=address
+LDFLAGS = 
+#-fsanitize=address
 NAME=minishell
 
 GENERAL_SOURCES=
@@ -27,6 +29,7 @@ export LIB_PARSER = parser
 LIB_PARSER_NAME = parser.a
 PARSER_PATH = $(PARSER_DIR)/$(LIB_PARSER_NAME)
 
+LIBS = $(LIBFT) $(LIB_LEXER) 
 LIBS_NAME = $(LIBFT_NAME) $(LIB_LEXER_NAME) 
 
 .PHONY: all clean fclean re clean2 libs $(LIBFT) $(LIB_LEXER)
@@ -37,13 +40,13 @@ $(NAME): libs $(OBJECTS)
 	$(CC) $(LIBFT_NAME) $(LIB_LEXER_NAME) $(OBJECTS)  -lreadline -o $(NAME)
 
 
-libs: $(LIBS_NAME)
+libs: $(LIBS)
 
-$(LIBFT_NAME):
+$(LIBFT):
 	@$(MAKE) -C $(LIBFT_DIR)
 	@cp $(LIBFT_PATH) $(LIBFT_NAME)
 
-$(LIB_LEXER_NAME):
+$(LIB_LEXER):
 	@$(MAKE) -C $(LEXER_DIR) $(LIB_LEXER)
 	@cp $(LEXER_PATH) $(LIB_LEXER_NAME)
 
