@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 09:26:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/23 19:38:15 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/24 20:59:50 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ bool	insert_token(t_parser **parser, t_token *token)
 			printf("error in add_token_back\n");
 			return (false);
 		}
-		(*parser)->type = token->type;
+		(*parser)->p_type = token->type;
 		(*parser)->token = token;
 		(*parser)->next = (*parser);
 		return (true);
@@ -45,7 +45,7 @@ bool	insert_token(t_parser **parser, t_token *token)
 	if (!(*parser)->next)
 		return (cleanup(), false);
 	(*parser)->next->token = token;
-	(*parser)->next->type = token->type;
+	(*parser)->next->p_type = token->type;
 	(*parser) = (*parser)->next;
 	(*parser)->next = old_next;
 	return (true);
@@ -66,17 +66,17 @@ t_parser	*link_parser(char *str)
 	lexer = new_lexer(str);
 	while (!token || token->type != T_EOF)
 	{
-		token = next_new_token(&lexer);
-		if (!insert_token(&parser, token))
+		token = next_new_token(&lexer); // null check
+		if (!insert_token(&parser, token))// null check
 			return (NULL);
 		if (!first)
 		{
 			first = parser;
-			if (parser->type == T_EOF)
+			if (parser->p_type == T_EOF)
 				return (parser);
 		}
 	}
-	parser->type = parser->token->type;
+	parser->p_type = parser->token->type;
 	parser->next = first;
 	return (first);
 }
@@ -84,7 +84,7 @@ t_parser	*link_parser(char *str)
 t_parser	*init_parser(char *str)
 {
 	t_parser	*parser;
-
+	
 	parser = link_parser(str);
 	return (parser);
 }
@@ -92,14 +92,14 @@ t_parser	*init_parser(char *str)
 bool	continue_parser(t_parser **parser)
 {
 	*parser = (*parser)->next;
-	if ((*parser)->type == T_EOF)
+	if ((*parser)->p_type == T_EOF)
 		return (false);
 	return (true);
 }
 
 void	jump_to_start(t_parser **parser)
 {
-	while ((*parser)->type != T_EOF)
+	while ((*parser)->p_type != T_EOF)
 		(*parser) = (*parser)->next;
 	(*parser) = (*parser)->next;
 }
@@ -118,7 +118,6 @@ void	clean_ncircular_parser(t_parser *parser)
 {
 	t_parser	*last;
 
-
 	while (parser)
 	{
 		last = parser;
@@ -129,25 +128,22 @@ void	clean_ncircular_parser(t_parser *parser)
 }
 
 /*
-TODO: TEST  THIS
 	- returns 1 on success, unless:
 	- returns 0 if the list is empty (afterwards/before) (can be changed if needed)
 	- returns -2 if the list is corrupted and does not free in that case
 		(does not activly check for list intagret)
 	sets *node to the element before the removed node
 */
-int	remove_parser_node(t_parser **node)
+int	remove_parser_node(t_parser **node, bool free_tok)
 {
 	t_parser	*last;
 
-	
 	if (!node)
 		return (-2);
 	if (!(*node))
 		return (0);
-	free_token((*node)->token);
-	if (is_redir((*node)->type))
-		clean_ncircular_parser((*node)->arg);
+	if (free_tok)
+		free_token((*node)->token);
 	last = (*node);
 	while (last->next != (*node))
 		last = last->next;
@@ -166,7 +162,9 @@ void	free_parser_main(t_parser *parser)
 {
 	while (parser)
 	{
-		remove_parser_node(&parser);
+		clean_ncircular_parser(parser->arg);
+		clean_ncircular_parser(parser->rest_name);
+		remove_parser_node(&parser, true);
 	}
 }
 
@@ -177,5 +175,5 @@ void	update_parser_node(t_parser *parser, t_type new_type, char *new_str_data)
 	if (parser->token->str_data)
 		free(parser->token->str_data);
 	parser->token->str_data = new_str_data;
-	parser->type = new_type;
+	parser->p_type = new_type;
 }

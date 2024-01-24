@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/23 21:16:23 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/24 02:16:25 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,10 @@ t_token	*next_new_token(t_lexer *lexer)
 	{
 		if (DEBUG) printf("interpreted_type\n");
 	}
-	else if (ft_buildin_type(lexer, token))
-	{
-		if (DEBUG) printf("ft_buildin_type\n");
-	}
+	// else if (ft_buildin_type(lexer, token))
+	// {
+	// 	if (DEBUG) printf("ft_buildin_type\n");
+	// }
 	else if (redir_type(lexer, token))
 	{
 		if (DEBUG) printf("redir_type\n");
@@ -83,12 +83,11 @@ t_lexer	new_lexer(char *str)
 {
 	t_lexer		lexer;
 
+	while (str && *str && ft_iswhitespace(*str))
+		str++;
 	lexer.position = 0;
 	lexer.read_position = 0;
 	lexer.str = str;
 	read_char(&lexer);
 	return (lexer);
 }
-
-
-

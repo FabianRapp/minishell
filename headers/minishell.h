@@ -6,12 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/23 18:52:31 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/24 22:18:43 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
+
 -$123 is unkown type and buggy ($is a terminator)
 	bash-3.2$ echo "$123"
 	23
@@ -54,7 +55,6 @@ bash: $test: ambiguous redirect
 # include "tokens.h"
 # include "parser.h"
 
-typedef	enum e_redir	t_redir;
 typedef enum e_type		t_type;
 typedef struct s_lexer	t_lexer;
 typedef struct s_parser	t_parser;
@@ -64,7 +64,7 @@ t_token		*next_new_token(t_lexer *lexer);
 t_lexer		new_lexer(char *str);
 
 // debug lexer
-void		print_token(t_token *token, t_parser *parser);
+void		print_token(t_token *token, t_parser *parser, int depth);
 bool		test_lexer_manualy(char *str);
 
 

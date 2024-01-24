@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:34:43 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/23 20:41:24 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/24 20:10:40 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,25 @@ bool	is_redir_arg_terminator(t_type type)
 bool	is_operator(t_type type)
 {
 	if (type == PIPE || type == OR || type == AND)
+	{
+		return (true);
+	}
+	return (false);
+}
+
+bool	is_word_terminator(t_type type)
+{
+	if (type != T_EOF && type != OR && type != AND && type != PIPE
+		&& !is_redir(type) && type != WHITE_SPACE)
+	{
+		return (false);
+	}
+	return (true);
+}
+
+bool	command_terminator(t_type type)
+{
+	if (type == PIPE || type == OR || type == AND || type == WHITE_SPACE || type == T_EOF)
 	{
 		return (true);
 	}

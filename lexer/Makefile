@@ -1,12 +1,12 @@
 CC=cc
-CFLAGS=-Wall -Wextra -Werror 
+CFLAGS=-Wall -Wextra -Werror -g
 #-fsanitize=address
 # -g -fsanitize=undefined 
 LDFLAGS = 
 #-fsanitize=address
 LIB_LEXER=lexer
 LIB_LEXER_NAME = lexer.a
-SOURCES= lexer/utils/debugging.c ../utils/utils1.c lexer/lexer_main.c lexer/utils/utils.c  \
+SOURCES= ../utils/utils1.c ../utils/debugging.c lexer/lexer_main.c lexer/utils/utils.c  \
  lexer/identifiers/ident_type1.c
 OBJECTS= $(SOURCES:.c=.o)
 

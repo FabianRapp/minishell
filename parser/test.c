@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 09:19:39 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/23 19:57:24 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/24 21:30:21 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int a(int ac, char **av)
 	t_parser *current = head;
 	do
 	{
-		print_token(current->token, current);
+		print_token(current->token, current, 0);
 		printf("\n");
 		current = current->next;
 	} while (current != head && current);
@@ -41,6 +41,8 @@ int a(int ac, char **av)
 	free_parser_main(current);
 	return 0;
 }
+
+
 
 int main(int ac, char **av)
 {
