@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:16:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/24 21:19:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/25 16:53:14 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,31 +19,27 @@ typedef struct s_lexer	t_lexer;
 
 typedef enum e_type
 {
-	UNKNOWN = false, // the variable unknow in the token must be filled with the unknown char
+	UNKNOWN = false, // if any unknow token comes out of lexer something is wrong
 	T_EOF,
-	WHITE_SPACE,
-	PIPE,// '|' might be bugged with external commands->figure out later
-	OR, // '||' might be bugged with external commands->figure out later
+	WHITE_SPACE, //removed in parser
+	PIPE,
+	OR,
 	AND, // '&&'
 	ENV_VAR,
 	EXIT_STATUS_REQUEST,
-	FT_BUILDIN, // reimplemented functions that are based of my source code
 	WILDCARD,
-	CTRL_C,
-	CTRL_D,
-	CTRL_BACKSLASH,
-	LITERAL, // the tokens str varialbe must hold the correct string
-	INTERPRETED, // the tokens str varialbe must hold the correct uninterpreted string
+	LITERAL,
+	VOID, // remove in parser
+	INTERPRETED,
 	REDIR_IN,
 	REDIR_OUT,
 	REDIR_APPEND,
 	HERE_DOC,
 	SUBSHELL, // only for || and &&
-	FLAG,
 	WORD,
-	COMMAND, // not identified by lexer. during execution the system path must be check for this on runtime
-	ARGUMENT, // not identified by lexer
-	REDIR_ARG,
+	COMMAND, // not identified by lexer->parser. during execution the system path must be check for this on runtime
+	ARGUMENT, // not identified by lexer->parser
+	REDIR_ARG,// not identified by lexer->parser
 }	t_type;
 
 

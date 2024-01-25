@@ -6,56 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/24 22:29:47 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/25 21:39:26 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/parser.h"
 #include "internals_parser.h"
 #include "../headers/lexer.h"
-
-bool	stop_lexing(t_type type)
-{
-	if (type == HERE_DOC)
-	{
-		return (true);
-	}
-	else if (type == WILDCARD)
-	{
-		return (true);
-	}
-	return (false);
-}
-
-// returns the next token without moving the lexer
-t_token	*peek_next_lexer_token(t_lexer *lexer)
-{
-	t_lexer	peek;
-	t_token	*next_token;
-
-	peek = *lexer;
-	next_token = next_new_token(&peek);
-	return (next_token);
-}
-
-// returns the type of the next token
-t_type	peek_next_lexer_type(t_lexer *lexer)
-{
-	t_type	next_type;
-	t_token	*next_token;
-
-	next_token = peek_next_lexer_token(lexer);
-	next_type = next_token->type;
-	free_token(next_token);
-	return (next_type);
-}
-// void	skip_whitespace_lexer(t_lexer *lexer)
-// {
-// 	while (peek_next_lexer_type(lexer) == WHITE_SPACE)
-// 	{
-// 		lexer->read_position += 1;
-// 	}
-// }
 
 bool	valid_path_syntax(t_token *token)
 {
@@ -73,79 +30,6 @@ bool	valid_path_syntax(t_token *token)
 		return (false);
 	return (true);
 }
-
-// // currently does almost nothing
-// bool	syntax_validity_command(t_token *command)
-// {
-// 	t_type	last_type;
-// 	t_token	*cur;
-
-// 	if (!command || command->type != COMMAND)
-// 		return (false);
-// 	// chech last token for invalid type of the last token of the command
-// 	if (command->last->type ==)
-// 		return (false);
-// 	cur = command->next;
-// 	// check for invalid order of types
-// 	while(cur && cur->type != COMMAND)
-// 	{
-// 		last_type = cur->last->type;
-
-// 		cur = cur->next;
-// 	}
-// 	// invalid cuz multiple commands or NULL ptr in circular list
-// 	if (!cur || cur != command)
-// 		return (false);
-// }
-
-// t_token	*parse_command(t_token *list)
-// {
-	
-// 	if (list->type != WORD && cur_token->type != COMMAND)
-// 	{
-// 		if (DEBUG)
-// 		{
-// 			printf("INVALID OR ERROR: should be COMMAND or WORD:\n");
-// 			print_token(*cur_token);
-// 			printf("________________________________\n");
-// 		}
-// 		// OUTPUT INVALID COMMAND
-// 		return (free_token(cur_token), NULL);
-// 	}
-// 	cur_token->type = COMMAND;
-// 	add_token_back(&command, &command, cur_token); //t_token *cure_node add_token_back(**last_node, **head_node, *cur_node);
-// 	next_type = peek_next_lexer_type(lexer);
-// 	if (next_type != WHITE_SPACE)
-// 		return (free_token(cur_token), NULL);
-// 	skip_whitespace_lexer(lexer);
-// 	next_type = peek_next_lexer_type(lexer);
-// 	last_type = cur_token->type;
-// 	while (next_type == WORD || next_type == FLAG || next_type == LITERAL
-// 		|| next_type == WILDCARD ||  next_type == ENV_VAR || next_type == INTERPRETED
-// 		|| is_redir(next_type))
-// 	{
-// 		last_type = cur_token->type;
-// 		cur_token = add_token_back(&cur_token, &command, next_new_token(lexer));
-// 		if (is_redir(last_type) && (cur_token->type == WORD || cur_token->type == FLAG))
-// 		{
-// 			cur_token->type == REDIR_ARG;
-// 			while (peek_next_lexer_type(lexer) == FLAG)
-// 			{
-// 				temp = next_new_token(lexer);
-// 				ft_strjoin_inplace(&(cur_token->str), temp->str);
-// 				free_token(temp);
-// 			}
-// 		}
-// 		else if (cur_token->type == WORD && last_type != WILDCARD && !is_redir(last_type))
-// 			cur_token->type = ARGUMENT;
-		
-// 		skip_whitespace_lexer(lexer);
-// 		next_type = peek_next_lexer_type(lexer);
-// 	}
-// 	if (!syntax_validity_command(command))
-// 		return (free_token_list(command), NULL);
-// 	return (command);
-// }
 
 void	trim_whitespace(t_parser *parser)
 {
@@ -166,38 +50,11 @@ void	trim_whitespace(t_parser *parser)
 	}
 }
 
-// // does not remove all wrong flags, potential wrong flags left:
-// // -flags before commands -> while indentifing words as commands flags have to be treated as words
-// void	remove_wrong_flags(t_parser *parser)
-// {
-// 	t_parser	*last;
-
-// 	last = NULL;
-// 	while(parser->p_type != T_EOF)
-// 	{
-// 		if (parser->p_type == FLAG)
-// 		{
-// 			if (last && (last->type == WORD || last->type == ENV_VAR || last->type == FT_BUILDIN
-// 				|| last->type == FLAG))
-// 			{
-// 				ft_strjoin_inplace(&(last->token->str_data), parser->token->str_data);
-// 				if (!last->token->str_data)
-// 				{
-// 					cleanup();
-// 					return ;
-// 				}
-// 				remove_parser_node(&parser);
-// 			}
-// 		}
-// 		parser = parser->next;
-// 	}
-// }
-
 /*
 	moves the next nodes of the parser list to the argument list of the given node
 */
 void	move_to_arg(t_parser *parser, bool skip_first_whitespace,
-			bool is_terminator(t_type), t_type new_type, bool skip_redir)
+			bool is_terminator(t_type), t_type new_type)
 {
 	int			len;
 	t_parser	*node;
@@ -209,7 +66,6 @@ void	move_to_arg(t_parser *parser, bool skip_first_whitespace,
 	len = 0;
 	parser = parser->next;
 	type = parser->p_type;
-
 	while (skip_first_whitespace && parser->p_type == WHITE_SPACE)
 	{
 		remove_parser_node(&parser, true);
@@ -217,8 +73,6 @@ void	move_to_arg(t_parser *parser, bool skip_first_whitespace,
 	}
 	while (arg_data && arg_data->next && arg_data->p_type != T_EOF)
 		arg_data = arg_data->next;
-	while (skip_redir && is_redir(parser->p_type))
-		parser = parser->next;
 	while (!is_terminator(parser->p_type))
 	{
 		parser->p_type = new_type;
@@ -234,8 +88,6 @@ void	move_to_arg(t_parser *parser, bool skip_first_whitespace,
 			node->arg = arg_data;
 		}
 		parser = parser->next;
-		while (skip_redir && is_redir(parser->p_type))
-			parser = parser->next;
 	}
 	if (arg_data)
 	{
@@ -252,7 +104,7 @@ bool	parse_redir_paths(t_parser *parser)
 		{
 			if (parser->next->p_type == T_EOF)
 				return (false); //sytanx error unecpected EOF
-			move_to_arg(parser, true, is_redir_arg_terminator, REDIR_ARG, false); // TODO: parse possible words first so this does not have to be done, also in wrong var atm
+			move_to_arg(parser, true, is_redir_arg_terminator, REDIR_ARG); // TODO: parse possible words first so this does not have to be done, also in wrong var atm
 			//optional TODO: remove single quotes of literals
 		}
 		parser = parser->next;
@@ -282,7 +134,11 @@ bool	type_commands(t_parser *parser)
 	while (parser->p_type != T_EOF)
 	{
 		if (is_redir(parser->p_type))
+		{
 			len++;
+			//parser = parser->next;
+			//continue ;
+		}
 		if (!found_command && is_operator(parser->p_type))
 			//bash: syntax error near unexpected parser->token
 			return (false);
@@ -307,11 +163,14 @@ bool	type_commands(t_parser *parser)
 
 bool	type_args(t_parser *parser)
 {
+	t_parser	*last_command_start;
+
+	last_command_start = parser;
 	while (parser->p_type != T_EOF)
 	{
 		if (parser->p_type == COMMAND)
 		{
-			move_to_arg(parser, true, command_terminator, ARGUMENT, true);
+			move_to_arg(parser, true, command_terminator, ARGUMENT);
 		}
 		parser = parser->next;
 	}
@@ -324,7 +183,7 @@ void	merge_words(t_parser *parser)
 	{
 		if (!is_word_terminator(parser->p_type))
 		{
-			move_to_arg(parser, false, is_word_terminator, WORD, false);
+			move_to_arg(parser, false, is_word_terminator, WORD);
 			parser->rest_name = parser->arg;
 			parser->arg = NULL;
 		}
@@ -344,142 +203,18 @@ void	remove_whitespace(t_parser *parser)
 	}
 }
 
-// does not clean up the parser
-// uses tokens of parser -->> dont free tokens when freeing parser
-t_token_list	*extract_token_list(t_parser *parser, char name_or_arg)
-{
-	t_token_list	*last;
-	t_token_list	*new_list;
-
-	if (!parser || parser->p_type == T_EOF || !parser->token || parser->token->type == T_EOF)
-		return (NULL);
-	new_list = ft_calloc(1, sizeof(t_token_list));
-	if (!new_list)
-		return (cleanup(), NULL);
-	new_list->token = parser->token;
-	if (name_or_arg == ARG)
-		new_list->next = extract_token_list(parser->arg, RECURSIVE_CALL);
-	else if (name_or_arg == NAME)
-		new_list->next = extract_token_list(parser->rest_name, RECURSIVE_CALL);
-	else // if (name_or_arg == RECURSIVE_CALL)
-		new_list->next = extract_token_list(parser->next, RECURSIVE_CALL);
-	if (DEBUG_EXTRACT_TOKENS && (name_or_arg == ARG || name_or_arg == NAME))
-	{
-		last = new_list;
-		int i = 0;
-		while (last)
-		{
-			printf("extracted token %d: \n", i++);
-			print_token(last->token, NULL, 0);
-			printf("\n");
-			last = last->next;
-		}
-	}
-	return (new_list);
-}
-
-t_token_list	*extract_command_name(t_parser *parser, t_parser **command_start)
-{
-	t_token_list	*list;
-
-	if (!parser || !command_start)
-		return (NULL);
-	*command_start = parser;
-	if ((*command_start)->p_type == COMMAND)
-		(*command_start) = (*command_start)->next;
-	while(parser->p_type != COMMAND && !command_terminator(parser->p_type))
-		parser = parser->next;
-	if (command_terminator(parser->p_type))
-		return (NULL);
-	list = extract_token_list(parser, NAME);
-	remove_parser_node(&parser, false);
-	return (list);
-}
-
-t_arg	*append_tokens(t_arg *arg, t_parser *parser)
-{
-	t_arg	*new_node;
-
-	new_node = ft_calloc(1, sizeof(t_arg));
-	if (!new_node)
-		return (cleanup(), NULL);
-	
-	return (new_node);
-}
-t_ast_command	*build_ast_command(t_parser *parser)
-{
-	t_ast_command	*ast_command;
-	//t_parser		*command_start;
-	//t_parser		*last;
-
-	while (command_terminator(parser->p_type) && parser->p_type != T_EOF)
-		parser = parser->next;
-	if (parser->p_type == T_EOF)
-		return (NULL);
-	ast_command = malloc(sizeof(t_ast_command));
-	if (!ast_command)
-		return (cleanup(), NULL);
-	while (!command_terminator(parser->p_type))
-	{
-		if (parser->p_type == COMMAND)
-		{
-			if (ast_command->name)
-			{
-				// syntax error
-			}
-			ast_command->name = extract_token_list(parser, NAME);
-			remove_parser_node(&parser, false);
-		}
-		else if (parser->p_type == REDIR_IN || parser->p_type == HERE_DOC)
-		{
-
-		}
-		else if (parser->p_type == REDIR_OUT || parser->p_type == REDIR_APPEND)
-		{
-		}
-		else if (parser->p_type == ARGUMENT)
-		{
-		}
-		parser = parser->next;
-	}
-	/*
-		TODO here:
-		malloc fail handle
-		syntax erro echecks
-	*/
-
-		
-	// // extract name
-	// ast_command->name = extract_command_name(parser, &command_start);
-	// if (!ast_command->name)
-	// 	return (free(ast_command), cleanup(), NULL);
-	// //extract redir in
-	// parser = command_start;
-	// ast_command->redir_in = extract_command_name(parser, &command_start);
-	// if (!ast_command->redir_in)
-	// 	return (free(ast_command), cleanup(), NULL);
-	// // extract redir out
-	// parser = command_start;
-	// ast_command->redir_out = extract_command_name(parser, &command_start);
-	// if (!ast_command->name)
-	// 	return (free(ast_command), cleanup(), NULL);
-	// // extract args
-	// parser = command_start;
-	// ast_command->redir_out = extract_command_name(parser, &command_start);
-	// if (!ast_command->name)
-	// 	return (free(ast_command), cleanup(), NULL);
-	return (ast_command);
-}
-
 /*
 TODO:
 	lex interpreted strings and merge them
 */
-t_parser	*parser(char *str)
+t_ast	*parser(char *str)
 {
 	t_parser	*parser;
+	t_ast		*ast;
 
 	parser = init_parser(str);
+	if (!parser)
+		return (cleanup(), NULL);
 	//TODO: parse words: literals and interpreted strings and what ever can be combined to 1 token: word
 	merge_words(parser);
 	trim_whitespace(parser);
@@ -493,12 +228,13 @@ t_parser	*parser(char *str)
 	{
 		// handle syntax error
 	}
-	build_ast_command(parser);
-	//if (!init_ast(&parser))
+	ast = build_ast(parser);
+	if (!ast)
 	{
+		printf("no ast\n");
 		// handle cleanup
 	}
-	return (parser);
+	return (ast);
 }
 
 // echo 'hello_word' | cat && (ls >> file > fil2 || echo 'ls failed') && cat < file && cat < file2

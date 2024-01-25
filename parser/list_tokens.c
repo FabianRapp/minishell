@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 09:26:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/24 20:59:50 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/25 16:05:59 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 bool	insert_token(t_parser **parser, t_token *token)
 {
-	t_parser	*old_next;
+	t_parser	*head;
 
 	if (!token || !parser)
 	{
@@ -40,14 +40,14 @@ bool	insert_token(t_parser **parser, t_token *token)
 		(*parser)->next = (*parser);
 		return (true);
 	}
-	old_next = (*parser)->next;
+	head = (*parser)->next;
 	(*parser)->next = ft_calloc(1, sizeof(t_parser));
 	if (!(*parser)->next)
 		return (cleanup(), false);
 	(*parser)->next->token = token;
 	(*parser)->next->p_type = token->type;
 	(*parser) = (*parser)->next;
-	(*parser)->next = old_next;
+	(*parser)->next = head;
 	return (true);
 }
 
@@ -67,6 +67,11 @@ t_parser	*link_parser(char *str)
 	while (!token || token->type != T_EOF)
 	{
 		token = next_new_token(&lexer); // null check
+		if (token->type == VOID)
+		{
+			free_token(token);
+			continue ;
+		}
 		if (!insert_token(&parser, token))// null check
 			return (NULL);
 		if (!first)
@@ -76,6 +81,8 @@ t_parser	*link_parser(char *str)
 				return (parser);
 		}
 	}
+	if (!parser)
+		return (NULL);
 	parser->p_type = parser->token->type;
 	parser->next = first;
 	return (first);
@@ -84,7 +91,7 @@ t_parser	*link_parser(char *str)
 t_parser	*init_parser(char *str)
 {
 	t_parser	*parser;
-	
+
 	parser = link_parser(str);
 	return (parser);
 }
@@ -114,15 +121,18 @@ void	free_token(t_token *token)
 }
 
 // frees a parser list that is not cirular, DOES NOT free the data var
-void	clean_ncircular_parser(t_parser *parser)
+void	clean_ncircular_parser(t_parser *parser, bool free_tok)
 {
 	t_parser	*last;
 
 	while (parser)
 	{
+		clean_ncircular_parser(parser->arg, true);
+		clean_ncircular_parser(parser->rest_name, true);
 		last = parser;
 		parser = parser->next;
-		free_token(last->token);
+		if (free_tok)
+			free_token(last->token);
 		free(last);
 	}
 }
@@ -162,8 +172,8 @@ void	free_parser_main(t_parser *parser)
 {
 	while (parser)
 	{
-		clean_ncircular_parser(parser->arg);
-		clean_ncircular_parser(parser->rest_name);
+		clean_ncircular_parser(parser->arg, true);
+		clean_ncircular_parser(parser->rest_name, true);
 		remove_parser_node(&parser, true);
 	}
 }

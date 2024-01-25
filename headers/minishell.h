@@ -6,12 +6,18 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/24 22:18:43 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/25 20:17:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
+
+-- functions to clean up AST
+-- util functions for AST replacements
+
+-- redir in between commmand and args is either parsed wrong: type_args()
+
 
 -$123 is unkown type and buggy ($is a terminator)
 	bash-3.2$ echo "$123"
@@ -70,6 +76,8 @@ bool		test_lexer_manualy(char *str);
 
 //parser
 typedef struct s_parser	t_parser;
-t_parser	*parser(char *str);
+typedef struct s_ast	t_ast;
+
+t_ast	*parser(char *str);
 
 #endif

@@ -6,14 +6,23 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 07:01:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/24 21:16:46 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/25 20:19:47 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/lexer.h"
 #include "../headers/parser.h"
 
-const char* token_type_to_string(t_type tokenType)
+
+void print_colored(const char *text, int color_index)
+{
+	const char *colors[] = {RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE};
+	const int num_colors = sizeof(colors) / sizeof(colors[0]);
+	const char *color = colors[color_index % num_colors];
+	printf("%s%s%s", color, text, RESET_COLOR);
+}
+
+const char	*token_type_to_string(t_type tokenType)
 {
 	switch (tokenType)
 	{
@@ -25,11 +34,11 @@ const char* token_type_to_string(t_type tokenType)
 		case AND: return "AND";
 		case ENV_VAR: return "ENV_VAR";
 		case EXIT_STATUS_REQUEST: return "EXIT_STATUS_REQUEST";
-		case FT_BUILDIN: return "FT_BUILDIN";
+		//case FT_BUILDIN: return "FT_BUILDIN";
 		case WILDCARD: return "WILDCARD";
-		case CTRL_C: return "CTRL_C";
-		case CTRL_D: return "CTRL_D";
-		case CTRL_BACKSLASH: return "CTRL_BACKSLASH";
+		//case CTRL_C: return "CTRL_C";
+		//case CTRL_D: return "CTRL_D";
+		//case CTRL_BACKSLASH: return "CTRL_BACKSLASH";
 		case LITERAL: return "LITERAL";
 		case INTERPRETED: return "INTERPRETED";
 		case REDIR_IN: return "REDIR_IN";
@@ -37,11 +46,12 @@ const char* token_type_to_string(t_type tokenType)
 		case REDIR_APPEND: return "REDIR_APPEND";
 		case HERE_DOC: return "HERE_DOC";
 		case SUBSHELL: return "SUBSHELL";
-		case FLAG: return "FLAG";
+		//case FLAG: return "FLAG";
 		case WORD: return "WORD";
 		case COMMAND: return "COMMAND";
 		case ARGUMENT: return "ARGUMENT";
 		case REDIR_ARG: return "REDIR_ARG";
+		case VOID: return "VOID";
 		default: return "Type not found";
 	}
 }
@@ -49,24 +59,22 @@ const char* token_type_to_string(t_type tokenType)
 void print_indent(int depth)
 {
 	for (int i = 0; i < depth; i++) {
-		printf("  ");
+		print_colored("--", depth);
 	}
 }
 
 void print_parser_tree(t_parser *parser, const char *label, int depth)
 {
 	if (parser) {
-		if (!ft_strcmp(label, "arg"))
-		{
-			print_indent(depth);
-			printf("%s:\n", label);
-		}
 		while (parser && parser->p_type != T_EOF) {
-			print_token(parser->token, parser, depth + 1);
+			print_token(parser->token, parser, depth);
 			parser = parser->next;
 		}
-		print_indent(depth);
-		printf("--end %s\n", label);
+		(void)label;
+		// print_indent(depth);
+		// print_colored("end ", depth);
+		// print_colored(label, depth);
+		// print_colored("\n", depth);
 	}
 }
 
@@ -74,70 +82,37 @@ void	print_token(t_token *token, t_parser *parser, int depth)
 {
 	const char* token_type_str = token_type_to_string(token->type);
 
+	printf("\n");
 	print_indent(depth);
 	if (!parser)
-		printf("%s", token_type_str);
+		print_colored(token_type_str, depth);
 	else
 	{
 		const char* parser_type_str = token_type_to_string(parser->p_type);
-		printf("%s/%s: ", parser_type_str, token_type_str);
+		print_colored(parser_type_str, depth);
+		print_colored("/", depth);
+		print_colored(token_type_str, depth);
+		print_colored(" ", depth);
 		if (parser->token->str_data)
-			printf("%s", parser->token->str_data);
+			print_colored(parser->token->str_data, depth);
 		if (parser->token->unknown)
-			printf("unknown %s", parser->token->str_data);
+			print_colored("unknown", depth); //printf("unknown %s", parser->token->str_data);
 		if (parser->rest_name) {
-			print_parser_tree(parser->rest_name, "name", depth + 1);
+		//	print_parser_tree(parser->rest_name, "name", depth + 1);
 		}
 		if (parser->arg) {
-			print_parser_tree(parser->arg, "arg", depth + 1);
+			printf("\n");
+			print_indent(depth);
+			if (parser->arg->p_type == ARGUMENT)
+				print_colored("Command arguments:", depth);
+			else if (parser->arg->p_type == REDIR_ARG)
+				print_colored("Redir argument:\n", depth);
+			else
+				print_colored("why is this here:\n", depth);
+			print_parser_tree(parser->arg, "arg", depth);
 		}
 	}
 }
-// 		if (parser->arg)
-// 			printf("\narg\n");
-// 		if (parser->rest_name)
-// 			printf("\nrest name \n");
-// 		if (parser->arg && (token->type == REDIR_IN || token->type == REDIR_OUT || token->type == REDIR_APPEND || token->type == HERE_DOC))
-// 		{
-// 			t_parser	*list;
-// 			printf("\n--start redir data:\n");
-// 			list = (t_parser *)(parser->arg);
-// 			while (list && list->p_type != T_EOF)
-// 			{
-// 				print_token(list->token, NULL);
-// 				printf("\n");
-// 				list = list->next;
-// 			}
-// 			printf("\n--end redir data data\n");
-// 		}
-// 		if (parser->arg && (parser->p_type == COMMAND))
-// 		{
-// 			t_parser	*list;
-// 			printf("\n--start command data:\n");
-// 			list = (t_parser *)(parser->arg);
-// 			while (list && list->p_type != T_EOF)
-// 			{
-// 				print_token(list->token, NULL);
-// 				printf("\n");
-// 				list = list->next;
-// 			}
-// 			printf("\n--end command data data\n");
-// 		}
-// 		if (parser->rest_name && (parser->p_type == WORD || parser->p_type == COMMAND || parser->p_type == WORD))
-// 		{
-// 			t_parser	*list;
-// 			printf("\n--start rest_name:\n");
-// 			list = (t_parser *)(parser->rest_name);
-// 			while (list && list->p_type != T_EOF)
-// 			{
-// 				print_token(list->token, NULL);
-// 				printf("\n");
-// 				list = list->next;
-// 			}
-// 			printf("\n--end rest_name\n");
-// 		}
-// 	}
-// }
 
 bool	test_lexer_manualy(char *str)
 {

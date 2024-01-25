@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:52:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/24 22:28:04 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/25 21:50:46 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "minishell.h"
 
-#define DEBUG_EXTRACT_TOKENS 1
+#define DEBUG_EXTRACT_TOKENS 0
 
 #define NAME 'n'
 #define ARG 'a'
@@ -57,13 +57,23 @@ typedef	struct s_arg
 	t_arg			*next;
 }	t_arg;
 
-typedef struct s_ast_command
+typedef struct s_ast	t_ast;
+typedef struct s_ast
 {
+	t_type			type;
 	t_token_list	*name;
 	t_arg			*redir_in;
 	t_arg			*redir_out;
-	t_arg			*args;
-}	t_ast_command;
+	t_parser		*val;
+	t_ast			*left;
+	t_ast			*right;
+}	t_ast;
+
+typedef struct s_left_right_parsers
+{
+	t_parser	*left;
+	t_parser	*right;
+}	t_left_right_parsers;
 
 t_parser	*init_parser(char *str);
 bool		insert_token(t_parser **parser, t_token *token);
@@ -79,9 +89,18 @@ bool		is_redir_arg_terminator(t_type type);
 bool		is_operator(t_type type);
 bool		command_name_terminator(t_type type);
 bool		is_word_terminator(t_type type);
-t_token		*peek_next_lexer_token(t_lexer *lexer);
-t_type		peek_next_lexer_type(t_lexer *lexer);
 bool		command_terminator(t_type type);
+void		clean_ncircular_parser(t_parser *parser, bool free_tok);
+
+
+// AST
+
+t_parser				*last_parser(t_parser *parser);
+t_parser				*find_highest_operator(t_parser *parser);
+t_parser				*remove_back(t_parser *cut_location);
+t_left_right_parsers	split_parser(t_parser *split_location);
+t_ast 					*build_ast(t_parser *parser);
+
 
 #endif
 

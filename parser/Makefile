@@ -7,7 +7,7 @@ LDFLAGS =
 #-fsanitize=address
 LIB_PARSER=parser
 LIB_PARSER_NAME = parser.a
-SOURCES= list_tokens.c parser.c ../utils/utils1.c groups1.c
+SOURCES= list_tokens.c parser.c ../utils/utils1.c groups1.c ast.c
 OBJECTS= $(SOURCES:.c=.o)
 
 NAME_TESTER=test

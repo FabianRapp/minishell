@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/24 17:01:56 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/25 17:44:22 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,15 @@ bool	env_var_type(t_lexer *lexer, t_token *token)
 		return (false);
 	len = name_len((lexer->str) + lexer->position + 1);
 	if (len == 0)
+	{
+		if (ft_isdigit((lexer->str)[lexer->position + 1]))
+		{
+			lexer->read_position = lexer->position + 2;
+			token->type = VOID;
+			return (token->type);
+		}
 		return (false);
+	}
 	token->type = ENV_VAR;
 	token->str_data = ft_strndup((lexer->str) + lexer->position + 1 , len);
 	if (!token->str_data)
@@ -55,12 +63,6 @@ bool	basic_sign_type(t_lexer *lexer, t_token *token)
 	}
 	else if (lexer->cur_char == '*')
 		token->type = WILDCARD;
-	else if (lexer->cur_char == 3) // might be wrong
-		token->type = CTRL_C;
-	else if (lexer->cur_char == 4) // might be wrong
-		token->type = CTRL_D;
-	else if (lexer->cur_char == 28) // might be wrong
-		token->type = CTRL_BACKSLASH;
 	return (token->type);
 }
 
@@ -121,38 +123,37 @@ bool	interpreted_type(t_lexer *lexer, t_token *token)
 	(lexer->read_position)++;
 	len = lexer->read_position - lexer->position - 2; // -1 to remove the double quite
 	token->type = INTERPRETED;
-	printf("len: %lu\n", len);
 	token->str_data =  ft_strndup(lexer->str + lexer->position + 1, len); // +1 to remove the double quite
 	return (token->type);
 }
 
-bool	ft_buildin_type(t_lexer *lexer, t_token *token)
-{
-	int	len;
+// bool	ft_buildin_type(t_lexer *lexer, t_token *token)
+// {
+// 	int	len;
 
-	len = 0;
-	if (!ft_strncmp(lexer->str + lexer->position, "echo", ft_strlen("echo")))
-		len = ft_strlen("echo");
-	else if (!ft_strncmp(lexer->str + lexer->position, "cd", ft_strlen("cd")))
-		len = ft_strlen("cd");
-	else if (!ft_strncmp(lexer->str + lexer->position, "pwd", ft_strlen("pwd")))
-		len = ft_strlen("pwd");
-	else if (!ft_strncmp(lexer->str + lexer->position, "export", ft_strlen("export")))
-		len = ft_strlen("export");
-	else if (!ft_strncmp(lexer->str + lexer->position, "unset", ft_strlen("unset")))
-		len = ft_strlen("unset");
-	else if (!ft_strncmp(lexer->str + lexer->position, "env", ft_strlen("env")))
-		len = ft_strlen("env");
-	else if (!ft_strncmp(lexer->str + lexer->position, "exit", ft_strlen("exit")))
-		len = ft_strlen("exit");
-	if (len)
-	{
-		token->type = FT_BUILDIN;
-		token->str_data = ft_strndup(lexer->str + lexer->position, len);
-		lexer->read_position = lexer->position + len;
-	}
-	return (token->type);
-}
+// 	len = 0;
+// 	if (!ft_strncmp(lexer->str + lexer->position, "echo", ft_strlen("echo")))
+// 		len = ft_strlen("echo");
+// 	else if (!ft_strncmp(lexer->str + lexer->position, "cd", ft_strlen("cd")))
+// 		len = ft_strlen("cd");
+// 	else if (!ft_strncmp(lexer->str + lexer->position, "pwd", ft_strlen("pwd")))
+// 		len = ft_strlen("pwd");
+// 	else if (!ft_strncmp(lexer->str + lexer->position, "export", ft_strlen("export")))
+// 		len = ft_strlen("export");
+// 	else if (!ft_strncmp(lexer->str + lexer->position, "unset", ft_strlen("unset")))
+// 		len = ft_strlen("unset");
+// 	else if (!ft_strncmp(lexer->str + lexer->position, "env", ft_strlen("env")))
+// 		len = ft_strlen("env");
+// 	else if (!ft_strncmp(lexer->str + lexer->position, "exit", ft_strlen("exit")))
+// 		len = ft_strlen("exit");
+// 	if (len)
+// 	{
+// 		token->type = FT_BUILDIN;
+// 		token->str_data = ft_strndup(lexer->str + lexer->position, len);
+// 		lexer->read_position = lexer->position + len;
+// 	}
+// 	return (token->type);
+// }
 
 bool	redir_type(t_lexer *lexer, t_token *token)
 {
@@ -203,21 +204,6 @@ bool	subshell_type(t_lexer *lexer, t_token *token)
 	token->str_data = ft_strndup(lexer->str + lexer->position + 1, lexer->read_position - lexer->position - 2);
 	return (token->type);
 }
-
-// bool	flag_type(t_lexer *lexer, t_token *token)
-// {
-// 	if (lexer->cur_char != '-')
-// 		return (false);
-// 	if (is_termination_char(lexer->str[lexer->read_position]))
-// 		return (0);
-// 	token->type = FLAG;
-// 	while (!is_termination_char(lexer->str[lexer->read_position]))
-// 	{
-// 		(lexer->read_position)++;
-// 	}
-// 	token->str_data = ft_strndup(lexer->str + lexer->position, lexer->read_position - lexer->position);
-// 	return (token->type);
-// }
 
 // has to run after all other typechecks
 bool	word_type(t_lexer *lexer, t_token *token)
