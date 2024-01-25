@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/25 21:51:34 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/25 23:00:36 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,11 +135,43 @@ t_token_list	*extract_token_list(t_parser *parser, char name_or_arg)
 	return (new_list);
 }
 
+// returns the head of the token list, NULL on malloc fail
+// assums the given list to be the had
+t_arg	*append_arg(t_parser *parser, t_arg *head_arg)
+{
+	t_arg	*cur;
+
+	//if (!parser)
+	//	return (NULL);
+	if (!head_arg)
+	{
+		head_arg = ft_calloc(1, sizeof(t_arg));
+		if (!head_arg)
+			return (cleanup(), NULL);
+		cur = head_arg;
+	}
+	else
+	{
+		cur = head_arg;
+		while (cur->next)
+			cur = cur->next;
+		cur->next = ft_calloc(1, sizeof(t_arg));
+		cur = cur->next;
+		if (!cur)
+			return (cleanup(), NULL);
+	}
+	cur->name = extract_token_list(parser->arg, NAME);
+	cur->type = parser->token->type;
+	return (head_arg);
+}
+
+
 t_ast *build_ast(t_parser *parser)
 {
 	t_parser				*highest_operator;
 	t_left_right_parsers	child_parsers;
 	t_ast					*ast_node;
+	t_parser				*args;
 
 	ast_node = ft_calloc(1, sizeof(t_ast));
 	if (!ast_node)
@@ -147,10 +179,29 @@ t_ast *build_ast(t_parser *parser)
 	highest_operator = find_highest_operator(parser);
 	if (!highest_operator)//is leaf node
 	{
+		if (parser->p_type != COMMAND)
+		{
+			printf("ERROR\n");
+		}
 		ast_node->val = parser;
 		ast_node->type = parser->p_type;
 		ast_node->name = extract_token_list(parser, NAME);
-		
+		args = parser->arg;
+		while (args)
+		{
+			if (args->token->type == REDIR_IN || args->token->type == HERE_DOC)
+				ast_node->redir_in = append_arg(args, ast_node->redir_in);
+			else if (args->token->type == REDIR_OUT || args->token->type == REDIR_APPEND)
+				ast_node->redir_out = append_arg(args, ast_node->redir_out);
+			else if (args->p_type == ARGUMENT)
+				ast_node->arg = append_arg(args, ast_node->arg);
+			else
+			{
+				printf("build ast debug:\n");
+				print_token(args->token, args, 2);
+			}
+			args = args->next;
+		}
 		return (ast_node);
 	}
 	ast_node->type = highest_operator->p_type;

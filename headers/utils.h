@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:23:25 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/25 19:17:51 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/25 23:01:57 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,8 @@ const char		*token_type_to_string(t_type tokenType);
 void			print_indent(int depth);
 void			print_colored(const char *text, int color_index);
 
+typedef	struct s_token_list	t_token_list;
+typedef	struct s_arg	t_arg;
+void			print_token_list(t_token_list *token_node, int level);
+void			print_arg_list(t_arg *arg, int level);
 #endif

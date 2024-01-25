@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/25 21:39:26 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/25 22:22:25 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,6 +228,7 @@ t_ast	*parser(char *str)
 	{
 		// handle syntax error
 	}
+	ast = NULL;
 	ast = build_ast(parser);
 	if (!ast)
 	{

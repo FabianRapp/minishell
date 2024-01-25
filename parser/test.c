@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 09:19:39 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/25 21:47:01 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/25 23:02:29 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,38 @@ void	print_parser(t_parser *parser, int tree_level)
 	//free_parser_main(parser);
 }
 
+void	print_token_list(t_token_list *token_node, int level)
+{
+	while (token_node)
+	{
+		print_colored(token_type_to_string(token_node->token->type), level);
+		print_colored(": ", level);
+		print_colored(token_node->token->str_data, level);
+		print_colored(" ; ", level);
+		token_node = token_node->next;
+	}
+}
+
+void	print_arg_list(t_arg *arg, int level)
+{
+	while (arg)
+	{
+		print_indent(level);
+		print_colored(token_type_to_string(arg->type), level);
+		print_colored(" ; Name : ", level);
+		print_token_list(arg->name, level);
+		printf("\n");
+		arg = arg->next;
+	}
+}
+
 void	print_ast(t_ast *ast, int level, char *path)
 {
 	t_token_list	*token_node;
 
-
 	print_colored("\nlevel: ", level);
 	print_colored(ft_itoa(level), level);
-	print_colored("path: ", level);
+	print_colored(" ; path: ", level);
 	print_colored(path, level);
 	printf("\n");
 	print_indent(level);
@@ -53,17 +77,29 @@ void	print_ast(t_ast *ast, int level, char *path)
 	{
 		print_colored("Name: ", level);
 		token_node = ast->name;
-		while (token_node)
-		{
-			print_colored(token_type_to_string(token_node->token->type), level);
-			print_colored(": ", level);
-			print_colored(token_node->token->str_data, level);
-			print_colored(" ; ", level);
-			token_node = token_node->next;
-		}
+		print_token_list(token_node, level);
+		printf("\n");
 	}
-	//if (ast->val)
-		//print_parser(ast->val, level);
+	if (ast->redir_in)
+	{
+		print_indent(level);
+		print_colored("Redir in: \n", level);
+		print_arg_list(ast->redir_in, level);
+	}
+	if (ast->redir_out)
+	{
+		print_indent(level);
+		print_colored("Redout in: \n", level);
+		print_arg_list(ast->redir_out, level);
+	}
+	if (ast->arg)
+	{
+		print_indent(level);
+		print_colored("Args: \n", level);
+		print_arg_list(ast->arg, level);
+	}
+	// if (ast->val)
+	// 	print_parser(ast->val, level);
 	if (ast->left)
 		print_ast(ast->left, level + 1, ft_strjoin(path, "->left"));
 	if (ast->right)

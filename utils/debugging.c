@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 07:01:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/25 20:19:47 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/25 23:03:35 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 
 void print_colored(const char *text, int color_index)
 {
-	const char *colors[] = {RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE};
-	const int num_colors = sizeof(colors) / sizeof(colors[0]);
-	const char *color = colors[color_index % num_colors];
+	char *colors[] = {RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE};
+	int num_colors = sizeof(colors) / sizeof(colors[0]);
+	char *color = colors[color_index % num_colors];
 	printf("%s%s%s", color, text, RESET_COLOR);
 }
 
