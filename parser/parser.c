@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/25 22:22:25 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/26 01:54:51 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,6 +203,50 @@ void	remove_whitespace(t_parser *parser)
 	}
 }
 
+void	swap_parsers(t_parser *node1, t_parser *node2)
+{
+	t_parser	*old1_next;
+	t_parser	*old2_next;
+	t_parser	*old1_last;
+	t_parser	*old2_last;
+	t_parser	*temp;
+
+	old1_next = node1->next;
+	old2_next = node2->next;
+	temp = node1;
+	jump_to_start(&temp);
+	old1_last = temp;
+	old2_last = temp;
+	while (old1_last->next != node1)
+		old1_last = old1_last->next;
+	while (old2_last->next != node2)
+		old2_last = old2_last->next;
+	old1_last->next = node2;
+	old2_last->next = node1;
+	temp = node1->next;
+	node1->next = node2->next;
+	node2->next = temp;
+}
+
+bool	move_commands_infront(t_parser *parser)
+{
+	t_parser	*last;
+
+	while (parser->p_type != T_EOF)
+	{
+		last = last_parser(parser);
+		while (parser->p_type == COMMAND && (!is_operator(last->p_type) && last->p_type != T_EOF))
+		{
+			if (!is_redir(last->p_type))//parsing/ lexer or syntax error idk
+				return (false);
+			swap_parsers(parser, last);
+			last = last_parser(parser);
+		}
+		parser = parser->next;
+	}
+	return (true);
+}
+
 /*
 TODO:
 	lex interpreted strings and merge them
@@ -224,11 +268,16 @@ t_ast	*parser(char *str)
 		// handle syntax error
 	}
 	remove_whitespace(parser);
+	if (!move_commands_infront(parser))
+	{
+		//handle error
+	}
+	jump_to_start(&parser);
 	if (!type_args(parser))
 	{
 		// handle syntax error
 	}
-	ast = NULL;
+
 	ast = build_ast(parser);
 	if (!ast)
 	{

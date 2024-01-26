@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 07:01:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/25 23:03:35 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/26 00:53:26 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,47 @@ const char	*token_type_to_string(t_type tokenType)
 	}
 }
 
-void print_indent(int depth)
+void	print_indent(int depth, bool left)
 {
-	for (int i = 0; i < depth; i++) {
-		print_colored("--", depth);
+	if (!left)
+	{
+		for (int i = 0; i < depth; i++) {
+			print_colored(" ", depth);
+		}
 	}
+	else
+	{
+		for (int i = 0; i < depth - 1; i++) {
+			print_colored(" ", depth);
+		}
+		print_colored("│", depth - 1);
+	}
+	print_colored("│", depth);
 }
+//├ ─ ─ │  └──
+void	print_new_indent(int depth, bool left)
+{
+
+	//print_indent(depth);
+	//printf("\n");
+	for (int i = 0; i < depth - 1; i++) {
+		print_colored(" ", depth);
+		//print_colored("─", depth);
+	}
+	if (depth > 0 && !left)
+	{
+		print_colored("└", depth - 1);
+		print_colored("├─", depth);
+	}
+	else if (depth > 0 && left)
+	{
+		print_colored("├", depth - 1);
+		print_colored("┬─", depth);
+	}
+	else
+		print_colored("│", depth);
+}
+
 
 void print_parser_tree(t_parser *parser, const char *label, int depth)
 {
@@ -83,9 +118,15 @@ void	print_token(t_token *token, t_parser *parser, int depth)
 	const char* token_type_str = token_type_to_string(token->type);
 
 	printf("\n");
-	print_indent(depth);
+	print_indent(depth, false);
 	if (!parser)
+	{
 		print_colored(token_type_str, depth);
+		if (token->str_data)
+			print_colored(token->str_data, depth);
+		if (token->unknown)
+			print_colored("unknown", depth); //printf("unknown %s", parser->token->str_data);
+	}
 	else
 	{
 		const char* parser_type_str = token_type_to_string(parser->p_type);
@@ -93,16 +134,13 @@ void	print_token(t_token *token, t_parser *parser, int depth)
 		print_colored("/", depth);
 		print_colored(token_type_str, depth);
 		print_colored(" ", depth);
-		if (parser->token->str_data)
-			print_colored(parser->token->str_data, depth);
-		if (parser->token->unknown)
-			print_colored("unknown", depth); //printf("unknown %s", parser->token->str_data);
+
 		if (parser->rest_name) {
 		//	print_parser_tree(parser->rest_name, "name", depth + 1);
 		}
 		if (parser->arg) {
 			printf("\n");
-			print_indent(depth);
+			print_indent(depth, false);
 			if (parser->arg->p_type == ARGUMENT)
 				print_colored("Command arguments:", depth);
 			else if (parser->arg->p_type == REDIR_ARG)
