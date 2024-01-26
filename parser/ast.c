@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/26 01:38:45 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/26 03:15:50 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ t_parser	*find_highest_operator(t_parser *parser)
 		printf("bug shows in last_parser\n");
 		return (NULL);
 	}
+	
 	while (parser->p_type != AND && parser->p_type != OR && parser->p_type != T_EOF)
 		parser = parser->next;
 	if (parser->p_type == T_EOF)
@@ -170,12 +171,9 @@ t_arg	*append_arg(t_parser *parser, t_arg *head_arg, bool leading_node)
 			return (cleanup(), NULL);
 		cur->name->next = extract_token_list(parser->rest_name, NAME);
 	}
-	//print_token_list(cur->name, 1);
-	//printf("\n\n");
 	cur->type = parser->token->type;
 	return (head_arg);
 }
-
 
 t_ast *build_ast(t_parser *parser)
 {
@@ -187,28 +185,22 @@ t_ast *build_ast(t_parser *parser)
 	ast_node = ft_calloc(3, sizeof(t_ast));
 	if (!ast_node)
 		return (cleanup(), NULL);
+	
 	highest_operator = find_highest_operator(parser);
+	
 	if (!highest_operator)//is leaf node
 	{
-		if (parser->p_type != COMMAND && !is_redir(parser->p_type))
+		if (parser->p_type != COMMAND)
 		{
-			printf("ERROR\n");
+			printf("ERROR build_ast\n");
+			exit(0);
 		}
-		// if (is_redir(parser->p_type))
-		// {
-		// 	print_token(parser->token, parser, 0);
-		// 	printf("\n\n");
-		// 	print_token(parser->next->token, parser->next, 0);
-		// 	printf("---\n\n");
-		// }
-		//ast_node->val = parser;
 		ast_node->type = parser->p_type;
 		ast_node->name = extract_token_list(parser, NAME);
+		//free_ncircular_parser(parser->rest_name, false);
 		args = parser->arg;
 		while (args)
 		{
-			//print_token(args->token, 0, 0);
-			//printf("\n\n");
 			if (args->token->type == REDIR_IN || args->token->type == HERE_DOC)
 				ast_node->redir_in = append_arg(args, ast_node->redir_in, false);
 			else if (args->token->type == REDIR_OUT || args->token->type == REDIR_APPEND)
@@ -219,10 +211,11 @@ t_ast *build_ast(t_parser *parser)
 			{
 				printf("build ast debug:\n");
 				print_token(args->token, args, 2);
-				printf("\n");
+				exit(0);
 			}
 			args = args->next;
 		}
+		free_parser_main(parser, false);
 		return (ast_node);
 	}
 	ast_node->type = highest_operator->p_type;
@@ -237,4 +230,43 @@ t_ast *build_ast(t_parser *parser)
 	free_token(highest_operator->token);
 	free(highest_operator);
 	return (ast_node);
+}
+
+void	free_token_list(t_token_list *list)
+{
+	t_token_list	*last;
+
+	while (list)
+	{
+		last = list;
+		list = list->next;
+		free_token(last->token);
+		free(last);
+	}
+}
+
+void	free_arg_list(t_arg *list)
+{
+	t_arg	*last;
+
+	while (list)
+	{
+		last = list;
+		list = list->next;
+		free_token_list(last->name);
+		free(last);
+	}
+}
+
+void	free_ast(t_ast *ast)
+{
+	if (ast->left)
+		free_ast(ast->left);
+	if (ast->right)
+		free_ast(ast->right);
+	free_token_list(ast->name);
+	free_arg_list(ast->redir_in);
+	free_arg_list(ast->redir_out);
+	free_arg_list(ast->arg);
+	free(ast);
 }

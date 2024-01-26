@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 09:26:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/25 16:05:59 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/26 02:45:02 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,14 +96,6 @@ t_parser	*init_parser(char *str)
 	return (parser);
 }
 
-bool	continue_parser(t_parser **parser)
-{
-	*parser = (*parser)->next;
-	if ((*parser)->p_type == T_EOF)
-		return (false);
-	return (true);
-}
-
 void	jump_to_start(t_parser **parser)
 {
 	while ((*parser)->p_type != T_EOF)
@@ -121,17 +113,17 @@ void	free_token(t_token *token)
 }
 
 // frees a parser list that is not cirular, DOES NOT free the data var
-void	clean_ncircular_parser(t_parser *parser, bool free_tok)
+void	free_ncircular_parser(t_parser *parser, bool free_tok)
 {
 	t_parser	*last;
 
 	while (parser)
 	{
-		clean_ncircular_parser(parser->arg, true);
-		clean_ncircular_parser(parser->rest_name, true);
+		free_ncircular_parser(parser->arg, free_tok);
+		free_ncircular_parser(parser->rest_name, free_tok);
 		last = parser;
 		parser = parser->next;
-		if (free_tok)
+		if (free_tok || last->token->type == T_EOF || is_redir(last->token->type))
 			free_token(last->token);
 		free(last);
 	}
@@ -152,7 +144,7 @@ int	remove_parser_node(t_parser **node, bool free_tok)
 		return (-2);
 	if (!(*node))
 		return (0);
-	if (free_tok)
+	if (free_tok || (*node)->token->type == T_EOF || is_redir((*node)->token->type))
 		free_token((*node)->token);
 	last = (*node);
 	while (last->next != (*node))
@@ -168,22 +160,12 @@ int	remove_parser_node(t_parser **node, bool free_tok)
 	return (1);
 }
 
-void	free_parser_main(t_parser *parser)
+void	free_parser_main(t_parser *parser, bool free_tokens)
 {
 	while (parser)
 	{
-		clean_ncircular_parser(parser->arg, true);
-		clean_ncircular_parser(parser->rest_name, true);
-		remove_parser_node(&parser, true);
+		free_ncircular_parser(parser->arg, free_tokens);
+		free_ncircular_parser(parser->rest_name, free_tokens);
+		remove_parser_node(&parser, free_tokens);
 	}
-}
-
-// only allows changes to type and str_data
-void	update_parser_node(t_parser *parser, t_type new_type, char *new_str_data)
-{
-	parser->token->type = new_type;
-	if (parser->token->str_data)
-		free(parser->token->str_data);
-	parser->token->str_data = new_str_data;
-	parser->p_type = new_type;
 }

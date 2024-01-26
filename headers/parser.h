@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:52:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/25 21:55:21 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/26 03:12:19 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct s_parser
 	t_parser	*next;
 	t_parser	*arg;
 	t_parser	*rest_name;
+	
 }	t_parser;
 
 
@@ -45,6 +46,7 @@ typedef	struct s_token_list	t_token_list;
 // simplified node of t_parser list
 typedef	struct s_token_list
 {
+	
 	t_token			*token;
 	t_token_list	*next;
 }	t_token_list;
@@ -52,6 +54,7 @@ typedef	struct s_token_list
 typedef	struct s_arg	t_arg;
 typedef	struct s_arg
 {
+	
 	t_type			type;
 	t_token_list	*name;
 	t_arg			*next;
@@ -60,6 +63,7 @@ typedef	struct s_arg
 typedef struct s_ast	t_ast;
 typedef struct s_ast
 {
+	
 	t_type			type;
 	t_token_list	*name;
 	t_arg			*redir_in;
@@ -79,19 +83,18 @@ typedef struct s_left_right_parsers
 t_parser	*init_parser(char *str);
 bool		insert_token(t_parser **parser, t_token *token);
 t_parser	*link_parser(char *str);
-bool		continue_parser(t_parser **parser);
 void		jump_to_start(t_parser **parser);
 void		free_token(t_token *token);
 int			remove_parser_node(t_parser **node, bool free_tok);
 bool		insert_token(t_parser **insert_after, t_token *insert_token);
-void		free_parser_main(t_parser *parser);
+void		free_parser_main(t_parser *parser, bool free_tokens);
 bool		is_redir(t_type type);
 bool		is_redir_arg_terminator(t_type type);
 bool		is_operator(t_type type);
 bool		command_name_terminator(t_type type);
 bool		is_word_terminator(t_type type);
 bool		command_terminator(t_type type);
-void		clean_ncircular_parser(t_parser *parser, bool free_tok);
+void		free_ncircular_parser(t_parser *parser, bool free_tok);
 
 
 // AST
@@ -101,7 +104,7 @@ t_parser				*find_highest_operator(t_parser *parser);
 t_parser				*remove_back(t_parser *cut_location);
 t_left_right_parsers	split_parser(t_parser *split_location);
 t_ast 					*build_ast(t_parser *parser);
-
+void					free_ast(t_ast *ast);
 
 #endif
 

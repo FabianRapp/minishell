@@ -1,9 +1,9 @@
 CC=cc
-CFLAGS=-Wall -Wextra -Werror -g
+CFLAGS=-Wall -Wextra -Werror -g 
 #-fsanitize=address
-# -g -fsanitize=undefined 
-LDFLAGS = 
-#-fsanitize=address
+# -g -fsanitize=undefined
+LDFLAGS =
+# -fsanitize=address
 LIB_LEXER=lexer
 LIB_LEXER_NAME = lexer.a
 SOURCES= ../utils/utils1.c ../utils/debugging.c lexer/lexer_main.c lexer/utils/utils.c  \

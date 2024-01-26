@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/22 17:55:56 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/26 02:00:35 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,3 +28,23 @@ bool	is_termination_char(char c)
 	}
 	return (false);
 }
+
+
+// mb usefull later, for parser not useable
+bool	valid_path_syntax(t_token *token)
+{
+	int	len;
+
+	if (!token->str_data)
+		return (0);
+	len = ft_strlen(token->str_data);
+	if (!token->str_data || *(token->str_data) == 0 || len > PATH_MAX)
+		return (false);
+	// check max individual file name length:
+	while (len && (token->str_data)[len - 1] != '/')
+		len--;
+	if (ft_strlen(token->str_data) - len > NAME_MAX)
+		return (false);
+	return (true);
+}
+

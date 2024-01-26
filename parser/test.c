@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 09:19:39 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/26 00:43:20 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/26 03:16:40 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,11 @@
 
 void	print_parser(t_parser *parser, int tree_level)
 {
-	// Print the circular linked list
 	t_parser *current = parser;
-	//int i = 0;
 	do
 	{
 		if (current->p_type == T_EOF)
 			break ;
-		//print_indent(tree_level);
-		//printf("lexer nb %d: \n", i++);
 		print_token(current->token, current, tree_level);
 		current = current->next;
 	} while (current != parser && current);
@@ -67,7 +63,9 @@ void	print_ast(t_ast *ast, int level, char *path, bool left)
 
 	print_new_indent(level, left);
 	print_colored("level: ", level);
-	print_colored(ft_itoa(level), level);
+	char	*a = ft_itoa(level);
+	print_colored(a, level);
+	free(a);
 	print_colored(" ; path: ", level);
 	print_colored(path, level);
 	printf("\n");
@@ -103,13 +101,9 @@ void	print_ast(t_ast *ast, int level, char *path, bool left)
 		print_arg_list(ast->arg, level, left);
 	}
 	if (ast->left)
-	{
 		print_ast(ast->left, level + 1, ft_strjoin(path, "->left"), true);
-	}
 	if (ast->right)
-	{
 		print_ast(ast->right, level + 1, ft_strjoin(path, "->right"), false);
-	}
 	free (path);
 }
 
@@ -124,12 +118,26 @@ int a(int ac, char **av)
 	}
 	ast = parser(av[1]);
 	print_ast(ast, 0, ft_strdup("root"), false);
-	return 0;
+	free_ast(ast);
+	return (0);
 }
 
+void print_type_sizes()
+{
+	printf("Size of t_operators_ast: %zu bytes\n", sizeof(t_operators_ast));
+	printf("Size of t_parser: %zu bytes\n", sizeof(t_parser));
+	printf("Size of t_token_list: %zu bytes\n", sizeof(t_token_list));
+	printf("Size of t_arg: %zu bytes\n", sizeof(t_arg));
+	printf("Size of t_ast: %zu bytes\n", sizeof(t_ast));
+	printf("Size of t_left_right_parsers: %zu bytes\n", sizeof(t_left_right_parsers));
+	printf("Size of t_type: %zu bytes\n", sizeof(t_type));
+	printf("Size of t_token: %zu bytes\n", sizeof(t_token));
+	printf("Size of t_lexer: %zu bytes\n", sizeof(t_lexer));
+}
 
 int main(int ac, char **av)
 {
+	//print_type_sizes();
 	a(ac, av);
 	//system("leaks test");
 	return (0);

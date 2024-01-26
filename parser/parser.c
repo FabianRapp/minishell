@@ -6,30 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/26 01:54:51 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/26 02:47:20 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/parser.h"
 #include "internals_parser.h"
 #include "../headers/lexer.h"
-
-bool	valid_path_syntax(t_token *token)
-{
-	int	len;
-
-	if (!token->str_data)
-		return (0);
-	len = ft_strlen(token->str_data);
-	if (!token->str_data || *(token->str_data) == 0 || len > PATH_MAX)
-		return (false);
-	// check max individual file name length:
-	while (len && (token->str_data)[len - 1] != '/')
-		len--;
-	if (ft_strlen(token->str_data) - len > NAME_MAX)
-		return (false);
-	return (true);
-}
 
 void	trim_whitespace(t_parser *parser)
 {
@@ -136,8 +119,6 @@ bool	type_commands(t_parser *parser)
 		if (is_redir(parser->p_type))
 		{
 			len++;
-			//parser = parser->next;
-			//continue ;
 		}
 		if (!found_command && is_operator(parser->p_type))
 			//bash: syntax error near unexpected parser->token
@@ -228,6 +209,8 @@ void	swap_parsers(t_parser *node1, t_parser *node2)
 	node2->next = temp;
 }
 
+// incase of leading redirs infront of command moves the comant infront of them
+// otherwise this situation is bugged duo to parsing order (change needs huge refactor)
 bool	move_commands_infront(t_parser *parser)
 {
 	t_parser	*last;
@@ -277,13 +260,14 @@ t_ast	*parser(char *str)
 	{
 		// handle syntax error
 	}
-
+	
 	ast = build_ast(parser);
 	if (!ast)
 	{
 		printf("no ast\n");
 		// handle cleanup
 	}
+	
 	return (ast);
 }
 

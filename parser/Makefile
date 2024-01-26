@@ -1,10 +1,10 @@
 
 CC=cc
-CFLAGS=-Wall -Wextra -Werror -g
+CFLAGS=-Wall -Wextra -Werror -g 
 #-fsanitize=address
 # -g -fsanitize=undefined
-LDFLAGS = 
-#-fsanitize=address
+LDFLAGS =
+# -fsanitize=address
 LIB_PARSER=parser
 LIB_PARSER_NAME = parser.a
 SOURCES= list_tokens.c parser.c ../utils/utils1.c groups1.c ast.c
