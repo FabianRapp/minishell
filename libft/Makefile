@@ -1,8 +1,8 @@
 CC=cc
-CFLAGS=-Wall -Wextra -Werror -g 
-#-fsanitize=address
-# -g -fsanitize=undefined
-LDFLAGS =
+CFLAGS=-Wall -Wextra -Werror -g -fsanitize=address
+#
+# -g 
+LDFLAGS = -fsanitize=undefined
 # -fsanitize=address
 NAME = libft.a
 SOURCES = ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c\

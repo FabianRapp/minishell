@@ -6,19 +6,31 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/21 10:36:43 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/26 04:11:56 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+#include "../headers/parser.h"
+
+
 
 int	main(void)
 {
-	//t_lexer	lexer;
+	t_ast	*ast;
+	char	*input;
 
-	while (1)
+	input = readline("minishell: ");
+	while (input != NULL)
 	{
-		test_lexer_manualy(readline("minishell: "));
+		if (*input)
+		{
+			add_history(input);
+			ast = parser(input);
+			print_ast(ast);
+		}
+		free(input);
+		input = readline("minishell: ");
 	}
 	return (0);
 }

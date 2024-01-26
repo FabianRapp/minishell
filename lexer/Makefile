@@ -1,8 +1,8 @@
 CC=cc
-CFLAGS=-Wall -Wextra -Werror -g 
-#-fsanitize=address
-# -g -fsanitize=undefined
-LDFLAGS =
+CFLAGS=-Wall -Wextra -Werror -g -fsanitize=address
+#
+# -g 
+LDFLAGS = -fsanitize=undefined
 # -fsanitize=address
 LIB_LEXER=lexer
 LIB_LEXER_NAME = lexer.a

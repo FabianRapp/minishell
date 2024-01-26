@@ -1,9 +1,9 @@
 
 CC=cc
-CFLAGS=-Wall -Wextra -Werror -g 
-#-fsanitize=address
-# -g -fsanitize=undefined
-LDFLAGS =
+CFLAGS=-Wall -Wextra -Werror -g -fsanitize=address
+#
+# -g 
+LDFLAGS = -fsanitize=undefined
 # -fsanitize=address
 LIB_PARSER=parser
 LIB_PARSER_NAME = parser.a

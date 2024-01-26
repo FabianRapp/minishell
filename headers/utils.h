@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:23:25 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/26 01:49:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/26 04:04:00 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ typedef	struct s_token_list	t_token_list;
 typedef	struct s_arg	t_arg;
 typedef	struct s_parser	t_parser;
 
+typedef struct s_ast	t_ast;
+void	print_ast(t_ast *ast);
 
 void			print_token_list(t_token_list *token_node, int level);
 void			print_arg_list(t_arg *arg, int level, bool left);

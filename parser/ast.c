@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/26 03:15:50 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/26 03:28:17 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,7 +193,7 @@ t_ast *build_ast(t_parser *parser)
 		if (parser->p_type != COMMAND)
 		{
 			printf("ERROR build_ast\n");
-			exit(0);
+			//exit(0);
 		}
 		ast_node->type = parser->p_type;
 		ast_node->name = extract_token_list(parser, NAME);

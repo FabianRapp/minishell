@@ -6,26 +6,19 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/25 20:17:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/26 03:31:44 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
 
--- functions to clean up AST
+-- redir without argument causes segfault
 -- util functions for AST replacements
 
 -- redir in between commmand and args is either parsed wrong: type_args()
-
-
--$123 is unkown type and buggy ($is a terminator)
-	bash-3.2$ echo "$123"
-	23
--need to parse '=' diffrent for ft_export()
+-need to parse '=' for ft_export()?
 -simplify lexer by using pointers instead of indexes
--maybe add a type to token (like a bool for command terminator)
--if the FT_BUILDIN type stays it needs capital char handleing (eChO is vlaid..)
 */
 
 /*

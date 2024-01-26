@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:52:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/26 03:12:19 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/26 03:55:04 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,9 @@ typedef struct s_left_right_parsers
 	t_parser	*right;
 }	t_left_right_parsers;
 
+
+t_ast	*parser(char *str);
+
 t_parser	*init_parser(char *str);
 bool		insert_token(t_parser **parser, t_token *token);
 t_parser	*link_parser(char *str);
@@ -105,6 +108,8 @@ t_parser				*remove_back(t_parser *cut_location);
 t_left_right_parsers	split_parser(t_parser *split_location);
 t_ast 					*build_ast(t_parser *parser);
 void					free_ast(t_ast *ast);
+
+
 
 #endif
 

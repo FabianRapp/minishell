@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/26 02:47:20 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/26 03:28:40 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,6 +239,8 @@ t_ast	*parser(char *str)
 	t_parser	*parser;
 	t_ast		*ast;
 
+	if (!str)// || !*str
+		return (NULL);
 	parser = init_parser(str);
 	if (!parser)
 		return (cleanup(), NULL);
@@ -267,7 +269,6 @@ t_ast	*parser(char *str)
 		printf("no ast\n");
 		// handle cleanup
 	}
-	
 	return (ast);
 }
 

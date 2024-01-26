@@ -1,8 +1,8 @@
 CC=cc
-CFLAGS=-Wall -Wextra -Werror -g 
-#-fsanitize=address
-# -g -fsanitize=undefined
-LDFLAGS =
+CFLAGS=-Wall -Wextra -Werror -g -fsanitize=address
+#
+# -g 
+LDFLAGS = -fsanitize=undefined
 # -fsanitize=address
 NAME=minishell
 
@@ -11,6 +11,7 @@ GENERAL_OBJECTS=
 
 SOURCES=repl/main.c
 OBJECTS= $(SOURCES:.c=.o)
+
 #$(GENERAL_OBJECTS)
 LEXER_DIR = ./lexer
 export LIB_LEXER = lexer
@@ -29,15 +30,15 @@ export LIB_PARSER = parser
 LIB_PARSER_NAME = parser.a
 PARSER_PATH = $(PARSER_DIR)/$(LIB_PARSER_NAME)
 
-LIBS = $(LIBFT) $(LIB_LEXER) 
-LIBS_NAME = $(LIBFT_NAME) $(LIB_LEXER_NAME) 
+LIBS = $(LIBFT) $(LIB_LEXER) $(LIB_PARSER)
+LIBS_NAME = $(LIBFT_NAME) $(LIB_LEXER_NAME) $(LIB_PARSER_NAME)
 
 .PHONY: all clean fclean re clean2 libs $(LIBFT) $(LIB_LEXER)
 
 all: $(NAME)
 
 $(NAME): libs $(OBJECTS)
-	$(CC) $(LIBFT_NAME) $(LIB_LEXER_NAME) $(OBJECTS)  -lreadline -o $(NAME)
+	$(CC) $(LIBS_NAME) $(OBJECTS)  -lreadline -o $(NAME) $(CFLAGS) $(LDFLAGS)
 
 
 libs: $(LIBS)
@@ -49,6 +50,10 @@ $(LIBFT):
 $(LIB_LEXER):
 	@$(MAKE) -C $(LEXER_DIR) $(LIB_LEXER)
 	@cp $(LEXER_PATH) $(LIB_LEXER_NAME)
+
+$(LIB_PARSER):
+	@$(MAKE) -C $(PARSER_DIR) $(LIB_PARSER)
+	@cp $(PARSER_PATH) $(LIB_PARSER_NAME)
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -o $@ -c $^
@@ -62,7 +67,7 @@ clean:
 
 #TODO add cleaning of testers
 fclean: clean
-	@rm -f $(LIB_LEXER_NAME) $(LIBFT_NAME) $(NAME_TESTER) $(NAME) a.out
+	@rm -f $(LIB_LEXER_NAME) $(LIBFT_NAME) $(NAME_TESTER) $(LIB_LEXER_NAME) $(NAME) a.out
 	@rm -f $(LIBFT_PATH)
 	@rm -f $(LEXER_PATH) $(LEXER_DIR)/$(LIBFT_NAME) $(LEXER_DIR)/a.out
 	@rm -f $(PARSER_PATH) $(PARSER_DIR)/$(LIBFT_NAME) $(PARSER_DIR)/$(LIB_LEXER_NAME) a.out
