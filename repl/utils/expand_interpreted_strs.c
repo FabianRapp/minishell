@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 03:37:23 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 04:09:07 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 04:13:59 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*expand_interpreted_str(char	*str)
 	{
 		while (str[i] != '$' || !str[i + 1] || (!ft_isalpha(str[i + 1]) && str[i + 1] != '_' && str[i + 1] != '$'))
 		{
-			ft_strjoin_inplace_char(&new_str, str[i++])
+			ft_strjoin_inplace_char(&new_str, str[i++]);
 			if (!new_str)
 				return (cleanup(), NULL);
 		}
@@ -55,7 +55,6 @@ char	*expand_interpreted_str(char	*str)
 t_token_list	*expand_token_list(t_token_list *list)
 {
 	t_token_list	*head;
-	char			*env_var;
 
 	head = list;
 	while (list && list->token->type != T_EOF)
@@ -79,12 +78,14 @@ bool	expand_arg_list(t_arg *args)
 {
 	while (args && args->type != T_EOF)
 	{
-		expand_token_list(args->name);
+		if (!expand_token_list(args->name))
+			return (false);
 		args = args->next;
 	}
+	return (true);
 }
 
-void	*expand_interpreteted strs(t_ast *ast)
+void	*expand_interpreteted_strs(t_ast *ast)
 {
 	if (!ast)
 		return (NULL);
@@ -92,12 +93,12 @@ void	*expand_interpreteted strs(t_ast *ast)
 	{
 		if (ast->left)
 		{
-			if (!expand_interpreteted(ast->left))
+			if (!expand_interpreteted_strs(ast->left))
 				return (cleanup(), NULL);
 		}
 		if (ast->right)
 		{
-			if (!expand_interpreteted(ast->right))
+			if (!expand_interpreteted_strs(ast->right))
 				return (cleanup(), NULL);
 		}
 	}

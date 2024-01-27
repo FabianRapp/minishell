@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 03:39:13 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 04:11:46 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,11 @@ void	init_path(t_path *path_ob)
 
 // frees the given string, returns the expanded one
 
-
-
-
-void	run_command(t_ast *command_data)
-{
-	expand_vars_command(command_data);
-	//find_path();
-}
+// void	run_command(t_ast *ast)
+// {
+	
+// 	//find_path();
+// }
 
 
 int	main(void)
@@ -80,6 +77,7 @@ int	main(void)
 		{
 			add_history(input);
 			ast = parser(input);
+			expand_interpreteted_strs(ast);
 			print_ast(ast);
 			free_ast(ast);
 			system("leaks minishell");

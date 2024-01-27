@@ -9,7 +9,7 @@ NAME=minishell
 GENERAL_SOURCES=
 GENERAL_OBJECTS=
 
-SOURCES=repl/main.c
+SOURCES=repl/main.c repl/utils/expand_interpreted_strs.c
 OBJECTS= $(SOURCES:.c=.o)
 
 #$(GENERAL_OBJECTS)
