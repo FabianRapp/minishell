@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/26 23:26:17 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 03:39:13 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,47 +56,10 @@ void	init_path(t_path *path_ob)
 // 	init_path(&path_ob);
 // }
 
-t_token_list	*expand_token_list_vars(t_token_list *list)
-{
-	t_token_list	*head;
-	char			*env_var;
+// frees the given string, returns the expanded one
 
-	head = list;
-	while (list && list->token->type != T_EOF)
-	{
-		if (list->token->type == ENV_VAR)
-		{
-			env_var = list->token->str_data;
-			list->token->str_data = ft_strdup(getenv(env_var));
-			if (!list->token->str_data)
-				return (cleanup(), NULL);
-			list->token->type = WORD;
-			free(env_var);
-		}
-		list = list->next;
-	}
-	return (head);
-}
 
-void	*expand_vars_command(t_ast *command_data)
-{
-	t_token_list	*cur;
 
-	cur = command_data->name;
-	if (command_data->redir_in)
-	{
-		
-	}
-	if (command_data->redir_out)
-	{
-		
-	}
-	if (command_data->arg)
-	{
-		
-	}
-	return (NULL);//
-}
 
 void	run_command(t_ast *command_data)
 {
@@ -119,7 +82,7 @@ int	main(void)
 			ast = parser(input);
 			print_ast(ast);
 			free_ast(ast);
-			//system("leaks minishell");
+			system("leaks minishell");
 			//run_command();
 		}
 		free(input);

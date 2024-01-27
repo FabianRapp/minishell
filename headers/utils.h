@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:23:25 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 00:25:45 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 04:06:15 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,9 @@ void	print_ast(t_ast *ast);
 void			print_token_list(t_token_list *token_node, int level);
 void			print_arg_list(t_arg *arg, int level, bool left);
 void			print_parser(t_parser *parser, int tree_level);
+
+
+// used in lexer and expanding env cars (repl?)
+int				name_len(char *str);
+
 #endif

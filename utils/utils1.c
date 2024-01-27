@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 00:27:02 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 04:05:30 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	print_token_list(t_token_list *token_node, int level)
 		print_colored(": ", level);
 		print_colored(token_node->token->str_data, level);
 		print_colored(" ; ", level);
-		printf("\n");
+		printf("\t");
 		token_node = token_node->next;
 	}
 }
@@ -60,14 +60,16 @@ void	print_arg_list(t_arg *arg, int level, bool left)
 {
 	//int	arg_nb;
 
+	print_indent_arg(level);
+	print_colored(" ; Name:\t", level);
 	//arg_nb = 0;
 	while (arg)
 	{
 		level++;
-		print_indent_arg(level);
+		//print_indent_arg(level);
 		(void)left;
-		print_colored(token_type_to_string(arg->type), level);
-		print_colored(" ; Name : ", level);
+		//print_colored(token_type_to_string(arg->type), level);
+		//print_colored(" : ", level);
 		print_token_list(arg->name, level);
 		arg = arg->next;
 	}
@@ -77,6 +79,8 @@ void	start_rec_print(t_ast *ast, int level, char *path, bool left)
 {
 	t_token_list	*token_node;
 
+	if (!left)
+		printf("\n");
 	print_new_indent(level, left);
 	print_colored("level: ", level);
 	char	*a = ft_itoa(level);
@@ -103,21 +107,24 @@ void	start_rec_print(t_ast *ast, int level, char *path, bool left)
 	}
 	if (ast->redir_in)
 	{
+		printf("\n");
 		print_indent(level, left);
 		print_colored("Redir in: \n", level);
-		print_arg_list(ast->redir_in, level, left);
+		print_arg_list(ast->redir_in, level + 1, left);
 	}
 	if (ast->redir_out)
 	{
+		printf("\n");
 		print_indent(level, left);
 		print_colored("Redout out: \n", level);
-		print_arg_list(ast->redir_out, level, left);
+		print_arg_list(ast->redir_out, level + 1, left);
 	}
 	if (ast->arg)
 	{
+		printf("\n");
 		print_indent(level, left);
 		print_colored("Args: \n", level);
-		print_arg_list(ast->arg, level, left);
+		print_arg_list(ast->arg, level + 1, left);
 	}
 	if (ast->left)
 		start_rec_print(ast->left, level + 1, ft_strjoin(path, "->left"), true);
@@ -130,6 +137,7 @@ void	start_rec_print(t_ast *ast, int level, char *path, bool left)
 void	print_ast(t_ast *ast)
 {
 	start_rec_print(ast, 0, "root", false);
+	printf("\n");
 }
 
 
@@ -151,7 +159,6 @@ bool	is_termination_char(char c)
 	return (false);
 }
 
-
 // mb usefull later, for parser not useable
 bool	valid_path_syntax(t_token *token)
 {
@@ -170,3 +177,17 @@ bool	valid_path_syntax(t_token *token)
 	return (true);
 }
 
+int	name_len(char *str)
+{
+	int		len;
+
+	// /if (*str && *str != '_' && !ft_isalnum(*str))
+	if (*str && *str != '_' && !ft_isalpha(*str))
+		return (0);
+	len = 1;
+	while (str[len] && (ft_isalnum(str[len]) || str[len] == '_'))
+	{
+		len++;
+	}
+	return (len);
+}

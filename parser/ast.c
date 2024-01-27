@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 01:13:56 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 02:04:18 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,7 +223,7 @@ t_ast *build_ast(t_parser *parser)
 		// 		|| (parser->next && !is_operator(parser->next) && parser->token->type != T_EOF))
 		//if (ast_node->type != REDIR_ARG)
 			free_parser_main(parser, false);
-		system("leaks minishell");
+		//system("leaks minishell");
 		return (ast_node);
 	}
 	ast_node->type = highest_operator->p_type;
@@ -237,7 +237,6 @@ t_ast *build_ast(t_parser *parser)
 	ast_node->right = build_ast(child_parsers.right);
 	free_token(highest_operator->token);
 	free(highest_operator);
-	
 	return (ast_node);
 }
 

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 07:01:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 00:25:26 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 01:43:00 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	print_indent_arg(int depth)
 	for (int i = 0; i < depth - 1; i++) {
 		print_colored(" ", depth);
 	}
-	print_colored("└", depth - 1);
+	print_colored("├", depth - 1);
 	print_colored("┐", depth);
 }
 

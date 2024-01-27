@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/26 20:57:40 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 03:57:30 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,16 @@ bool	env_var_type(t_lexer *lexer, t_token *token)
 	len = name_len((lexer->str) + lexer->position + 1);
 	if (len == 0)
 	{
+		if ((lexer->str)[lexer->position + 1] == '$')
+		{
+			token->type = ENV_VAR;
+			len = 1;
+			token->str_data = ft_strndup((lexer->str) + lexer->position + 1 , len);
+			if (!token->str_data)
+				return (cleanup(), 0);
+			lexer->read_position = lexer->position + 1 + len;
+			return (token->type);
+		}
 		if (ft_isdigit((lexer->str)[lexer->position + 1]))
 		{
 			lexer->read_position = lexer->position + 2;
