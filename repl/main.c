@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 05:11:08 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 23:56:25 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,13 @@ int	main(void)
 		{
 			add_history(input);
 			ast = parser(input);
-			
-			print_ast(ast);
-			free_ast(ast);
+			if (ast)
+			{
+				run_command(ast);
+				print_ast(ast);
+				free_ast(ast);
+			}
 			//system("leaks minishell");
-			//run_command();
 		}
 		free(input);
 		input = readline("minishell: ");

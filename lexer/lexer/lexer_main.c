@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/26 20:57:40 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 20:30:19 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ t_token	*next_new_token(t_lexer *lexer)
 	{
 		if (DEBUG) printf("basic_sign_type\n");
 	}
-	else if (WORD_type(lexer, token))
+	else if (literal_type(lexer, token))
 	{
-		if (DEBUG) printf("WORD_type\n");
+		if (DEBUG) printf("literal_type\n");
 	}
 	else if (interpreted_type(lexer, token))
 	{
@@ -62,9 +62,9 @@ t_token	*next_new_token(t_lexer *lexer)
 	// {
 	// 	if (DEBUG) printf("flag_type\n");
 	// }
-	else if (word_type(lexer, token))
+	else if (literal_type2(lexer, token))
 	{
-		if (DEBUG) printf("word_type\n");
+		if (DEBUG) printf("literal_type2\n");
 	}
 	else if (DEBUG)
 	{

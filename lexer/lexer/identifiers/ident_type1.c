@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 03:57:30 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 23:53:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ bool	basic_sign_type(t_lexer *lexer, t_token *token)
 // 	return (token->type);
 //}
 
-bool	WORD_type(t_lexer *lexer, t_token *token)
+bool	literal_type(t_lexer *lexer, t_token *token)
 {
 	size_t	len;
 
@@ -113,7 +113,7 @@ bool	WORD_type(t_lexer *lexer, t_token *token)
 		return (token->type);
 	(lexer->read_position)++; // +1 to remove the signle quote
 	len = lexer->read_position - lexer->position - 2; // -2 to remove the quotes
-	token->type = WORD;
+	token->type = LITERAL;
 	token->str_data =  ft_strndup(lexer->str + lexer->position + 1, len); // +1 to skip the initial quote
 	return (token->type);
 }
@@ -216,15 +216,17 @@ bool	subshell_type(t_lexer *lexer, t_token *token)
 }
 
 // has to run after all other typechecks
-bool	word_type(t_lexer *lexer, t_token *token)
+bool	literal_type2(t_lexer *lexer, t_token *token)
 {
-	if (is_termination_char(lexer->cur_char))
+	if (is_termination_char(lexer->cur_char)
+		&& !(lexer->cur_char && lexer->cur_char == '$' //just '$' is a literal
+			&& (ft_iswhitespace(lexer->str[lexer->position + 1]) || !(lexer->str)[lexer->position + 1]))) 
 		return (0);
 	while (!is_termination_char((lexer->str)[lexer->read_position]))
 	{
 		(lexer->read_position)++;
 	}
-	token->type = WORD;
+	token->type = LITERAL;
 	token->str_data = ft_strndup(lexer->str + lexer->position, lexer->read_position - lexer->position);
 	return (token->type);
 }

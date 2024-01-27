@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 01:00:39 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/28 00:18:50 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,6 @@ bool	type_commands(t_parser *parser)
 	bool		redir;
 	
 	//t_parser	*last;
-
 	found_command = false;
 	redir = false;
 	while (parser->p_type != T_EOF)
@@ -260,11 +259,11 @@ bool	move_commands_infront(t_parser *parser)
 	return (true);
 }
 
-bool	new_merge_words_start(t_parser *parser)
+bool	new_merge_literals_start(t_parser *parser)
 {
 	while(parser && parser->token->type != T_EOF)
 	{
-		while (parser->token->type == WORD && parser->next->token->type == WORD)
+		while (parser->token->type == LITERAL && parser->next->token->type == LITERAL)
 		{
 			ft_strjoin_inplace(&(parser->token->str_data), parser->next->token->str_data);
 			if (!parser->token->str_data)
@@ -313,10 +312,6 @@ void	merge_names(t_parser *parser)
 	}
 }
 
-/*
-TODO:
-	lex interpreted strings and merge them
-*/
 t_ast	*parser(char *str)
 {
 	t_parser	*parser;
@@ -329,18 +324,17 @@ t_ast	*parser(char *str)
 		return (cleanup(), NULL);
 	trim_whitespace(parser);
 	//
-	if (!new_merge_words_start(parser))
+	if (!new_merge_literals_start(parser))
 	{
 		// malloc fail
 	}
 	merge_names(parser);
-	
 	//merge_words(parser); buggy
 	parse_redir_paths(parser);
 	if (!type_commands(parser))
 	{
 		printf("type commands return false\n");
-		exit(0);
+		//exit(0);
 		// handle syntax error
 	}
 

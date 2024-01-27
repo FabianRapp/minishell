@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:52:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/26 03:55:04 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/28 00:31:18 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,6 @@
 #define ARG 'a'
 #define RECURSIVE_CALL 'r'
 
-typedef enum e_operators_ast
-{
-	AST_PIPE,
-	AST_OR,
-	AST_AND,
-	AST_COMMAND
-}	t_operators_ast;
-
 typedef struct s_parser	t_parser;
 
 typedef struct s_parser
@@ -38,7 +30,6 @@ typedef struct s_parser
 	t_parser	*next;
 	t_parser	*arg;
 	t_parser	*rest_name;
-	
 }	t_parser;
 
 

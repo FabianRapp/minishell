@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 09:26:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/26 23:30:19 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 23:55:25 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ t_parser	*link_parser(char *str)
 	token = NULL;
 	parser = NULL;
 	lexer = new_lexer(str);
+	if (!lexer.str || lexer.cur_char == 0)
+		return (NULL);
 	while (!token || token->type != T_EOF)
 	{
 		token = next_new_token(&lexer); // null check

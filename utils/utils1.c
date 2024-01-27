@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 04:05:30 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 23:47:46 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,6 @@ void	print_arg_list(t_arg *arg, int level, bool left)
 
 void	start_rec_print(t_ast *ast, int level, char *path, bool left)
 {
-	t_token_list	*token_node;
-
 	if (!left)
 		printf("\n");
 	print_new_indent(level, left);
@@ -101,8 +99,7 @@ void	start_rec_print(t_ast *ast, int level, char *path, bool left)
 			printf("\n");
 			print_indent(level, left);
 			print_colored("Name: ", level);
-			token_node = ast->name;
-			print_token_list(token_node, level);
+			print_token_list(ast->name, level);
 		}
 	}
 	if (ast->redir_in)
@@ -116,7 +113,7 @@ void	start_rec_print(t_ast *ast, int level, char *path, bool left)
 	{
 		printf("\n");
 		print_indent(level, left);
-		print_colored("Redout out: \n", level);
+		print_colored("Redir out: \n", level);
 		print_arg_list(ast->redir_out, level + 1, left);
 	}
 	if (ast->arg)
@@ -150,7 +147,7 @@ void	cleanup()
 bool	is_termination_char(char c)
 {
 	if (c == 0 || c == '(' || c == ')' || c == '|' || c == '\'' || c == '\"' 
-		|| c == '>' || c == '<' || c == '*' || c == '?'
+		|| c == '>' || c == '<' || c == '*' || c == '?' || c == '\'' 
 		|| c == '$' || c == '&'
 		|| ft_iswhitespace(c))
 	{
@@ -181,8 +178,10 @@ int	name_len(char *str)
 {
 	int		len;
 
+	if (!str)
+		return (0);
 	// /if (*str && *str != '_' && !ft_isalnum(*str))
-	if (*str && *str != '_' && !ft_isalpha(*str))
+	if (!*str || (*str != '_' && !ft_isalpha(*str)))
 		return (0);
 	len = 1;
 	while (str[len] && (ft_isalnum(str[len]) || str[len] == '_'))

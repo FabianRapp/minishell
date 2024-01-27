@@ -6,11 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 06:59:45 by frapp             #+#    #+#             */
-/*   Updated: 2023/10/31 07:02:34 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 21:20:47 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_iswhitespace(char c)
+#include "../headers/libft.h"
+
+bool	ft_iswhitespace(char c)
 {
 	if (c == 32 || (c >= 9 && c <= 13))
 		return (1);

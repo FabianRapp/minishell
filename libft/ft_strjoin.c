@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/08 00:47:03 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 04:35:32 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 23:37:38 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ void	ft_strjoin_inplace(char **s1, char const *s2)
 	size_t	size2;
 	char	*new_str;
 
+	if (!s2 || !*s2)
+		return ;
 	size1 = 0;
 	size2 = 0;
 	if (*s1)
@@ -60,7 +62,7 @@ void	ft_strjoin_inplace_char(char **s1, char const s2)
 	size_t	size2;
 	char	*new_str;
 
-	if (!s1)
+	if (!s1 || !s2)
 		return ;
 	size1 = 0;
 	size2 = 1;

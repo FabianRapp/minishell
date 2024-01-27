@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 22:22:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/26 23:03:58 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 21:20:21 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # include <stddef.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <stdbool.h>
 
 //part 1
 int		ft_isalpha(int c);
@@ -35,6 +36,7 @@ size_t	ft_strlcat(char *dst, const char *src,
 int		ft_toupper(int c);
 int		ft_tolower(int c);
 char	*ft_strchr(const char *s, int c);
+char	*ft_strchr_fn(const char *s, bool fn(char));
 char	*ft_strrchr(const char *s, int c);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 void	*ft_memchr(const void *s, int c, size_t n);
@@ -52,6 +54,8 @@ void	ft_strjoin_inplace(char **s1, char const *s2);
 void	ft_strjoin_inplace_char(char **s1, char const s2);
 char	*ft_strtrim(char const *s1, char const *set);
 char	**ft_split(char const *s, char c);
+char	**ft_split_fn(char const *s, bool is_sep(char));
+char	**free_str_ar(char **str_arr);
 char	*ft_itoa(int n);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
@@ -65,7 +69,7 @@ int		ft_printf(const char *format_str, ...);
 
 int		ft_strcmp(const char *s1, const char *s2);
 int		ft_expo(int base, int expo);
-int		ft_iswhitespace(char c);
+bool	ft_iswhitespace(char c);
 //bonus
 //struct	s_list;
 //typedef struct s_list	t_list;

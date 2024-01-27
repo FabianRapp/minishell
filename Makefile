@@ -1,9 +1,9 @@
 CC=cc
-CFLAGS=-Wall -Wextra -Werror -g 
-#-fsanitize=address
-# -g  -fsanitize=undefined
-LDFLAGS =
-# -fsanitize=address
+CFLAGS=-Wall -Wextra -Werror -g -fsanitize=address
+#-fsanitize=undefined
+# -g 
+LDFLAGS =  -fsanitize=address
+#
 NAME=minishell
 
 GENERAL_SOURCES=

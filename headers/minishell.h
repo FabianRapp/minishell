@@ -6,34 +6,30 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 05:17:23 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/28 00:28:26 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
--- add literals back in: literals are not split and words must be split at white space (needed for edge cases)
-->many additonal contions
-->words in arguments expand to the same argument; for commands the first is the command and afterwords args?
-->reason for ambiguous redirect(below), duo to multiple args for redir?
-->when a command start to execute no word should be left, only literals
--- repl/utils/expand_strs1.c: expand_token_list() make env var handling correct (echo $PATH (no quotes))
-
--need to parse '=' for ft_export()?
--simplify lexer by using pointers instead of indexes
+	- need to expand each redir one by one and create the files, because
+		if an invalid redir appears the ones before allready created the files but the ones afet not
+	- have some kind of error checking for unclosed quotes in init_parser()
+	- need to lex '=' for ft_export()? (maybe just hardcode an export type duo to unique
+		interaction of export with white space (does not accept any whitespace))
+	- simplify lexer by using pointers instead of indexes
+	- env var names need to be tracked in case of error to print the correct name for the error message
+		(example at stuff to keep in mind 1), or error has to be detected before expanding the var (simpler, but
+		in case this type of error message shows in other cases might not be possible -> do near finish)
 */
 
 /*
 weird stuff to keep in mind
 
 1.:
-bash-3.2$ echo $test
-a b
-bash-3.2$ $test
-bash: a: command not found
-bash-3.2$ >$test
-bash: $test: ambiguous redirect
-
+	-if an redir has more than 1 arg its:
+		"bash: $<var name>: ambiguous redirect"
+		this is caused if a variable is expanded as a redir arg without double quots when it incldes whitespace
 */
 
 #ifndef MINISHELL_H

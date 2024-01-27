@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 07:01:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 01:43:00 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 20:28:16 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ const char	*token_type_to_string(t_type tokenType)
 		case REDIR_ARG: return "REDIR_ARG";
 		case VOID: return "VOID";
 		case DUMMY_COMMAND: return "DUMMY_COMMAND";
+		case LITERAL: return "LITERAL";
 		default: return "Type not found";
 	}
 }
