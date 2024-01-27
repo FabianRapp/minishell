@@ -1,8 +1,8 @@
 CC=cc
-CFLAGS=-Wall -Wextra -Werror -g -fsanitize=address
-#
-# -g 
-LDFLAGS = -fsanitize=undefined
+CFLAGS=-Wall -Wextra -Werror -g 
+#-fsanitize=address
+# -g  -fsanitize=undefined
+LDFLAGS =
 # -fsanitize=address
 NAME=minishell
 
@@ -33,7 +33,7 @@ PARSER_PATH = $(PARSER_DIR)/$(LIB_PARSER_NAME)
 LIBS = $(LIBFT) $(LIB_LEXER) $(LIB_PARSER)
 LIBS_NAME = $(LIBFT_NAME) $(LIB_LEXER_NAME) $(LIB_PARSER_NAME)
 
-.PHONY: all clean fclean re clean2 libs $(LIBFT) $(LIB_LEXER)
+.PHONY: all clean fclean re clean2 libs $(LIBFT) $(LIB_LEXER) $(LIB_PARSER)
 
 all: $(NAME)
 
@@ -67,10 +67,10 @@ clean:
 
 #TODO add cleaning of testers
 fclean: clean
-	@rm -f $(LIB_LEXER_NAME) $(LIBFT_NAME) $(NAME_TESTER) $(LIB_LEXER_NAME) $(NAME) a.out
+	@rm -f $(LIB_LEXER_NAME) $(LIBFT_NAME) $(NAME_TESTER) $(LIB_PARSER_NAME) $(NAME) a.out
 	@rm -f $(LIBFT_PATH)
 	@rm -f $(LEXER_PATH) $(LEXER_DIR)/$(LIBFT_NAME) $(LEXER_DIR)/a.out
-	@rm -f $(PARSER_PATH) $(PARSER_DIR)/$(LIBFT_NAME) $(PARSER_DIR)/$(LIB_LEXER_NAME) a.out
+	@rm -f $(PARSER_PATH) $(PARSER_DIR)/$(LIBFT_NAME) $(PARSER_DIR)/$(LIB_PARSER_NAME) a.out
 	@echo "\033[33mroot fcleaned\033[0m"
 
 re: fclean all

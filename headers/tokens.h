@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:16:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/26 02:38:55 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/26 22:43:42 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ typedef enum e_type
 	ENV_VAR,
 	EXIT_STATUS_REQUEST,
 	WILDCARD,
-	LITERAL,
 	VOID, // remove in parser
 	INTERPRETED,
 	REDIR_IN,
@@ -40,6 +39,7 @@ typedef enum e_type
 	COMMAND, // not identified by lexer->parser. during execution the system path must be check for this on runtime
 	ARGUMENT, // not identified by lexer->parser
 	REDIR_ARG,// not identified by lexer->parser
+	DUMMY_COMMAND, // empty command but not a syntax error (redir only)
 }	t_type;
 
 

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 07:01:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/26 00:53:26 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 00:25:26 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ const char	*token_type_to_string(t_type tokenType)
 		//case CTRL_C: return "CTRL_C";
 		//case CTRL_D: return "CTRL_D";
 		//case CTRL_BACKSLASH: return "CTRL_BACKSLASH";
-		case LITERAL: return "LITERAL";
+		case WORD: return "WORD";
 		case INTERPRETED: return "INTERPRETED";
 		case REDIR_IN: return "REDIR_IN";
 		case REDIR_OUT: return "REDIR_OUT";
@@ -47,11 +47,11 @@ const char	*token_type_to_string(t_type tokenType)
 		case HERE_DOC: return "HERE_DOC";
 		case SUBSHELL: return "SUBSHELL";
 		//case FLAG: return "FLAG";
-		case WORD: return "WORD";
 		case COMMAND: return "COMMAND";
 		case ARGUMENT: return "ARGUMENT";
 		case REDIR_ARG: return "REDIR_ARG";
 		case VOID: return "VOID";
+		case DUMMY_COMMAND: return "DUMMY_COMMAND";
 		default: return "Type not found";
 	}
 }
@@ -73,6 +73,16 @@ void	print_indent(int depth, bool left)
 	}
 	print_colored("│", depth);
 }
+
+void	print_indent_arg(int depth)
+{
+	for (int i = 0; i < depth - 1; i++) {
+		print_colored(" ", depth);
+	}
+	print_colored("└", depth - 1);
+	print_colored("┐", depth);
+}
+
 //├ ─ ─ │  └──
 void	print_new_indent(int depth, bool left)
 {

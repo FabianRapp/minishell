@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/26 03:28:40 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 01:00:39 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ bool	parse_redir_paths(t_parser *parser)
 			if (parser->next->p_type == T_EOF)
 				return (false); //sytanx error unecpected EOF
 			move_to_arg(parser, true, is_redir_arg_terminator, REDIR_ARG); // TODO: parse possible words first so this does not have to be done, also in wrong var atm
-			//optional TODO: remove single quotes of literals
+			//optional TODO: remove single quotes of WORDs
 		}
 		parser = parser->next;
 	}
@@ -105,39 +105,68 @@ bool	parse_redir_paths(t_parser *parser)
 	return (true);
 }
 
+// util for type_commands()
+bool	insert_dummy(t_parser *parser)
+{
+	t_parser	*dummy;
+
+	dummy = ft_calloc(1, sizeof(t_parser));
+	if (!dummy)
+		return (cleanup(), false);
+	dummy->next = parser->next;
+	dummy->p_type = COMMAND;
+	parser->next = dummy;
+	dummy->token = ft_calloc(1, sizeof(t_token));
+	if (!dummy->token)
+		return (cleanup(), false);
+	dummy->token->type = DUMMY_COMMAND;
+	return (true);
+}
+
 // retuns false on syntax error
 bool	type_commands(t_parser *parser)
 {
 	bool		found_command;
-	int			len;
+	bool		redir;
+	
 	//t_parser	*last;
 
 	found_command = false;
-	len = 0;
+	redir = false;
 	while (parser->p_type != T_EOF)
 	{
 		if (is_redir(parser->p_type))
-		{
-			len++;
-		}
-		if (!found_command && is_operator(parser->p_type))
+			redir = true;
+		if (!found_command && !redir && is_operator(parser->p_type))
 			//bash: syntax error near unexpected parser->token
 			return (false);
-		else if (found_command && is_operator(parser->p_type))
+		else if (is_operator(parser->p_type))
+		{
+			if (!found_command && redir)
+			{
+				if (!insert_dummy(parser))
+					return (false);
+			}
 			found_command = false;
+			redir = false;
+		}
 		else if (!found_command && !is_operator(parser->p_type) && parser->p_type != WHITE_SPACE
 				&& !is_redir(parser->p_type))
 		{
-			len++;
 			parser->p_type = COMMAND;
 			found_command = true;
 		}
 		parser = parser->next;
 	}
-	if (len && !found_command)
+	if (!redir && !found_command)
 	{
 		//bash: syntax error: unexpected end of file
 		return (false);
+	}
+	if (redir && !found_command)
+	{
+		if (!insert_dummy(parser))
+			return (false);
 	}
 	return (true);
 }
@@ -158,9 +187,10 @@ bool	type_args(t_parser *parser)
 	return (true);
 }
 
+// old and weird buggy, if new one is stable delete this
 void	merge_words(t_parser *parser)
 {
-	while (parser->p_type != T_EOF)
+	while (parser && parser->p_type != T_EOF)
 	{
 		if (!is_word_terminator(parser->p_type))
 		{
@@ -230,6 +260,59 @@ bool	move_commands_infront(t_parser *parser)
 	return (true);
 }
 
+bool	new_merge_words_start(t_parser *parser)
+{
+	while(parser && parser->token->type != T_EOF)
+	{
+		while (parser->token->type == WORD && parser->next->token->type == WORD)
+		{
+			ft_strjoin_inplace(&(parser->token->str_data), parser->next->token->str_data);
+			if (!parser->token->str_data)
+				return (cleanup(), false);
+			parser = parser->next;
+			remove_parser_node(&parser, true);
+		}
+		if (parser && parser->token->type != T_EOF)
+			parser = parser->next;
+	}
+	return (true);
+}
+
+void	merge_names(t_parser *parser)
+{
+	t_parser	*rest_name_end;
+
+	while (parser->token->type != T_EOF)
+	{
+		if (!is_word_terminator(parser->token->type))
+		{
+			rest_name_end = parser->rest_name;
+			while (rest_name_end && rest_name_end->next)
+				rest_name_end = rest_name_end->next;
+			while (!is_word_terminator(parser->next->token->type))
+			{
+				rest_name_end = parser->rest_name;
+				while (rest_name_end && rest_name_end->next)
+					rest_name_end = rest_name_end->next;
+				if (!rest_name_end)
+				{
+					parser->rest_name = parser->next;
+					parser->next = parser->next->next;
+					rest_name_end = parser->rest_name;
+				}
+				else
+				{
+					rest_name_end->next = parser->next;
+					parser->next = parser->next->next;
+					rest_name_end = rest_name_end->next;
+				}
+				rest_name_end->next = NULL;
+			}
+		}
+		parser = parser->next;
+	}
+}
+
 /*
 TODO:
 	lex interpreted strings and merge them
@@ -244,31 +327,42 @@ t_ast	*parser(char *str)
 	parser = init_parser(str);
 	if (!parser)
 		return (cleanup(), NULL);
-	//TODO: parse words: literals and interpreted strings and what ever can be combined to 1 token: word
-	merge_words(parser);
 	trim_whitespace(parser);
+	//
+	if (!new_merge_words_start(parser))
+	{
+		// malloc fail
+	}
+	merge_names(parser);
+	
+	//merge_words(parser); buggy
 	parse_redir_paths(parser);
 	if (!type_commands(parser))
 	{
+		printf("type commands return false\n");
+		exit(0);
 		// handle syntax error
 	}
+
 	remove_whitespace(parser);
 	if (!move_commands_infront(parser))
 	{
 		//handle error
 	}
+	//system("leaks minishell");
 	jump_to_start(&parser);
 	if (!type_args(parser))
 	{
 		// handle syntax error
 	}
-	
+	//system("leaks minishell");
 	ast = build_ast(parser);
 	if (!ast)
 	{
 		printf("no ast\n");
 		// handle cleanup
 	}
+	
 	return (ast);
 }
 

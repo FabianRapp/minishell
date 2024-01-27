@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/25 17:44:22 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/26 20:57:40 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ bool	basic_sign_type(t_lexer *lexer, t_token *token)
 // 	return (token->type);
 //}
 
-bool	literal_type(t_lexer *lexer, t_token *token)
+bool	WORD_type(t_lexer *lexer, t_token *token)
 {
 	size_t	len;
 
@@ -103,7 +103,7 @@ bool	literal_type(t_lexer *lexer, t_token *token)
 		return (token->type);
 	(lexer->read_position)++; // +1 to remove the signle quote
 	len = lexer->read_position - lexer->position - 2; // -2 to remove the quotes
-	token->type = LITERAL;
+	token->type = WORD;
 	token->str_data =  ft_strndup(lexer->str + lexer->position + 1, len); // +1 to skip the initial quote
 	return (token->type);
 }

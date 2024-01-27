@@ -6,17 +6,18 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/26 03:31:44 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/26 23:35:53 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
 
--- redir without argument causes segfault
+-- parser: something goes wrong if a command arg is followed by a sngle arg cosisiting of:
+-word+literal or literal+word followed by something, then somthing is not printed
+->build_ast needs refactor (ideally fully recursice)
 -- util functions for AST replacements
 
--- redir in between commmand and args is either parsed wrong: type_args()
 -need to parse '=' for ft_export()?
 -simplify lexer by using pointers instead of indexes
 */
@@ -46,6 +47,8 @@ bash: $test: ambiguous redirect
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <limits.h>
+# include <stdlib.h>
+
 
 // this projects headers
 # include "libft.h"
@@ -53,6 +56,8 @@ bash: $test: ambiguous redirect
 # include "lexer.h"
 # include "tokens.h"
 # include "parser.h"
+# include "eval.h"
+
 
 typedef enum e_type		t_type;
 typedef struct s_lexer	t_lexer;
@@ -66,6 +71,8 @@ t_lexer		new_lexer(char *str);
 void		print_token(t_token *token, t_parser *parser, int depth);
 bool		test_lexer_manualy(char *str);
 
+// utils
+bool	my_free(void **ptr);
 
 //parser
 typedef struct s_parser	t_parser;

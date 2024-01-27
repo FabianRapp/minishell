@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/26 03:28:17 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 01:13:56 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_parser	*last_parser(t_parser *parser)
 		return (NULL);
 	}
 	last = parser;
-	while (last->next != parser)
+	while (last && last->next != parser)
 		last = last->next;
 	return (last);
 }
@@ -137,14 +137,14 @@ t_token_list	*extract_token_list(t_parser *parser, char name_or_arg)
 }
 
 // returns the head of the token list, NULL on malloc fail
-// assums the given list to be the had
+// assums the given list to be the head
 t_arg	*append_arg(t_parser *parser, t_arg *head_arg, bool leading_node)
 {
 	t_arg	*cur;
 
 	if (!parser)
 		return (NULL);
-	if (!head_arg)
+	if (!head_arg) 
 	{
 		head_arg = ft_calloc(1, sizeof(t_arg));
 		if (!head_arg)
@@ -169,11 +169,13 @@ t_arg	*append_arg(t_parser *parser, t_arg *head_arg, bool leading_node)
 		cur->name->token = parser->token;
 		if (!cur->name)
 			return (cleanup(), NULL);
-		cur->name->next = extract_token_list(parser->rest_name, NAME);
+		cur->name->next = extract_token_list(parser->rest_name, RECURSIVE_CALL);
 	}
 	cur->type = parser->token->type;
 	return (head_arg);
 }
+
+// >redir 'name1'name2'name3'name4  'arg1'arg2'arg3'arg4'arg5'arg6
 
 t_ast *build_ast(t_parser *parser)
 {
@@ -185,7 +187,7 @@ t_ast *build_ast(t_parser *parser)
 	ast_node = ft_calloc(3, sizeof(t_ast));
 	if (!ast_node)
 		return (cleanup(), NULL);
-	
+	//system("leaks minishell");
 	highest_operator = find_highest_operator(parser);
 	
 	if (!highest_operator)//is leaf node
@@ -211,11 +213,17 @@ t_ast *build_ast(t_parser *parser)
 			{
 				printf("build ast debug:\n");
 				print_token(args->token, args, 2);
-				exit(0);
+				//exit(0);
 			}
+			//system("leaks minishell");
 			args = args->next;
 		}
-		free_parser_main(parser, false);
+		
+		// if ((last_parser(parser) && last_parser(parser)->token->type != T_EOF)
+		// 		|| (parser->next && !is_operator(parser->next) && parser->token->type != T_EOF))
+		//if (ast_node->type != REDIR_ARG)
+			free_parser_main(parser, false);
+		system("leaks minishell");
 		return (ast_node);
 	}
 	ast_node->type = highest_operator->p_type;
@@ -229,6 +237,7 @@ t_ast *build_ast(t_parser *parser)
 	ast_node->right = build_ast(child_parsers.right);
 	free_token(highest_operator->token);
 	free(highest_operator);
+	
 	return (ast_node);
 }
 

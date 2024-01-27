@@ -6,11 +6,22 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/26 04:06:43 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 00:27:02 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
+bool	my_free(void **ptr)
+{
+	if (!ptr)
+		return (false);
+	if (!*ptr)
+		return (false);
+	free(*ptr);
+	*ptr = NULL;
+	return (true);
+}
 
 void	print_parser(t_parser *parser, int tree_level)
 {
@@ -47,9 +58,14 @@ void	print_token_list(t_token_list *token_node, int level)
 
 void	print_arg_list(t_arg *arg, int level, bool left)
 {
+	//int	arg_nb;
+
+	//arg_nb = 0;
 	while (arg)
 	{
-		print_indent(level, left);
+		level++;
+		print_indent_arg(level);
+		(void)left;
 		print_colored(token_type_to_string(arg->type), level);
 		print_colored(" ; Name : ", level);
 		print_token_list(arg->name, level);
@@ -76,11 +92,14 @@ void	start_rec_print(t_ast *ast, int level, char *path, bool left)
 		printf("\n");
 	if (ast->name)
 	{
-		printf("\n");
-		print_indent(level, left);
-		print_colored("Name: ", level);
-		token_node = ast->name;
-		print_token_list(token_node, level);
+		//if (!is_redir(ast->type))
+		{
+			printf("\n");
+			print_indent(level, left);
+			print_colored("Name: ", level);
+			token_node = ast->name;
+			print_token_list(token_node, level);
+		}
 	}
 	if (ast->redir_in)
 	{
