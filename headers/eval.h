@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:38:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 04:10:26 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 04:49:36 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ typedef struct s_path
 	int		read_postion;
 }	t_path;
 
-void	*expand_interpreteted_strs(t_ast *ast);
+void	*expand_strs(t_ast *ast);
 
 
 #endif

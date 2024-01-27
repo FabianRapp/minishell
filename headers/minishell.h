@@ -6,17 +6,18 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/26 23:35:53 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/27 05:17:23 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
-
--- parser: something goes wrong if a command arg is followed by a sngle arg cosisiting of:
--word+literal or literal+word followed by something, then somthing is not printed
-->build_ast needs refactor (ideally fully recursice)
--- util functions for AST replacements
+-- add literals back in: literals are not split and words must be split at white space (needed for edge cases)
+->many additonal contions
+->words in arguments expand to the same argument; for commands the first is the command and afterwords args?
+->reason for ambiguous redirect(below), duo to multiple args for redir?
+->when a command start to execute no word should be left, only literals
+-- repl/utils/expand_strs1.c: expand_token_list() make env var handling correct (echo $PATH (no quotes))
 
 -need to parse '=' for ft_export()?
 -simplify lexer by using pointers instead of indexes
