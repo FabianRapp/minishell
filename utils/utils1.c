@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 23:47:46 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/28 03:11:35 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,18 @@ void	print_token_list(t_token_list *token_node, int level)
 void	print_arg_list(t_arg *arg, int level, bool left)
 {
 	//int	arg_nb;
+	//int	base_lvl;
 
+	//base_lvl = level;
 	print_indent_arg(level);
 	print_colored(" ; Name:\t", level);
 	//arg_nb = 0;
 	while (arg)
 	{
-		level++;
+		//level++;
 		//print_indent_arg(level);
+		printf("\n");
+		print_indent(level, false);
 		(void)left;
 		//print_colored(token_type_to_string(arg->type), level);
 		//print_colored(" : ", level);
@@ -81,7 +85,7 @@ void	start_rec_print(t_ast *ast, int level, char *path, bool left)
 		printf("\n");
 	print_new_indent(level, left);
 	print_colored("level: ", level);
-	char	*a = ft_itoa(level);
+	char	*a = ft_itoa(level / 2);
 	print_colored(a, level);
 	free(a);
 	print_colored(" ; path: ", level);
@@ -124,9 +128,9 @@ void	start_rec_print(t_ast *ast, int level, char *path, bool left)
 		print_arg_list(ast->arg, level + 1, left);
 	}
 	if (ast->left)
-		start_rec_print(ast->left, level + 1, ft_strjoin(path, "->left"), true);
+		start_rec_print(ast->left, level + 2, ft_strjoin(path, "->left"), true);
 	if (ast->right)
-		start_rec_print(ast->right, level + 1, ft_strjoin(path, "->right"), false);
+		start_rec_print(ast->right, level + 2, ft_strjoin(path, "->right"), false);
 	if (ft_strcmp(path, "root"))
 		free (path);
 }

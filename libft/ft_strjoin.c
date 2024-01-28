@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/08 00:47:03 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 23:37:38 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/28 03:23:42 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,8 @@ void	ft_strjoin_inplace_char(char **s1, char const s2)
 	}
 	ft_strlcpy(new_str, *s1, size1 + 1);
 	new_str[size1] = s2;
-	new_str[size1 + 2] = 0;
+	if (s2)
+		new_str[size1 + 1] = 0;
 	if (*s1)
 		free(*s1);
 	*s1 = new_str;

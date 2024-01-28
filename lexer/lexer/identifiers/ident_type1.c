@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 23:53:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/28 04:16:12 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,9 @@ bool	env_var_type(t_lexer *lexer, t_token *token)
 	token->type = ENV_VAR;
 	token->str_data = ft_strndup((lexer->str) + lexer->position + 1 , len);
 	if (!token->str_data)
+		return (cleanup(), 0);
+	token->old_data = ft_strdup(token->str_data);
+	if (!token->old_data)
 		return (cleanup(), 0);
 	lexer->read_position = lexer->position + 1 + len;
 	return (token->type);

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 03:37:23 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 23:44:33 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/28 03:20:55 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,10 @@ char	*expand_interpreted_str(char	*str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '$' && !str[i + 1])
+		if (!str[i] || (str[i] == '$' && !str[i + 1]))
 			break ;
-		while ((str[i] && str[i] != '$') || (str[i] == '$' && (!str[i + 1] || (!ft_isalpha(str[i + 1]) && str[i + 1] != '_' && str[i + 1] != '$'))))
+		while ((str[i] && str[i] != '$')
+			|| (str[i] && (str[i] == '$' && (!str[i + 1] || (!ft_isalpha(str[i + 1]) && str[i + 1] != '_' && str[i + 1] != '$')))))
 		{
 			ft_strjoin_inplace_char(&new_str, str[i]);
 			i++;
@@ -245,7 +246,7 @@ t_arg	*fix_arg_literals(t_arg *args)
 	return (head);
 }
 
-#define EXPAND_FULL_AST // EXPAND_FULL_AST: for testing (not usable later on since vars have to be evaluated on runtime)
+//#define EXPAND_FULL_AST // EXPAND_FULL_AST: for testing (not usable later on since vars have to be evaluated on runtime)
 // expands the current ast nodes env vars and interpreted strs (if the first)
 void	*expand_strs(t_ast *ast)
 {

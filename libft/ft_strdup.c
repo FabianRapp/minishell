@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 21:37:54 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/22 19:59:43 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/28 04:13:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*ft_strdup(const char *s1)
 	size_t	i;
 
 	len = ft_strlen(s1);
-	cpy = (char *)malloc(sizeof(char) * (len + 1));
+	cpy = ft_calloc(len + 1, sizeof(char));
 	if (!cpy)
 		return (NULL);
 	i = 0;
@@ -41,7 +41,7 @@ char	*ft_strndup(const char *s1, size_t max_size)
 	len = 0;
 	if (s1)
 		len = ft_strnlen(s1, max_size);
-	cpy = (char *)malloc(sizeof(char) * (len + 1));
+	cpy = (char *)ft_calloc(len + 1, sizeof(char));
 	if (!cpy)
 		return (NULL);
 	i = 0;

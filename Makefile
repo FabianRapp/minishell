@@ -9,7 +9,7 @@ NAME=minishell
 GENERAL_SOURCES=
 GENERAL_OBJECTS=
 
-SOURCES=repl/main.c repl/utils/expand_strs1.c repl/utils/path.c
+SOURCES=repl/main.c repl/utils/expand_strs1.c repl/utils/path.c repl/ft_buildin1.c repl/redir.c
 OBJECTS= $(SOURCES:.c=.o)
 
 #$(GENERAL_OBJECTS)
@@ -39,6 +39,7 @@ all: $(NAME)
 
 $(NAME): libs $(OBJECTS)
 	$(CC) $(LIBS_NAME) $(OBJECTS)  -lreadline -o $(NAME) $(CFLAGS) $(LDFLAGS)
+	cp $(NAME) ../../../bash_testing
 
 
 libs: $(LIBS)

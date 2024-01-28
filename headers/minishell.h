@@ -6,22 +6,19 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/28 01:13:27 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/28 04:20:46 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
+	-redir env var expansion does not make sense, either needs additional pointer in structs or idk ($<varname> expands to multile redir eventhough it should be 1)
 	- need to expand each redir one by one and create the files, because
 		if an invalid redir appears the ones before allready created the files but the ones afet not
 	- have some kind of error checking for unclosed quotes in init_parser()
 	- need to lex '=' for ft_export()? (maybe just hardcode an export type duo to unique
 		interaction of export with white space (does not accept any whitespace))
 	- simplify lexer by using pointers instead of indexes
-	- env var names need to be tracked in case of error to print the correct name for the error message
-		(example at stuff to keep in mind 1), or error has to be detected before expanding the var (simpler, but
-		in case this type of error message shows in other cases might not be possible -> do near finish)
-		other idea: have some extra field in each token for 'old data' (simple)
 */
 
 /*
@@ -31,12 +28,23 @@ weird stuff to keep in mind
 	-if an redir has more than 1 arg its:
 		"bash: $<var name>: ambiguous redirect"
 		this is caused if a variable is expanded as a redir arg without double quots when it incldes whitespace
+2.:
+	- exit does not exit if it is part of a pipe (only exits sub process)
+	- exit prints an error for non integer args but still exits, unless:
+	- if more than 0 or 1 arg is given does not exit
 */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# define SHELL_NAME "minishell"
+
 # define DEBUG 0
+
+#define ARGS 1
+#define IN 2
+#define OUT 3
+
 
 // libs
 # include <stdbool.h>
