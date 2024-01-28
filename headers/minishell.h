@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/28 00:28:26 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/28 01:13:27 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ TODO:
 	- env var names need to be tracked in case of error to print the correct name for the error message
 		(example at stuff to keep in mind 1), or error has to be detected before expanding the var (simpler, but
 		in case this type of error message shows in other cases might not be possible -> do near finish)
+		other idea: have some extra field in each token for 'old data' (simple)
 */
 
 /*

@@ -6,64 +6,61 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 23:56:25 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/28 01:55:04 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 #include "../headers/parser.h"
 
-// updates the cur_path in the path_ob, if its NULL all paths have been checked
-// frees the old path
-void	next_path(t_path *path_ob)
+bool	ft_buildin(char *command_name)
 {
-	if (!path_ob)
-		return ;
-	my_free((void **)&(path_ob->cur_path));
-	path_ob->cur_path = NULL;
-	if (!(path_ob->all_paths) || !(path_ob->all_paths)[path_ob->read_postion])
+	(void)command_name;
+	return (false);
+}
+
+bool	execute_command(char *command_path)
+{
+	pid_t	pid;
+
+	pid = fork();
+	if (pid) // parent process
 	{
-		path_ob->cur_path = NULL;
-		return ;
+		
 	}
-	path_ob->position = path_ob->read_postion;
-	while ((path_ob->all_paths)[path_ob->read_postion] != ':'
-		&& (path_ob->all_paths)[path_ob->read_postion])
+	else // child process
 	{
-		path_ob->read_postion++;
-	}
-	path_ob->cur_path = ft_strndup(path_ob->all_paths + path_ob->position,
-		path_ob->read_postion - path_ob->position);
-	while ((path_ob->all_paths)[path_ob->read_postion] == ':')
-	{
-		path_ob->read_postion++;
+		execvp(command_path, {"Hello World!\n"});
 	}
 }
 
-void	init_path(t_path *path_ob)
+
+// for now assumes ast to be the node of exactly one command
+bool	run_command_node(t_ast *ast)
 {
-	path_ob->all_paths = getenv("PATH");
-	path_ob->cur_path = NULL;
-	path_ob->read_postion = 0;
-	path_ob->position = 0;
-	next_path(path_ob);
-}
+	char	*path;
+	char	*command_name;
 
-// char	*find_path(char *command_name)
-// {
-// 	t_path	path_ob;
-
-// 	init_path(&path_ob);
-// }
-
-// frees the given string, returns the expanded one
-
-void	run_command(t_ast *ast)
-{
 	expand_strs(ast);
-	//find_path();
+	command_name = ast->name->token->str_data; // TODO: name neeeds to be fully expanded, currtly some cases are not expanded (for example exit status req., wildcards etc)
+	if (!command_name)
+	{
+		if (!ast->redir_in && ast->redir_out)
+			return (printf("minishell: syntax error: unexpected end of file\n"), false);
+		// do redirs
+		return (true);
+	}
+	if (ft_buildin(command_name))
+		return ;
+	path = find_path(command_name);
+	if (!path)
+	{
+		printf("minishell: %s: command not found\n", command_name);
+		return (false);
+	}
+	free(path);
+	return (true);
 }
-
 
 int	main(void)
 {
@@ -79,7 +76,7 @@ int	main(void)
 			ast = parser(input);
 			if (ast)
 			{
-				run_command(ast);
+				run_command_node(ast);
 				print_ast(ast);
 				free_ast(ast);
 			}
