@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/29 09:03:41 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/29 12:17:18 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 	char	*input;
 	t_ast	*ast;
 
-	ft_printf("minishell: ");
+	ft_printf("minishell-$: ");
 	input = readline("");
 	add_history(input);
 	ast = parser(input);

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 03:37:23 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/28 03:20:55 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/29 12:30:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,35 +269,38 @@ void	*expand_strs(t_ast *ast)
 	else
 	#endif
 	{
-		if (ast->name)
+		if (ast->type == COMMAND)
 		{
-			if (!expand_token_list(ast->name))
-				return (cleanup(), NULL);
-			ast->arg = move_additional_literals_to_args(ast->name, ast->arg, true);
-			// needs malloc protection
-			//if (!ast->arg)
-				//return (cleanup(), ast);
-		}
-		if (ast->redir_in)
-		{
-			if (!expand_arg_list(ast->redir_in))
-				return(cleanup(), NULL);
-			ast->redir_in = fix_arg_literals(ast->redir_in);
-			// needs malloc protection
-		}
-		if (ast->redir_out)
-		{
-			if (!expand_arg_list(ast->redir_out))
-				return(cleanup(), NULL);
-			ast->redir_out = fix_arg_literals(ast->redir_out);
-			// needs malloc protection
-		}
-		if (ast->arg)
-		{
-			if (!expand_arg_list(ast->arg))
-				return(cleanup(), NULL);
-			ast->arg = fix_arg_literals(ast->arg);
-			// needs malloc protection
+			if (ast->name)
+			{
+				if (!expand_token_list(ast->name))
+					return (cleanup(), NULL);
+				ast->arg = move_additional_literals_to_args(ast->name, ast->arg, true);
+				// needs malloc protection
+				//if (!ast->arg)
+					//return (cleanup(), ast);
+			}
+			if (ast->redir_in)
+			{
+				if (!expand_arg_list(ast->redir_in))
+					return(cleanup(), NULL);
+				ast->redir_in = fix_arg_literals(ast->redir_in);
+				// needs malloc protection
+			}
+			if (ast->redir_out)
+			{
+				if (!expand_arg_list(ast->redir_out))
+					return(cleanup(), NULL);
+				ast->redir_out = fix_arg_literals(ast->redir_out);
+				// needs malloc protection
+			}
+			if (ast->arg)
+			{
+				if (!expand_arg_list(ast->arg))
+					return(cleanup(), NULL);
+				ast->arg = fix_arg_literals(ast->arg);
+				// needs malloc protection
+			}
 		}
 		return (ast);
 	}

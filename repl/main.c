@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/29 10:19:17 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/29 12:12:45 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,12 +90,11 @@ void	create_child_command(t_ast *ast, char *command_path)
 }
 
 // for now assumes ast to be the node of exactly one command
-void	run_command_node(t_ast *ast, t_cleanup_data *cleanup_data)
+void	run_command_node(t_ast *ast)
 {
 	char	*path;
 	char	*command_name;
 
-	ast->cleanup_data = cleanup_data;
 	expand_strs(ast);
 	if (ast->info != NOT_FINISHED)
 		return ;
@@ -128,14 +127,14 @@ int	main(void)
 	{
 		if (ast)
 		{
-			run_command_node(ast, &cleanup_data);
-			//print_ast(ast);
+			print_ast(ast);
+			walk_ast(ast, &cleanup_data, true);
 			if (ast->info == EXIT_ERROR)
 				return (main_cleanup(&cleanup_data), 1);
 			else if (ast->info == SYNTAX_ERROR)
 			{
 			}
-			print_ast(ast);
+			//print_ast(ast);
 			//system("leaks minishell");
 		}
 		main_cleanup(&cleanup_data);

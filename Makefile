@@ -10,7 +10,7 @@ GENERAL_SOURCES=
 GENERAL_OBJECTS=
 
 SOURCES=repl/main.c repl/utils/expand_strs1.c repl/utils/path.c repl/ft_buildin1.c repl/redir.c \
-repl/utils/input_exit.c repl/utils/data_utils.c
+repl/utils/input_exit.c repl/utils/data_utils.c repl/run_ast.c
 OBJECTS= $(SOURCES:.c=.o)
 
 #$(GENERAL_OBJECTS)

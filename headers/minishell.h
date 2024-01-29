@@ -6,15 +6,21 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/29 10:07:49 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/29 13:29:59 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
+	- $$ is void type eventhough it should be an env
+	- implement pipes
+	- implement other ft functions
+	- implement exit status request
+	- implement redirs
+	- update path functions to use new error print fn
+	- add error handeling to lexer and parser
 	- maybe need to keep track if the main process or a child is running a command for exit()?
-	- ft_calloc set perror("Error: Memory allocation failed");: use ft_calloc in other ft_functions for consistant behaivoor and
-		no need to set the seeror in the shell code
+	- add current working dir to path
 	-redir env var expansion does not make sense, either needs additional pointer in structs or idk ($<varname> expands to multile redir eventhough it should be 1)
 	- need to expand each redir one by one and create the files, because
 		if an invalid redir appears the ones before allready created the files but the ones afet not
@@ -96,6 +102,10 @@ typedef struct s_cleanup_data
 // lexer
 t_token		*next_new_token(t_lexer *lexer);
 t_lexer		new_lexer(char *str);
+
+// main
+void	walk_ast(t_ast *ast, t_cleanup_data *cleanup_data, bool main_process);
+void	run_command_node(t_ast *ast);
 
 // debug lexer
 void		print_token(t_token *token, t_parser *parser, int depth);

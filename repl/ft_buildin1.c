@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/29 10:51:25 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/29 13:20:19 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,50 +23,44 @@ static bool	includes_non_num(char *str)
 	return (false);
 }
 
-void	zero_rl(void)
-{
-	int		len;
-
-	len = ft_strlen(SHELL_PROMPT);
-	while (rl_line_buffer && *rl_line_buffer)
-	{
-		
-	}
-}
-
 // see header file for weird stuff to keep in mind for implentation
 void	ft_exit(t_ast *ast)
 {
-	//if (is main process)
+	int	exit_status;
+
+	if (ast->main_process)
 		printf("exit\n");
 	if (ast->arg && includes_non_num(ast->arg->name->token->str_data))
 	{
-		errno = (signed char)255;
 		if (ast->arg && ast->arg->name)
-		{
-			//ft_fprintf(2, "%s: %s: %s: %s\n", SHELL_NAME, "exit", ast->arg->name->token->str_data, "numeric argument required");
 			print_error(1, "exit", ast->arg->name->token->str_data, "numeric argument required");
-		}
-			//print_error(1, "exit", NULL, "numeric argument required");
 		ast->exit_status = 255;
 		ast->info = FINISHED;
-		//if (is main process)
-			main_cleanup(ast->cleanup_data);
-		exit(255);
-		return ;
 	}
-	if (count_args(ast, ARGS) > 1)
+	else if (ast->arg && count_args(ast, ARGS) > 1)
 	{
 		print_error(1, "exit", ast->arg->name->token->str_data, "too many arguments");
 		ast->info = SYNTAX_ERROR;
 		ast->exit_status = 1;
 		return ;
 	}
-	ast->exit_status = 0;
-	ast->info = FINISHED;
-	//if (is main process)
+	else if (!ast->arg || count_args(ast, ARGS) == 0)
+	{
+		ast->info = FINISHED;
+		ast->exit_status = 0;
+	}
+	else
+	{
+		ast->info = FINISHED;
+		if (ast->arg->name)
+			ast->exit_status = ft_atoi(ast->arg->name->token->str_data);
+		else
+			ast->exit_status = 0; // should not be needed later on
+	}
+	exit_status = ast->exit_status;
+	if (ast->main_process)
 		main_cleanup(ast->cleanup_data);
-	exit(0);
+	exit(exit_status);
 }
 
 void	ft_buildin(t_ast *ast)
@@ -78,6 +72,11 @@ void	ft_buildin(t_ast *ast)
 	{
 		ft_exit(ast);
 		return ;
+	}
+	//if (!ft_strcmp(command_name, "echo"))
+	{
+	//	ft_exit(ast);
+		//return ;
 	}
 	return ;
 }

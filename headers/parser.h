@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:52:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/29 08:55:36 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/29 11:58:22 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ typedef struct s_ast
 	t_ast			*right;
 	int				exit_status;
 	int				info;
+	bool			main_process;
 	t_cleanup_data	*cleanup_data;
 }	t_ast;
 

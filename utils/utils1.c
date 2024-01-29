@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/29 10:49:35 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/29 10:53:31 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,6 @@ void	print_error(bool shell_name, char *command_name, char *arg, char *str)
 	if (str)
 		ft_fprintf(2, "%s", str);
 	ft_fprintf(2, "\n");
-	// if (shell_name)
-	// 	ft_printf("%s: ", "minishell");//SHELL_NAME
-	// //if (command_name)
-	// //	ft_printf("%s: %s", command_name);
-	// if (arg)
-	// 	ft_printf("%s: ", arg);
-	// if (str)
-	// 	ft_printf("%s", str);
-	// ft_printf("\n");
-	(void)shell_name;
-	(void)command_name;
-	(void)arg;
-	(void)str;
 }
 
 bool	my_free(void **ptr)
