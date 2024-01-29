@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:52:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/28 02:41:46 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/29 08:55:36 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #define RECURSIVE_CALL 'r'
 
 typedef struct s_parser	t_parser;
+typedef struct s_cleanup_data	t_cleanup_data;
 
 typedef struct s_parser
 {
@@ -52,11 +53,11 @@ typedef	struct s_arg
 }	t_arg;
 
 typedef struct s_ast	t_ast;
+
 typedef struct s_ast
 {
 	
 	t_type			type;
-	bool			finished;
 	t_token_list	*name;
 	t_arg			*redir_in;
 	t_arg			*redir_out;
@@ -64,7 +65,9 @@ typedef struct s_ast
 	t_parser		*val;
 	t_ast			*left;
 	t_ast			*right;
-	int				return_val;
+	int				exit_status;
+	int				info;
+	t_cleanup_data	*cleanup_data;
 }	t_ast;
 
 typedef struct s_left_right_parsers

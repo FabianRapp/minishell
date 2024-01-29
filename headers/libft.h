@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 22:22:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 21:20:21 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/29 08:40:32 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,13 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdbool.h>
+
+//minishell start
+# include <stdio.h>
+# ifndef SHELL_NAME
+#  define SHELL_NAME "minishell"
+# endif
+//minishell end
 
 //part 1
 int		ft_isalpha(int c);
@@ -52,7 +59,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strjoin(char const *s1, char const *s2);
 void	ft_strjoin_inplace(char **s1, char const *s2);
 void	ft_strjoin_inplace_char(char **s1, char const s2);
-char	*ft_strtrim(char const *s1, char const *set);
+char	
+*ft_strtrim(char const *s1, char const *set);
 char	**ft_split(char const *s, char c);
 char	**ft_split_fn(char const *s, bool is_sep(char));
 char	**free_str_ar(char **str_arr);
@@ -66,7 +74,7 @@ void	ft_putnbr_fd(int n, int fd);
 
 char	*get_next_line(int fd);
 int		ft_printf(const char *format_str, ...);
-
+int		ft_fprintf(int fd, const char *format_str, ...);
 int		ft_strcmp(const char *s1, const char *s2);
 int		ft_expo(int base, int expo);
 bool	ft_iswhitespace(char c);

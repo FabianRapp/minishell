@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 02:04:18 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/29 01:59:00 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,9 +184,10 @@ t_ast *build_ast(t_parser *parser)
 	t_ast					*ast_node;
 	t_parser				*args;
 
-	ast_node = ft_calloc(3, sizeof(t_ast));
+	ast_node = ft_calloc(3, sizeof(t_ast)); ///TODO why 3??
 	if (!ast_node)
 		return (cleanup(), NULL);
+	ast_node->info = NOT_FINISHED;
 	//system("leaks minishell");
 	highest_operator = find_highest_operator(parser);
 	

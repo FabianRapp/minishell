@@ -6,13 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 18:36:38 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 21:09:49 by frapp            ###   ########.fr       */
+/*   Updated: 2023/12/08 06:54:40 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_printf_handle_x(va_list *arg, int *written_bytes)
+int	ft_printf_handle_x(va_list *arg, int *written_bytes, int fd)
 {
 	char			digits[17];
 	unsigned int	argument;
@@ -23,7 +23,7 @@ int	ft_printf_handle_x(va_list *arg, int *written_bytes)
 	argument = va_arg(*arg, unsigned);
 	if (!argument)
 	{
-		if (write(1, "0", 1) == -1)
+		if (write(fd, "0", 1) == -1)
 			return (-1);
 		(*written_bytes)++;
 		return (0);
@@ -35,7 +35,7 @@ int	ft_printf_handle_x(va_list *arg, int *written_bytes)
 		buffer[--i] = digits[argument % 16];
 		argument /= 16;
 	}
-	if (write(1, buffer + i, 11 - i) == -1)
+	if (write(fd, buffer + i, 11 - i) == -1)
 		return (-1);
 	(*written_bytes) += 11 - i;
 	return (0);
