@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/29 12:12:45 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/31 13:50:57 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,13 @@ void	no_command(t_ast *ast)
 		}
 		ast->exit_status = 258;
 		ast->info = SYNTAX_ERROR;
+		*(ast->env->last_exit_status) = ast->exit_status;
 		// TODO: need to enable this condtion
 		//if (not first command)
 			//return (printf(SHELL_NAME": syntax error: unexpected end of file\n"), false);
 		//else
 		{
-			print_error(1, "syntax error near unexpected token", "<needs to be converted to actual input:>", (char *)token_type_to_string(ast->type));
+			print_error(1, "syntax error near unexpected token", "<needs to be converted to actual input:>", (char *)type_to_str_type(ast->type));
 			return ;
 		}
 	}
@@ -63,7 +64,6 @@ void	create_child_command(t_ast *ast, char *command_path)
 	pid = fork();
 	if (pid == 0) // child process 
 	{
-		
 		if (ast->info != NOT_FINISHED)
 			exit(ast->exit_status);
 		argv = ft_calloc(count_args(ast, ARGS) + 2, sizeof (char *const));
@@ -75,7 +75,6 @@ void	create_child_command(t_ast *ast, char *command_path)
 		argv[0] = command_path;
 		fill_args(ast, argv + 1, ARGS);
 		execvp(command_path, argv);
-		perror("command finished");
 		ast->info = FINISHED;
 		ast->exit_status = 0;
 		exit(0);
@@ -84,9 +83,13 @@ void	create_child_command(t_ast *ast, char *command_path)
 	{
 		ast->info = EXIT_ERROR;
 		ast->exit_status = 126;
+		*(ast->env->last_exit_status) = ast->exit_status;
 	}
 	else // parent process
+	{
 		waitpid(pid, &(ast->exit_status), 0);
+		*(ast->env->last_exit_status) = ast->exit_status;
+	}
 }
 
 // for now assumes ast to be the node of exactly one command
@@ -101,13 +104,14 @@ void	run_command_node(t_ast *ast)
 	check_edgecases(ast);
 	if (ast->info != NOT_FINISHED)
 		return ;
-	path = find_path(ast, &command_name, &(ast->info));
+	path = find_path(ast, &command_name, &(ast->info), "PATH");
 	if (ast->info == EXIT_ERROR)
 		return ;
 	else if (path == NULL)
 	{
 		print_error(SHELL_NAME, command_name, NULL, "command not found");
 		ast->exit_status = 127;
+		*(ast->env->last_exit_status) = ast->exit_status;
 		ast->info = SYNTAX_ERROR;
 		return ;
 	}
@@ -120,8 +124,14 @@ int	main(void)
 	t_ast			*ast;
 	char			*input;
 	t_cleanup_data	cleanup_data;
+	t_env			env;
+	int				temp;
 
+	env.pid = get_pid();
+	if (!env.pid )
+		return (1);
 	ast = get_input(&cleanup_data);
+	init_env(&env, ast, NULL);
 	input = cleanup_data.input;
 	while (input != NULL)
 	{
@@ -136,9 +146,15 @@ int	main(void)
 			}
 			//print_ast(ast);
 			//system("leaks minishell");
+			temp = *(env.last_exit_status);
+			main_cleanup(&cleanup_data);
 		}
-		main_cleanup(&cleanup_data);
 		ast = get_input(&cleanup_data);
+		if (ast)
+		{
+			init_env(&env, ast, NULL);
+			*(env.last_exit_status) = temp;
+		}
 		input = cleanup_data.input;
 	}
 	return (0);

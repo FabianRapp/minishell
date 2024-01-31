@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/29 10:53:31 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/31 08:41:53 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	print_token_list(t_token_list *token_node, int level)
 {
 	while (token_node)
 	{
-		print_colored(token_type_to_string(token_node->token->type), level);
+		print_colored(type_to_str_type(token_node->token->type), level);
 		print_colored(": ", level);
 		print_colored(token_node->token->str_data, level);
 		print_colored(" ; ", level);
@@ -85,7 +85,7 @@ void	print_arg_list(t_arg *arg, int level, bool left)
 		printf("\n");
 		print_indent(level, false);
 		(void)left;
-		//print_colored(token_type_to_string(arg->type), level);
+		//print_colored(type_to_str_type(arg->type), level);
 		//print_colored(" : ", level);
 		print_token_list(arg->name, level);
 		arg = arg->next;
@@ -105,7 +105,7 @@ void	start_rec_print(t_ast *ast, int level, char *path, bool left)
 	print_colored(path, level);
 	printf("\n");
 	print_indent(level, left);
-	print_colored(token_type_to_string(ast->type), level);
+	print_colored(type_to_str_type(ast->type), level);
 	print_colored("; ", level);
 	if (!(ast->name) && !(ast->redir_in) && !(ast->redir_out) && !(ast->arg))
 		printf("\n");
@@ -155,10 +155,9 @@ void	print_ast(t_ast *ast)
 }
 
 
-
-void	cleanup()
+void	cleanup(char *location)
 {
-	printf("clean up placeholder\n");
+	printf("clean up placeholder: %s\n", location);
 }
 
 bool	is_termination_char(char c)

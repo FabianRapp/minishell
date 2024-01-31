@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:38:43 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/29 02:38:58 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/31 13:50:33 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,31 @@ void	fill_args(t_ast *ast, char *argv[], int type)
 		args = args->next;
 	}
 	argv[i] = NULL;
+}
+
+int	get_pid(void)
+{
+	pid_t	pid;
+	int		exit_status;
+	int		fd[2];
+
+	if (pipe(fd) == -1)
+		return(print_error(true, false, false, "Error creating pipe\n"), 0);
+	pid = fork();
+	if (pid != 0 && pid != -1) // main
+	{
+		close(fd[0]);
+		write(fd[1], &pid, sizeof(pid));
+		close(fd[1]);
+		waitpid(pid, &exit_status, 0);
+		return (exit(exit_status), 0);
+	}
+	else if (pid == 0)
+	{
+		close(fd[1]);
+		read(fd[0], &pid, sizeof(pid_t));
+		close(fd[0]);
+		return(pid);
+	}
+	return (print_error(true, NULL, NULL, "error forking main process"), 0);
 }

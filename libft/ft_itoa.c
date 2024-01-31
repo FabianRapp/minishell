@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/08 03:14:24 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/18 07:24:41 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/31 11:54:16 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ char	*ft_itoa(int n)
 		n /= 10;
 		size++;
 	}
-	str = (char *)malloc(sizeof(char) * (size + 1));
+	str = (char *)ft_calloc(size + 1, sizeof(char));
 	if (!str)
 		return (NULL);
 	fill_str(str, n_cpy, size);

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 09:26:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/28 04:11:48 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/30 03:39:45 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,27 @@
 #include "../headers/lexer.h"
 #include "internals_parser.h"
 
-bool	insert_token(t_parser **parser, t_token *token)
+bool	insert_token(t_parser **parser, t_token *token, bool *malloc_error)
 {
-	t_parser	*head;
+	t_parser	*next;
 
 	if (!token || !parser)
 	{
-		printf ("error add_token_back\n");
+		printf ("error insert_token\n");
 		return (false);
 	}
 	if (!*parser)
 		*parser = ft_calloc(1, sizeof(t_parser));
 	if (!*parser)
-		return (cleanup(), false);
+	{
+		*malloc_error = true;
+		return (false);
+	}
 	if (!(*parser)->token)
 	{
 		if ((*parser)->next)
 		{
-			printf("error in add_token_back\n");
+			printf("error in insert_token\n");
 			return (false);
 		}
 		(*parser)->p_type = token->type;
@@ -40,14 +43,17 @@ bool	insert_token(t_parser **parser, t_token *token)
 		(*parser)->next = (*parser);
 		return (true);
 	}
-	head = (*parser)->next;
+	next = (*parser)->next;
 	(*parser)->next = ft_calloc(1, sizeof(t_parser));
 	if (!(*parser)->next)
-		return (cleanup(), false);
+	{
+		*malloc_error = true;
+		return (false);
+	}
 	(*parser)->next->token = token;
 	(*parser)->next->p_type = token->type;
 	(*parser) = (*parser)->next;
-	(*parser)->next = head;
+	(*parser)->next = next;;
 	return (true);
 }
 
@@ -59,7 +65,10 @@ t_parser	*link_parser(char *str)
 	t_parser		*first;
 	t_lexer			lexer;
 	t_parser		*parser;
+	bool			malloc_error;
+	t_parser		*head;
 
+	malloc_error = false;
 	first = NULL;
 	token = NULL;
 	parser = NULL;
@@ -68,14 +77,31 @@ t_parser	*link_parser(char *str)
 		return (NULL);
 	while (!token || token->type != T_EOF)
 	{
-		token = next_new_token(&lexer); // null check
+		token = next_new_token(&lexer, &malloc_error);
+		if (malloc_error)
+		{
+			free_parser_main(parser, true);
+			return (NULL);
+		}
 		if (token->type == VOID)
 		{
 			free_token(token);
 			continue ;
 		}
-		if (!insert_token(&parser, token))// null check
+		//for malloc_fail
+		if (parser)
+			head = parser->next;
+		else
+			head = NULL;
+		if (!insert_token(&parser, token, &malloc_error))
+		{
+			if (malloc_error && head)
+			{
+				parser->next = head;
+				free_parser_main(parser, true);
+			}
 			return (NULL);
+		}
 		if (!first)
 		{
 			first = parser;

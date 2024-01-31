@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 20:30:19 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/30 03:45:03 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,57 +18,59 @@
 	token.str has to be checked for NULL
 	if not NULL "free(token.str)" has to be called
 */
-t_token	*next_new_token(t_lexer *lexer)
+
+t_token	*lexer_malloc_fail(t_token *token, bool *malloc_error)
+{
+	my_free((void **)&(token->str_data));
+	my_free((void **)&(token->old_data));
+	my_free((void **)&(token));
+	*malloc_error = true;
+	return (NULL);
+}
+
+t_token	*next_new_token(t_lexer *lexer, bool *malloc_error)
 {
 	t_token		*token;
 
-	token = malloc(sizeof(t_token));
+	token = ft_calloc(1, sizeof(t_token));
 	if (!token)
-		return(cleanup(), NULL);
+		return(lexer_malloc_fail(token, malloc_error));
 	init_token(token, lexer);
-	if (basic_sign_type(lexer, token))
+	if ((*malloc_error) || basic_sign_type(lexer, token))
 	{
-		if (DEBUG) printf("basic_sign_type\n");
 	}
-	else if (literal_type(lexer, token))
+	else if ((*malloc_error) || literal_type(lexer, token, malloc_error))
 	{
-		if (DEBUG) printf("literal_type\n");
+		if (*malloc_error)
+			return(lexer_malloc_fail(token, malloc_error));
 	}
-	else if (interpreted_type(lexer, token))
+	else if ((*malloc_error) || interpreted_type(lexer, token, malloc_error))
 	{
-		if (DEBUG) printf("interpreted_type\n");
+		if (*malloc_error)
+			return(lexer_malloc_fail(token, malloc_error));
 	}
-	// else if (ft_buildin_type(lexer, token))
-	// {
-	// 	if (DEBUG) printf("ft_buildin_type\n");
-	// }
-	else if (redir_type(lexer, token))
+	else if ((*malloc_error) || redir_type(lexer, token))
 	{
-		if (DEBUG) printf("redir_type\n");
 	}
-	else if (env_var_type(lexer, token))
+	else if ((*malloc_error) || env_var_type(lexer, token, malloc_error))
 	{
-		if (DEBUG) printf("env_var_type\n");
+		if (*malloc_error)
+			return(lexer_malloc_fail(token, malloc_error));
 	}
-	else if (subshell_type(lexer, token))
+	else if ((*malloc_error) || subshell_type(lexer, token, malloc_error))
 	{
-		if (DEBUG) printf("subshell_type\n");
+		if (*malloc_error)
+			return(lexer_malloc_fail(token, malloc_error));
 	}
-	// else if (integer_type(lexer, token))
-	// {
-	// 	if (DEBUG) printf("integer_type\n");
-	// }
-	// else if (flag_type(lexer, token))
-	// {
-	// 	if (DEBUG) printf("flag_type\n");
-	// }
-	else if (literal_type2(lexer, token))
+	else if ((*malloc_error) || literal_type2(lexer, token, malloc_error))
 	{
-		if (DEBUG) printf("literal_type2\n");
+		if (*malloc_error)
+			return(lexer_malloc_fail(token, malloc_error));
 	}
-	else if (DEBUG)
+	else
 	{
-		printf("no function IDed the type\n");
+		printf("DEBUG: no function IDed the type\n");
+		exit (1);
 	}
 	if (token->type == UNKNOWN)
 		token->unknown = lexer->cur_char;

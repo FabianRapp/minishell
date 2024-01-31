@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:23:25 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 04:06:15 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/31 08:20:24 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,8 @@
 
 typedef enum e_type	t_type;
 
-void			cleanup();
+void			cleanup(char *location);
 bool			is_termination_char(char c);
-
-
 
 #define RESET_COLOR "\x1b[0m"
 #define RED "\x1b[31m"
@@ -33,8 +31,10 @@ bool			is_termination_char(char c);
 
 
 
+char	*type_to_str(t_type tokenType);
+
 // debug
-const char		*token_type_to_string(t_type tokenType);
+char		*type_to_str_type(t_type tokenType);
 void			print_indent(int depth, bool left);
 void			print_colored(const char *text, int color_index);
 void			print_new_indent(int depth, bool left);

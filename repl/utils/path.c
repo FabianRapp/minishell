@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/29 07:16:41 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/31 06:23:30 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@ void	next_path(t_path *path_ob, int *info)
 	return ;
 }
 
-void	init_path(t_path *path_ob, int *info)
+void	init_path(t_path *path_ob, int *info, char *env_var)
 {
-	path_ob->all_paths = getenv("PATH");
+	path_ob->all_paths = getenv(env_var);
 	path_ob->cur_path = NULL;
 	path_ob->read_postion = 0;
 	path_ob->position = 0;
@@ -64,13 +64,13 @@ void	init_path(t_path *path_ob, int *info)
 }
 
 // changes the global errno
-char	*find_path(t_ast *ast, char **command_name, int *info)
+char	*find_path(t_ast *ast, char **command_name, int *info, char *path_env)
 {
 	t_path	path_ob;
 	char	*command_path;
 
 	*command_name = ast->name->token->str_data; // TODO: name neeeds to be fully expanded, currtly some cases are not expanded (for example exit status req., wildcards etc)
-	init_path(&path_ob, info);
+	init_path(&path_ob, info, path_env);
 	if ((*info) != NOT_FINISHED)
 		return (NULL);
 	if (!path_ob.cur_path || !*(path_ob.cur_path))

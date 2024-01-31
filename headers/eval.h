@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:38:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/29 07:17:25 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/31 07:07:15 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,12 @@ typedef struct s_path
 	int		read_postion;
 }	t_path;
 
+
+
+
 void	*expand_strs(t_ast *ast);
-char	*find_path(t_ast *ast, char **command_name, int *info);
+char	*find_path(t_ast *ast, char **command_name, int *info, char *path_env);
+void	init_path(t_path *path_ob, int *info, char *env_var);
 void	ft_buildin(t_ast *ast);
 int		count_args(t_ast *ast, int type);
 

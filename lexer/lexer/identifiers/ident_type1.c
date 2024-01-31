@@ -6,14 +6,14 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/28 04:16:12 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/30 09:47:46 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../headers/lexer.h"
 #include "../internals.h"
 
-bool	env_var_type(t_lexer *lexer, t_token *token)
+bool	env_var_type(t_lexer *lexer, t_token *token, bool *malloc_error)
 {
 	int	len;
 
@@ -24,11 +24,14 @@ bool	env_var_type(t_lexer *lexer, t_token *token)
 	{
 		if ((lexer->str)[lexer->position + 1] == '$')
 		{
-			token->type = ENV_VAR;
+			token->type = PID_REQUEST;
 			len = 1;
 			token->str_data = ft_strndup((lexer->str) + lexer->position + 1 , len);
 			if (!token->str_data)
-				return (cleanup(), 0);
+			{
+				*malloc_error = true;
+				return (false);
+			}
 			lexer->read_position = lexer->position + 1 + len;
 			return (token->type);
 		}
@@ -43,10 +46,16 @@ bool	env_var_type(t_lexer *lexer, t_token *token)
 	token->type = ENV_VAR;
 	token->str_data = ft_strndup((lexer->str) + lexer->position + 1 , len);
 	if (!token->str_data)
-		return (cleanup(), 0);
+	{
+		*malloc_error = true;
+		return (false);
+	}
 	token->old_data = ft_strdup(token->str_data);
 	if (!token->old_data)
-		return (cleanup(), 0);
+	{
+		*malloc_error = true;
+		return (false);
+	}
 	lexer->read_position = lexer->position + 1 + len;
 	return (token->type);
 }
@@ -102,7 +111,7 @@ bool	basic_sign_type(t_lexer *lexer, t_token *token)
 // 	return (token->type);
 //}
 
-bool	literal_type(t_lexer *lexer, t_token *token)
+bool	literal_type(t_lexer *lexer, t_token *token , bool *malloc_error)
 {
 	size_t	len;
 
@@ -118,10 +127,15 @@ bool	literal_type(t_lexer *lexer, t_token *token)
 	len = lexer->read_position - lexer->position - 2; // -2 to remove the quotes
 	token->type = LITERAL;
 	token->str_data =  ft_strndup(lexer->str + lexer->position + 1, len); // +1 to skip the initial quote
+	if (!token->str_data)
+	{
+		*malloc_error = true;
+		return (false);
+	}
 	return (token->type);
 }
 
-bool	interpreted_type(t_lexer *lexer, t_token *token)
+bool	interpreted_type(t_lexer *lexer, t_token *token, bool *malloc_error)
 {
 	size_t	len;
 
@@ -137,36 +151,13 @@ bool	interpreted_type(t_lexer *lexer, t_token *token)
 	len = lexer->read_position - lexer->position - 2; // -1 to remove the double quite
 	token->type = INTERPRETED;
 	token->str_data =  ft_strndup(lexer->str + lexer->position + 1, len); // +1 to remove the double quite
+	if (!token->str_data)
+	{
+		*malloc_error = true;
+		return (false);
+	}
 	return (token->type);
 }
-
-// bool	ft_buildin_type(t_lexer *lexer, t_token *token)
-// {
-// 	int	len;
-
-// 	len = 0;
-// 	if (!ft_strncmp(lexer->str + lexer->position, "echo", ft_strlen("echo")))
-// 		len = ft_strlen("echo");
-// 	else if (!ft_strncmp(lexer->str + lexer->position, "cd", ft_strlen("cd")))
-// 		len = ft_strlen("cd");
-// 	else if (!ft_strncmp(lexer->str + lexer->position, "pwd", ft_strlen("pwd")))
-// 		len = ft_strlen("pwd");
-// 	else if (!ft_strncmp(lexer->str + lexer->position, "export", ft_strlen("export")))
-// 		len = ft_strlen("export");
-// 	else if (!ft_strncmp(lexer->str + lexer->position, "unset", ft_strlen("unset")))
-// 		len = ft_strlen("unset");
-// 	else if (!ft_strncmp(lexer->str + lexer->position, "env", ft_strlen("env")))
-// 		len = ft_strlen("env");
-// 	else if (!ft_strncmp(lexer->str + lexer->position, "exit", ft_strlen("exit")))
-// 		len = ft_strlen("exit");
-// 	if (len)
-// 	{
-// 		token->type = FT_BUILDIN;
-// 		token->str_data = ft_strndup(lexer->str + lexer->position, len);
-// 		lexer->read_position = lexer->position + len;
-// 	}
-// 	return (token->type);
-// }
 
 bool	redir_type(t_lexer *lexer, t_token *token)
 {
@@ -193,7 +184,7 @@ bool	redir_type(t_lexer *lexer, t_token *token)
 	return (token->type);
 }
 
-bool	subshell_type(t_lexer *lexer, t_token *token)
+bool	subshell_type(t_lexer *lexer, t_token *token, bool *malloc_error)
 {
 	int	count_open;
 
@@ -215,11 +206,16 @@ bool	subshell_type(t_lexer *lexer, t_token *token)
 	}
 	token->type = SUBSHELL;
 	token->str_data = ft_strndup(lexer->str + lexer->position + 1, lexer->read_position - lexer->position - 2);
+	if (!token->str_data)
+	{
+		*malloc_error = true;
+		return (false);
+	}
 	return (token->type);
 }
 
 // has to run after all other typechecks
-bool	literal_type2(t_lexer *lexer, t_token *token)
+bool	literal_type2(t_lexer *lexer, t_token *token, bool *malloc_error)
 {
 	if (is_termination_char(lexer->cur_char)
 		&& !(lexer->cur_char && lexer->cur_char == '$' //just '$' is a literal
@@ -231,5 +227,10 @@ bool	literal_type2(t_lexer *lexer, t_token *token)
 	}
 	token->type = LITERAL;
 	token->str_data = ft_strndup(lexer->str + lexer->position, lexer->read_position - lexer->position);
+	if (!token->str_data)
+	{
+		*malloc_error = true;
+		return (false);
+	}
 	return (token->type);
 }

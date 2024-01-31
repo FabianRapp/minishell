@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/29 01:59:00 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/31 09:14:53 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ t_parser	*find_highest_operator(t_parser *parser)
 		printf("bug shows in last_parser\n");
 		return (NULL);
 	}
-	
 	while (parser->p_type != AND && parser->p_type != OR && parser->p_type != T_EOF)
 		parser = parser->next;
 	if (parser->p_type == T_EOF)
@@ -61,6 +60,7 @@ t_parser	*remove_back(t_parser *cut_location)
 	t_parser	*left_head;
 	t_parser	*left_last;
 	t_token		*left_eof_token;
+	bool		malloc_error;
 
 	right_head = cut_location->next;
 	if (right_head == cut_location || cut_location->p_type == T_EOF)
@@ -74,9 +74,12 @@ t_parser	*remove_back(t_parser *cut_location)
 	{
 		left_eof_token = ft_calloc(1, sizeof(t_token));
 		if (!left_eof_token)
-			return (cleanup(), NULL);
+			return (cleanup("remove_back"), NULL);
 		left_eof_token->type = T_EOF;
-		insert_token(&left_last, left_eof_token);
+		insert_token(&left_last, left_eof_token, &malloc_error);
+		if (malloc_error)
+		{
+		}
 		left_last->next = left_head;
 	}
 	right_end = right_head;
@@ -113,7 +116,7 @@ t_token_list	*extract_token_list(t_parser *parser, char name_or_arg)
 		return (NULL);
 	new_list = ft_calloc(1, sizeof(t_token_list));
 	if (!new_list)
-		return (cleanup(), NULL);
+		return (cleanup("extract_token_list"), NULL);
 	new_list->token = parser->token;
 	if (name_or_arg == ARG)
 		new_list->next = extract_token_list(parser->arg, RECURSIVE_CALL);
@@ -148,7 +151,7 @@ t_arg	*append_arg(t_parser *parser, t_arg *head_arg, bool leading_node)
 	{
 		head_arg = ft_calloc(1, sizeof(t_arg));
 		if (!head_arg)
-			return (cleanup(), NULL);
+			return (cleanup("extract_token_list"), NULL);
 		cur = head_arg;
 	}
 	else
@@ -159,7 +162,7 @@ t_arg	*append_arg(t_parser *parser, t_arg *head_arg, bool leading_node)
 		cur->next = ft_calloc(1, sizeof(t_arg));
 		cur = cur->next;
 		if (!cur)
-			return (cleanup(), NULL);
+			return (cleanup("extract_token_list"), NULL);
 	}
 	if (!leading_node)
 		cur->name = extract_token_list(parser->arg, NAME);
@@ -168,15 +171,14 @@ t_arg	*append_arg(t_parser *parser, t_arg *head_arg, bool leading_node)
 		cur->name = ft_calloc(1, sizeof(t_arg));
 		cur->name->token = parser->token;
 		if (!cur->name)
-			return (cleanup(), NULL);
+			return (cleanup("extract_token_list"), NULL);
 		cur->name->next = extract_token_list(parser->rest_name, RECURSIVE_CALL);
 	}
 	cur->type = parser->token->type;
 	return (head_arg);
 }
 
-// >redir 'name1'name2'name3'name4  'arg1'arg2'arg3'arg4'arg5'arg6
-
+// TODO: handle errors and cleanup correctly
 t_ast *build_ast(t_parser *parser)
 {
 	t_parser				*highest_operator;
@@ -186,17 +188,21 @@ t_ast *build_ast(t_parser *parser)
 
 	ast_node = ft_calloc(3, sizeof(t_ast)); ///TODO why 3??
 	if (!ast_node)
-		return (cleanup(), NULL);
+		return (cleanup("extract_token_list"), NULL);
 	ast_node->info = NOT_FINISHED;
 	//system("leaks minishell");
 	highest_operator = find_highest_operator(parser);
-	
+	if (parser->p_type != COMMAND)
+	{
+		print_error(true, NULL, NULL, type_to_str(parser->token->type));
+		return (NULL);
+	}
 	if (!highest_operator)//is leaf node
 	{
 		if (parser->p_type != COMMAND)
 		{
-			printf("ERROR build_ast\n");
-			//exit(0);
+			print_error(true, NULL, NULL, type_to_str(parser->token->type));
+			return (NULL);
 		}
 		ast_node->type = parser->p_type;
 		ast_node->name = extract_token_list(parser, NAME);
@@ -269,6 +275,7 @@ void	free_arg_list(t_arg *list)
 
 void	free_ast(t_ast *ast)
 {
+	free_env(ast->env);
 	if (ast->left)
 		free_ast(ast->left);
 	if (ast->right)

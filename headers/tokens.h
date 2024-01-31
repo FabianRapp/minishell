@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:16:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/28 03:26:00 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/30 09:47:23 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef enum e_type
 	AND, // '&&'
 	ENV_VAR,
 	EXIT_STATUS_REQUEST,
+	PID_REQUEST,
 	WILDCARD,
 	VOID, // remove in parser
 	INTERPRETED,

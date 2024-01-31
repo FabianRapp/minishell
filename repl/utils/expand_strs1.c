@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 03:37:23 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/29 12:30:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/31 12:38:59 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	*expand_interpreted_str(char	*str)
 
 	new_str = ft_calloc(1, 1);
 	if (!new_str)
-		return (cleanup(), NULL);
+		return (cleanup("expand_interpreted_str"), NULL);
 	i = 0;
 	while (str[i])
 	{
@@ -48,7 +48,7 @@ char	*expand_interpreted_str(char	*str)
 			i++;
 			//printf("new str: %s\n", new_str);
 			if (!new_str)
-				return (cleanup(), NULL);
+				return (cleanup("expand_interpreted_str"), NULL);
 		}
 		if (!str[i])
 			break ;
@@ -66,7 +66,7 @@ char	*expand_interpreted_str(char	*str)
 		{
 			env_var = ft_strndup(str + i + 1 , name_len(str + i + 1));
 			if (!env_var)
-				return (cleanup(), NULL);
+				return (cleanup("expand_interpreted_str"), NULL);
 			ft_strjoin_inplace(&new_str , getenv(env_var));
 			free(env_var);
 			i += name_len(str + i + 1) + 1;
@@ -78,7 +78,7 @@ char	*expand_interpreted_str(char	*str)
 			i++;
 		}
 		if (!new_str)
-			return (cleanup(), NULL);
+			return (cleanup("expand_interpreted_str"), NULL);
 	}
 	my_free((void **)&str);
 	return (new_str);
@@ -94,7 +94,7 @@ t_token_list	*word_to_literals(t_token_list *list)
 		return (list);
 	all_literals = ft_split_fn(list->token->str_data, ft_iswhitespace);
 	if (!all_literals)
-		return (cleanup(), list);
+		return (cleanup("word_to_literals"), list);
 	if (!all_literals[1])
 		return (free_str_ar(all_literals), list);
 	my_free((void **)&(list->token->str_data));
@@ -108,13 +108,13 @@ t_token_list	*word_to_literals(t_token_list *list)
 		if (!list->next)
 		{
 			list->next = temp;
-			return (cleanup(), list);
+			return (cleanup("word_to_literals"), list);
 		}
 		list = list->next;
 		list->next = temp;
 		list->token = ft_calloc(1, sizeof(t_token));
 		if (!list->token)
-			return (cleanup(), list);
+			return (cleanup("word_to_literals"), list);
 		list->token->str_data = all_literals[i++];
 		list->token->type = LITERAL;
 	}
@@ -122,7 +122,7 @@ t_token_list	*word_to_literals(t_token_list *list)
 	return (list);
 }
 
-t_token_list	*expand_token_list(t_token_list *list)
+t_token_list	*expand_token_list(t_token_list *list, t_env *env)
 {
 	t_token_list	*head;
 	char			*temp;
@@ -134,7 +134,7 @@ t_token_list	*expand_token_list(t_token_list *list)
 		{
 			list->token->str_data = expand_interpreted_str(list->token->str_data);
 			if (!list->token->str_data)
-				return (cleanup(), head);
+				return (cleanup("expand_token_list"), head);
 			list->token->type = LITERAL;
 		}
 		else if (list->token->type == ENV_VAR)
@@ -147,27 +147,33 @@ t_token_list	*expand_token_list(t_token_list *list)
 				list->token->type = WORD;
 				list = word_to_literals(list);
 				if (!list)
-					return (cleanup(), head);
+					return (cleanup("expand_token_list"), head);
 			}
 			else
 			{
 				list->token->type = VOID;
 			}
 		}
-		else if (0)
+		else if (list->token->type == EXIT_STATUS_REQUEST)
 		{
-			// other token types
+			// TODO malloc fail
+			list->token->str_data = ft_itoa(*(env->last_exit_status));
+		}
+		else if (list->token->type == PID_REQUEST)
+		{
+			// TODO malloc fail
+			list->token->str_data = ft_itoa(env->pid);
 		}
 		list = list->next;
 	}
 	return (head);
 }
 
-bool	expand_arg_list(t_arg *args)
+bool	expand_arg_list(t_arg *args, t_env *env)
 {
 	while (args && args->type != T_EOF)
 	{
-		if (!expand_token_list(args->name))
+		if (!expand_token_list(args->name, env))
 			return (false);
 		args = args->next;
 	}
@@ -199,7 +205,7 @@ t_arg	*move_additional_literals_to_args(t_token_list *name, t_arg *args, bool is
 			}
 			if (!new_args)
 			{
-				return (cleanup(), args);
+				return (cleanup("move_additional_literals_to_args"), args);
 			}
 			new_args->name = name->next;
 			name->next = new_args->name->next;
@@ -252,57 +258,38 @@ void	*expand_strs(t_ast *ast)
 {
 	if (!ast)
 		return (NULL);
-	#ifdef EXPAND_FULL_AST
-	if (!is_redir(ast->type) && ast->type != COMMAND)
+	if (ast->type == COMMAND)
 	{
-		if (ast->left)
+		if (ast->name)
 		{
-			if (!expand_strs(ast->left))
-				return (cleanup(), NULL);
+			if (!expand_token_list(ast->name, ast->env))
+				return (cleanup("expand_strs"), NULL);
+			ast->arg = move_additional_literals_to_args(ast->name, ast->arg, true);
+			// needs malloc protection
+			//if (!ast->arg)
+				//return (cleanup(), ast);
 		}
-		if (ast->right)
+		if (ast->redir_in)
 		{
-			if (!expand_strs(ast->right))
-				return (cleanup(), NULL);
+			if (!expand_arg_list(ast->redir_in, ast->env))
+				return(cleanup("expand_strs"), NULL);
+			ast->redir_in = fix_arg_literals(ast->redir_in);
+			// needs malloc protection
 		}
-	}
-	else
-	#endif
-	{
-		if (ast->type == COMMAND)
+		if (ast->redir_out)
 		{
-			if (ast->name)
-			{
-				if (!expand_token_list(ast->name))
-					return (cleanup(), NULL);
-				ast->arg = move_additional_literals_to_args(ast->name, ast->arg, true);
-				// needs malloc protection
-				//if (!ast->arg)
-					//return (cleanup(), ast);
-			}
-			if (ast->redir_in)
-			{
-				if (!expand_arg_list(ast->redir_in))
-					return(cleanup(), NULL);
-				ast->redir_in = fix_arg_literals(ast->redir_in);
-				// needs malloc protection
-			}
-			if (ast->redir_out)
-			{
-				if (!expand_arg_list(ast->redir_out))
-					return(cleanup(), NULL);
-				ast->redir_out = fix_arg_literals(ast->redir_out);
-				// needs malloc protection
-			}
-			if (ast->arg)
-			{
-				if (!expand_arg_list(ast->arg))
-					return(cleanup(), NULL);
-				ast->arg = fix_arg_literals(ast->arg);
-				// needs malloc protection
-			}
+			if (!expand_arg_list(ast->redir_out, ast->env))
+				return(cleanup("expand_strs"), NULL);
+			ast->redir_out = fix_arg_literals(ast->redir_out);
+			// needs malloc protection
 		}
-		return (ast);
+		if (ast->arg)
+		{
+			if (!expand_arg_list(ast->arg, ast->env))
+				return(cleanup("expand_strs"), NULL);
+			ast->arg = fix_arg_literals(ast->arg);
+			// needs malloc protection
+		}
 	}
 	return (ast);
 }

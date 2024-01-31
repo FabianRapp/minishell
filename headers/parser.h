@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:52:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/29 11:58:22 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/31 07:07:04 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,22 +54,6 @@ typedef	struct s_arg
 
 typedef struct s_ast	t_ast;
 
-typedef struct s_ast
-{
-	
-	t_type			type;
-	t_token_list	*name;
-	t_arg			*redir_in;
-	t_arg			*redir_out;
-	t_arg			*arg;
-	t_parser		*val;
-	t_ast			*left;
-	t_ast			*right;
-	int				exit_status;
-	int				info;
-	bool			main_process;
-	t_cleanup_data	*cleanup_data;
-}	t_ast;
 
 typedef struct s_left_right_parsers
 {
@@ -81,12 +65,11 @@ typedef struct s_left_right_parsers
 t_ast	*parser(char *str);
 
 t_parser	*init_parser(char *str);
-bool		insert_token(t_parser **parser, t_token *token);
+bool		insert_token(t_parser **parser, t_token *token, bool *malloc_error);
 t_parser	*link_parser(char *str);
 void		jump_to_start(t_parser **parser);
 void		free_token(t_token *token);
 int			remove_parser_node(t_parser **node, bool free_tok);
-bool		insert_token(t_parser **insert_after, t_token *insert_token);
 void		free_parser_main(t_parser *parser, bool free_tokens);
 bool		is_redir(t_type type);
 bool		is_redir_arg_terminator(t_type type);
