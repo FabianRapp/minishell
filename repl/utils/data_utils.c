@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:38:43 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/31 13:50:33 by frapp            ###   ########.fr       */
+/*   Updated: 2024/01/31 14:28:01 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	get_pid(void)
 	if (pid != 0 && pid != -1) // main
 	{
 		close(fd[0]);
-		write(fd[1], &pid, sizeof(pid));
+		write(fd[1], &pid, sizeof(pid_t));
 		close(fd[1]);
 		waitpid(pid, &exit_status, 0);
 		return (exit(exit_status), 0);

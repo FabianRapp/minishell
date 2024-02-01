@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:38:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/31 07:07:15 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/01 10:09:18 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int		count_args(t_ast *ast, int type);
 
 // input_exit.c
 t_ast	*get_input(t_cleanup_data *cleanup_data);
-void	main_cleanup(t_cleanup_data *data);
+void	main_cleanup(t_cleanup_data *data, bool full_exit, bool main_process);
 
 // data_utils.c
 int		count_args(t_ast *ast, int type);

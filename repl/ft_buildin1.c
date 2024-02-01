@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/31 11:48:43 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/01 10:58:00 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,9 @@ static bool	includes_non_num(char *str)
 // see header file for weird stuff to keep in mind for implentation
 void	ft_exit(t_ast *ast)
 {
-	if (ast->main_process)
+	int	exit_status;
+
+	if (ast->env->main_process)
 		printf("exit\n");
 	if (ast->arg && includes_non_num(ast->arg->name->token->str_data))
 	{
@@ -35,13 +37,15 @@ void	ft_exit(t_ast *ast)
 			print_error(1, "exit", ast->arg->name->token->str_data, "numeric argument required");
 		ast->exit_status = 255;
 		ast->info = FINISHED;
+		
 	}
 	else if (ast->arg && count_args(ast, ARGS) > 1)
 	{
 		print_error(1, "exit", ast->arg->name->token->str_data, "too many arguments");
 		ast->info = SYNTAX_ERROR;
 		ast->exit_status = 1;
-		return ;
+		if (ast->env->main_process)
+			return ;
 	}
 	else if (!ast->arg || count_args(ast, ARGS) == 0)
 	{
@@ -56,10 +60,14 @@ void	ft_exit(t_ast *ast)
 		else
 			ast->exit_status = 0; // should not be needed later on
 	}
-	if (ast->main_process)
-		main_cleanup(ast->cleanup_data);
+	exit_status = ast->exit_status;
 	*(ast->env->last_exit_status) = ast->exit_status;
-	exit(ast->exit_status);
+	if (ast->env->main_process)
+	{
+		main_cleanup(ast->cleanup_data, true, ast->env->main_process);
+		exit(exit_status);
+	}
+	ast->info = EXIT;
 }
 
 typedef struct	s_cd
@@ -70,7 +78,6 @@ typedef struct	s_cd
 
 void	ft_cd(t_ast *ast)
 {
-	
 	t_cd	cd_ob;
 
 	init_path(&(cd_ob.path_ob), &(ast->info), "CDPATH");
@@ -89,20 +96,30 @@ void	ft_cd(t_ast *ast)
 	my_free((void **)&(cd_ob.path_ob.cur_path));
 }
 
+//void	ft_export(t_ast *ast)
+//{
+	
+//}
+
 void	ft_buildin(t_ast *ast)
 {
 	char	*command_name;
 
 	command_name = ast->name->token->str_data;
-	if (!ft_strcmp(command_name, "exit"))
-	{
-		ft_exit(ast);
-		return ;
-	}
+	// if (!ft_strcmp(command_name, "exit"))
+	// {
+	// 	ft_exit(ast);
+	// 	return ;
+	// }
 	//if (!ft_strcmp(command_name, "echo"))
 	{
 	//	ft_exit(ast);
 		//return ;
+	}
+	if (!ft_strcmp(command_name, "export"))
+	{
+		///ft_export(ast);
+		return ;
 	}
 	return ;
 }

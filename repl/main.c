@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/31 13:50:57 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/01 10:37:25 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void	no_command(t_ast *ast)
 		}
 		ast->exit_status = 258;
 		ast->info = SYNTAX_ERROR;
-		*(ast->env->last_exit_status) = ast->exit_status;
 		// TODO: need to enable this condtion
 		//if (not first command)
 			//return (printf(SHELL_NAME": syntax error: unexpected end of file\n"), false);
@@ -56,105 +55,122 @@ void	check_edgecases(t_ast *ast)
 		return ;
 }
 
-void	create_child_command(t_ast *ast, char *command_path)
+pid_t	create_child_command(t_ast *ast)
 {
 	pid_t	pid;
 	char	**argv;
+	char	*path;
+	char	*command_name;
 
 	pid = fork();
-	if (pid == 0) // child process 
+	if (pid != 0)
+		return (pid);
+	check_edgecases(ast);
+	if (ast->info != NOT_FINISHED)
+		exit(ast->exit_status);
+	argv = ft_calloc(count_args(ast, ARGS) + 2, sizeof (char *const));
+	if (!argv)
 	{
-		if (ast->info != NOT_FINISHED)
-			exit(ast->exit_status);
-		argv = ft_calloc(count_args(ast, ARGS) + 2, sizeof (char *const));
-		if (!argv)
-		{
-			// cleanup()
-			ast->info = EXIT_ERROR;
-		}
-		argv[0] = command_path;
+		// cleanup()
+		ast->info = EXIT_ERROR;
+	}
+	path = find_path(ast, &command_name, &(ast->info), "PATH");
+	if (path == NULL && ast->info != EXIT_ERROR)
+	{
+		print_error(SHELL_NAME, command_name, NULL, "command not found");
+		ast->exit_status = 127;
+		ast->info = SYNTAX_ERROR;
+	}
+	else if (ast->info != EXIT_ERROR)
+	{
+		argv[0] = path;
 		fill_args(ast, argv + 1, ARGS);
-		execvp(command_path, argv);
+		execvp(path, argv);
 		ast->info = FINISHED;
 		ast->exit_status = 0;
-		exit(0);
 	}
-	else if (pid == -1) // error
-	{
-		ast->info = EXIT_ERROR;
-		ast->exit_status = 126;
-		*(ast->env->last_exit_status) = ast->exit_status;
-	}
-	else // parent process
-	{
-		waitpid(pid, &(ast->exit_status), 0);
-		*(ast->env->last_exit_status) = ast->exit_status;
-	}
+	exit(ast->exit_status);
+	return (-1);
 }
 
 // for now assumes ast to be the node of exactly one command
 void	run_command_node(t_ast *ast)
 {
-	char	*path;
-	char	*command_name;
+	pid_t	pid;
+	int		temp;
 
 	expand_strs(ast);
 	if (ast->info != NOT_FINISHED)
 		return ;
-	check_edgecases(ast);
-	if (ast->info != NOT_FINISHED)
-		return ;
-	path = find_path(ast, &command_name, &(ast->info), "PATH");
-	if (ast->info == EXIT_ERROR)
-		return ;
-	else if (path == NULL)
+	if (!ft_strcmp(ast->name->token->str_data, "exit"))
 	{
-		print_error(SHELL_NAME, command_name, NULL, "command not found");
-		ast->exit_status = 127;
-		*(ast->env->last_exit_status) = ast->exit_status;
-		ast->info = SYNTAX_ERROR;
+		ft_exit(ast);
 		return ;
 	}
-	create_child_command(ast, path);
-	free(path);
+	pid = create_child_command(ast);
+	if (pid == -1)
+	{
+		ast->info = EXIT_ERROR;
+		ast->exit_status = 126;
+		*(ast->env->last_exit_status) = ast->exit_status;
+		exit(ast->exit_status);
+	}
+	waitpid(pid, &(ast->exit_status), 0);
+	ast->exit_status >>= 8; // idk why but this fixes the exit status. no idea wtf is happening to make this needed
+	if (ast->exit_status == EXIT_ERROR)
+	{
+		printf("test\n");
+		temp = ast->exit_status;
+		main_cleanup(ast->cleanup_data, true, ast->env->main_process);
+		exit(temp);
+	}
+	*(ast->env->last_exit_status) = ast->exit_status;
 }
 
-int	main(void)
+void disableRawMode(struct termios *orig_ter)
+{
+	struct termios *orig_termios;
+	(void)orig_ter;
+	tcsetattr(STDIN_FILENO, TCSAFLUSH, orig_termios);
+}
+
+int	main(int ac, char **av, char **base_env)
 {
 	t_ast			*ast;
 	char			*input;
 	t_cleanup_data	cleanup_data;
 	t_env			env;
 	int				temp;
+	//struct termios	terminal;
 
+	env.last_exit_status = NULL;
+	if (ac > 1)
+		return (printf("no args allowed\n"), 1);
+	(void)av;
+	//atexit(() -> disableRawMode(&orig_termios));
+	//tcsetattr(STDIN_FILENO, TCSAFLUSH, &terminal);
 	env.pid = get_pid();
-	if (!env.pid )
+	if (!env.pid)
+		return (1);
+	if (!init_env(&env, base_env))
 		return (1);
 	ast = get_input(&cleanup_data);
-	init_env(&env, ast, NULL);
 	input = cleanup_data.input;
 	while (input != NULL)
 	{
 		if (ast)
 		{
+			env.last_exit_status = &(ast->exit_status);
+			*(env.last_exit_status) = temp;
+			ast->env = &env;
 			print_ast(ast);
-			walk_ast(ast, &cleanup_data, true);
-			if (ast->info == EXIT_ERROR)
-				return (main_cleanup(&cleanup_data), 1);
-			else if (ast->info == SYNTAX_ERROR)
-			{
-			}
+			walk_ast(ast, &cleanup_data);
 			//print_ast(ast);
 			//system("leaks minishell");
 			temp = *(env.last_exit_status);
-			main_cleanup(&cleanup_data);
+			main_cleanup(&cleanup_data, false, true);
 		}
 		ast = get_input(&cleanup_data);
-		if (ast)
-		{
-			init_env(&env, ast, NULL);
-			*(env.last_exit_status) = temp;
-		}
 		input = cleanup_data.input;
 	}
 	return (0);

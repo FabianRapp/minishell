@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 03:37:23 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/31 12:38:59 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/01 08:54:59 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,7 +252,6 @@ t_arg	*fix_arg_literals(t_arg *args)
 	return (head);
 }
 
-//#define EXPAND_FULL_AST // EXPAND_FULL_AST: for testing (not usable later on since vars have to be evaluated on runtime)
 // expands the current ast nodes env vars and interpreted strs (if the first)
 void	*expand_strs(t_ast *ast)
 {

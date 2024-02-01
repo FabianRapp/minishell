@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/31 09:14:53 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/01 08:12:19 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,7 +275,6 @@ void	free_arg_list(t_arg *list)
 
 void	free_ast(t_ast *ast)
 {
-	free_env(ast->env);
 	if (ast->left)
 		free_ast(ast->left);
 	if (ast->right)
