@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/31 09:25:28 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/01 13:55:32 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ bool	parse_redir_paths(t_parser *parser)
 			if (parser->next->p_type == T_EOF)
 				return (print_error(true, NULL, NULL, type_to_str(parser->next->token->type)), false);
 			move_to_arg(parser, true, is_redir_arg_terminator, REDIR_ARG); // TODO: parse possible words first so this does not have to be done, also in wrong var atm
-			//optional TODO: remove single quotes of WORDs
 		}
 		parser = parser->next;
 	}
@@ -186,21 +185,6 @@ void	type_args(t_parser *parser)
 	}
 }
 
-// old and weird buggy, if new one is stable delete this
-void	merge_words(t_parser *parser)
-{
-	while (parser && parser->p_type != T_EOF)
-	{
-		if (!is_word_terminator(parser->p_type))
-		{
-			move_to_arg(parser, false, is_word_terminator, WORD);
-			parser->rest_name = parser->arg;
-			parser->arg = NULL;
-		}
-		parser=parser->next;
-	}
-}
-
 void	remove_whitespace(t_parser *parser)
 {
 	while (parser->p_type != T_EOF)
@@ -249,12 +233,9 @@ bool	move_commands_infront(t_parser *parser)
 		last = last_parser(parser);
 		while (parser->p_type == COMMAND && !is_operator(last->p_type) && last->p_type != T_EOF)
 		{
-			if (!is_redir(last->p_type))//parsing/ lexer or syntax error idk
-			{
-				printf("debug move_commands_inform : %s\n", type_to_str_type(last->p_type));
-				exit(1);
-				return (false);
-			}
+			//TODO: figure out the diffrent syntax errors here (example: echo >aaa <sadad (echo) | >a <ad)
+			if (!is_redir(last->p_type))
+				return (print_error(true, NULL, NULL, "syntax error"), false);
 			swap_parsers(parser, last);
 			last = last_parser(parser);
 		}
@@ -330,7 +311,6 @@ t_ast	*parser(char *str)
 	if (!new_merge_literals_start(parser))
 		return (free_parser_main(parser, true), NULL);
 	merge_names(parser);
-	//merge_words(parser); buggy
 	if (!parse_redir_paths(parser))
 		return (free_parser_main(parser, true), NULL);
 	if (!type_commands(parser))
@@ -338,6 +318,8 @@ t_ast	*parser(char *str)
 	remove_whitespace(parser);
 	if (!move_commands_infront(parser))
 	{
+		free_parser_main(parser, true);
+		return (NULL);
 		// debug condtion in function will exit atm
 	}
 	//system("leaks minishell");
@@ -354,44 +336,3 @@ t_ast	*parser(char *str)
 }
 
 // echo 'hello_word' | cat && (ls >> file > fil2 || echo 'ls failed') && cat < file && cat < file2
-
-// LogicalAND
-// ├── Pipeline
-// │   ├── Command
-// │   │   └── SimpleCommand
-// │   │       ├── CommandName (echo)
-// │   │       └── CommandArguments ('hello_word')
-// │   └── Command
-// │       └── SimpleCommand
-// │           └── CommandName (cat)
-// ├── LogicalAND
-// │   ├── Subshell
-// │   │   └── LogicalOR
-// │   │       ├── Pipeline
-// │   │       │   └── Command
-// │   │       │       └── SimpleCommand
-// │   │       │           ├── CommandName (ls)
-// │   │       │           ├── Redirection
-// │   │       │           │   ├── Operator (>>)
-// │   │       │           │   └── Word (file)
-// │   │       │           └── Redirection
-// │   │       │               ├── Operator (>)
-// │   │       │               └── Word (fil2)
-// │   │       └── Command
-// │   │           └── SimpleCommand
-// │   │               ├── CommandName (echo)
-// │   │               └── CommandArguments ('ls failed')
-// │   └── Pipeline
-// │       └── Command
-// │           └── SimpleCommand
-// │               ├── CommandName (cat)
-// │               └── Redirection
-// │                   ├── Operator (<)
-// │                   └── Word (file)
-// └── Pipeline
-//     └── Command
-//         └── SimpleCommand
-//             ├── CommandName (cat)
-//             └── Redirection
-//                 ├── Operator (<)
-//                 └── Word (file2)

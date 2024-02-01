@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 09:19:39 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/26 04:04:09 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/01 12:24:16 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ int a(int ac, char **av)
 
 void print_type_sizes()
 {
-	printf("Size of t_operators_ast: %zu bytes\n", sizeof(t_operators_ast));
 	printf("Size of t_parser: %zu bytes\n", sizeof(t_parser));
 	printf("Size of t_token_list: %zu bytes\n", sizeof(t_token_list));
 	printf("Size of t_arg: %zu bytes\n", sizeof(t_arg));

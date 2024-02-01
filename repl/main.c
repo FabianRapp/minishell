@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/01 10:37:25 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/01 17:12:45 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,22 @@
 // if ast->info == NOT_FINISHED afterwards there was a command to execute
 void	no_command(t_ast *ast)
 {
-	if (ast->name->token->type == DUMMY_COMMAND && (ast->redir_in || ast->redir_out))
+	if (ast->name->token->type == DUMMY_COMMAND && ast->redir)
 	{
-			//run redirs
+		if (!resolve_redirs(ast))
+		{
+			ast->info = SYNTAX_ERROR;
+			ast->exit_status = 1;
+		}
+		else
+		{
 			ast->exit_status = 0;
 			ast->info = FINISHED;
+		}
 	}
 	else if (is_operator(ast->type))
 	{
-		if (ast->redir_in || ast->redir_out)
+		if (ast->redir)
 		{
 			printf("DEBUG: operator with redirs in no_command()\n");
 			ast->info = EXIT_ERROR;//DEBUG
@@ -47,6 +54,7 @@ void	no_command(t_ast *ast)
 
 void	check_edgecases(t_ast *ast)
 {
+	
 	no_command(ast);
 	if (ast->info != NOT_FINISHED)
 		return ;
@@ -68,7 +76,9 @@ pid_t	create_child_command(t_ast *ast)
 	check_edgecases(ast);
 	if (ast->info != NOT_FINISHED)
 		exit(ast->exit_status);
-	argv = ft_calloc(count_args(ast, ARGS) + 2, sizeof (char *const));
+	if (!resolve_redirs(ast))
+		exit(ast->exit_status);
+	argv = ft_calloc(count_args(ast->arg) + 2, sizeof (char *const));
 	if (!argv)
 	{
 		// cleanup()
@@ -102,8 +112,17 @@ void	run_command_node(t_ast *ast)
 	expand_strs(ast);
 	if (ast->info != NOT_FINISHED)
 		return ;
-	if (!ft_strcmp(ast->name->token->str_data, "exit"))
+	
+	// if (ast->name->token->type == DUMMY_COMMAND)
+	// {
+	// 	resolve_redirs(ast);
+	// 	reset_stdio(ast);
+	// 	return ;
+	// }
+	if (ast->name->token->str_data && !ft_strcmp(ast->name->token->str_data, "exit"))
 	{
+		resolve_redirs(ast);
+		reset_stdio(ast);
 		ft_exit(ast);
 		return ;
 	}
@@ -116,10 +135,10 @@ void	run_command_node(t_ast *ast)
 		exit(ast->exit_status);
 	}
 	waitpid(pid, &(ast->exit_status), 0);
+	reset_stdio(ast);
 	ast->exit_status >>= 8; // idk why but this fixes the exit status. no idea wtf is happening to make this needed
 	if (ast->exit_status == EXIT_ERROR)
 	{
-		printf("test\n");
 		temp = ast->exit_status;
 		main_cleanup(ast->cleanup_data, true, ast->env->main_process);
 		exit(temp);
@@ -140,7 +159,7 @@ int	main(int ac, char **av, char **base_env)
 	char			*input;
 	t_cleanup_data	cleanup_data;
 	t_env			env;
-	int				temp;
+	int				last_exit;
 	//struct termios	terminal;
 
 	env.last_exit_status = NULL;
@@ -156,18 +175,19 @@ int	main(int ac, char **av, char **base_env)
 		return (1);
 	ast = get_input(&cleanup_data);
 	input = cleanup_data.input;
+	last_exit = 0;// TODO first exit should be unknown
 	while (input != NULL)
 	{
 		if (ast)
 		{
-			env.last_exit_status = &(ast->exit_status);
-			*(env.last_exit_status) = temp;
+			
+			env.last_exit_status = &last_exit;
 			ast->env = &env;
 			print_ast(ast);
-			walk_ast(ast, &cleanup_data);
+			ast->cleanup_data = &cleanup_data;
+			walk_ast(ast);
 			//print_ast(ast);
 			//system("leaks minishell");
-			temp = *(env.last_exit_status);
 			main_cleanup(&cleanup_data, false, true);
 		}
 		ast = get_input(&cleanup_data);

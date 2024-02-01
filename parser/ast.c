@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/01 08:12:19 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/01 13:42:17 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,11 @@ t_parser	*last_parser(t_parser *parser)
 	}
 	last = parser;
 	while (last && last->next != parser)
+	{
+		//if (last->p_type == T_EOF)
+		//	printf("eof \n");
 		last = last->next;
+	}
 	return (last);
 }
 
@@ -185,6 +189,7 @@ t_ast *build_ast(t_parser *parser)
 	t_left_right_parsers	child_parsers;
 	t_ast					*ast_node;
 	t_parser				*args;
+	t_redir					*cur_redir;
 
 	ast_node = ft_calloc(3, sizeof(t_ast)); ///TODO why 3??
 	if (!ast_node)
@@ -208,12 +213,37 @@ t_ast *build_ast(t_parser *parser)
 		ast_node->name = extract_token_list(parser, NAME);
 		//free_ncircular_parser(parser->rest_name, false);
 		args = parser->arg;
+		cur_redir = NULL;
 		while (args)
 		{
-			if (args->token->type == REDIR_IN || args->token->type == HERE_DOC)
-				ast_node->redir_in = append_arg(args, ast_node->redir_in, false);
-			else if (args->token->type == REDIR_OUT || args->token->type == REDIR_APPEND)
-				ast_node->redir_out = append_arg(args, ast_node->redir_out, false);
+			if (args->token->type == REDIR_IN || args->token->type == HERE_DOC
+				|| args->token->type == REDIR_OUT || args->token->type == REDIR_APPEND)
+			{
+				
+				if (cur_redir)
+				{
+					cur_redir->next = ft_calloc(1, sizeof(t_redir));
+					cur_redir = cur_redir->next;
+					cur_redir->type = args->token->type;
+					//printf("redir type: %s \n", type_to_str_type(cur_redir->type));
+					cur_redir->arg = append_arg(args->arg, cur_redir->arg, true);
+				}
+				else
+				{
+					cur_redir = ft_calloc(1, sizeof(t_redir));
+					if (!cur_redir)
+					{
+						//malloc fail
+					}
+					ast_node->redir = cur_redir;
+					cur_redir->type = args->token->type;
+					cur_redir->arg = append_arg(args->arg, cur_redir->arg, true);
+					//printf("redir type: %s \n", type_to_str_type(cur_redir->type));
+					// printf("redir args:\n");
+					// print_arg_list(cur_redir->arg, 10, 0);
+					// printf("\n");
+				}
+			}
 			else if (args->p_type == ARGUMENT)
 				ast_node->arg = append_arg(args, ast_node->arg, true);
 			else
@@ -273,6 +303,8 @@ void	free_arg_list(t_arg *list)
 	}
 }
 
+
+//TODO: redir rework
 void	free_ast(t_ast *ast)
 {
 	if (ast->left)
@@ -280,8 +312,8 @@ void	free_ast(t_ast *ast)
 	if (ast->right)
 		free_ast(ast->right);
 	free_token_list(ast->name);
-	free_arg_list(ast->redir_in);
-	free_arg_list(ast->redir_out);
+	//free_arg_list(ast->redir_in);
+	//free_arg_list(ast->redir_out);
 	free_arg_list(ast->arg);
 	free(ast);
 }

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/31 08:41:53 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/01 12:49:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	print_arg_list(t_arg *arg, int level, bool left)
 
 	//base_lvl = level;
 	print_indent_arg(level);
-	print_colored(" ; Name:\t", level);
+	print_colored(" Name:\t", level);
 	//arg_nb = 0;
 	while (arg)
 	{
@@ -91,6 +91,28 @@ void	print_arg_list(t_arg *arg, int level, bool left)
 		arg = arg->next;
 	}
 }
+
+void	print_redir_list(t_redir *redir, int level, bool left)
+{
+	t_arg	*arg;
+
+	while (redir)
+	{
+		printf("\n");
+		print_indent_arg(level);
+		print_colored(type_to_str_type(redir->type), level);
+		print_colored(": ", level);
+		arg = redir->arg;
+		while (arg)
+		{
+			print_token_list(arg->name, level);
+			arg = arg->next;
+		}
+		redir = redir->next;
+	}
+	(void)left;
+}
+
 
 void	start_rec_print(t_ast *ast, int level, char *path, bool left)
 {
@@ -107,7 +129,7 @@ void	start_rec_print(t_ast *ast, int level, char *path, bool left)
 	print_indent(level, left);
 	print_colored(type_to_str_type(ast->type), level);
 	print_colored("; ", level);
-	if (!(ast->name) && !(ast->redir_in) && !(ast->redir_out) && !(ast->arg))
+	if (!(ast->name) && !(ast->redir) && !(ast->arg))
 		printf("\n");
 	if (ast->name)
 	{
@@ -119,19 +141,12 @@ void	start_rec_print(t_ast *ast, int level, char *path, bool left)
 			print_token_list(ast->name, level);
 		}
 	}
-	if (ast->redir_in)
+	if (ast->redir)
 	{
 		printf("\n");
 		print_indent(level, left);
-		print_colored("Redir in: \n", level);
-		print_arg_list(ast->redir_in, level + 1, left);
-	}
-	if (ast->redir_out)
-	{
-		printf("\n");
-		print_indent(level, left);
-		print_colored("Redir out: \n", level);
-		print_arg_list(ast->redir_out, level + 1, left);
+		print_colored("Redir: ", level);
+		print_redir_list(ast->redir, level + 1, left);
 	}
 	if (ast->arg)
 	{

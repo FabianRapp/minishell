@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/01 10:58:00 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/01 17:15:49 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	ft_exit(t_ast *ast)
 	int	exit_status;
 
 	if (ast->env->main_process)
-		printf("exit\n");
+		print_error(false, NULL, NULL, "exit\n");
 	if (ast->arg && includes_non_num(ast->arg->name->token->str_data))
 	{
 		if (ast->arg && ast->arg->name)
@@ -39,7 +39,7 @@ void	ft_exit(t_ast *ast)
 		ast->info = FINISHED;
 		
 	}
-	else if (ast->arg && count_args(ast, ARGS) > 1)
+	else if (ast->arg && count_args(ast->arg) > 1)
 	{
 		print_error(1, "exit", ast->arg->name->token->str_data, "too many arguments");
 		ast->info = SYNTAX_ERROR;
@@ -47,7 +47,7 @@ void	ft_exit(t_ast *ast)
 		if (ast->env->main_process)
 			return ;
 	}
-	else if (!ast->arg || count_args(ast, ARGS) == 0)
+	else if (!ast->arg || count_args(ast->arg) == 0)
 	{
 		ast->info = FINISHED;
 		ast->exit_status = 0;
@@ -65,6 +65,8 @@ void	ft_exit(t_ast *ast)
 	if (ast->env->main_process)
 	{
 		main_cleanup(ast->cleanup_data, true, ast->env->main_process);
+		close(ast->fd[1]);
+		close(ast->fd[0]);
 		exit(exit_status);
 	}
 	ast->info = EXIT;

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/01 10:08:37 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/01 16:02:00 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	main_cleanup(t_cleanup_data *data, bool full_exit, bool main_process)
 {
 	if (!data)
 		return ;
+	//reset_stdio(data->root);
 	if (data->root && main_process)
 	{
 		if (full_exit && data->root->env)

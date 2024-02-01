@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:52:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/01 12:00:48 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/01 12:07:17 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,7 @@ typedef	struct s_arg
 }	t_arg;
 
 
-typedef	struct s_redir	t_redir;
-typedef	struct s_redir
-{
-	
-	t_type			type;
-	t_arg			*arg;
-	t_arg			*next;
-}	t_redir;
+
 
 typedef struct s_ast	t_ast;
 

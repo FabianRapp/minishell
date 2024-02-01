@@ -6,12 +6,15 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 03:37:23 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/01 08:54:59 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/01 13:04:45 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 #include "../../headers/parser.h"
+
+
+t_arg	*move_additional_literals_to_args(t_token_list *name, t_arg *args, bool is_name);
 
 char	*env_var_to_str(char *env_var)
 {
@@ -75,6 +78,7 @@ char	*expand_interpreted_str(char	*str)
 		{
 			printf("bug in expand_interpreted_str(): what is this char: %c\n", str[i]);
 			printf("and what is this: %c\n", str[i + 1]);
+			exit(0);// debug
 			i++;
 		}
 		if (!new_str)
@@ -169,6 +173,31 @@ t_token_list	*expand_token_list(t_token_list *list, t_env *env)
 	return (head);
 }
 
+t_arg	*fix_arg_literals(t_arg *args)
+{
+	t_arg	*head;
+	t_arg	*last;
+
+	if (!args)
+		return (NULL);
+	head = args;// if only one arg of T_EOF
+	last = NULL;
+	while (args && args->type != T_EOF)
+	{
+		args = move_additional_literals_to_args(args->name, args, false);
+		{
+			///need malloc protection
+		}
+		if (last)
+			last->next = args;
+		else
+			head = args;;
+		last = args;
+		args = args->next;
+	}
+	return (head);
+}
+
 bool	expand_arg_list(t_arg *args, t_env *env)
 {
 	while (args && args->type != T_EOF)
@@ -176,6 +205,27 @@ bool	expand_arg_list(t_arg *args, t_env *env)
 		if (!expand_token_list(args->name, env))
 			return (false);
 		args = args->next;
+	}
+	return (true);
+}
+
+bool	expand_redir_list(t_redir *redir, t_env *env)
+{
+	t_redir	*head;
+
+	head = redir;
+	while (redir && redir->type != T_EOF)
+	{
+		if (!expand_arg_list(redir->arg, env))
+			return (false);
+		redir = redir->next;
+	}
+	redir = head;
+	while (redir && redir->type != T_EOF)
+	{
+		if (!fix_arg_literals(redir->arg))
+			return (false);
+		redir = redir->next;
 	}
 	return (true);
 }
@@ -227,30 +277,7 @@ t_arg	*move_additional_literals_to_args(t_token_list *name, t_arg *args, bool is
 	return (args);
 }
 
-t_arg	*fix_arg_literals(t_arg *args)
-{
-	t_arg	*head;
-	t_arg	*last;
 
-	if (!args)
-		return (NULL);
-	head = args;// if only one arg of T_EOF
-	last = NULL;
-	while (args && args->type != T_EOF)
-	{
-		args = move_additional_literals_to_args(args->name, args, false);
-		{
-			///need malloc protection
-		}
-		if (last)
-			last->next = args;
-		else
-			head = args;;
-		last = args;
-		args = args->next;
-	}
-	return (head);
-}
 
 // expands the current ast nodes env vars and interpreted strs (if the first)
 void	*expand_strs(t_ast *ast)
@@ -268,19 +295,10 @@ void	*expand_strs(t_ast *ast)
 			//if (!ast->arg)
 				//return (cleanup(), ast);
 		}
-		if (ast->redir_in)
+		if (ast->redir)
 		{
-			if (!expand_arg_list(ast->redir_in, ast->env))
+			if (!expand_redir_list(ast->redir, ast->env))
 				return(cleanup("expand_strs"), NULL);
-			ast->redir_in = fix_arg_literals(ast->redir_in);
-			// needs malloc protection
-		}
-		if (ast->redir_out)
-		{
-			if (!expand_arg_list(ast->redir_out, ast->env))
-				return(cleanup("expand_strs"), NULL);
-			ast->redir_out = fix_arg_literals(ast->redir_out);
-			// needs malloc protection
 		}
 		if (ast->arg)
 		{

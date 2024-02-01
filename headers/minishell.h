@@ -6,18 +6,19 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/01 12:01:38 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/01 17:07:40 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
+	- redirs bugged with exit
 	- parser return value must indicate a diffrence between syntax and malloc error
 	- add early exits for sytax error in lexer and parser:
 		-- if any subshell contains nothing or only whitespace its "bash: syntax error near unexpected token `)'" and no command even starts
 	- implement pipes
 	- implement other ft functions
-	- implement redirs
+	- implement here doc
 	- update path functions to use new error print fn
 	- add error handeling to lexer and parser
 	- maybe need to keep track if the main process or a child is running a command for exit()?
@@ -30,6 +31,9 @@ TODO:
 		interaction of export with white space (does not accept any whitespace))
 
 	- change white space identification: not all whitespace is the same (mb dosnt matter since no multi line)
+
+./test "asd >asd <sadad (asd) | >a <ad"
+debug move_commands_inform : COMMAND
 
 	lexer:
 	bash-3.2$ "asd
@@ -67,9 +71,11 @@ weird stuff to keep in mind about bash
 
 # define DEBUG 0
 
-#define ARGS 1
-#define IN 2
-#define OUT 3
+# define NEW_FILE_PERMISSIONS 0644
+
+#define ARGS 2
+# define IN 0
+# define OUT 1
 
 # define NOT_FINISHED 0
 # define FALSE 1
@@ -77,6 +83,8 @@ weird stuff to keep in mind about bash
 # define EXIT_ERROR 3
 # define FINISHED 4
 # define EXIT 5
+
+
 
 
 // libs
@@ -91,6 +99,7 @@ weird stuff to keep in mind about bash
 # include <errno.h>
 # include <dirent.h>
 # include <fcntl.h>
+# include <termios.h>
 
 // this projects headers
 # include "libft.h"
@@ -99,7 +108,7 @@ weird stuff to keep in mind about bash
 # include "tokens.h"
 # include "parser.h"
 # include "eval.h"
-# include <termios.h>
+
 
 typedef enum e_type		t_type;
 typedef struct s_lexer	t_lexer;
@@ -128,18 +137,27 @@ typedef struct s_env
 	int			pid;
 }	t_env;
 
+typedef	struct s_redir	t_redir;
+typedef	struct s_redir
+{
+	
+	t_type			type;
+	t_arg			*arg;
+	t_redir			*next;
+}	t_redir;
+
 typedef struct s_ast
 {
 	t_type			type;
 	t_token_list	*name;
-	t_arg			*redir_in;
-	t_arg			*redir_out;
+	t_redir			*redir;
 	t_arg			*arg;
 	t_parser		*val;
 	t_ast			*left;
 	t_ast			*right;
 	int				exit_status;
 	int				info;
+	int				fd[2];
 	t_cleanup_data	*cleanup_data;
 	t_env			*env;
 }	t_ast;
@@ -149,8 +167,12 @@ t_token		*next_new_token(t_lexer *lexer, bool *malloc_fail);
 t_lexer		new_lexer(char *str);
 
 // main
-void	walk_ast(t_ast *ast, t_cleanup_data *cleanup_data);
+void	walk_ast(t_ast *ast);
 void	run_command_node(t_ast *ast);
+
+//redir
+bool	resolve_redirs(t_ast *ast);
+bool	reset_stdio(t_ast *ast);
 
 // debug lexer
 void		print_token(t_token *token, t_parser *parser, int depth);

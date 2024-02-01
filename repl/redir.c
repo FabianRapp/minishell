@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:37:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/01 11:57:32 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/01 15:59:20 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
                         exhausted.
      []           O_CREAT is specified, the file does not exist, and the user's quota of inodes on the file system on which the file is being created has been exhausted.
      [EEXIST]           O_CREAT and O_EXCL are specified and the file exists.
-     [EFAULT]           Path points outside the process's allocated address space.
+     [EFAULT]           Path points fd[fd[out]]side the process's allocated address space.
      []            The open() operation is interrupted by a signal.
      [EINVAL]           The value of oflag is not valid.
      []              An I/O error occurs while making the directory entry or allocating the inode for O_CREAT.
@@ -49,7 +49,7 @@
      [EILSEQ]           The filename does not match the encoding rules.
 */
 
-int	redir_out(char *file, bool append)
+int	redir_fd_out(char *file, bool append)
 {
 	int	fd;
 	int	flag;
@@ -57,7 +57,7 @@ int	redir_out(char *file, bool append)
 	flag = O_WRONLY | O_CREAT;
 	if (append)
 		flag |= O_APPEND;
-	fd = open(file, flag);
+	fd = open(file, flag, NEW_FILE_PERMISSIONS);
 	if (fd >= 0)
 		return (fd);
 	if (fd == EACCES)
@@ -65,9 +65,9 @@ int	redir_out(char *file, bool append)
 	else if (fd == EINTR)
 		print_error(true, NULL, file, "Signal interupt");
 	else if (fd == EIO)
-		print_error(true, NULL, file, "Error writing to file"); //change for in
+		print_error(true, NULL, file, "Error writing to file");
 	else if (fd == EISDIR)
-		print_error(true, NULL, file, "Is a directory");// write only
+		print_error(true, NULL, file, "Is a directory");
 	else if (fd == EMFILE)
 		print_error(true, NULL, file, "Too many open files");
 	else if (fd == ENAMETOOLONG)
@@ -81,24 +81,146 @@ int	redir_out(char *file, bool append)
 	return (fd);
 }
 
+int	redir_in(char *file)
+{
+	int	fd;
+	int	flag;
+
+	flag = O_RDONLY;
+	fd = open(file, flag);
+	if (fd >= 0)
+		return (fd);
+	if (fd == EACCES)
+		print_error(true, NULL, file, "Permission denied");
+	else if (fd == EINTR)
+		print_error(true, NULL, file, "Signal interupt");
+	else if (fd == EIO)
+		print_error(true, NULL, file, "Error reading from file"); 
+	else if (fd == EISDIR)
+		print_error(true, NULL, file, "Is a directory");
+	else if (fd == EMFILE)
+		print_error(true, NULL, file, "Too many open files");
+	else if (fd == ENAMETOOLONG)
+		print_error(true, NULL, file, "File name too long");
+	else if (fd == ENOENT)
+		print_error(true, NULL, file, "No such file or directory");
+	else if (fd == ENOTDIR)
+		print_error(true, NULL, file, "Not a directory");
+	else
+		print_error(true, NULL, file, "Error");
+	return (fd);
+}
+
+bool	check_valid_arg(t_ast *ast, t_redir *redir)
+{
+	if (count_args(redir->arg) != 1)
+	{
+		if (count_args(redir->arg) == 0)
+			print_error(true, false, false, type_to_str(T_EOF));
+		else
+		{
+			print_error(true, false, redir->arg->name->token->old_data, "ambiguous redirect");
+			ast->exit_status = 1;
+			*(ast->env->last_exit_status) = 1;
+		}
+		return (false);
+	}
+	return (true);
+}
+
+bool	reset_stdio(t_ast *ast)
+{
+	int	*fds;
+
+	fds = ast->fd;
+	fds[IN] = dup2(STDIN_FILENO, fds[IN]);
+	if (fds[IN] < 0)
+	{
+		print_error(true, NULL, NULL, "error redirecting input");
+		ast->exit_status = 1;
+		*(ast->env->last_exit_status) = 1;
+		return (false);
+	}
+	fds[OUT] = dup2(STDOUT_FILENO, fds[OUT]);
+	if (fds[OUT] < 0)
+	{
+		print_error(true, NULL, NULL, "error redirecting output");
+		ast->exit_status = 1;
+		*(ast->env->last_exit_status) = 1;
+		return (false);
+	}
+	ast->exit_status = 0;
+	*(ast->env->last_exit_status) = 0;
+	return (true);
+}
+
+bool	redir_stdio(t_ast *ast)
+{
+	int	*fds;
+
+	fds = ast->fd;
+	fds[IN] = dup2(fds[IN], STDIN_FILENO);
+	if (fds[IN] < 0)
+	{
+		print_error(true, NULL, NULL, "error redirecting input");
+		ast->exit_status = 1;
+		*(ast->env->last_exit_status) = 1;
+		return (false);
+	}
+	fds[OUT] = dup2(fds[OUT], STDOUT_FILENO);
+	if (fds[OUT] < 0)
+	{
+		print_error(true, NULL, NULL, "error redirecting ouput");
+		ast->exit_status = 1;
+		*(ast->env->last_exit_status) = 1;
+		return (false);
+	}
+	ast->exit_status = 0;
+	*(ast->env->last_exit_status) = 0;
+	return (true);
+}
 
 bool	resolve_redirs(t_ast *ast)
 {
-	t_arg	*redirs;
+	t_redir	*redir;
+	int		*fd;
 
-	redirs = ast->redir_in;
-	while (redirs)
+	fd = ast->fd;
+	redir = ast->redir;
+	fd[IN] = 0;
+	fd[OUT] = 1;
+	while (redir)
 	{
-		if (redirs->name->next)
+		if (!check_valid_arg(ast, redir))
+			return (false);
+		if (redir->type == REDIR_OUT)
 		{
-			// TODO: change additional redir args to be in name rather new args and throw
-			// and error here if multiple args for 1 redir
+			if (fd[OUT] != 1)
+				close(fd[OUT]);
+			fd[OUT] = redir_fd_out(redir->arg->name->token->str_data, false);
 		}
-		redirs = redirs->next;
+		else if (redir->type == REDIR_APPEND)
+		{
+			if (fd[OUT] != 1)
+				close(fd[OUT]);
+			fd[OUT] = redir_fd_out(redir->arg->name->token->str_data, true);
+		}
+		else if (redir->type == REDIR_IN)
+		{
+			if (fd[IN] != 0)
+				close(fd[IN]);
+			fd[IN] = redir_in(redir->arg->name->token->str_data);
+		}
+		// TODO
+		else if (redir->type == HERE_DOC)
+		{
+			if (fd[IN] != 0)
+				close(fd[IN]);
+			fd[IN] = 0;
+		}
+		if (fd[OUT] < 0 || fd[IN] < 0)
+			return (false);
+		redir = redir->next;
 	}
-	if (ast->redir_out)
-	{
-		
-	}
-	return (true);
+	return (redir_stdio(ast));
 }

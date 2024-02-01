@@ -6,25 +6,16 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:38:43 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/31 14:28:01 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/01 14:04:49 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 
-int	count_args(t_ast *ast, int type)
+int	count_args(t_arg *args)
 {
-	t_arg	*args;
 	int		count;
 
-	if (type == ARGS)
-		args = ast->arg;
-	else if (type == OUT)
-		args = ast->redir_out;
-	else if (type == IN)
-		args = ast->redir_in;
-	else
-		return (0);
 	count = 0;
 	while (args && args->type != T_EOF)
 	{
@@ -42,12 +33,13 @@ void	fill_args(t_ast *ast, char *argv[], int type)
 
 	if (type == ARGS)
 		args = ast->arg;
-	else if (type == REDIR_OUT)
-		args = ast->redir_out;
-	else if (type == REDIR_IN)
-		args = ast->redir_in;
 	else
 		return ;
+	// else if (type == REDIR_OUT)
+	// 	args = ast->redir_out;
+	// else if (type == REDIR_IN)
+	// 	args = ast->redir_in;
+
 	i = 0;
 	while (args && args->type != T_EOF)
 	{

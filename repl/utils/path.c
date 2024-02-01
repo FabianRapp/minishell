@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/31 06:23:30 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/01 14:40:35 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,5 @@ char	*find_path(t_ast *ast, char **command_name, int *info, char *path_env)
 		if (*info != NOT_FINISHED)
 			return (NULL);
 	}
-	perror("command not found");
 	return (NULL);
 }
