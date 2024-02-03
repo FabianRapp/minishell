@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:37:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/01 15:59:20 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/03 22:26:18 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ int	redir_fd_out(char *file, bool append)
 	flag = O_WRONLY | O_CREAT;
 	if (append)
 		flag |= O_APPEND;
+	else
+		flag |= O_TRUNC;
 	fd = open(file, flag, NEW_FILE_PERMISSIONS);
 	if (fd >= 0)
 		return (fd);
@@ -120,8 +122,8 @@ bool	check_valid_arg(t_ast *ast, t_redir *redir)
 		else
 		{
 			print_error(true, false, redir->arg->name->token->old_data, "ambiguous redirect");
-			ast->exit_status = 1;
-			*(ast->env->last_exit_status) = 1;
+			ast->env->exit_status = 1;
+			
 		}
 		return (false);
 	}
@@ -133,24 +135,22 @@ bool	reset_stdio(t_ast *ast)
 	int	*fds;
 
 	fds = ast->fd;
-	fds[IN] = dup2(STDIN_FILENO, fds[IN]);
+	fds[IN] = dup2(ast->base_fd[IN], STDIN_FILENO);
 	if (fds[IN] < 0)
 	{
 		print_error(true, NULL, NULL, "error redirecting input");
-		ast->exit_status = 1;
-		*(ast->env->last_exit_status) = 1;
+		ast->env->exit_status = 1;
+		
 		return (false);
 	}
-	fds[OUT] = dup2(STDOUT_FILENO, fds[OUT]);
+	fds[OUT] = dup2(ast->base_fd[OUT], STDOUT_FILENO);
 	if (fds[OUT] < 0)
 	{
 		print_error(true, NULL, NULL, "error redirecting output");
-		ast->exit_status = 1;
-		*(ast->env->last_exit_status) = 1;
+		ast->env->exit_status = 1;
 		return (false);
 	}
-	ast->exit_status = 0;
-	*(ast->env->last_exit_status) = 0;
+	ast->env->exit_status = 0;
 	return (true);
 }
 
@@ -163,20 +163,18 @@ bool	redir_stdio(t_ast *ast)
 	if (fds[IN] < 0)
 	{
 		print_error(true, NULL, NULL, "error redirecting input");
-		ast->exit_status = 1;
-		*(ast->env->last_exit_status) = 1;
+		ast->env->exit_status = 1;
 		return (false);
 	}
 	fds[OUT] = dup2(fds[OUT], STDOUT_FILENO);
 	if (fds[OUT] < 0)
 	{
 		print_error(true, NULL, NULL, "error redirecting ouput");
-		ast->exit_status = 1;
-		*(ast->env->last_exit_status) = 1;
+		ast->env->exit_status = 1;
+		
 		return (false);
 	}
-	ast->exit_status = 0;
-	*(ast->env->last_exit_status) = 0;
+	ast->env->exit_status = 0;
 	return (true);
 }
 
@@ -187,8 +185,6 @@ bool	resolve_redirs(t_ast *ast)
 
 	fd = ast->fd;
 	redir = ast->redir;
-	fd[IN] = 0;
-	fd[OUT] = 1;
 	while (redir)
 	{
 		if (!check_valid_arg(ast, redir))
@@ -222,5 +218,7 @@ bool	resolve_redirs(t_ast *ast)
 			return (false);
 		redir = redir->next;
 	}
-	return (redir_stdio(ast));
+	//reset_stdio(ast);
+	//redir_stdio(ast);
+	return (true);
 }

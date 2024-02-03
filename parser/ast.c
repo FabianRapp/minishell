@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/01 13:42:17 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/03 14:29:46 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,7 +194,6 @@ t_ast *build_ast(t_parser *parser)
 	ast_node = ft_calloc(3, sizeof(t_ast)); ///TODO why 3??
 	if (!ast_node)
 		return (cleanup("extract_token_list"), NULL);
-	ast_node->info = NOT_FINISHED;
 	//system("leaks minishell");
 	highest_operator = find_highest_operator(parser);
 	if (parser->p_type != COMMAND)
@@ -312,8 +311,6 @@ void	free_ast(t_ast *ast)
 	if (ast->right)
 		free_ast(ast->right);
 	free_token_list(ast->name);
-	//free_arg_list(ast->redir_in);
-	//free_arg_list(ast->redir_out);
 	free_arg_list(ast->arg);
 	free(ast);
 }

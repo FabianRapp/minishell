@@ -9,8 +9,13 @@ NAME=minishell
 GENERAL_SOURCES=
 GENERAL_OBJECTS=
 
-SOURCES=repl/main.c repl/utils/expand_strs1.c repl/utils/path.c repl/ft_buildin1.c repl/redir.c \
-repl/utils/input_exit.c repl/utils/data_utils.c repl/run_ast.c repl/env.c
+SOURCES=repl/main.c  repl/utils/path.c repl/ft_buildin1.c repl/redir.c \
+repl/utils/input_exit.c repl/utils/data_utils.c repl/run_ast.c repl/env.c \
+\
+repl/expansion/expand_strs1.c repl/expansion/utils1.c repl/expansion/word_splitting.c\
+repl/expansion/utils2.c\
+\
+repl/signals/child_parent_coms.c
 
 OBJECTS= $(SOURCES:.c=.o)
 

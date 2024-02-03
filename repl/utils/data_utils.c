@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:38:43 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/01 14:04:49 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/03 14:40:37 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,17 +60,17 @@ int	get_pid(void)
 	pid = fork();
 	if (pid != 0 && pid != -1) // main
 	{
-		close(fd[0]);
-		write(fd[1], &pid, sizeof(pid_t));
-		close(fd[1]);
+		close(fd[IN]);
+		write(fd[OUT], &pid, sizeof(pid_t));
+		close(fd[OUT]);
 		waitpid(pid, &exit_status, 0);
 		return (exit(exit_status), 0);
 	}
 	else if (pid == 0)
 	{
-		close(fd[1]);
-		read(fd[0], &pid, sizeof(pid_t));
-		close(fd[0]);
+		close(fd[OUT]);
+		read(fd[IN], &pid, sizeof(pid_t));
+		close(fd[IN]);
 		return(pid);
 	}
 	return (print_error(true, NULL, NULL, "error forking main process"), 0);

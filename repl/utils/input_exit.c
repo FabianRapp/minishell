@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/01 16:02:00 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/02 09:13:59 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,37 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 	return (ast);
 }
 
-void	main_cleanup(t_cleanup_data *data, bool full_exit, bool main_process)
+void	main_exit(t_cleanup_data *data, bool full_exit, t_env *env, int exit_status)
 {
-	if (!data)
-		return ;
+	bool	main_process;
+
+	if (!data || !data->root)
+		exit(exit_status);
+	main_process = env->main_process;
 	//reset_stdio(data->root);
-	if (data->root && main_process)
+	if (main_process && full_exit)
 	{
-		if (full_exit && data->root->env)
-			free_env(data->root->env);
+		my_free((void **)&(data->input));
+		if (env)
+			free_env(env);
 		if (data->root)
 			free_ast(data->root);
 	}
-	my_free((void **)&(data->input));
+	else if (!main_process && full_exit)
+	{
+		free_env(env);
+	}
+	else if (!main_process)
+	{
+		exit(exit_status);
+		if (env)
+			free_env(env);
+	}
+	else
+	{
+		my_free((void **)&(data->input));
+		if (data->root)
+			free_ast(data->root);
+	}
 	//system("leaks minishell");
 }

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:23:25 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/31 08:20:24 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/03 16:52:40 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ bool			is_termination_char(char c);
 #define CYAN "\x1b[36m"
 #define WHITE "\x1b[37m"
 
+typedef struct s_ast	t_ast;
+typedef struct s_token	t_token;
 
 
 char	*type_to_str(t_type tokenType);
@@ -43,6 +45,10 @@ void			print_indent_arg(int depth);
 typedef	struct s_token_list	t_token_list;
 typedef	struct s_arg	t_arg;
 typedef	struct s_parser	t_parser;
+
+t_token	*new_dummy_token(void);
+void	set_status(t_ast *ast, int status);
+void	my_exit(t_ast *ast, int status);
 
 typedef struct s_ast	t_ast;
 void	print_ast(t_ast *ast);

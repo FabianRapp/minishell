@@ -6,11 +6,27 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/01 12:49:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/03 18:04:44 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
+void	set_status(t_ast *ast, int status)
+{
+	ast->env->exit_status = status;
+}
+
+t_token	*new_dummy_token(void)
+{
+	t_token	*dummy;
+
+	dummy = ft_calloc(1, sizeof(t_token));
+	if (!dummy)
+		return (NULL);
+	dummy->type = DUMMY_COMMAND;
+	return (dummy);
+}
 
 void	print_error(bool shell_name, char *command_name, char *arg, char *str)
 {
@@ -39,6 +55,7 @@ bool	my_free(void **ptr)
 void	print_parser(t_parser *parser, int tree_level)
 {
 	t_parser *current = parser;
+
 	do
 	{
 		if (current->p_type == T_EOF)
@@ -221,3 +238,15 @@ int	name_len(char *str)
 	}
 	return (len);
 }
+
+void	my_exit(t_ast *ast, int status)
+{
+	int	finished_fd;
+
+	finished_fd = ast->exit_fd[OUT];
+	write(finished_fd, &(status), sizeof(int));
+	close(finished_fd);
+	exit(status);
+}
+
+

@@ -6,12 +6,15 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/01 17:07:40 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/03 22:15:52 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
+	- close base fds
+	- rework expansion
+	- ft_exit completly bugged
 	- redirs bugged with exit
 	- parser return value must indicate a diffrence between syntax and malloc error
 	- add early exits for sytax error in lexer and parser:
@@ -84,9 +87,6 @@ weird stuff to keep in mind about bash
 # define FINISHED 4
 # define EXIT 5
 
-
-
-
 // libs
 # include <stdbool.h>
 # include <stdio.h>
@@ -100,6 +100,7 @@ weird stuff to keep in mind about bash
 # include <dirent.h>
 # include <fcntl.h>
 # include <termios.h>
+# include <signal.h>
 
 // this projects headers
 # include "libft.h"
@@ -108,7 +109,7 @@ weird stuff to keep in mind about bash
 # include "tokens.h"
 # include "parser.h"
 # include "eval.h"
-
+# include "signals.h"
 
 typedef enum e_type		t_type;
 typedef struct s_lexer	t_lexer;
@@ -132,19 +133,33 @@ typedef struct s_env_var
 typedef struct s_env
 {
 	t_env_var	*vars;
-	int			*last_exit_status;
+	int			exit_status;
 	bool		main_process;
-	int			pid;
+	int			main_pid;
+	int			size_name_fd[2];
+	int			name_fd[2];
+	int			size_val_fd[2];
+	int			val_fd[2];
 }	t_env;
 
 typedef	struct s_redir	t_redir;
 typedef	struct s_redir
 {
-	
 	t_type			type;
 	t_arg			*arg;
 	t_redir			*next;
 }	t_redir;
+
+typedef struct s_child_data
+{
+	char		*path;
+	char		*command_name;
+	int			exit_status;
+	bool		malloc_error;
+	char		**argv;
+}	t_child_data;
+
+
 
 typedef struct s_ast
 {
@@ -155,11 +170,14 @@ typedef struct s_ast
 	t_parser		*val;
 	t_ast			*left;
 	t_ast			*right;
-	int				exit_status;
-	int				info;
 	int				fd[2];
+	int				exit_status_node;
 	t_cleanup_data	*cleanup_data;
 	t_env			*env;
+	pid_t			id;
+	int				exit_fd[2];
+	int				*all_pids;
+	int				base_fd[2];
 }	t_ast;
 
 // lexer
@@ -168,11 +186,15 @@ t_lexer		new_lexer(char *str);
 
 // main
 void	walk_ast(t_ast *ast);
+void	run_node(t_ast *ast);
 void	run_command_node(t_ast *ast);
+
+bool	check_edgecases(t_ast *ast);
 
 //redir
 bool	resolve_redirs(t_ast *ast);
 bool	reset_stdio(t_ast *ast);
+bool	redir_stdio(t_ast *ast);
 
 // debug lexer
 void		print_token(t_token *token, t_parser *parser, int depth);

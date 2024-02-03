@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/01 14:40:35 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/02 08:18:31 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,16 @@
 // updates the cur_path in the path_ob, if its NULL all paths have been checked
 // frees the old path
 // returns EXIT_ERROR on malloc fail, otherwise NOT_FINISHED
-void	next_path(t_path *path_ob, int *info)
+bool	next_path(t_path *path_ob)
 {
 	if (!path_ob)
-		return ;
+		return (false);
 	my_free((void **)&(path_ob->cur_path));
 	path_ob->cur_path = NULL;
 	if (!(path_ob->all_paths) || !(path_ob->all_paths)[path_ob->read_postion])
 	{
 		path_ob->cur_path = NULL;
-		return ;
+		return (true);
 	}
 	path_ob->position = path_ob->read_postion;
 	while ((path_ob->all_paths)[path_ob->read_postion] != ':'
@@ -36,43 +36,41 @@ void	next_path(t_path *path_ob, int *info)
 		path_ob->read_postion - path_ob->position);
 	if (!path_ob->cur_path)
 	{
-		(*info) = EXIT_ERROR;
-		return ;
+		return (false);
 	}
 	ft_strjoin_inplace(&(path_ob->cur_path), "/");
 	if (!path_ob->cur_path)
 	{
-		(*info) = EXIT_ERROR;
-		return ;
+		return (false);
 	}
 	while ((path_ob->all_paths)[path_ob->read_postion] == ':')
 	{
 		path_ob->read_postion++;
 	}
-	(*info) = NOT_FINISHED;
-	return ;
+	return (true);
 }
 
-void	init_path(t_path *path_ob, int *info, char *env_var)
+bool	init_path(t_path *path_ob, char *env_var)
 {
 	path_ob->all_paths = getenv(env_var);
 	path_ob->cur_path = NULL;
 	path_ob->read_postion = 0;
 	path_ob->position = 0;
-	next_path(path_ob, info);
-	return ;
+	return (next_path(path_ob));
 }
 
 // changes the global errno
-char	*find_path(t_ast *ast, char **command_name, int *info, char *path_env)
+char	*find_path(t_ast *ast, char **command_name, char *path_env, t_child_data *data)
 {
 	t_path	path_ob;
 	char	*command_path;
 
 	*command_name = ast->name->token->str_data; // TODO: name neeeds to be fully expanded, currtly some cases are not expanded (for example exit status req., wildcards etc)
-	init_path(&path_ob, info, path_env);
-	if ((*info) != NOT_FINISHED)
+	if (!init_path(&path_ob, path_env))
+	{
+		data->exit_status = 1;
 		return (NULL);
+	}
 	if (!path_ob.cur_path || !*(path_ob.cur_path))
 		return (NULL);
 	while (path_ob.cur_path && *(path_ob.cur_path))
@@ -80,7 +78,7 @@ char	*find_path(t_ast *ast, char **command_name, int *info, char *path_env)
 		command_path = ft_strjoin(path_ob.cur_path, *command_name);
 		if (!command_path)
 		{
-			(*info) = EXIT_ERROR;
+			data->exit_status = 1;
 			return (NULL);
 		}
 		my_free((void **)&(path_ob.cur_path));
@@ -91,13 +89,15 @@ char	*find_path(t_ast *ast, char **command_name, int *info, char *path_env)
 		{
 			// if the file exists but some error occurred
 			// TODO: would be better to checck rest of the paths but idk what bash does
-			perror(strerror(errno));
-			*info = SYNTAX_ERROR;
+			print_error(true, "idk what error", "in find_path()", NULL);
+			data->exit_status = 1;
 			return (NULL);
 		}
-		next_path(&path_ob, info);
-		if (*info != NOT_FINISHED)
+		if (!next_path(&path_ob))
+		{
+			data->exit_status = 1;
 			return (NULL);
+		}
 	}
 	return (NULL);
 }

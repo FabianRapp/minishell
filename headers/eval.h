@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:38:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/01 13:59:58 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/02 09:04:01 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 # include "minishell.h"
 
 typedef struct s_cleanup_data	t_cleanup_data;
+typedef struct s_child_data		t_child_data;
+typedef struct s_env			t_env;
+
 
 typedef struct s_path
 {
@@ -26,18 +29,16 @@ typedef struct s_path
 }	t_path;
 
 
-
-
-void	*expand_strs(t_ast *ast);
-char	*find_path(t_ast *ast, char **command_name, int *info, char *path_env);
-void	init_path(t_path *path_ob, int *info, char *env_var);
-void	ft_buildin(t_ast *ast);
+bool	expand_strs(t_ast *ast);
+char	*find_path(t_ast *ast, char **command_name, char *path_env, t_child_data *data);
+bool	init_path(t_path *path_ob, char *env_var);
+bool	ft_buildin(t_ast *ast);
 
 // utils
 
 // input_exit.c
 t_ast	*get_input(t_cleanup_data *cleanup_data);
-void	main_cleanup(t_cleanup_data *data, bool full_exit, bool main_process);
+void	main_exit(t_cleanup_data *data, bool full_exit, t_env *env, int exit_status);
 
 // data_utils.c
 int		count_args(t_arg *args);

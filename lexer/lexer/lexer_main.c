@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/30 03:45:03 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/02 05:22:12 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ t_token	*next_new_token(t_lexer *lexer, bool *malloc_error)
 	else
 	{
 		printf("DEBUG: no function IDed the type\n");
+		printf("%s\n", lexer->str + lexer->position);
 		exit (1);
 	}
 	if (token->type == UNKNOWN)

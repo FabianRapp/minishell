@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/01 13:55:32 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/03 13:40:30 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ bool	insert_dummy(t_parser *parser)
 	dummy->next = parser->next;
 	dummy->p_type = COMMAND;
 	
-	dummy->token = ft_calloc(1, sizeof(t_token));
+	dummy->token = new_dummy_token();
 	if (!dummy->token)
 		return (free(dummy), false);
 	dummy->token->type = DUMMY_COMMAND;
