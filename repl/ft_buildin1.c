@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/03 18:19:59 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/04 21:15:44 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void	ft_exit(t_ast *ast)
 {
 	int	exit_status;
 
-	
 	if (ast->env->main_process)
 		print_error(false, NULL, NULL, "exit");
 	if (ast->arg && includes_non_num(ast->arg->name->token->str_data))

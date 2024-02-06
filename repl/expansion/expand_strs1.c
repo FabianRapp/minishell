@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 03:37:23 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/03 20:57:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/05 00:43:30 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ bool	expand_strs(t_ast *ast)
 		return (false);
 	if (ast->type != COMMAND)
 		return (true);
+	if (ast->type == COMMAND && ast->name->token->type == SUBSHELL)
+		ast->type = SUBSHELL;
 	ast->name = expand_list(ast->env, ast->name);// needs malloc protection
 	if (ast->name)
 		ast->name = remove_non_literals(ast->name);

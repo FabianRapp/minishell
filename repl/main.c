@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/03 22:25:32 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/05 03:18:11 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ bool	no_command(t_ast *ast)
 	{
 		if (!resolve_redirs(ast))
 		{
-			exit(1);
+			printf("debug: exit in no command\n");
+			my_exit(ast, 1);
 		}
 		else
 		{
@@ -64,7 +65,6 @@ bool	check_edgecases(t_ast *ast)
 
 void	init_child_data(t_child_data *data, t_ast *ast)
 {
-	
 	data->path = NULL;
 	data->command_name = NULL;
 	data->exit_status = 0;
@@ -93,25 +93,38 @@ pid_t	create_child_command(t_ast *ast)
 	if (data.exit_status)
 	{
 		set_status(ast, data.exit_status);
-		return (-1);
+		print_error(SHELL_NAME, data.command_name, NULL, "debug error create_child_command");
+		exit(1);
 	}
-	if (data.path == NULL)
-	{
-		print_error(SHELL_NAME, data.command_name, NULL, "command not found");
-		my_exit(ast, 127);
-	}
+
 	else
 	{
 		pid = fork();
 		if (pid == -1)
 		{
-			print_error(true, NULL, NULL, "fork failed");
-			my_exit(ast, errno);
+			if (data.path)
+			{
+				print_error(true, NULL, NULL, "fork failed");
+				my_exit(ast, errno);
+			}
 		}
 		if (pid != 0)
-			my_exit(ast, 0);
+		{
+			if (data.path == NULL)
+			{
+				print_error(SHELL_NAME, data.command_name, NULL, "command not found");
+				my_exit(ast, 127);
+			}
+			waitpid(pid, &(ast->exit_status_node), 0);
+			ast->exit_status_node >>= 8;
+			//ft_printf("should be main exit command, status: %d (%s)\n", ast->exit_status_node, ast->name->token->str_data);
+			my_exit(ast, ast->exit_status_node);
+		}
 		redir_stdio(ast);
-		execvp(data.path, data.argv);
+		//printf("asd\n");
+		execve(data.path, data.argv, ast->envs);
+		//printf("qwe\n");
+		my_exit(ast, 0);
 	}
 	return (-1);
 }
@@ -136,20 +149,22 @@ void	init_signals(struct sigaction *signals)
 	signals->sa_flags = SA_RESTART;
 }
 
-void	add_global_data(t_ast *ast, t_env *env)
+void	add_global_data(t_ast *ast, t_env *env, char **envs)
 {
 	if (!ast)
 		return ;
-	add_global_data(ast->left, env);
-	add_global_data(ast->right, env);
+	add_global_data(ast->left, env, envs);
+	add_global_data(ast->right, env, envs);
 	ast->base_fd[IN] = dup(STDIN_FILENO);
 	ast->base_fd[OUT] = dup(STDOUT_FILENO);
 	if (ast->base_fd[IN] == -1 || ast->base_fd[OUT] == -1)
 	{//handel error
 	}
 	ast->env = env;
-	ast->fd[IN] = IN;
-	ast->fd[OUT] = OUT;
+	ast->fd[IN] = ast->base_fd[IN];
+	ast->fd[OUT] = ast->base_fd[OUT];
+	ast->exit_status_node = DEFAULT_EXIT_STATUS;
+	ast->envs = envs;
 }
 
 int	main(int ac, char **av, char **base_env)
@@ -158,6 +173,8 @@ int	main(int ac, char **av, char **base_env)
 	char			*input;
 	t_cleanup_data	cleanup_data;
 	t_env			env;
+	int				status;
+
 	//struct sigaction	signals;
 	//struct termios	terminal;
 
@@ -174,14 +191,20 @@ int	main(int ac, char **av, char **base_env)
 		return (1);
 	ast = get_input(&cleanup_data);
 	input = cleanup_data.input;
-	while (input != NULL)
+	while (1)
 	{
 		if (ast)
 		{
-			add_global_data(ast, &env);
+			//print_ast(ast);
+			add_global_data(ast, &env, base_env);
 			ast->cleanup_data = &cleanup_data;
-			print_ast(ast);
+			env.exit_status = -1;
+			//print_ast(ast);
 			run_node(ast);
+			while (waitpid(-1, &status, 0) != -1)
+			{
+				ast->env->exit_status = WIFEXITED(status);
+			}
 			//system("leaks minishell");
 			main_exit(&cleanup_data, false, &env, true);
 		}

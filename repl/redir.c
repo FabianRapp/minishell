@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:37:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/03 22:26:18 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/04 21:13:42 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,6 @@ bool	reset_stdio(t_ast *ast)
 		ast->env->exit_status = 1;
 		return (false);
 	}
-	ast->env->exit_status = 0;
 	return (true);
 }
 
@@ -159,22 +158,28 @@ bool	redir_stdio(t_ast *ast)
 	int	*fds;
 
 	fds = ast->fd;
-	fds[IN] = dup2(fds[IN], STDIN_FILENO);
-	if (fds[IN] < 0)
+	if (fds[IN] != ast->base_fd[IN])
 	{
-		print_error(true, NULL, NULL, "error redirecting input");
-		ast->env->exit_status = 1;
-		return (false);
+		fds[IN] = dup2(fds[IN], STDIN_FILENO);
+		if (fds[IN] < 0)
+		{
+			perror(strerror(errno));
+			print_error(true, NULL, NULL, "error redirecting input");
+			ast->exit_status_node = 1;
+			return (false);
+		}
 	}
-	fds[OUT] = dup2(fds[OUT], STDOUT_FILENO);
-	if (fds[OUT] < 0)
+	if (fds[OUT] != ast->base_fd[OUT])
 	{
-		print_error(true, NULL, NULL, "error redirecting ouput");
-		ast->env->exit_status = 1;
-		
-		return (false);
+		fds[OUT] = dup2(fds[OUT], STDOUT_FILENO);
+		if (fds[OUT] < 0)
+		{
+			perror(strerror(errno));
+			print_error(true, NULL, NULL, "error redirecting ouput");
+			ast->exit_status_node = 1;
+			return (false);
+		}
 	}
-	ast->env->exit_status = 0;
 	return (true);
 }
 
@@ -218,7 +223,5 @@ bool	resolve_redirs(t_ast *ast)
 			return (false);
 		redir = redir->next;
 	}
-	//reset_stdio(ast);
-	//redir_stdio(ast);
 	return (true);
 }

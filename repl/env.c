@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 07:19:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/03 19:37:44 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/05 01:13:14 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ bool	init_env(t_env *new_env, char **base_env)
 
 	if (!new_env)
 		return (false);
-	new_env->exit_status = 0;
+	new_env->exit_status = DEFAULT_EXIT_STATUS;
 	new_env->vars = NULL;
 	if (!base_env)
 		return (false);

@@ -6,20 +6,25 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/03 22:15:52 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/06 14:34:45 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
+	- env vars rework
+	- init nodes to -1 exit status and only run if this is -1:
+		- AND/OR can change nodes exit status even withoutrunning the nodes ->
+		add checks so these not ran nodes do not need to pipe the exit status to waiting
+		logic conditions
+		-conditions need to check their on exit status to decide if they run the left (and right) node
 	- close base fds
-	- rework expansion
+	- finish expansion rework
 	- ft_exit completly bugged
 	- redirs bugged with exit
 	- parser return value must indicate a diffrence between syntax and malloc error
 	- add early exits for sytax error in lexer and parser:
 		-- if any subshell contains nothing or only whitespace its "bash: syntax error near unexpected token `)'" and no command even starts
-	- implement pipes
 	- implement other ft functions
 	- implement here doc
 	- update path functions to use new error print fn
@@ -75,6 +80,8 @@ weird stuff to keep in mind about bash
 # define DEBUG 0
 
 # define NEW_FILE_PERMISSIONS 0644
+
+# define DEFAULT_EXIT_STATUS -1
 
 #define ARGS 2
 # define IN 0
@@ -178,6 +185,7 @@ typedef struct s_ast
 	int				exit_fd[2];
 	int				*all_pids;
 	int				base_fd[2];
+	char			**envs;
 }	t_ast;
 
 // lexer
@@ -190,6 +198,7 @@ void	run_node(t_ast *ast);
 void	run_command_node(t_ast *ast);
 
 bool	check_edgecases(t_ast *ast);
+void	add_global_data(t_ast *ast, t_env *env, char **envs);
 
 //redir
 bool	resolve_redirs(t_ast *ast);
@@ -221,3 +230,96 @@ typedef struct s_ast	t_ast;
 t_ast	*parser(char *str);
 
 #endif
+
+
+
+// (echo D) || (echo E && echo F | echo G) && (echo H || echo I) | (echo J && echo K) || echo L && (echo M || echo N)
+
+
+//(echo A && (echo B | echo C) && echo D) || (echo E && echo F | echo G) && (echo H || echo I) | (echo J && echo K) || echo L && (echo M || echo N)
+
+/*
+
+(echo A && (echo B | echo C) && echo D) || (echo E && echo F | echo G) && (echo H || echo I) | (echo J && echo K) || echo L && (echo M || echo N)
+
+
+(echo H) | (echo J && echo K) || echo L			H J K L		(J K)
+echo H | (echo J && echo K) || echo L			J K L		
+
+echo H | (echo J && echo K) || echo L
+
+(echo H) | (echo J && echo K)
+
+
+(echo J && echo K) || echo L
+
+(echo J) || echo L
+
+
+(echo A && (echo B | echo C) && echo D) || (echo E && echo F | echo G) && (echo H || echo I) | (echo J && echo K) || echo L
+
+
+(echo A && (echo B | echo C) && echo D) || (echo E && echo F | echo G) && (eco H || echo I) | (eho J && echo K) || echo L
+
+
+(echo A && (echo B | echo C) && echo D) || (echo E && echo F | echo G) && (eco H) | (echo J && echo K) || echo L
+
+(echo A && (echo B || echo C) && (echo D | (echo E && echo F))) || (echo G && (echo H | echo I)) && ((echo J || echo K) && echo L) | (echo M && (echo N || echo O)) && (echo P || (echo Q && echo R)) || echo S && ((echo T && echo U) || echo V) | (echo W || echo X) && echo Y || (echo Z && echo AA) || echo AB && (echo AC || echo AD) && (echo AE | echo AF && echo AG)
+
+(echo H || echo I) | (echo J && echo K) || echo L && (echo M || echo N)
+
+
+
+echo H | (echo J) || echo L
+
+
+echo P || (echo Q && echo R)
+
+bash-3.2$ (echo A && (echo B || echo C) && (echo D | (echo E && echo F))) || (echo G && (echo H | echo I)) && ((echo J || echo K) && echo L) | (echo M && (echo N || echo & (echo P || (echo Q && echo R)) || echo S && ((echo T && echo U) || echo V) | (echo W || echo X) && echo Y || (echo Z && echo AA) || echo AB && (echo AC || echo AD) && (AE | echo AF && echo AG)
+A
+B
+E
+F
+M
+N
+P
+W
+Y
+AC
+AF
+AG
+bash-3.2$ ./minishell
+minishell-$: (echo A && (echo B || echo C) && (echo D | (echo E && echo F))) || (echo G && (echo H | echo I)) && ((echo J || echo K) && echo L) | (echo M && (echo N || echo O)) && (echo P || (echo Q && echo R)) || echo S && ((echo T && echo U) || echo V) | (echo W || echo X) && echo Y || (echo Z && echo AA) || echo AB && (echo AC || echo AD) && (echo AE | echo AF && echo AG)
+A
+B
+E
+F
+M
+N
+P
+R
+W
+Y
+AC
+AF
+AG
+
+
+
+(echo A && (B || echo C) && (D | (echo E && F)))
+
+
+(D | (echo E && F)) && echo G
+
+(echo E && F) && echo G
+
+
+
+
+
+(echo H | I) && (echo N)
+
+
+*/
+
+
