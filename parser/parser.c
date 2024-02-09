@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/03 13:40:30 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/06 23:27:48 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,6 @@ bool	insert_dummy(t_parser *parser)
 		return (false);
 	dummy->next = parser->next;
 	dummy->p_type = COMMAND;
-	
 	dummy->token = new_dummy_token();
 	if (!dummy->token)
 		return (free(dummy), false);
@@ -130,7 +129,6 @@ bool	type_commands(t_parser *parser)
 	bool		found_command;
 	bool		redir;
 	
-	//t_parser	*last;
 	found_command = false;
 	redir = false;
 	while (parser->p_type != T_EOF)
@@ -141,11 +139,8 @@ bool	type_commands(t_parser *parser)
 			return (print_error(true, NULL, NULL, type_to_str(parser->p_type)), false);
 		else if (is_operator(parser->p_type))
 		{
-			if (!found_command && redir)
-			{
-				if (!insert_dummy(parser))
+			if (!found_command && redir && !insert_dummy(parser))
 					return (false);
-			}
 			found_command = false;
 			redir = false;
 		}
@@ -162,11 +157,8 @@ bool	type_commands(t_parser *parser)
 		print_error(true, NULL, NULL, type_to_str(T_EOF));
 		return (false);
 	}
-	if (redir && !found_command)
-	{
-		if (!insert_dummy(parser))
-			return (false);
-	}
+	if (redir && !found_command && !insert_dummy(parser))
+		return (false);
 	return (true);
 }
 
@@ -235,7 +227,7 @@ bool	move_commands_infront(t_parser *parser)
 		{
 			//TODO: figure out the diffrent syntax errors here (example: echo >aaa <sadad (echo) | >a <ad)
 			if (!is_redir(last->p_type))
-				return (print_error(true, NULL, NULL, "syntax error"), false);
+				return (print_error(true, NULL, NULL, type_to_str(parser->token->type)), false);
 			swap_parsers(parser, last);
 			last = last_parser(parser);
 		}

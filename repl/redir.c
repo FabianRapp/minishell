@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:37:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/04 21:13:42 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/06 20:56:45 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,24 +62,24 @@ int	redir_fd_out(char *file, bool append)
 	fd = open(file, flag, NEW_FILE_PERMISSIONS);
 	if (fd >= 0)
 		return (fd);
-	if (fd == EACCES)
+	if (errno == EACCES)
 		print_error(true, NULL, file, "Permission denied");
-	else if (fd == EINTR)
+	else if (errno == EINTR)
 		print_error(true, NULL, file, "Signal interupt");
-	else if (fd == EIO)
+	else if (errno == EIO)
 		print_error(true, NULL, file, "Error writing to file");
-	else if (fd == EISDIR)
+	else if (errno == EISDIR)
 		print_error(true, NULL, file, "Is a directory");
-	else if (fd == EMFILE)
+	else if (errno == EMFILE)
 		print_error(true, NULL, file, "Too many open files");
-	else if (fd == ENAMETOOLONG)
+	else if (errno == ENAMETOOLONG)
 		print_error(true, NULL, file, "File name too long");
-	else if (fd == ENOENT)
+	else if (errno == ENOENT)
 		print_error(true, NULL, file, "No such file or directory");
-	else if (fd == ENOTDIR)
+	else if (errno == ENOTDIR)
 		print_error(true, NULL, file, "Not a directory");
 	else
-		print_error(true, NULL, file, "Error");
+		print_error(true, NULL, file, strerror(errno));
 	return (fd);
 }
 
@@ -92,24 +92,24 @@ int	redir_in(char *file)
 	fd = open(file, flag);
 	if (fd >= 0)
 		return (fd);
-	if (fd == EACCES)
+	if (errno == EACCES)
 		print_error(true, NULL, file, "Permission denied");
-	else if (fd == EINTR)
+	else if (errno == EINTR)
 		print_error(true, NULL, file, "Signal interupt");
-	else if (fd == EIO)
+	else if (errno == EIO)
 		print_error(true, NULL, file, "Error reading from file"); 
-	else if (fd == EISDIR)
+	else if (errno == EISDIR)
 		print_error(true, NULL, file, "Is a directory");
-	else if (fd == EMFILE)
+	else if (errno == EMFILE)
 		print_error(true, NULL, file, "Too many open files");
-	else if (fd == ENAMETOOLONG)
+	else if (errno == ENAMETOOLONG)
 		print_error(true, NULL, file, "File name too long");
-	else if (fd == ENOENT)
+	else if (errno == ENOENT)
 		print_error(true, NULL, file, "No such file or directory");
-	else if (fd == ENOTDIR)
+	else if (errno == ENOTDIR)
 		print_error(true, NULL, file, "Not a directory");
 	else
-		print_error(true, NULL, file, "Error");
+		print_error(true, NULL, file, strerror(errno));
 	return (fd);
 }
 
@@ -138,7 +138,7 @@ bool	reset_stdio(t_ast *ast)
 	fds[IN] = dup2(ast->base_fd[IN], STDIN_FILENO);
 	if (fds[IN] < 0)
 	{
-		print_error(true, NULL, NULL, "error redirecting input");
+		//print_error(true, NULL, NULL, "error redirecting input");
 		ast->env->exit_status = 1;
 		
 		return (false);
@@ -146,7 +146,7 @@ bool	reset_stdio(t_ast *ast)
 	fds[OUT] = dup2(ast->base_fd[OUT], STDOUT_FILENO);
 	if (fds[OUT] < 0)
 	{
-		print_error(true, NULL, NULL, "error redirecting output");
+		//print_error(true, NULL, NULL, "error redirecting output");
 		ast->env->exit_status = 1;
 		return (false);
 	}
@@ -158,24 +158,24 @@ bool	redir_stdio(t_ast *ast)
 	int	*fds;
 
 	fds = ast->fd;
-	if (fds[IN] != ast->base_fd[IN])
+	//if (fds[IN] != ast->base_fd[IN])
 	{
 		fds[IN] = dup2(fds[IN], STDIN_FILENO);
 		if (fds[IN] < 0)
 		{
-			perror(strerror(errno));
-			print_error(true, NULL, NULL, "error redirecting input");
+			//perror(strerror(errno));
+			//print_error(true, NULL, NULL, "error redirecting input");
 			ast->exit_status_node = 1;
 			return (false);
 		}
 	}
-	if (fds[OUT] != ast->base_fd[OUT])
+	//if (fds[OUT] != ast->base_fd[OUT])
 	{
 		fds[OUT] = dup2(fds[OUT], STDOUT_FILENO);
 		if (fds[OUT] < 0)
 		{
-			perror(strerror(errno));
-			print_error(true, NULL, NULL, "error redirecting ouput");
+			//perror(strerror(errno));
+			//print_error(true, NULL, NULL, "error redirecting ouput");
 			ast->exit_status_node = 1;
 			return (false);
 		}

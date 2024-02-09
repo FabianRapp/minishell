@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 13:01:55 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/03 18:37:48 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 17:36:09 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,8 @@ t_token_list	*remove_non_literals(t_token_list *list)
 				printf("DEBUG remove_non_literals: this token type is unexpected: %s\n", type_to_str_type(list->token->type));
 				exit(0);
 			}
-			list = move_nodes_ahead(list, true);
+			if (list->token->type != DUMMY_COMMAND)
+				list = move_nodes_ahead(list, true);
 		}
 		if (list)
 			list = list->next;

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/05 03:17:19 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 17:59:57 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,16 +238,3 @@ int	name_len(char *str)
 	}
 	return (len);
 }
-
-void	my_exit(t_ast *ast, int status)
-{
-	int	finished_fd;
-
-	finished_fd = ast->exit_fd[OUT];
-	if (write(finished_fd, &(status), sizeof(int)) == -1)
-		ft_fprintf(ast->base_fd[OUT], "DEBUG: my_exit write status failed\n");
-	close(finished_fd);
-	exit(status);
-}
-
-

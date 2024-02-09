@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/05 03:18:11 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 18:01:13 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,28 +18,22 @@ void	child_cleanup(t_child_data *data)
 	(void)data;
 }
 
-
 // if ast->info == NOT_FINISHED afterwards there was a command to execute
 bool	no_command(t_ast *ast)
 {
-	if (ast->name->token->type == DUMMY_COMMAND && ast->redir)
+	if (ast->name->token->type == DUMMY_COMMAND)
 	{
-		if (!resolve_redirs(ast))
-		{
-			printf("debug: exit in no command\n");
-			my_exit(ast, 1);
-		}
-		else
-		{
-			exit(0);
-		}
+		if (!ast->redir)
+			ast->exit_status_node = 1;
+		ast->exit_status_node = 0;
+		return (true);
 	}
 	else if (is_operator(ast->type))
 	{
 		if (ast->redir)
 		{
 			printf("DEBUG: operator with redirs in no_command()\n");
-			exit(1);// DEBUG
+			ast->exit_status_node = 1;
 			return (true);
 		}
 		// TODO: need to enable this condtion
@@ -48,7 +42,7 @@ bool	no_command(t_ast *ast)
 		//else
 		{
 			print_error(1, "syntax error near unexpected token", "<needs to be converted to actual input:>", (char *)type_to_str_type(ast->type));
-			exit(258);
+			ast->exit_status_node = 258;
 		}
 	}
 	return (false);
@@ -66,73 +60,53 @@ bool	check_edgecases(t_ast *ast)
 void	init_child_data(t_child_data *data, t_ast *ast)
 {
 	data->path = NULL;
-	data->command_name = NULL;
+	data->command_name = ast->name->token->str_data;
 	data->exit_status = 0;
 	data->malloc_error = false;
 	data->argv = ft_calloc(count_args(ast->arg) + 2, sizeof (char *const));
 	if (!data->argv)
 	{
-		data->exit_status = 1;
+		ast->exit_status_node = errno;
 		return ;
 	}
-	data->path = find_path(ast, &(data->command_name), "PATH", data);
+	
+	data->path = find_path(ast, data->command_name, "PATH", data);
 	if (data->exit_status)
+	{
+		ast->exit_status_node = data->exit_status;
 		return ;
+	}
+	
 	data->argv[0] = data->path;
 	fill_args(ast, data->argv + 1, ARGS);
-}
-
-pid_t	create_child_command(t_ast *ast)
-{
-	pid_t			pid;
-	t_child_data	data;
-
-	// if (!resolve_redirs(ast))
-	// 	return (-1);
-	init_child_data(&data, ast);
-	if (data.exit_status)
-	{
-		set_status(ast, data.exit_status);
-		print_error(SHELL_NAME, data.command_name, NULL, "debug error create_child_command");
-		exit(1);
-	}
-
-	else
-	{
-		pid = fork();
-		if (pid == -1)
-		{
-			if (data.path)
-			{
-				print_error(true, NULL, NULL, "fork failed");
-				my_exit(ast, errno);
-			}
-		}
-		if (pid != 0)
-		{
-			if (data.path == NULL)
-			{
-				print_error(SHELL_NAME, data.command_name, NULL, "command not found");
-				my_exit(ast, 127);
-			}
-			waitpid(pid, &(ast->exit_status_node), 0);
-			ast->exit_status_node >>= 8;
-			//ft_printf("should be main exit command, status: %d (%s)\n", ast->exit_status_node, ast->name->token->str_data);
-			my_exit(ast, ast->exit_status_node);
-		}
-		redir_stdio(ast);
-		//printf("asd\n");
-		execve(data.path, data.argv, ast->envs);
-		//printf("qwe\n");
-		my_exit(ast, 0);
-	}
-	return (-1);
 }
 
 // for now assumes ast to be the node of exactly one command
 void	run_command_node(t_ast *ast)
 {
-	ast->id = create_child_command(ast);
+	t_child_data	data;
+
+	init_child_data(&data, ast);
+	if (ast->exit_status_node != DEFAULT_EXIT_STATUS)
+		return ;
+	
+	ast->pid = fork();
+	if (ast->pid == -1)
+	{
+		ast->exit_status_node = errno;
+		print_error(true, NULL, NULL, strerror(ast->exit_status_node));
+		return ;
+	}
+	if (ast->pid != 0)
+	{
+		//waitpid(ast->pid, &(ast->exit_status_node), 0);
+		//ast->exit_status_node >>= 8;
+		//exit( ast->exit_status_node);
+		return ;
+	}
+	redir_stdio(ast);
+	execve(data.path, data.argv, ast->envs);
+	exit( 0);// should not run
 }
 
 void disableRawMode(struct termios *orig_ter)
@@ -155,14 +129,16 @@ void	add_global_data(t_ast *ast, t_env *env, char **envs)
 		return ;
 	add_global_data(ast->left, env, envs);
 	add_global_data(ast->right, env, envs);
-	ast->base_fd[IN] = dup(STDIN_FILENO);
-	ast->base_fd[OUT] = dup(STDOUT_FILENO);
-	if (ast->base_fd[IN] == -1 || ast->base_fd[OUT] == -1)
+	//ast->base_fd[IN] = dup(STDIN_FILENO);
+	//ast->base_fd[OUT] = dup(STDOUT_FILENO);
+	//if (ast->base_fd[IN] == -1 || ast->base_fd[OUT] == -1)
 	{//handel error
 	}
 	ast->env = env;
-	ast->fd[IN] = ast->base_fd[IN];
-	ast->fd[OUT] = ast->base_fd[OUT];
+	ast->fd[IN] = IN;
+	ast->fd[OUT] = OUT;
+	// ast->fd[IN] = ast->base_fd[IN];
+	// ast->fd[OUT] = ast->base_fd[OUT];
 	ast->exit_status_node = DEFAULT_EXIT_STATUS;
 	ast->envs = envs;
 }

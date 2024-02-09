@@ -6,40 +6,28 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/06 14:34:45 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 19:14:11 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
+	- last exit setter/getter
 	- env vars rework
-	- init nodes to -1 exit status and only run if this is -1:
-		- AND/OR can change nodes exit status even withoutrunning the nodes ->
-		add checks so these not ran nodes do not need to pipe the exit status to waiting
-		logic conditions
-		-conditions need to check their on exit status to decide if they run the left (and right) node
-	- close base fds
 	- finish expansion rework
-	- ft_exit completly bugged
-	- redirs bugged with exit
-	- parser return value must indicate a diffrence between syntax and malloc error
+	- exit behivior with two numeric args (stops curent command execution but does not exit)
+	- parser must print syntax error and return NULL in case of error
 	- add early exits for sytax error in lexer and parser:
 		-- if any subshell contains nothing or only whitespace its "bash: syntax error near unexpected token `)'" and no command even starts
 	- implement other ft functions
 	- implement here doc
 	- update path functions to use new error print fn
 	- add error handeling to lexer and parser
-	- maybe need to keep track if the main process or a child is running a command for exit()?
-	- add current working dir to path
-	-redir env var expansion does not make sense, either needs additional pointer in structs or idk ($<varname> expands to multile redir eventhough it should be 1)
-	- need to expand each redir one by one and create the files, because
-		if an invalid redir appears the ones before allready created the files but the ones afet not
 	- have some kind of error checking for unclosed quotes in init_parser()
-	- need to lex '=' for ft_export()? (maybe just hardcode an export type duo to unique
-		interaction of export with white space (does not accept any whitespace))
-
+	- add 
 	- change white space identification: not all whitespace is the same (mb dosnt matter since no multi line)
-
+minishell-$: (asd) (asd)
+minishell: asd: command not found
 ./test "asd >asd <sadad (asd) | >a <ad"
 debug move_commands_inform : COMMAND
 
@@ -52,12 +40,9 @@ debug move_commands_inform : COMMAND
 	bash: syntax error: unexpected end of file
 	bash-3.2$ (asd
 	> bash: syntax error: unexpected end of file
-
 */
 
 /*
-weird stuff to keep in mind about the code
-- printf will cause weird bugs, use ft_printf ft_fprintf, print_error or write
 
 weird stuff to keep in mind about bash
 
@@ -181,8 +166,7 @@ typedef struct s_ast
 	int				exit_status_node;
 	t_cleanup_data	*cleanup_data;
 	t_env			*env;
-	pid_t			id;
-	int				exit_fd[2];
+	pid_t			pid;
 	int				*all_pids;
 	int				base_fd[2];
 	char			**envs;
@@ -193,7 +177,6 @@ t_token		*next_new_token(t_lexer *lexer, bool *malloc_fail);
 t_lexer		new_lexer(char *str);
 
 // main
-void	walk_ast(t_ast *ast);
 void	run_node(t_ast *ast);
 void	run_command_node(t_ast *ast);
 
@@ -215,9 +198,6 @@ void	free_env(t_env *env);
 int		get_pid(void);
 void	print_env(t_env *env);
 t_env	clone_env(t_env *base);
-
-
-void	ft_exit(t_ast *ast);
 
 // utils
 bool	my_free(void **ptr);

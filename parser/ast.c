@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/03 14:29:46 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 17:57:56 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -310,6 +310,10 @@ void	free_ast(t_ast *ast)
 		free_ast(ast->left);
 	if (ast->right)
 		free_ast(ast->right);
+	if (ast->fd[IN] != IN)
+		close(ast->fd[IN]);
+	if (ast->fd[OUT] != OUT)
+		close (ast->fd[OUT]);
 	free_token_list(ast->name);
 	free_arg_list(ast->arg);
 	free(ast);

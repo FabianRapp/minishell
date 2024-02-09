@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:23:25 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/03 16:52:40 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 18:00:38 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ typedef	struct s_parser	t_parser;
 
 t_token	*new_dummy_token(void);
 void	set_status(t_ast *ast, int status);
-void	my_exit(t_ast *ast, int status);
 
 typedef struct s_ast	t_ast;
 void	print_ast(t_ast *ast);

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/04 21:15:44 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 18:01:13 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,11 @@ static bool	includes_non_num(char *str)
 	return (false);
 }
 
+void	ft_pwd(t_ast *ast)
+{
+	ft_fprintf(ast->fd[OUT], "%s\n", getenv("PWD"));
+}
+
 // see header file for weird stuff to keep in mind for implentation
 void	ft_exit(t_ast *ast)
 {
@@ -35,34 +40,33 @@ void	ft_exit(t_ast *ast)
 	{
 		if (ast->arg && ast->arg->name)
 			print_error(1, "exit", ast->arg->name->token->str_data, "numeric argument required");
-		my_exit(ast, 255);
 		exit(255);
 	}
 	else if (ast->arg && count_args(ast->arg) > 1)
 	{
 		print_error(1, "exit", ast->arg->name->token->str_data, "too many arguments");
-		exit(1);
+		ast->exit_status_node = 1;
 		if (ast->env->main_process)
 			return ;
+		exit(1);
 	}
 	else if (!ast->arg || count_args(ast->arg) == 0)
 	{
-		my_exit(ast, 0);
+		exit( 0);
 	}
 	else
 	{
-		
 		if (ast->arg->name)
-			my_exit(ast, ft_atoi(ast->arg->name->token->str_data));
+			exit( ft_atoi(ast->arg->name->token->str_data));
 		else
-			my_exit(ast, 0);; // should not be needed later on
+			exit( 0);; // should not be needed later on
 	}
 	printf("debug exit, why is it getting here\n");
 	exit_status = ast->env->exit_status;
 	//if (ast->env->main_process)
 	{
 		
-		my_exit(ast, exit_status);
+		exit( exit_status);
 		// close(ast->fd[1]);
 		// close(ast->fd[0]);
 		// main_exit(ast->cleanup_data, true, ast->env, exit_status);
@@ -108,7 +112,6 @@ bool	ft_buildin(t_ast *ast)
 	{
 		resolve_redirs(ast);
 		ft_exit(ast);
-		reset_stdio(ast);
 		return (true);
 	}
 	command_name = ast->name->token->str_data;
@@ -120,6 +123,12 @@ bool	ft_buildin(t_ast *ast)
 	if (!ft_strcmp(command_name, "export"))
 	{
 		///ft_export(ast);
+		return (true);
+	}
+	else if (!ft_strcmp(command_name, "pwd"))
+	{
+		//redir_stdio(ast);
+		ft_pwd(ast);
 		return (true);
 	}
 	return (false);

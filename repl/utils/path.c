@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/02 08:18:31 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 17:09:15 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ bool	next_path(t_path *path_ob)
 	if (!(path_ob->all_paths) || !(path_ob->all_paths)[path_ob->read_postion])
 	{
 		path_ob->cur_path = NULL;
-		return (true);
+		path_ob->ast->exit_status_node = 127;
+		return (print_error(SHELL_NAME, path_ob->command_name, NULL, "command not found"), true);
 	}
 	path_ob->position = path_ob->read_postion;
 	while ((path_ob->all_paths)[path_ob->read_postion] != ':'
@@ -32,16 +33,19 @@ bool	next_path(t_path *path_ob)
 	{
 		path_ob->read_postion++;
 	}
+	
 	path_ob->cur_path = ft_strndup(path_ob->all_paths + path_ob->position,
 		path_ob->read_postion - path_ob->position);
 	if (!path_ob->cur_path)
 	{
-		return (false);
+		path_ob->ast->exit_status_node = errno;
+		return (print_error(true, NULL, NULL, strerror(path_ob->ast->exit_status_node)), false);
 	}
 	ft_strjoin_inplace(&(path_ob->cur_path), "/");
 	if (!path_ob->cur_path)
 	{
-		return (false);
+		path_ob->ast->exit_status_node = errno;
+		return (print_error(true, NULL, NULL, strerror(path_ob->ast->exit_status_node)), false);
 	}
 	while ((path_ob->all_paths)[path_ob->read_postion] == ':')
 	{
@@ -56,26 +60,29 @@ bool	init_path(t_path *path_ob, char *env_var)
 	path_ob->cur_path = NULL;
 	path_ob->read_postion = 0;
 	path_ob->position = 0;
+	
 	return (next_path(path_ob));
 }
 
 // changes the global errno
-char	*find_path(t_ast *ast, char **command_name, char *path_env, t_child_data *data)
+char	*find_path(t_ast *ast, char *command_name, char *path_env, t_child_data *data)
 {
 	t_path	path_ob;
 	char	*command_path;
 
-	*command_name = ast->name->token->str_data; // TODO: name neeeds to be fully expanded, currtly some cases are not expanded (for example exit status req., wildcards etc)
+	path_ob.ast = ast;
+	path_ob.command_name = command_name;
 	if (!init_path(&path_ob, path_env))
 	{
 		data->exit_status = 1;
 		return (NULL);
 	}
+	
 	if (!path_ob.cur_path || !*(path_ob.cur_path))
 		return (NULL);
 	while (path_ob.cur_path && *(path_ob.cur_path))
 	{
-		command_path = ft_strjoin(path_ob.cur_path, *command_name);
+		command_path = ft_strjoin(path_ob.cur_path, command_name);
 		if (!command_path)
 		{
 			data->exit_status = 1;
@@ -87,17 +94,11 @@ char	*find_path(t_ast *ast, char **command_name, char *path_env, t_child_data *d
 		my_free((void **)&(command_path));
 		if (errno != ENOENT)
 		{
-			// if the file exists but some error occurred
-			// TODO: would be better to checck rest of the paths but idk what bash does
-			print_error(true, "idk what error", "in find_path()", NULL);
-			data->exit_status = 1;
-			return (NULL);
+			data->exit_status = errno;
+			return (print_error(true, NULL, NULL, strerror(errno)), NULL);
 		}
 		if (!next_path(&path_ob))
-		{
-			data->exit_status = 1;
 			return (NULL);
-		}
 	}
 	return (NULL);
 }
