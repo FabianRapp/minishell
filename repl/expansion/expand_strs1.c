@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 03:37:23 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 17:36:18 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 19:34:15 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,9 @@ t_token_list	*expand_list(t_env *env, t_token_list *list)
 	}
 	else if (list->token->type == EXIT_STATUS_REQUEST)
 	{
-		if (!exitreq_to_literal_token(env, list->token))
+		list->token->type = LITERAL;
+		list->token->str_data = get_last_exit();
+		if (!list->token->str_data)
 		{//malloc fails
 		}
 	}

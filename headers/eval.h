@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:38:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 16:49:41 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 20:22:05 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef struct s_path
 
 
 bool	expand_strs(t_ast *ast);
-char	*find_path(t_ast *ast, char *command_name, char *path_env, t_child_data *data);
+char	*find_path(t_ast *ast, char *command_name, char *path_env);
 bool	init_path(t_path *path_ob, char *env_var);
 bool	ft_buildin(t_ast *ast);
 

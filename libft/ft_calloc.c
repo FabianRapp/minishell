@@ -6,14 +6,14 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 21:18:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/08 14:38:15 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 20:24:05 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/libft.h"
 
 // minishell
-static void	print_error(bool shell_name, char *command_name, char *arg, char *str)
+static void	print_error_calloc(bool shell_name, char *command_name, char *arg, char *str)
 {
 	if (shell_name)
 		ft_fprintf(2, "%s: ", SHELL_NAME);
@@ -36,7 +36,8 @@ void	*ft_calloc(size_t count, size_t size)
 	arr = (char *)malloc(bytes);
 	if (!arr)
 	{
-		print_error(true, NULL,"Error", " Memory allocation failed");
+		print_error_calloc(true, NULL,"Error", " Memory allocation failed");
+		set_last_exit(errno);
 		return (NULL);
 	}
 	i = 0;

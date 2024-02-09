@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 07:19:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/05 01:13:14 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 20:55:39 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ bool	init_env(t_env *new_env, char **base_env)
 
 	if (!new_env)
 		return (false);
-	new_env->exit_status = DEFAULT_EXIT_STATUS;
 	new_env->vars = NULL;
 	if (!base_env)
 		return (false);
@@ -83,7 +82,6 @@ t_env	clone_env(t_env *base)
 	clone.vars = NULL;
 	if (!base)
 		return (clone);
-	clone.exit_status = base->exit_status;
 	i = 0;
 	while (base->vars && base->vars[i].name)
 		i++;
@@ -119,8 +117,6 @@ void	print_env(t_env *env)
 		printf("name: %s\n", (env->vars)[i].name);
 		printf("val: %s\n", (env->vars)[i].val);
 	}
-	if ((env->exit_status))
-		printf("last exit status: %d\n", env->exit_status);
 	printf("pid: %d\n", env->main_pid);
 }
 

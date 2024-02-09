@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 18:01:13 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 21:06:06 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,9 @@ bool	no_command(t_ast *ast)
 	if (ast->name->token->type == DUMMY_COMMAND)
 	{
 		if (!ast->redir)
-			ast->exit_status_node = 1;
-		ast->exit_status_node = 0;
+			ast->exit_status = 1;
+		ast->exit_status = 0;
+		set_last_exit(ast->exit_status);
 		return (true);
 	}
 	else if (is_operator(ast->type))
@@ -33,7 +34,8 @@ bool	no_command(t_ast *ast)
 		if (ast->redir)
 		{
 			printf("DEBUG: operator with redirs in no_command()\n");
-			ast->exit_status_node = 1;
+			ast->exit_status = 1;
+			set_last_exit(ast->exit_status);
 			return (true);
 		}
 		// TODO: need to enable this condtion
@@ -42,7 +44,8 @@ bool	no_command(t_ast *ast)
 		//else
 		{
 			print_error(1, "syntax error near unexpected token", "<needs to be converted to actual input:>", (char *)type_to_str_type(ast->type));
-			ast->exit_status_node = 258;
+			ast->exit_status = 258;
+			set_last_exit(ast->exit_status);
 		}
 	}
 	return (false);
@@ -61,22 +64,16 @@ void	init_child_data(t_child_data *data, t_ast *ast)
 {
 	data->path = NULL;
 	data->command_name = ast->name->token->str_data;
-	data->exit_status = 0;
 	data->malloc_error = false;
 	data->argv = ft_calloc(count_args(ast->arg) + 2, sizeof (char *const));
 	if (!data->argv)
 	{
-		ast->exit_status_node = errno;
+		ast->exit_status = errno;
 		return ;
 	}
-	
-	data->path = find_path(ast, data->command_name, "PATH", data);
-	if (data->exit_status)
-	{
-		ast->exit_status_node = data->exit_status;
+	data->path = find_path(ast, data->command_name, "PATH");
+	if (ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
-	}
-	
 	data->argv[0] = data->path;
 	fill_args(ast, data->argv + 1, ARGS);
 }
@@ -87,26 +84,25 @@ void	run_command_node(t_ast *ast)
 	t_child_data	data;
 
 	init_child_data(&data, ast);
-	if (ast->exit_status_node != DEFAULT_EXIT_STATUS)
+	if (ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
-	
 	ast->pid = fork();
 	if (ast->pid == -1)
 	{
-		ast->exit_status_node = errno;
-		print_error(true, NULL, NULL, strerror(ast->exit_status_node));
+		ast->exit_status = errno;
+		print_error(true, NULL, NULL, strerror(ast->exit_status));
 		return ;
 	}
 	if (ast->pid != 0)
 	{
-		//waitpid(ast->pid, &(ast->exit_status_node), 0);
-		//ast->exit_status_node >>= 8;
-		//exit( ast->exit_status_node);
+		//waitpid(ast->pid, &(ast->exit_status), 0);
+		//ast->exit_status >>= 8;
+		//exit( ast->exit_status);
 		return ;
 	}
 	redir_stdio(ast);
 	execve(data.path, data.argv, ast->envs);
-	exit( 0);// should not run
+	exit(errno);
 }
 
 void disableRawMode(struct termios *orig_ter)
@@ -139,7 +135,7 @@ void	add_global_data(t_ast *ast, t_env *env, char **envs)
 	ast->fd[OUT] = OUT;
 	// ast->fd[IN] = ast->base_fd[IN];
 	// ast->fd[OUT] = ast->base_fd[OUT];
-	ast->exit_status_node = DEFAULT_EXIT_STATUS;
+	ast->exit_status = DEFAULT_EXIT_STATUS;
 	ast->envs = envs;
 }
 
@@ -174,12 +170,11 @@ int	main(int ac, char **av, char **base_env)
 			//print_ast(ast);
 			add_global_data(ast, &env, base_env);
 			ast->cleanup_data = &cleanup_data;
-			env.exit_status = -1;
 			//print_ast(ast);
 			run_node(ast);
 			while (waitpid(-1, &status, 0) != -1)
 			{
-				ast->env->exit_status = WIFEXITED(status);
+				set_last_exit(WEXITSTATUS(status));
 			}
 			//system("leaks minishell");
 			main_exit(&cleanup_data, false, &env, true);

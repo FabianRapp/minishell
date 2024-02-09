@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:37:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/06 20:56:45 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 20:54:23 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,8 +122,7 @@ bool	check_valid_arg(t_ast *ast, t_redir *redir)
 		else
 		{
 			print_error(true, false, redir->arg->name->token->old_data, "ambiguous redirect");
-			ast->env->exit_status = 1;
-			
+			ast->exit_status = 1;
 		}
 		return (false);
 	}
@@ -139,7 +138,7 @@ bool	reset_stdio(t_ast *ast)
 	if (fds[IN] < 0)
 	{
 		//print_error(true, NULL, NULL, "error redirecting input");
-		ast->env->exit_status = 1;
+		ast->exit_status = 1;
 		
 		return (false);
 	}
@@ -147,7 +146,7 @@ bool	reset_stdio(t_ast *ast)
 	if (fds[OUT] < 0)
 	{
 		//print_error(true, NULL, NULL, "error redirecting output");
-		ast->env->exit_status = 1;
+		ast->exit_status = 1;
 		return (false);
 	}
 	return (true);
@@ -165,7 +164,7 @@ bool	redir_stdio(t_ast *ast)
 		{
 			//perror(strerror(errno));
 			//print_error(true, NULL, NULL, "error redirecting input");
-			ast->exit_status_node = 1;
+			ast->exit_status = 1;
 			return (false);
 		}
 	}
@@ -176,7 +175,7 @@ bool	redir_stdio(t_ast *ast)
 		{
 			//perror(strerror(errno));
 			//print_error(true, NULL, NULL, "error redirecting ouput");
-			ast->exit_status_node = 1;
+			ast->exit_status = 1;
 			return (false);
 		}
 	}

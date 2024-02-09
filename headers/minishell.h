@@ -6,13 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 19:14:11 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 21:00:16 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
-	- last exit setter/getter
+	- add relative path  optiopns for commands
 	- env vars rework
 	- finish expansion rework
 	- exit behivior with two numeric args (stops curent command execution but does not exit)
@@ -125,13 +125,8 @@ typedef struct s_env_var
 typedef struct s_env
 {
 	t_env_var	*vars;
-	int			exit_status;
 	bool		main_process;
 	int			main_pid;
-	int			size_name_fd[2];
-	int			name_fd[2];
-	int			size_val_fd[2];
-	int			val_fd[2];
 }	t_env;
 
 typedef	struct s_redir	t_redir;
@@ -146,11 +141,9 @@ typedef struct s_child_data
 {
 	char		*path;
 	char		*command_name;
-	int			exit_status;
 	bool		malloc_error;
 	char		**argv;
 }	t_child_data;
-
 
 
 typedef struct s_ast
@@ -163,7 +156,7 @@ typedef struct s_ast
 	t_ast			*left;
 	t_ast			*right;
 	int				fd[2];
-	int				exit_status_node;
+	int				exit_status;
 	t_cleanup_data	*cleanup_data;
 	t_env			*env;
 	pid_t			pid;
@@ -201,7 +194,12 @@ t_env	clone_env(t_env *base);
 
 // utils
 bool	my_free(void **ptr);
+
+
 void	print_error(bool shell_name, char *command_name, char *arg, char *str);
+
+//repl/expansion/utils3.c
+void	set_last_exit(int exit_status);
 
 //parser
 typedef struct s_parser	t_parser;

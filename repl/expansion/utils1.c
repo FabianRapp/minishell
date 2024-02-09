@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:00 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/03 18:37:27 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 19:32:48 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,6 @@ bool	pidreq_to_literal_token(t_env *env, t_token *token)
 {
 	token->type = LITERAL;
 	token->str_data = ft_itoa(env->main_pid);
-	if (!token->str_data)
-		return (false);
-	return (true);
-}
-
-bool	exitreq_to_literal_token(t_env *env, t_token *token)
-{
-	token->type = LITERAL;
-	token->str_data = ft_itoa(env->exit_status);
 	if (!token->str_data)
 		return (false);
 	return (true);

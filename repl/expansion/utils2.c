@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 13:01:55 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 17:36:09 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 20:57:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*expand_dollar(char *dollar_str, t_env *env, int *index)
 	else if (*(dollar_str + 1) == '?')
 	{
 		*index += 2;
-		return (ft_itoa(env->exit_status));
+		return (get_last_exit());
 	}
 	else if (*(dollar_str + 1) == '$')
 	{

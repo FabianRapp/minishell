@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:38:43 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/03 14:40:37 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 21:06:41 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ int	get_pid(void)
 		write(fd[OUT], &pid, sizeof(pid_t));
 		close(fd[OUT]);
 		waitpid(pid, &exit_status, 0);
+		exit_status = WEXITSTATUS(exit_status);
 		return (exit(exit_status), 0);
 	}
 	else if (pid == 0)

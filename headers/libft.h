@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 22:22:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/03 12:56:37 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 20:17:39 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,13 @@
 
 //minishell start
 # include <stdio.h>
-# ifndef SHELL_NAME
-#  define SHELL_NAME "minishell"
-# endif
+
+# include "minishell.h"
+
+void	set_last_exit(int exit_status);
 //minishell end
+
+
 
 //part 1
 int		ft_isalpha(int c);

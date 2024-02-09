@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 18:01:13 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 20:53:50 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ void	ft_pwd(t_ast *ast)
 // see header file for weird stuff to keep in mind for implentation
 void	ft_exit(t_ast *ast)
 {
-	int	exit_status;
-
 	if (ast->env->main_process)
 		print_error(false, NULL, NULL, "exit");
 	if (ast->arg && includes_non_num(ast->arg->name->token->str_data))
@@ -45,7 +43,7 @@ void	ft_exit(t_ast *ast)
 	else if (ast->arg && count_args(ast->arg) > 1)
 	{
 		print_error(1, "exit", ast->arg->name->token->str_data, "too many arguments");
-		ast->exit_status_node = 1;
+		ast->exit_status = 1;
 		if (ast->env->main_process)
 			return ;
 		exit(1);
@@ -62,14 +60,11 @@ void	ft_exit(t_ast *ast)
 			exit( 0);; // should not be needed later on
 	}
 	printf("debug exit, why is it getting here\n");
-	exit_status = ast->env->exit_status;
 	//if (ast->env->main_process)
 	{
 		
-		exit( exit_status);
-		// close(ast->fd[1]);
-		// close(ast->fd[0]);
-		// main_exit(ast->cleanup_data, true, ast->env, exit_status);
+		//exit( exit_status);
+
 	}
 }
 

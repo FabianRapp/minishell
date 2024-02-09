@@ -6,16 +6,11 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 17:59:57 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 20:52:09 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
-
-void	set_status(t_ast *ast, int status)
-{
-	ast->env->exit_status = status;
-}
 
 t_token	*new_dummy_token(void)
 {
