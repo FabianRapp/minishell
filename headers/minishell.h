@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 21:00:16 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 21:50:22 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,15 @@ typedef struct s_env
 	bool		main_process;
 	int			main_pid;
 }	t_env;
+
+typedef	struct s_arg	t_arg;
+typedef	struct s_arg
+{
+	
+	t_type			type;
+	t_token_list	*name;
+	t_arg			*next;
+}	t_arg;
 
 typedef	struct s_redir	t_redir;
 typedef	struct s_redir

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:52:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/01 12:07:17 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 21:50:05 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,15 +42,6 @@ typedef	struct s_token_list
 	t_token			*token;
 	t_token_list	*next;
 }	t_token_list;
-
-typedef	struct s_arg	t_arg;
-typedef	struct s_arg
-{
-	
-	t_type			type;
-	t_token_list	*name;
-	t_arg			*next;
-}	t_arg;
 
 
 

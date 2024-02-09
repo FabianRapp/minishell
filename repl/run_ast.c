@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 21:07:38 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 22:20:48 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ bool	ft_pipe(t_ast *ast)
 
 	if (ast->exit_status > 0)
 		return (false);
-	if (ast->fd[IN] != ast->base_fd[IN])
+	//if (ast->fd[IN] != ast->base_fd[IN])
 		ast->left->fd[IN] = ast->fd[IN];
 	if (pipe(pipe_fd) == -1)
 	{//handle error
@@ -57,16 +57,16 @@ void	create_sub_shell(t_env sub_env, char *input, t_ast *ast)
 	sub_ast = parser(input);
 	if (!input)//TODO syntax error should be found before i think?
 	{
-		exit( 1);
+		exit(1);
 	}
 	// TODO: differ between syntax and malloc parser error
 	if (!sub_ast)
-		exit( 1);
+		exit(1);
 	//if (ast->fd[IN] != ast->base_fd[IN] || ast->fd[OUT] != ast->base_fd[OUT])
 	add_global_data(sub_ast, &sub_env, ast->envs); // TODO envs
 	sub_ast->exit_status = ast->exit_status;
-	sub_ast->base_fd[0] = ast->fd[0];
-	sub_ast->base_fd[1] = ast->fd[1];
+	sub_ast->base_fd[0] = ast->fd[0];//
+	sub_ast->base_fd[1] = ast->fd[1];//
 	sub_ast->env = &sub_env;
 	run_node(sub_ast);
 	if (sub_ast->exit_status == DEFAULT_EXIT_STATUS)
@@ -76,12 +76,11 @@ void	create_sub_shell(t_env sub_env, char *input, t_ast *ast)
 	}
 	while (waitpid(-1, &temp, 0) != -1)
 	{
-		// sub_env.exit_status = temp;
 	}
 	ast->exit_status = sub_ast->exit_status;
 	free_ast(sub_ast);
 	free_env(&sub_env);
-	exit( ast->exit_status);
+	exit(ast->exit_status);
 	return ;
 }
 
@@ -172,7 +171,7 @@ void	ft_and(t_ast *ast)
 
 void	init_command(t_ast *ast)
 {
-	if (!expand_strs(ast))
+	if (!expansion(ast))
 	{
 		printf("DEBUG create_sub\n");
 		exit(1);

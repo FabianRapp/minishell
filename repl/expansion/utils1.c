@@ -6,12 +6,11 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:00 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 19:32:48 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 22:18:57 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansion.h"
-
 
 bool	env_to_word_token(t_token *token)
 {
@@ -47,4 +46,25 @@ char	*env_var_to_str(char *env_var)
 	if (!*not_free_able)
 		return (NULL);
 	return (ft_strdup(getenv(env_var)));
+}
+
+//moves acess tokens from name to arguments
+bool	move_excess_to_arg(t_ast *ast)
+{
+	t_arg	*new_arg;
+	t_arg	*cur;
+
+	cur = ast->arg;
+	while (ast->name->next && ast->name->next->token->type != T_EOF)
+	{
+		new_arg = ft_calloc(1, sizeof(t_arg));
+		if (!new_arg)
+			return (false);
+		new_arg->name = ast->name->next;
+		ast->name->next = ast->name->next->next;
+		new_arg->next = cur;
+		ast->arg = new_arg;
+		cur = new_arg;
+	}
+	return (true);
 }

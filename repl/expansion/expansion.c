@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand_strs1.c                                     :+:      :+:    :+:   */
+/*   expansion1.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 03:37:23 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 19:34:15 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 22:20:31 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,18 +75,8 @@ t_token_list	*expand_list(t_env *env, t_token_list *list)
 	return (list);
 }
 
-// TODO:
-// expands the current ast nodes env vars and interpreted strs (if the first)
-bool	expand_strs(t_ast *ast)
+bool	expand_name(t_ast *ast)
 {
-	//t_token_list	*temp;
-
-	if (!ast)
-		return (false);
-	if (ast->type != COMMAND)
-		return (true);
-	//if (ast->type == COMMAND && ast->name->token->type == SUBSHELL)
-		//ast->type = SUBSHELL;
 	ast->name = expand_list(ast->env, ast->name);// needs malloc protection
 	if (ast->name)
 		ast->name = remove_non_literals(ast->name);
@@ -98,5 +88,27 @@ bool	expand_strs(t_ast *ast)
 		}
 		ast->name->token = new_dummy_token();
 	}
+	if (!move_excess_to_arg(ast))
+		return (false);
+	return (true);
+}
+
+// TODO:
+// expands the current ast nodes env vars and interpreted strs (if the first)
+bool	expansion(t_ast *ast)
+{
+	//t_token_list	*temp;
+	if (!ast)
+		return (false);
+	if (ast->type != COMMAND)
+		return (true);
+	if (!expand_name(ast))
+	{
+		ast->exit_status = errno;
+		return (false);
+	}
+	//if (ast->type == COMMAND && ast->name->token->type == SUBSHELL)
+		//ast->type = SUBSHELL;
+
 	return (true);
 }
