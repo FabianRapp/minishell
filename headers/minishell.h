@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 21:03:49 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 21:17:09 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,17 @@ TODO:
 	- subshell lexing: sub shell error handeling if there is other invalid syntax in the subshell is diffrent
 	- exit behivior with two numeric args (stops curent command execution but does not exit)
 	- parser must print syntax error and return NULL in case of error
-	- add early exits for sytax error in parser:
-		-- if any subshell contains nothing or only whitespace its "bash: syntax error near unexpected token `)'" and no command even starts
+	- add early exits for sytax error in parser
 	- implement other ft functions
 	- implement here doc
 	- update path functions to use new error print fn
-	- add error handeling to lexer and parser
-	- have some kind of error checking for unclosed quotes in init_parser()
-	- add 
 	- change white space identification: not all whitespace is the same (mb dosnt matter since no multi line)
 minishell-$: (asd) (asd)
 minishell: asd: command not found
 ./test "asd >asd <sadad (asd) | >a <ad"
 debug move_commands_inform : COMMAND
+
+	echo (asd)
 
 	lexer:
 	bash-3.2$ "asd

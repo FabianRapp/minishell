@@ -6,8 +6,8 @@ LDFLAGS = -fsanitize=address
 #
 LIB_LEXER=lexer
 LIB_LEXER_NAME = lexer.a
-SOURCES= ../utils/utils1.c ../utils/debugging.c lexer/lexer_main.c lexer/utils/utils.c  \
- lexer/identifiers/ident_type1.c
+SOURCES= ../utils/utils1.c ../utils/debugging.c lexer_main.c utils/utils.c  \
+ identifiers/ident_type.c identifiers/dollar_sign.c identifiers/subshell.c
 OBJECTS= $(SOURCES:.c=.o)
 
 NAME_TESTER=test

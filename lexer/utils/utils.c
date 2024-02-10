@@ -6,11 +6,11 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:46:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/28 04:15:49 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 21:32:11 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../headers/lexer.h"
+#include "../../headers/lexer.h"
 
 // reads the next char into the lexer and updates indexes
 void	read_char(t_lexer *lexer)

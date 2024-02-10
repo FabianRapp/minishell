@@ -6,11 +6,11 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 21:10:18 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 21:32:04 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/lexer.h"
+#include "../headers/lexer.h"
 #include "internals.h"
 
 /*
@@ -49,7 +49,7 @@ t_token	*classify_sub_str(t_token *token, t_lexer *lexer)
 		return (lexer_error(token), NULL);
 	if (!token->type && !redir_type(lexer, token))
 		return (lexer_error(token), NULL);
-	if (!token->type && !env_var_type(lexer, token))
+	if (!token->type && !dollar_lexing(lexer, token))
 		return (lexer_error(token), NULL);
 	if (!token->type && !subshell_type(lexer, token))
 		return (lexer_error(token), NULL);

@@ -6,50 +6,12 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 21:06:13 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 21:34:52 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../headers/lexer.h"
+#include "../../headers/lexer.h"
 #include "../internals.h"
-
-bool	env_var_type(t_lexer *lexer, t_token *token)
-{
-	int	len;
-
-	if (lexer->cur_char != '$')
-		return (true);
-	len = name_len((lexer->str) + lexer->position + 1);
-	if (len == 0)
-	{
-		if ((lexer->str)[lexer->position + 1] == '$')
-		{
-			token->type = PID_REQUEST;
-			len = 1;
-			token->str_data = ft_strndup((lexer->str) + lexer->position + 1 , len);
-			if (!token->str_data)
-				return (false);
-			lexer->read_position = lexer->position + 1 + len;
-			return (true);
-		}
-		if (ft_isdigit((lexer->str)[lexer->position + 1]))
-		{
-			lexer->read_position = lexer->position + 2;
-			token->type = VOID;
-			return (true);
-		}
-		return (true);
-	}
-	token->type = ENV_VAR;
-	token->str_data = ft_strndup((lexer->str) + lexer->position + 1 , len);
-	if (!token->str_data)
-		return (false);
-	token->old_data = ft_strdup(token->str_data);
-	if (!token->old_data)
-		return (false);
-	lexer->read_position = lexer->position + 1 + len;
-	return (true);
-}
 
 bool	basic_sign_type(t_lexer *lexer, t_token *token)
 {
@@ -154,52 +116,10 @@ bool	redir_type(t_lexer *lexer, t_token *token)
 	return (true);
 }
 
-// TODO need to reade new lexer process and keep track if there is invalid syntax within the subshell
-bool	subshell_type(t_lexer *lexer, t_token *token)
-{
-	int		count_open;
-
-	if (lexer->cur_char != '(')
-		return (true);
-	if ((lexer->str)[lexer->read_position] == ')')
-	{
-		print_error(true, NULL, NULL, "syntax error near unexpected token `)\'");
-		return (false);
-	}
-	count_open = 1;
-	while((lexer->str)[lexer->read_position] && count_open)
-	{
-		if ((lexer->str)[lexer->read_position] == '(')
-			count_open++;
-		else if ((lexer->str)[lexer->read_position] == ')')
-			count_open--;
-		(lexer->read_position)++;
-	}
-	if (count_open)
-	{
-		print_error(true, NULL, "syntax error", " unexpected end of file");
-		ft_fprintf(2, "exit\n");
-		exit(2);
-	}
-	token->type = SUBSHELL;
-	token->str_data = ft_strndup(lexer->str + lexer->position + 1, lexer->read_position - lexer->position - 2);
-	if (!token->str_data)
-		return (false);
-	return (true);
-}
-
 // has to run after all other typechecks
 bool	literal_type2(t_lexer *lexer, t_token *token)
 {
-	if (lexer->cur_char == '$' 
-		&& (ft_iswhitespace(lexer->str[lexer->position + 1])
-			|| !(lexer->str)[lexer->position + 1]))
-	{
-		token->type = LITERAL;
-		token->str_data = ft_strdup("$");
-		if (!token->str_data)
-			return (false);
-	}
+
 	if (is_termination_char(lexer->cur_char))
 		return (true);
 	while (!is_termination_char((lexer->str)[lexer->read_position]))
