@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 20:25:59 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 21:03:49 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ TODO:
 	- subshell lexing: sub shell error handeling if there is other invalid syntax in the subshell is diffrent
 	- exit behivior with two numeric args (stops curent command execution but does not exit)
 	- parser must print syntax error and return NULL in case of error
-	- add early exits for sytax error in lexer and parser:
+	- add early exits for sytax error in parser:
 		-- if any subshell contains nothing or only whitespace its "bash: syntax error near unexpected token `)'" and no command even starts
 	- implement other ft functions
 	- implement here doc

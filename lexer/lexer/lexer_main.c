@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 20:51:42 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 21:10:18 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 	token.str has to be checked for NULL
 	if not NULL "free(token.str)" has to be called
 */
-
 void	lexer_error(t_token *token)
 {
 	if (token)
@@ -29,8 +28,20 @@ void	lexer_error(t_token *token)
 	}
 }
 
+bool	invalid_char(t_lexer *lexer)
+{
+	if (lexer->cur_char == ')')
+	{
+		print_error(true, NULL, NULL, "syntax error near unexpected token `)\'");
+		return (true);
+	}
+	return (false);
+}
+
 t_token	*classify_sub_str(t_token *token, t_lexer *lexer)
 {
+	if (invalid_char(lexer))
+		return (lexer_error(token), NULL);
 	basic_sign_type(lexer, token);
 	if (!token->type && !literal_type(lexer, token))
 		return (lexer_error(token), NULL);
@@ -56,7 +67,8 @@ t_token	*next_new_token(t_lexer *lexer)
 	if (!token)
 		return (NULL);
 	init_token(token, lexer);
-	classify_sub_str(token, lexer);
+	if (!classify_sub_str(token, lexer))
+		return (NULL);
 	if (token->type)
 		return (read_char(lexer), token);
 	printf("DEBUG: no function IDed the type\n");

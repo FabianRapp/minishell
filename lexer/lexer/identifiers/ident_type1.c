@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 20:49:42 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 21:06:13 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,29 +78,6 @@ bool	basic_sign_type(t_lexer *lexer, t_token *token)
 		token->type = WILDCARD;
 	return (token->type);
 }
-
-// // TODO:
-// // handle >INT_MAX and < INT_MIN
-// bool	integer_type(t_lexer *lexer, t_token *token)
-// {
-// 	if (lexer->cur_char == '0')
-// 	{
-// 		token->type = INTEGER;
-// 		token->int_val = 0;
-// 		return (token->type);
-// 	}
-// 	if (ft_atoi(lexer->str + lexer->position))
-// 	{
-// 		token->type = INTEGER;
-// 		token->int_val = ft_atoi(lexer->str + lexer->position);
-// 		while (ft_isdigit((lexer->str)[lexer->read_position]))
-// 		{
-// 			(lexer->read_position)++;
-// 		}
-// 		return (token->type);
-// 	}
-// 	return (token->type);
-//}
 
 bool	literal_type(t_lexer *lexer, t_token *token)
 {
@@ -177,12 +154,18 @@ bool	redir_type(t_lexer *lexer, t_token *token)
 	return (true);
 }
 
+// TODO need to reade new lexer process and keep track if there is invalid syntax within the subshell
 bool	subshell_type(t_lexer *lexer, t_token *token)
 {
 	int		count_open;
 
 	if (lexer->cur_char != '(')
 		return (true);
+	if ((lexer->str)[lexer->read_position] == ')')
+	{
+		print_error(true, NULL, NULL, "syntax error near unexpected token `)\'");
+		return (false);
+	}
 	count_open = 1;
 	while((lexer->str)[lexer->read_position] && count_open)
 	{
@@ -208,10 +191,16 @@ bool	subshell_type(t_lexer *lexer, t_token *token)
 // has to run after all other typechecks
 bool	literal_type2(t_lexer *lexer, t_token *token)
 {
-	// TODO: fill token for $
-	if (is_termination_char(lexer->cur_char)
-		&& !(lexer->cur_char && lexer->cur_char == '$' //just '$' is a literal
-			&& (ft_iswhitespace(lexer->str[lexer->position + 1]) || !(lexer->str)[lexer->position + 1]))) 
+	if (lexer->cur_char == '$' 
+		&& (ft_iswhitespace(lexer->str[lexer->position + 1])
+			|| !(lexer->str)[lexer->position + 1]))
+	{
+		token->type = LITERAL;
+		token->str_data = ft_strdup("$");
+		if (!token->str_data)
+			return (false);
+	}
+	if (is_termination_char(lexer->cur_char))
 		return (true);
 	while (!is_termination_char((lexer->str)[lexer->read_position]))
 	{
@@ -223,4 +212,3 @@ bool	literal_type2(t_lexer *lexer, t_token *token)
 		return (false);
 	return (true);
 }
-
