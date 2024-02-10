@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:00 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 22:18:57 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 22:26:08 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char	*env_var_to_str(char *env_var)
 }
 
 //moves acess tokens from name to arguments
-bool	move_excess_to_arg(t_ast *ast)
+bool	move_excess_name_to_arg(t_ast *ast)
 {
 	t_arg	*new_arg;
 	t_arg	*cur;
@@ -59,7 +59,10 @@ bool	move_excess_to_arg(t_ast *ast)
 	{
 		new_arg = ft_calloc(1, sizeof(t_arg));
 		if (!new_arg)
+		{
+			ast->exit_status = errno;
 			return (false);
+		}
 		new_arg->name = ast->name->next;
 		ast->name->next = ast->name->next->next;
 		new_arg->next = cur;

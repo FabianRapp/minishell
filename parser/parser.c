@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/06 23:27:48 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 23:52:32 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,8 @@ bool	parse_redir_paths(t_parser *parser)
 		{
 			if (parser->next->p_type == T_EOF)
 				return (print_error(true, NULL, NULL, type_to_str(parser->next->token->type)), false);
-			move_to_arg(parser, true, is_redir_arg_terminator, REDIR_ARG); // TODO: parse possible words first so this does not have to be done, also in wrong var atm
+			move_to_arg(parser, true, is_redir_arg_terminator, REDIR_ARG);
+			 // TODO: parse possible words first so this does not have to be done, also in wrong var atm
 		}
 		parser = parser->next;
 	}
@@ -140,7 +141,7 @@ bool	type_commands(t_parser *parser)
 		else if (is_operator(parser->p_type))
 		{
 			if (!found_command && redir && !insert_dummy(parser))
-					return (false);
+				return (false);
 			found_command = false;
 			redir = false;
 		}

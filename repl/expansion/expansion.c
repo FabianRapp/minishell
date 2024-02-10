@@ -84,12 +84,20 @@ bool	expand_name(t_ast *ast)
 	{
 		ast->name = ft_calloc(1, sizeof(t_ast));
 		if (!ast->name)
-		{// malloc fail
+		{
+			ast->exit_status = errno;
+			return (false);
 		}
 		ast->name->token = new_dummy_token();
 	}
-	if (!move_excess_to_arg(ast))
+	if (!move_excess_name_to_arg(ast))
 		return (false);
+	return (true);
+}
+
+bool	expand_args(t_ast *ast)
+{
+	(void)ast;
 	return (true);
 }
 
@@ -103,12 +111,10 @@ bool	expansion(t_ast *ast)
 	if (ast->type != COMMAND)
 		return (true);
 	if (!expand_name(ast))
-	{
-		ast->exit_status = errno;
 		return (false);
-	}
 	//if (ast->type == COMMAND && ast->name->token->type == SUBSHELL)
 		//ast->type = SUBSHELL;
-
+	if (!expand_args(ast))
+		return (false);
 	return (true);
 }

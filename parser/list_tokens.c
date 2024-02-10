@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 09:26:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/30 03:39:45 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 23:45:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 bool	insert_token(t_parser **parser, t_token *token, bool *malloc_error)
 {
-	t_parser	*next;
+	t_parser	*head;
 
 	if (!token || !parser)
 	{
@@ -43,7 +43,7 @@ bool	insert_token(t_parser **parser, t_token *token, bool *malloc_error)
 		(*parser)->next = (*parser);
 		return (true);
 	}
-	next = (*parser)->next;
+	head = (*parser)->next;
 	(*parser)->next = ft_calloc(1, sizeof(t_parser));
 	if (!(*parser)->next)
 	{
@@ -53,7 +53,7 @@ bool	insert_token(t_parser **parser, t_token *token, bool *malloc_error)
 	(*parser)->next->token = token;
 	(*parser)->next->p_type = token->type;
 	(*parser) = (*parser)->next;
-	(*parser)->next = next;;
+	(*parser)->next = head;
 	return (true);
 }
 
@@ -88,7 +88,6 @@ t_parser	*link_parser(char *str)
 			free_token(token);
 			continue ;
 		}
-		//for malloc_fail
 		if (parser)
 			head = parser->next;
 		else

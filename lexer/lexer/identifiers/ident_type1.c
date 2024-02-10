@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/30 09:47:46 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 23:35:16 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,6 +217,7 @@ bool	subshell_type(t_lexer *lexer, t_token *token, bool *malloc_error)
 // has to run after all other typechecks
 bool	literal_type2(t_lexer *lexer, t_token *token, bool *malloc_error)
 {
+	// TODO: fill token for $
 	if (is_termination_char(lexer->cur_char)
 		&& !(lexer->cur_char && lexer->cur_char == '$' //just '$' is a literal
 			&& (ft_iswhitespace(lexer->str[lexer->position + 1]) || !(lexer->str)[lexer->position + 1]))) 
@@ -234,3 +235,4 @@ bool	literal_type2(t_lexer *lexer, t_token *token, bool *malloc_error)
 	}
 	return (token->type);
 }
+

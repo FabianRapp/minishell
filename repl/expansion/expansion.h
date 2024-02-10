@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:52 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 22:19:09 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/09 22:25:50 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_token_list	*word_splitting(t_token_list *list);
 bool			env_to_word_token(t_token *token);
 bool			pidreq_to_literal_token(t_env *env, t_token *token);
 char			*env_var_to_str(char *env_var);
-bool			move_excess_to_arg(t_ast *ast);
+bool			move_excess_name_to_arg(t_ast *ast);
 
 // utils2.c
 bool			expand_interpreted(t_token *token, t_env *env);
