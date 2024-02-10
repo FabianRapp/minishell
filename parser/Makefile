@@ -9,7 +9,8 @@ LIB_PARSER=parser
 LIB_PARSER_NAME = parser.a
 SOURCES= parser.c ../utils/utils1.c groups1.c ast.c \
 \
-list_operations/utils1.c list_operations/init_cleanup.c
+list_operations/utils1.c list_operations/add_new.c\
+list_operations/move_nodes.c list_operations/remove_nodes.c
 
 OBJECTS= $(SOURCES:.c=.o)
 

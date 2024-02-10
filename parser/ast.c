@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 19:45:58 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 22:24:14 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -301,7 +301,6 @@ void	free_arg_list(t_arg *list)
 		free(last);
 	}
 }
-
 
 //TODO: redir rework
 void	free_ast(t_ast *ast)
