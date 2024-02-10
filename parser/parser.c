@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 23:52:32 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 21:59:47 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -290,6 +290,26 @@ void	merge_names(t_parser *parser)
 	}
 }
 
+bool	empty_parser(t_parser *parser)
+{
+	t_parser	*head;
+
+	if (!parser)
+		return (true);
+	head = parser;
+	while (parser->p_type == WHITE_SPACE || parser->p_type == VOID
+		|| parser->p_type == ERROR || parser->p_type == T_EOF)
+	{
+		parser = parser->next;
+		if (parser == head)
+		{
+			free_parser_main(parser, true);
+			return (true);
+		}
+	}
+	return (false);
+}
+
 t_ast	*parser(char *str)
 {
 	t_parser	*parser;
@@ -298,7 +318,7 @@ t_ast	*parser(char *str)
 	if (!str)
 		return (NULL);
 	parser = init_parser(str);
-	if (!parser)
+	if (empty_parser(parser))
 		return (NULL);
 	trim_whitespace(parser);
 	if (!new_merge_literals_start(parser))

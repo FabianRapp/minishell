@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 09:26:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 20:24:40 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 21:58:08 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,36 +15,40 @@
 #include "../headers/lexer.h"
 #include "internals_parser.h"
 
-bool	fill_first_parser(t_parser **parser, t_token *token)
+// util for insert_token()
+static t_parser	*fill_first_parser(t_parser **parser, t_token *token)
 {
 	*parser = ft_calloc(1, sizeof(t_parser));
 	if (!*parser)
-		return (free_token(token), false);
+		return (free_token(token), NULL);
 	(*parser)->p_type = token->type;
 	(*parser)->token = token;
 	(*parser)->next = *parser;
-	return (true);
+	return (*parser);
 }
 
+// returns the head
+// appends a parser node and advances the parser to the new node
+// (keeps cirular list)
 // cleans up on error and returns false
-bool	insert_token(t_parser **parser, t_token *token)
+t_parser	*insert_token(t_parser **parser, t_token *token)
 {
-	t_parser	*head;
+	t_parser	*first;
 
 	if (!*parser)
 		return (fill_first_parser(parser, token));
-	head = (*parser)->next;
+	first = (*parser)->next;
 	(*parser)->next = ft_calloc(1, sizeof(t_parser));
 	if (!(*parser)->next)
 	{
-		(*parser)->next = head;
-		return (free_parser_main(*parser, true), free_token(token), false);
+		(*parser)->next = first;
+		return (free_parser_main(*parser, true), free_token(token), NULL);
 	}
 	(*parser)->next->token = token;
 	(*parser)->next->p_type = token->type;
 	*parser = (*parser)->next;
-	(*parser)->next = head;
-	return (true);
+	(*parser)->next = first;
+	return (first);
 }
 
 // creates a cricular singular linked list
@@ -55,7 +59,6 @@ t_parser	*link_parser(char *str)
 	t_parser		*first;
 	t_lexer			lexer;
 	t_parser		*parser;
-	t_parser		*head;
 
 	first = NULL;
 	token = NULL;
@@ -71,25 +74,13 @@ t_parser	*link_parser(char *str)
 		if (token->type == VOID)
 		{
 			free_token(token);
+			token = NULL;
 			continue ;
 		}
-		if (parser)
-			head = parser->next;
-		else
-			head = NULL;
-		if (!insert_token(&parser, token))
-			return (NULL);
+		first = insert_token(&parser, token);
 		if (!first)
-		{
-			first = parser;
-			if (parser->p_type == T_EOF)
-				return (parser);
-		}
+			return (NULL);
 	}
-	if (!parser)
-		return (NULL);
-	parser->p_type = parser->token->type;
-	parser->next = first;
 	return (first);
 }
 
