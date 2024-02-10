@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 20:23:53 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 20:49:42 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,7 @@ bool	redir_type(t_lexer *lexer, t_token *token)
 		else
 			token->type = REDIR_OUT;
 	}
-	return (token->type);
+	return (true);
 }
 
 bool	subshell_type(t_lexer *lexer, t_token *token)

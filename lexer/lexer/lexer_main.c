@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 20:26:11 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 20:51:42 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,25 @@ void	lexer_error(t_token *token)
 	}
 }
 
+t_token	*classify_sub_str(t_token *token, t_lexer *lexer)
+{
+	basic_sign_type(lexer, token);
+	if (!token->type && !literal_type(lexer, token))
+		return (lexer_error(token), NULL);
+	if (!token->type && !interpreted_type(lexer, token))
+		return (lexer_error(token), NULL);
+	if (!token->type && !redir_type(lexer, token))
+		return (lexer_error(token), NULL);
+	if (!token->type && !env_var_type(lexer, token))
+		return (lexer_error(token), NULL);
+	if (!token->type && !subshell_type(lexer, token))
+		return (lexer_error(token), NULL);
+	if (!token->type && !literal_type2(lexer, token))
+		return (lexer_error(token), NULL);
+	token->unknown = lexer->cur_char;
+	return (token);
+}
+
 t_token	*next_new_token(t_lexer *lexer)
 {
 	t_token		*token;
@@ -37,37 +56,12 @@ t_token	*next_new_token(t_lexer *lexer)
 	if (!token)
 		return (NULL);
 	init_token(token, lexer);
-	basic_sign_type(lexer, token);
+	classify_sub_str(token, lexer);
 	if (token->type)
 		return (read_char(lexer), token);
-	if (!literal_type(lexer, token))
-		return (lexer_error(token), NULL);
-	if (token->type)
-		return (read_char(lexer), token);
-	if (!interpreted_type(lexer, token))
-		return (lexer_error(token), NULL);
-	if (token->type)
-		return (read_char(lexer), token);
-	redir_type(lexer, token);
-	if (token->type)
-		return (read_char(lexer), token);
-	if (!env_var_type(lexer, token))
-		return (lexer_error(token), NULL);
-	if (token->type)
-		return (read_char(lexer), token);
-	if (!subshell_type(lexer, token))
-		return (lexer_error(token), NULL);
-	if (token->type)
-		return (read_char(lexer), token);
-	if (!literal_type2(lexer, token))
-		return (lexer_error(token), NULL);
-	if (token->type)
-		return (read_char(lexer), token);
-	token->unknown = lexer->cur_char;
 	printf("DEBUG: no function IDed the type\n");
 	printf("%s\n", lexer->str + lexer->position);
-	exit(1);
-	return (lexer_error(token), NULL);
+	return (lexer_error(token), exit(1), NULL);
 }
 
 // inits a lexer object, returns the object
