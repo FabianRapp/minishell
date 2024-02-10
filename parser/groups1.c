@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:34:43 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/24 20:10:40 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 22:19:30 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,6 @@ bool	is_redir_arg_terminator(t_type type)
 		return (false);
 	}
 	return (true);
-}
-
-bool	is_operator(t_type type)
-{
-	if (type == PIPE || type == OR || type == AND)
-	{
-		return (true);
-	}
-	return (false);
 }
 
 bool	is_word_terminator(t_type type)

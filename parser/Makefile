@@ -7,12 +7,11 @@ LDFLAGS = -fsanitize=address
 #
 LIB_PARSER=parser
 LIB_PARSER_NAME = parser.a
-SOURCES= list_tokens.c parser.c ../utils/utils1.c groups1.c ast.c
-OBJECTS= $(SOURCES:.c=.o)
+SOURCES= parser.c ../utils/utils1.c groups1.c ast.c \
+\
+list_operations/utils1.c list_operations/init_cleanup.c
 
-NAME_TESTER=test
-SOURCES_TESTER= test.c
-OBJECTS_TESTER=$(SOURCES_TESTER:.c=.o)
+OBJECTS= $(SOURCES:.c=.o)
 
 LIBFT=libft
 LIBFT_NAME = libft.a
@@ -26,22 +25,15 @@ build: $(OBJECTS)
 	@ar rcs $(LIB_PARSER_NAME) $(OBJECTS)
 	@echo "\033[32mparser build\033[0m"
 
-$(NAME_TESTER): libs $(LIB_PARSER) $(OBJECTS_TESTER) $(OBJECTS)
-	@$(CC) $(OBJECTS_TESTER) $(LIB_PARSER_NAME) $(LIBFT_NAME) $(LIB_LEXER_NAME) -o $(NAME_TESTER) $(CFLAGS) $(LDFLAGS)
-	@echo "\033[32mparser_tester build\033[0m"
-
-re$(NAME_TESTER): fclean $(NAME_TESTER)
-
 %.o: %.c
 	@$(CC) $(CFLAGS) -o $@ -c $^
 
 clean:
-	@rm -f $(OBJECTS) $(OBJECTS_TESTER)
+	@rm -f $(OBJECTS)
 	@echo "\033[33mparser objects cleaned\033[0m"
 
 fclean: clean
-	@$(MAKE) -C .. fclean
-	@rm -f test 
+	@$(MAKE) -C .. fclean 
 
 re: fclean $(LIB_PARSER)
 

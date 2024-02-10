@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:23:25 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 21:47:19 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 22:19:03 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ typedef struct s_token	t_token;
 
 char	*type_to_str(t_type tokenType);
 
+bool		is_operator(t_type type);
+
 // debug
 char		*type_to_str_type(t_type tokenType);
 void			print_indent(int depth, bool left);
@@ -46,9 +48,8 @@ typedef	struct s_token_list	t_token_list;
 typedef	struct s_arg	t_arg;
 typedef	struct s_parser	t_parser;
 
-t_token	*new_dummy_token(void);
-void	set_status(t_ast *ast, int status);
-
+t_token		*new_dummy_token(void);
+void		free_token(t_token *token);
 typedef struct s_ast	t_ast;
 void	print_ast(t_ast *ast);
 

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 20:52:09 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 22:18:48 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,14 @@ void	print_redir_list(t_redir *redir, int level, bool left)
 	(void)left;
 }
 
+bool	is_operator(t_type type)
+{
+	if (type == PIPE || type == OR || type == AND)
+	{
+		return (true);
+	}
+	return (false);
+}
 
 void	start_rec_print(t_ast *ast, int level, char *path, bool left)
 {
@@ -181,6 +189,14 @@ void	print_ast(t_ast *ast)
 	printf("\n");
 }
 
+void	free_token(t_token *token)
+{
+	if (!token)
+		return ;
+	my_free((void **)&(token->str_data));
+	my_free((void **)&(token->old_data));
+	free(token);
+}
 
 void	cleanup(char *location)
 {
