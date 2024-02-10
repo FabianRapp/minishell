@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 09:26:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 23:45:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 19:43:30 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,40 +15,30 @@
 #include "../headers/lexer.h"
 #include "internals_parser.h"
 
-bool	insert_token(t_parser **parser, t_token *token, bool *malloc_error)
+bool	fill_first_parser(t_parser **parser, t_token *token)
+{
+	*parser = ft_calloc(1, sizeof(t_parser));
+	if (!*parser)
+		return (free_token(token), false);
+	(*parser)->p_type = token->type;
+	(*parser)->token = token;
+	(*parser)->next = *parser;
+	return (true);
+}
+
+// cleans up on error and returns false
+bool	insert_token(t_parser **parser, t_token *token)
 {
 	t_parser	*head;
 
-	if (!token || !parser)
-	{
-		printf ("error insert_token\n");
-		return (false);
-	}
 	if (!*parser)
-		*parser = ft_calloc(1, sizeof(t_parser));
-	if (!*parser)
-	{
-		*malloc_error = true;
-		return (false);
-	}
-	if (!(*parser)->token)
-	{
-		if ((*parser)->next)
-		{
-			printf("error in insert_token\n");
-			return (false);
-		}
-		(*parser)->p_type = token->type;
-		(*parser)->token = token;
-		(*parser)->next = (*parser);
-		return (true);
-	}
+		return (fill_first_parser(parser, token));
 	head = (*parser)->next;
 	(*parser)->next = ft_calloc(1, sizeof(t_parser));
 	if (!(*parser)->next)
 	{
-		*malloc_error = true;
-		return (false);
+		(*parser)->next = head;
+		return (free_parser_main(*parser, true), free_token(token), false);
 	}
 	(*parser)->next->token = token;
 	(*parser)->next->p_type = token->type;
@@ -92,15 +82,8 @@ t_parser	*link_parser(char *str)
 			head = parser->next;
 		else
 			head = NULL;
-		if (!insert_token(&parser, token, &malloc_error))
-		{
-			if (malloc_error && head)
-			{
-				parser->next = head;
-				free_parser_main(parser, true);
-			}
+		if (!insert_token(&parser, token))
 			return (NULL);
-		}
 		if (!first)
 		{
 			first = parser;

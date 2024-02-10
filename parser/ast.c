@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 17:57:56 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 19:45:58 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ t_parser	*remove_back(t_parser *cut_location)
 	t_parser	*left_head;
 	t_parser	*left_last;
 	t_token		*left_eof_token;
-	bool		malloc_error;
 
 	right_head = cut_location->next;
 	if (right_head == cut_location || cut_location->p_type == T_EOF)
@@ -80,9 +79,10 @@ t_parser	*remove_back(t_parser *cut_location)
 		if (!left_eof_token)
 			return (cleanup("remove_back"), NULL);
 		left_eof_token->type = T_EOF;
-		insert_token(&left_last, left_eof_token, &malloc_error);
-		if (malloc_error)
+		if (!insert_token(&left_last, left_eof_token))
 		{
+			//TODO: left_lasts list is freed here/ idk what this code does atm, handle the situation
+			return (NULL);
 		}
 		left_last->next = left_head;
 	}
