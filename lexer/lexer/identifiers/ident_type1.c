@@ -6,19 +6,19 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 23:35:16 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 20:23:53 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../headers/lexer.h"
 #include "../internals.h"
 
-bool	env_var_type(t_lexer *lexer, t_token *token, bool *malloc_error)
+bool	env_var_type(t_lexer *lexer, t_token *token)
 {
 	int	len;
 
 	if (lexer->cur_char != '$')
-		return (false);
+		return (true);
 	len = name_len((lexer->str) + lexer->position + 1);
 	if (len == 0)
 	{
@@ -28,36 +28,27 @@ bool	env_var_type(t_lexer *lexer, t_token *token, bool *malloc_error)
 			len = 1;
 			token->str_data = ft_strndup((lexer->str) + lexer->position + 1 , len);
 			if (!token->str_data)
-			{
-				*malloc_error = true;
 				return (false);
-			}
 			lexer->read_position = lexer->position + 1 + len;
-			return (token->type);
+			return (true);
 		}
 		if (ft_isdigit((lexer->str)[lexer->position + 1]))
 		{
 			lexer->read_position = lexer->position + 2;
 			token->type = VOID;
-			return (token->type);
+			return (true);
 		}
-		return (false);
+		return (true);
 	}
 	token->type = ENV_VAR;
 	token->str_data = ft_strndup((lexer->str) + lexer->position + 1 , len);
 	if (!token->str_data)
-	{
-		*malloc_error = true;
 		return (false);
-	}
 	token->old_data = ft_strdup(token->str_data);
 	if (!token->old_data)
-	{
-		*malloc_error = true;
 		return (false);
-	}
 	lexer->read_position = lexer->position + 1 + len;
-	return (token->type);
+	return (true);
 }
 
 bool	basic_sign_type(t_lexer *lexer, t_token *token)
@@ -111,52 +102,54 @@ bool	basic_sign_type(t_lexer *lexer, t_token *token)
 // 	return (token->type);
 //}
 
-bool	literal_type(t_lexer *lexer, t_token *token , bool *malloc_error)
+bool	literal_type(t_lexer *lexer, t_token *token)
 {
 	size_t	len;
 
 	if (lexer->cur_char != '\'')
-		return (false);
+		return (true);
 	while ((lexer->str)[lexer->read_position] && (lexer->str)[lexer->read_position] != '\'')
 	{
 		(lexer->read_position)++;
 	}
 	if (!(lexer->str)[lexer->read_position])
-		return (token->type);
+	{
+		ft_fprintf(2, "exit\n");
+		print_error(true, NULL, NULL, "unexpected EOF while looking for matching `\'\'");
+		exit(2);
+	}
 	(lexer->read_position)++; // +1 to remove the signle quote
 	len = lexer->read_position - lexer->position - 2; // -2 to remove the quotes
 	token->type = LITERAL;
 	token->str_data =  ft_strndup(lexer->str + lexer->position + 1, len); // +1 to skip the initial quote
 	if (!token->str_data)
-	{
-		*malloc_error = true;
 		return (false);
-	}
-	return (token->type);
+	return (true);
 }
 
-bool	interpreted_type(t_lexer *lexer, t_token *token, bool *malloc_error)
+bool	interpreted_type(t_lexer *lexer, t_token *token)
 {
 	size_t	len;
 
 	if (lexer->cur_char != '\"')
-		return (false);
+		return (true);
 	while ((lexer->str)[lexer->read_position] && (lexer->str)[lexer->read_position] != '\"')
 	{
 		(lexer->read_position)++;
 	}
 	if (!(lexer->str)[lexer->read_position])
-		return (token->type);
+	{
+		ft_fprintf(2, "exit\n");
+		print_error(true, NULL, NULL, "unexpected EOF while looking for matching `\"\'");
+		exit(2);
+	}
 	(lexer->read_position)++;
 	len = lexer->read_position - lexer->position - 2; // -1 to remove the double quite
 	token->type = INTERPRETED;
 	token->str_data =  ft_strndup(lexer->str + lexer->position + 1, len); // +1 to remove the double quite
 	if (!token->str_data)
-	{
-		*malloc_error = true;
 		return (false);
-	}
-	return (token->type);
+	return (true);
 }
 
 bool	redir_type(t_lexer *lexer, t_token *token)
@@ -184,12 +177,12 @@ bool	redir_type(t_lexer *lexer, t_token *token)
 	return (token->type);
 }
 
-bool	subshell_type(t_lexer *lexer, t_token *token, bool *malloc_error)
+bool	subshell_type(t_lexer *lexer, t_token *token)
 {
-	int	count_open;
+	int		count_open;
 
 	if (lexer->cur_char != '(')
-		return (false);
+		return (true);
 	count_open = 1;
 	while((lexer->str)[lexer->read_position] && count_open)
 	{
@@ -201,27 +194,25 @@ bool	subshell_type(t_lexer *lexer, t_token *token, bool *malloc_error)
 	}
 	if (count_open)
 	{
-		lexer->read_position = lexer->position + 1;
-		return (false);
+		print_error(true, NULL, "syntax error", " unexpected end of file");
+		ft_fprintf(2, "exit\n");
+		exit(2);
 	}
 	token->type = SUBSHELL;
 	token->str_data = ft_strndup(lexer->str + lexer->position + 1, lexer->read_position - lexer->position - 2);
 	if (!token->str_data)
-	{
-		*malloc_error = true;
 		return (false);
-	}
-	return (token->type);
+	return (true);
 }
 
 // has to run after all other typechecks
-bool	literal_type2(t_lexer *lexer, t_token *token, bool *malloc_error)
+bool	literal_type2(t_lexer *lexer, t_token *token)
 {
 	// TODO: fill token for $
 	if (is_termination_char(lexer->cur_char)
 		&& !(lexer->cur_char && lexer->cur_char == '$' //just '$' is a literal
 			&& (ft_iswhitespace(lexer->str[lexer->position + 1]) || !(lexer->str)[lexer->position + 1]))) 
-		return (0);
+		return (true);
 	while (!is_termination_char((lexer->str)[lexer->read_position]))
 	{
 		(lexer->read_position)++;
@@ -229,10 +220,7 @@ bool	literal_type2(t_lexer *lexer, t_token *token, bool *malloc_error)
 	token->type = LITERAL;
 	token->str_data = ft_strndup(lexer->str + lexer->position, lexer->read_position - lexer->position);
 	if (!token->str_data)
-	{
-		*malloc_error = true;
 		return (false);
-	}
-	return (token->type);
+	return (true);
 }
 

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 09:26:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 19:43:30 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 20:24:40 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ bool	insert_token(t_parser **parser, t_token *token)
 	}
 	(*parser)->next->token = token;
 	(*parser)->next->p_type = token->type;
-	(*parser) = (*parser)->next;
+	*parser = (*parser)->next;
 	(*parser)->next = head;
 	return (true);
 }
@@ -55,10 +55,8 @@ t_parser	*link_parser(char *str)
 	t_parser		*first;
 	t_lexer			lexer;
 	t_parser		*parser;
-	bool			malloc_error;
 	t_parser		*head;
 
-	malloc_error = false;
 	first = NULL;
 	token = NULL;
 	parser = NULL;
@@ -67,12 +65,9 @@ t_parser	*link_parser(char *str)
 		return (NULL);
 	while (!token || token->type != T_EOF)
 	{
-		token = next_new_token(&lexer, &malloc_error);
-		if (malloc_error)
-		{
-			free_parser_main(parser, true);
-			return (NULL);
-		}
+		token = next_new_token(&lexer);
+		if (!token)
+			return (free_parser_main(parser, true), NULL);
 		if (token->type == VOID)
 		{
 			free_token(token);

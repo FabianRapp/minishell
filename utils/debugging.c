@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 07:01:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/31 08:54:43 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 20:25:03 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,19 +204,17 @@ bool	test_lexer_manualy(char *str)
 {
 	t_lexer			lexer;
 	t_token			*token;
-	bool			malloc_error;
 
-	malloc_error = false;
 	printf("test str: \"%s\"\n", str);
 	printf("lexer output before in list:\n");
 	lexer = new_lexer(str);
-	token = next_new_token(&lexer, &malloc_error);
+	token = next_new_token(&lexer);
 	while (token->type != T_EOF)
 	{
 		printf("\t");
 		print_token(token, NULL, 0);
 		printf("\n");
-		token = next_new_token(&lexer, &malloc_error);
+		token = next_new_token(&lexer);
 	}
 	printf("\t");
 	print_token(token, NULL, 0);

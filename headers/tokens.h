@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:16:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/30 09:47:23 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 20:01:52 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef enum e_type
 	REDIR_ARG,// not identified by lexer->parser
 	DUMMY_COMMAND, // empty command but not a syntax error (redir only)
 	LITERAL,
+	ERROR
 }	t_type;
 
 

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 21:06:06 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 20:25:18 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ void	init_child_data(t_child_data *data, t_ast *ast)
 {
 	data->path = NULL;
 	data->command_name = ast->name->token->str_data;
-	data->malloc_error = false;
 	data->argv = ft_calloc(count_args(ast->arg) + 2, sizeof (char *const));
 	if (!data->argv)
 	{

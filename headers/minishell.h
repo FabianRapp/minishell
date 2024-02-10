@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 00:03:48 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 20:25:59 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@ TODO:
 	- add relative path  optiopns for commands
 	- env vars rework
 	- finish expansion rework
+	- subshell lexing: sub shell error handeling if there is other invalid syntax in the subshell is diffrent
 	- exit behivior with two numeric args (stops curent command execution but does not exit)
 	- parser must print syntax error and return NULL in case of error
 	- add early exits for sytax error in lexer and parser:
@@ -152,7 +153,6 @@ typedef struct s_child_data
 {
 	char		*path;
 	char		*command_name;
-	bool		malloc_error;
 	char		**argv;
 }	t_child_data;
 
@@ -177,7 +177,7 @@ typedef struct s_ast
 }	t_ast;
 
 // lexer
-t_token		*next_new_token(t_lexer *lexer, bool *malloc_fail);
+t_token		*next_new_token(t_lexer *lexer);
 t_lexer		new_lexer(char *str);
 
 // main
