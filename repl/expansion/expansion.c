@@ -32,33 +32,81 @@ bool	merge_literals(t_token_list *node)
 	return (true);
 }
 
-t_token_list	*expand_list(t_env *env, t_token_list *list)
+// for here doc: dollar sign is not interpreted
+bool	add_dollar(t_token *token)
+{
+	if (token->type == ENV_VAR)
+	{
+		free(token->str_data);
+		token->str_data = ft_strjoin("$", token->old_data);
+	}
+	else if (token->type == PID_REQUEST)
+		token->str_data = ft_strjoin("$", "$");
+	else if (token->type == EXIT_STATUS_REQUEST)
+		token->str_data = ft_strjoin("$", "?");
+	token->type = LITERAL;
+	if (!token->str_data)
+		return (false);
+	return (true);
+}
+
+t_token_list	*expand_list(t_env *env, t_token_list *list, bool expand_dollar)
 {
 	if (list->token->type == INTERPRETED)
 	{
-		if (!expand_interpreted(list->token, env))
-		{//malloc fail
+		if (expand_dollar)
+		{
+			if (!expand_interpreted(list->token, env))
+			{//malloc fail
+			}
 		}
+		list->token->type = LITERAL;
 	}
 	if (list->token->type == ENV_VAR)
 	{
-		if (!env_to_word_token(list->token))
-		{// malloc fail
+		if (expand_dollar)
+		{
+			if (!env_to_word_token(list->token))
+			{// malloc fail
+			}
 		}
-		//expand_list(ast, list);
+		else
+		{
+			if (!add_dollar(list->token))
+			{//malloc fail
+			}
+		}
 	}
 	else if (list->token->type == PID_REQUEST)
 	{
-		if (!pidreq_to_literal_token(env, list->token))
-		{//malloc fails
+		if (expand_dollar)
+		{
+			if (!pidreq_to_literal_token(env, list->token))
+			{//malloc fails
+			}
+		}
+		else
+		{
+			if (!add_dollar(list->token))
+			{//malloc fail
+			}
 		}
 	}
 	else if (list->token->type == EXIT_STATUS_REQUEST)
 	{
-		list->token->type = LITERAL;
-		list->token->str_data = get_last_exit();
-		if (!list->token->str_data)
-		{//malloc fails
+		if (expand_dollar)
+		{
+			list->token->str_data = get_last_exit();
+			if (!list->token->str_data)
+			{//malloc fails
+			}
+			list->token->type = LITERAL;
+		}
+		else
+		{
+			if (!add_dollar(list->token))
+			{//malloc fail
+			}
 		}
 	}
 	if (list->token->type == WORD)
@@ -69,7 +117,7 @@ t_token_list	*expand_list(t_env *env, t_token_list *list)
 			return (NULL);
 	}
 	if (list->next && list->next->token->type != T_EOF)
-		list->next = expand_list(env, list->next);
+		list->next = expand_list(env, list->next, expand_dollar);
 	if (!merge_literals(list))
 	{// malloc fail
 	}
@@ -80,7 +128,7 @@ bool	expand_name(t_ast *ast)
 {
 	if (!ast->name)
 		return (true);
-	ast->name = expand_list(ast->env, ast->name);// needs malloc protection
+	ast->name = expand_list(ast->env, ast->name, true);// needs malloc protection
 	if (ast->name)
 		ast->name = remove_non_literals(ast->name);
 	if (!ast->name)
@@ -104,19 +152,19 @@ bool	expand_name(t_ast *ast)
 	return (true);
 }
 
-bool	expand_args(t_ast *ast)
+bool	expand_args(t_ast *ast, t_arg **base_arg, bool expand_dollar)
 {
 	t_arg	*cur;
 	t_arg	*new_arg;
 	t_arg	*last;
 
-	cur = ast->arg;
+	cur = *base_arg;
 	if (!cur)
 		return (true);
 	last = NULL;
 	while (cur)
 	{
-		cur->name = expand_list(ast->env, cur->name);
+		cur->name = expand_list(ast->env, cur->name, expand_dollar);
 		if (cur->name)
 			cur->name = remove_non_literals(cur->name);
 		if (!cur->name)//remove the current arg
@@ -129,11 +177,11 @@ bool	expand_args(t_ast *ast)
 			}
 			else
 			{
-				if (ast->arg)
+				if (*base_arg)
 				{
 					cur = ast->arg->next;
 					free(ast->arg);
-					ast->arg = cur;
+					*base_arg = cur;
 				}
 				else
 					return (true);
@@ -157,8 +205,19 @@ bool	expand_args(t_ast *ast)
 
 bool	expand_redirs(t_ast *ast)
 {
-	if (!ast->redir)
+	t_redir	*cur;
+
+	cur = ast->redir;
+	if (!cur)
 		return (true);
+	while (cur)
+	{
+		if (cur->type != HERE_DOC)
+			expand_args(ast, &(cur->arg), true);
+		else
+			expand_args(ast, &(cur->arg), false);
+		cur = cur->next;
+	}
 	return (true);
 }
 
@@ -175,7 +234,7 @@ bool	expansion(t_ast *ast)
 		return (false);
 	//if (ast->type == COMMAND && ast->name->token->type == SUBSHELL)
 		//ast->type = SUBSHELL;
-	if (!expand_args(ast))
+	if (!expand_args(ast, &(ast->arg), true))
 		return (false);
 	if (!expand_redirs(ast))
 		return (false);

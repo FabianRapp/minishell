@@ -6,15 +6,15 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/11 00:33:51 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/11 02:30:17 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
+	- $ + any digit as§ here doc args
 	- add relative path  optiopns for commands
 	- env vars rework
-	- finish expansion rework
 	- subshell lexing: sub shell error handeling if there is other invalid syntax in the subshell is diffrent
 	- exit behivior with two numeric args (stops curent command execution but does not exit)
 	- parser must print syntax error and return NULL in case of error
