@@ -97,6 +97,7 @@ bool	expand_name(t_ast *ast)
 			ast->exit_status = errno;
 			return (false);
 		}
+		return (true);
 	}
 	if (!move_excess_name_to_arg(ast))
 		return (false);
@@ -105,8 +106,52 @@ bool	expand_name(t_ast *ast)
 
 bool	expand_args(t_ast *ast)
 {
-	if (!ast->arg)
+	t_arg	*cur;
+	t_arg	*new_arg;
+	t_arg	*last;
+
+	cur = ast->arg;
+	if (!cur)
 		return (true);
+	last = NULL;
+	while (cur)
+	{
+		cur->name = expand_list(ast->env, cur->name);
+		if (cur->name)
+			cur->name = remove_non_literals(cur->name);
+		if (!cur->name)//remove the current arg
+		{
+			if (last)
+			{
+				last->next = cur->next;
+				free(cur);
+				cur = last->next;
+			}
+			else
+			{
+				if (ast->arg)
+				{
+					cur = ast->arg->next;
+					free(ast->arg);
+					ast->arg = cur;
+				}
+				else
+					return (true);
+			}
+			continue ;
+		}
+		while (cur->name && cur->name->next)
+		{
+			new_arg = ft_calloc(1, sizeof(t_arg));
+			new_arg->next = cur->next;
+			new_arg->name = cur->name->next;
+			cur->name->next = cur->name->next->next;
+			new_arg->name->next = NULL;
+			cur->next = new_arg;
+		}
+		last = cur;
+		cur = cur->next;
+	}
 	return (true);
 }
 

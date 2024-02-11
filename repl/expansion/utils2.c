@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 13:01:55 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 20:57:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/11 01:52:11 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,15 @@ t_token_list	*remove_non_literals(t_token_list *list)
 				exit(0);
 			}
 			if (list->token->type != DUMMY_COMMAND)
-				list = move_nodes_ahead(list, true);
+			{
+				if (list == head)
+				{
+					list = move_nodes_ahead(list, true);
+					head = list;
+				}
+				else
+					list = move_nodes_ahead(list, true);
+			}
 		}
 		if (list)
 			list = list->next;
