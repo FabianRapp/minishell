@@ -6,32 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 22:24:14 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/11 00:53:35 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/parser.h"
 #include "internals_parser.h"
 #include "../headers/lexer.h"
-
-t_parser	*last_parser(t_parser *parser)
-{
-	t_parser	*last;
-
-	if (!parser)
-	{
-		printf("bug shows in last_parser\n");
-		return (NULL);
-	}
-	last = parser;
-	while (last && last->next != parser)
-	{
-		//if (last->p_type == T_EOF)
-		//	printf("eof \n");
-		last = last->next;
-	}
-	return (last);
-}
 
 t_parser	*find_highest_operator(t_parser *parser)
 {
@@ -54,7 +35,7 @@ t_parser	*find_highest_operator(t_parser *parser)
 }
 
 // remove the list after cut_locataion and returns it as a seperated cirular linked list
-// cut_location gets removed from both lists, so keep a poiter to the first if it exists
+// cut_location gets removed from both lists: keep a poiter to the first if it exists
 // does nothing and returns NULL if the given list only contains 1 element or the cut_location is T_EOF
 // adds a new T_EOF token to the old list if it got removed
 t_parser	*remove_back(t_parser *cut_location)
@@ -182,98 +163,96 @@ t_arg	*append_arg(t_parser *parser, t_arg *head_arg, bool leading_node)
 	return (head_arg);
 }
 
+t_ast	*build_leaf_node(t_ast *ast_node, t_parser *parser)
+{
+	t_redir					*cur_redir;
+	t_parser				*args;
+
+	ast_node->type = parser->p_type;
+	ast_node->name = extract_token_list(parser, NAME);
+	//free_ncircular_parser(parser->rest_name, false);
+	args = parser->arg;
+	cur_redir = NULL;
+	while (args)
+	{
+		if (is_redir(args->token->type))
+		{
+			if (cur_redir)
+			{
+				cur_redir->next = ft_calloc(1, sizeof(t_redir));
+				cur_redir = cur_redir->next;
+				cur_redir->type = args->token->type;
+				//printf("redir type: %s \n", type_to_str_type(cur_redir->type));
+				cur_redir->arg = append_arg(args->arg, cur_redir->arg, true);
+			}
+			else
+			{
+				cur_redir = ft_calloc(1, sizeof(t_redir));
+				if (!cur_redir)
+				{
+					//malloc fail
+				}
+				ast_node->redir = cur_redir;
+				cur_redir->type = args->token->type;
+				cur_redir->arg = append_arg(args->arg, cur_redir->arg, true);
+				//printf("redir type: %s \n", type_to_str_type(cur_redir->type));
+				// printf("redir args:\n");
+				// print_arg_list(cur_redir->arg, 10, 0);
+				// printf("\n");
+			}
+		}
+		else if (args->p_type == ARGUMENT)
+			ast_node->arg = append_arg(args, ast_node->arg, true);
+		else
+		{
+			printf("build ast debug:\n");
+			print_token(args->token, args, 2);
+			//exit(0);
+		}
+		//system("leaks minishell");
+		args = args->next;
+	}
+	// if ((last_parser(parser) && last_parser(parser)->token->type != T_EOF)
+	// 		|| (parser->next && !is_operator(parser->next) && parser->token->type != T_EOF))
+	//if (ast_node->type != REDIR_ARG)
+		free_parser_main(parser, false);
+	//system("leaks minishell");
+	return (ast_node);
+}
+
 // TODO: handle errors and cleanup correctly
 t_ast *build_ast(t_parser *parser)
 {
 	t_parser				*highest_operator;
 	t_left_right_parsers	child_parsers;
 	t_ast					*ast_node;
-	t_parser				*args;
-	t_redir					*cur_redir;
 
 	ast_node = ft_calloc(3, sizeof(t_ast)); ///TODO why 3??
 	if (!ast_node)
-		return (cleanup("extract_token_list"), NULL);
+		return (free_parser_main(parser, true), NULL);
 	//system("leaks minishell");
-	highest_operator = find_highest_operator(parser);
 	if (parser->p_type != COMMAND)
-	{
-		print_error(true, NULL, NULL, type_to_str(parser->token->type));
-		return (NULL);
-	}
+		return (print_error(true, NULL, NULL, type_to_str(parser->token->type)),
+			free_parser_main(parser, true), NULL);
+	highest_operator = find_highest_operator(parser);
 	if (!highest_operator)//is leaf node
-	{
-		if (parser->p_type != COMMAND)
-		{
-			print_error(true, NULL, NULL, type_to_str(parser->token->type));
-			return (NULL);
-		}
-		ast_node->type = parser->p_type;
-		ast_node->name = extract_token_list(parser, NAME);
-		//free_ncircular_parser(parser->rest_name, false);
-		args = parser->arg;
-		cur_redir = NULL;
-		while (args)
-		{
-			if (args->token->type == REDIR_IN || args->token->type == HERE_DOC
-				|| args->token->type == REDIR_OUT || args->token->type == REDIR_APPEND)
-			{
-				
-				if (cur_redir)
-				{
-					cur_redir->next = ft_calloc(1, sizeof(t_redir));
-					cur_redir = cur_redir->next;
-					cur_redir->type = args->token->type;
-					//printf("redir type: %s \n", type_to_str_type(cur_redir->type));
-					cur_redir->arg = append_arg(args->arg, cur_redir->arg, true);
-				}
-				else
-				{
-					cur_redir = ft_calloc(1, sizeof(t_redir));
-					if (!cur_redir)
-					{
-						//malloc fail
-					}
-					ast_node->redir = cur_redir;
-					cur_redir->type = args->token->type;
-					cur_redir->arg = append_arg(args->arg, cur_redir->arg, true);
-					//printf("redir type: %s \n", type_to_str_type(cur_redir->type));
-					// printf("redir args:\n");
-					// print_arg_list(cur_redir->arg, 10, 0);
-					// printf("\n");
-				}
-			}
-			else if (args->p_type == ARGUMENT)
-				ast_node->arg = append_arg(args, ast_node->arg, true);
-			else
-			{
-				printf("build ast debug:\n");
-				print_token(args->token, args, 2);
-				//exit(0);
-			}
-			//system("leaks minishell");
-			args = args->next;
-		}
-		
-		// if ((last_parser(parser) && last_parser(parser)->token->type != T_EOF)
-		// 		|| (parser->next && !is_operator(parser->next) && parser->token->type != T_EOF))
-		//if (ast_node->type != REDIR_ARG)
-			free_parser_main(parser, false);
-		//system("leaks minishell");
-		return (ast_node);
-	}
+		return (build_leaf_node(ast_node, parser));
 	ast_node->type = highest_operator->p_type;
 	if (highest_operator->rest_name || highest_operator->arg)
 	{
-		printf("build ast wtf\n");
-		exit(0);
+		printf("debug: build ast wtf\n");
+		exit(1);
 	}
 	child_parsers = split_parser(highest_operator);
 	ast_node->left = build_ast(child_parsers.left);
+	if (!ast_node->left)
+	{// handle error
+	}
 	ast_node->right = build_ast(child_parsers.right);
-	free_token(highest_operator->token);
-	free(highest_operator);
-	return (ast_node);
+	if (!ast_node->right)
+	{// handle error
+	}
+	return (free_token(highest_operator->token), free(highest_operator), ast_node);
 }
 
 void	free_token_list(t_token_list *list)

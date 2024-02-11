@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:04:11 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 22:48:26 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 23:10:20 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,4 +79,23 @@ t_parser	*insert_token(t_parser **parser, t_token *token)
 	*parser = (*parser)->next;
 	(*parser)->next = first;
 	return (first);
+}
+
+t_parser	*last_parser(t_parser *parser)
+{
+	t_parser	*last;
+
+	if (!parser)
+	{
+		printf("bug shows in last_parser\n");
+		return (NULL);
+	}
+	last = parser;
+	while (last && last->next != parser)
+	{
+		//if (last->p_type == T_EOF)
+		//	printf("eof \n");
+		last = last->next;
+	}
+	return (last);
 }

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:52:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 22:22:23 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 23:10:24 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ typedef struct s_left_right_parsers
 t_ast	*parser(char *str);
 
 // AST
-t_parser				*last_parser(t_parser *parser);
+
 t_parser				*find_highest_operator(t_parser *parser);
 t_parser				*remove_back(t_parser *cut_location);
 t_left_right_parsers	split_parser(t_parser *split_location);

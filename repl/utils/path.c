@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 20:53:50 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/11 00:43:08 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ char	*find_path(t_ast *ast, char *command_name, char *path_env)
 		command_path = ft_strjoin(path_ob.cur_path, command_name);
 		if (!command_path)
 		{
+			
 			ast->exit_status = errno;
 			return (NULL);
 		}
@@ -92,7 +93,7 @@ char	*find_path(t_ast *ast, char *command_name, char *path_env)
 		if (!access(command_path, X_OK))
 			return (command_path);
 		my_free((void **)&(command_path));
-		if (errno != ENOENT)
+		if (errno != ENOENT && errno != 20)
 		{
 			ast->exit_status = errno;
 			return (print_error(true, NULL, NULL, strerror(errno)), NULL);
@@ -100,5 +101,6 @@ char	*find_path(t_ast *ast, char *command_name, char *path_env)
 		if (!next_path(&path_ob))
 			return (NULL);
 	}
+	
 	return (NULL);
 }

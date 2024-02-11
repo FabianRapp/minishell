@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:23:25 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 22:19:03 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 23:30:52 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*type_to_str(t_type tokenType);
 bool		is_operator(t_type type);
 
 // debug
-char		*type_to_str_type(t_type tokenType);
+char			*type_to_str_type(t_type tokenType);
 void			print_indent(int depth, bool left);
 void			print_colored(const char *text, int color_index);
 void			print_new_indent(int depth, bool left);

@@ -63,9 +63,10 @@ t_token_list	*expand_list(t_env *env, t_token_list *list)
 	}
 	if (list->token->type == WORD)
 	{
-		if (!word_splitting(list))
-		{// error handle
-		}
+		// TODO: differ between malloc fail in word_splitting and empty list
+		list = word_splitting(list);
+		if (!list)
+			return (NULL);
 	}
 	if (list->next && list->next->token->type != T_EOF)
 		list->next = expand_list(env, list->next);
@@ -77,18 +78,25 @@ t_token_list	*expand_list(t_env *env, t_token_list *list)
 
 bool	expand_name(t_ast *ast)
 {
+	if (!ast->name)
+		return (true);
 	ast->name = expand_list(ast->env, ast->name);// needs malloc protection
 	if (ast->name)
 		ast->name = remove_non_literals(ast->name);
 	if (!ast->name)
 	{
-		ast->name = ft_calloc(1, sizeof(t_ast));
+		ast->name = ft_calloc(1, sizeof(t_token_list));
 		if (!ast->name)
 		{
 			ast->exit_status = errno;
 			return (false);
 		}
 		ast->name->token = new_dummy_token();
+		if (!ast->name->token)
+		{
+			ast->exit_status = errno;
+			return (false);
+		}
 	}
 	if (!move_excess_name_to_arg(ast))
 		return (false);
@@ -97,7 +105,15 @@ bool	expand_name(t_ast *ast)
 
 bool	expand_args(t_ast *ast)
 {
-	(void)ast;
+	if (!ast->arg)
+		return (true);
+	return (true);
+}
+
+bool	expand_redirs(t_ast *ast)
+{
+	if (!ast->redir)
+		return (true);
 	return (true);
 }
 
@@ -115,6 +131,8 @@ bool	expansion(t_ast *ast)
 	//if (ast->type == COMMAND && ast->name->token->type == SUBSHELL)
 		//ast->type = SUBSHELL;
 	if (!expand_args(ast))
+		return (false);
+	if (!expand_redirs(ast))
 		return (false);
 	return (true);
 }

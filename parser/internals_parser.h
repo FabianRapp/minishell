@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 19:21:02 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 22:45:16 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/10 23:10:43 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,6 @@ bool		command_terminator(t_type type);
 void		jump_to_start(t_parser **parser);
 void		remove_parser_node(t_parser **node, bool free_tok);
 t_parser	*insert_token(t_parser **parser, t_token *token);
-
+t_parser	*last_parser(t_parser *parser);
 
 #endif

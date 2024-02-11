@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:00 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 22:26:08 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/11 01:02:18 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,15 @@
 
 bool	env_to_word_token(t_token *token)
 {
-	char	*old_data;
+	char	*env_var;
 
-	old_data = token->str_data;
 	token->type = WORD;
-	token->str_data = ft_strdup(getenv(old_data));
-	my_free((void **) &old_data);
+	free(token->str_data);
+	env_var = getenv(token->old_data);
+	if (!env_var)
+		token->str_data = ft_strdup("");
+	else
+		token->str_data = ft_strdup(env_var);
 	if (!token->str_data)
 		return (false);
 	return (true);
@@ -55,7 +58,7 @@ bool	move_excess_name_to_arg(t_ast *ast)
 	t_arg	*cur;
 
 	cur = ast->arg;
-	while (ast->name->next && ast->name->next->token->type != T_EOF)
+	while (ast->name->next)// && ast->name->next->token->type != T_EOF)
 	{
 		new_arg = ft_calloc(1, sizeof(t_arg));
 		if (!new_arg)
@@ -66,6 +69,7 @@ bool	move_excess_name_to_arg(t_ast *ast)
 		new_arg->name = ast->name->next;
 		ast->name->next = ast->name->next->next;
 		new_arg->next = cur;
+		new_arg->name->next = NULL;
 		ast->arg = new_arg;
 		cur = new_arg;
 	}

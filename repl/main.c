@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 20:25:18 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/11 00:39:29 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	child_cleanup(t_child_data *data)
 // if ast->info == NOT_FINISHED afterwards there was a command to execute
 bool	no_command(t_ast *ast)
 {
-	if (ast->name->token->type == DUMMY_COMMAND)
+	if (!ast->name || ast->name->token->type == DUMMY_COMMAND)
 	{
 		if (!ast->redir)
 			ast->exit_status = 1;
@@ -70,9 +70,11 @@ void	init_child_data(t_child_data *data, t_ast *ast)
 		ast->exit_status = errno;
 		return ;
 	}
+	
 	data->path = find_path(ast, data->command_name, "PATH");
 	if (ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
+	
 	data->argv[0] = data->path;
 	fill_args(ast, data->argv + 1, ARGS);
 }
@@ -82,9 +84,14 @@ void	run_command_node(t_ast *ast)
 {
 	t_child_data	data;
 
+	if (check_edgecases(ast))
+		return ;
+	
 	init_child_data(&data, ast);
+	
 	if (ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
+	
 	ast->pid = fork();
 	if (ast->pid == -1)
 	{

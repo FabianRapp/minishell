@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 21:17:09 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/11 00:33:51 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,9 +159,9 @@ typedef struct s_ast
 {
 	t_type			type;
 	t_token_list	*name;
-	t_redir			*redir;
 	t_arg			*arg;
 	t_parser		*val;
+	t_redir			*redir;
 	t_ast			*left;
 	t_ast			*right;
 	int				fd[2];

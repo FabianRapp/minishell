@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:33:33 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/03 12:59:17 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/11 00:28:55 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ bool	insert_next_literal_node(t_token_list *list, char *str, int *index)
 	return (true);
 }
 
+//TODO should clean list incase of malloc fail
 t_token_list	*word_splitting(t_token_list *list)
 {
 	int				index;
@@ -83,6 +84,7 @@ t_token_list	*word_splitting(t_token_list *list)
 	head = list;
 	index = 0;
 	str = list->token->str_data;
+	last = NULL;
 	while (str[index])
 	{
 		if (ft_iswhitespace(str[index]))
@@ -104,8 +106,11 @@ t_token_list	*word_splitting(t_token_list *list)
 			list = list->next;
 		}
 	}
-	last->next = list->next;
+	if (last)
+		last->next = list->next;
 	free_token(list->token);
 	free(list);
-	return (head);
+	if (head != list)
+		return (head);
+	return (NULL);
 }
