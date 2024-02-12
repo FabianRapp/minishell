@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:38:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 18:21:39 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 19:53:55 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ t_result	move_commands_infront(t_parser *parser)
 }
 
 // util for merge_names
-void	move_next_to_name(t_parser *parser, t_parser **rest_name)
+void	move_next_to_restname(t_parser *parser, t_parser **rest_name)
 {
 	if (!*rest_name)
 	{

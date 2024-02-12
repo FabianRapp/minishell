@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 18:26:17 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 19:45:08 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,10 +106,14 @@ weird stuff to keep in mind about bash
 # define FINISHED 4
 # define EXIT 5
 
-typedef bool	t_result;
-// for t_result
-# define ERROR false
-# define SUCCESS true
+typedef enum e_result
+{
+	ERROR = false,
+	SUCCESS = true,
+}	t_result;
+// // for t_result
+// # define ERROR false
+// # define SUCCESS true
 
 typedef enum e_type		t_type;
 typedef struct s_lexer	t_lexer;

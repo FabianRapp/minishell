@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 22:18:48 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 20:15:31 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,16 @@ void	print_parser(t_parser *parser, int tree_level)
 		if (current->p_type == T_EOF)
 			break ;
 		print_token(current->token, current, tree_level);
+		if (parser->rest_name)
+		{
+			printf("---rest name:----\n");
+			print_parser(parser->rest_name, tree_level + 1);
+		}
+		if (parser->arg)
+		{
+			printf("---rest name:----\n");
+			print_parser(parser->arg, tree_level + 1);
+		}
 		current = current->next;
 	} while (current != parser && current);
 	//if (!current)

@@ -6,23 +6,26 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 19:21:02 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/11 21:08:24 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 19:53:55 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef INTERNALS_PARSER_H
 # define INTERNALS_PARSER_H
 
+// parser_type_commands.c
+t_result	type_commands(t_parser *parser);
+
 // list_operations/add_new.c
 t_parser	*init_parser(char *str);
-bool		insert_dummy(t_parser *parser);
+t_result	insert_dummy(t_parser *parser);
 
 // list_operations/move_nodes.c
 void		move_to_arg(t_parser *parser,
 			bool is_terminator(t_type), t_type new_type);
 void		swap_parsers(t_parser *node1, t_parser *node2);
-bool		move_commands_infront(t_parser *parser);
-void		move_next_to_name(t_parser *parser, t_parser **rest_name);
+t_result	move_commands_infront(t_parser *parser);
+void		move_next_to_restname(t_parser *parser, t_parser **rest_name);
 
 // list_operations/remove_nodes.c
 void		trim_whitespace(t_parser *parser);

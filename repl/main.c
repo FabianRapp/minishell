@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 18:36:00 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 20:10:30 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,7 @@ int	main(int ac, char **av, char **base_env)
 	{
 		if (ast)
 		{
-			print_ast(ast);
+			//print_ast(ast);
 			add_global_data(ast, &env, base_env);
 			ast->cleanup_data = &cleanup_data;
 			//print_ast(ast);

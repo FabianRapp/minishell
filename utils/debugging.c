@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 07:01:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 19:09:29 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 20:14:06 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,6 +174,7 @@ void	print_token(t_token *token, t_parser *parser, int depth)
 			print_colored(token->str_data, depth);
 		if (token->unknown)
 			print_colored("unknown", depth); //printf("unknown %s", parser->token->str_data);
+		printf("\n");
 	}
 	else
 	{

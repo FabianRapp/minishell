@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 18:29:47 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 20:21:57 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,55 +42,6 @@ t_result	parse_redir_paths(t_parser *parser)
 	}
 	parser = parser->next; // reset to head of circular list
 	return (redirs_have_arg(parser));
-}
-
-// abstraction for type_commands
-static bool	handle_operator(t_parser *parser, bool *found_command, bool *found_redir)
-{
-	if (!is_operator(parser->p_type))
-		return (SUCCESS);
-	if (!*found_command && !*found_redir && is_operator(parser->p_type))
-		return (print_error(true, NULL, NULL, type_to_str(parser->p_type)), ERROR);
-	if (!*found_command && *found_redir && !insert_dummy(parser))
-		return (ERROR);
-	*found_command = false;
-	*found_redir = false;
-	return (SUCCESS);
-}
-
-// abstraction for type_commands()
-// return value is just for readability and not used
-static void	type_command(t_parser *parser, bool *found_command)
-{
-	if (is_operator(parser->p_type) || *found_command || parser->p_type == WHITE_SPACE
-		|| is_redir(parser->p_type))
-	{
-		return ;
-	}
-	parser->p_type = COMMAND;
-	*found_command = true;
-}
-
-t_result	type_commands(t_parser *parser)
-{
-	bool		found_command;
-	bool		found_redir;
-
-	found_command = false;
-	found_redir = false;
-	while (parser->p_type != T_EOF)
-	{
-		found_redir = is_redir(parser->p_type);
-		if (!handle_operator(parser, &found_command, &found_redir))
-			return (ERROR);
-		type_command(parser, &found_command);
-		parser = parser->next;
-	}
-	if (!found_redir && !found_command)
-		return (print_error(true, NULL, NULL, type_to_str(T_EOF)), ERROR);
-	if (found_redir && !found_command && !insert_dummy(parser))
-		return (ERROR);
-	return (SUCCESS);
 }
 
 void	type_args(t_parser *parser)
@@ -135,16 +86,16 @@ void	merge_names(t_parser *parser)
 
 	while (parser->token->type != T_EOF)
 	{
-		if (!is_word_terminator(parser->token->type))
+		if (is_word_terminator(parser->token->type) == false)
 		{
 			rest_name_end = parser->rest_name;
 			while (rest_name_end && rest_name_end->next)
 			{
 				rest_name_end = rest_name_end->next;
 			}
-			while (!is_word_terminator(parser->next->token->type))
+			while (is_word_terminator(parser->next->token->type) == false)
 			{
-				move_next_to_name(parser, &rest_name_end);
+				move_next_to_restname(parser, &rest_name_end);
 			}
 		}
 		parser = parser->next;
@@ -205,7 +156,6 @@ t_ast	*parser(char *str)
 	{
 		// handle cleanup
 	}
-	
 	return (ast);
 }
 

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 19:25:25 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 19:40:05 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,34 +28,34 @@ void	lexer_error(t_token *token)
 	}
 }
 
-bool	invalid_char(t_lexer *lexer)
+t_result	valid_first_char(t_lexer *lexer)
 {
 	if (lexer->cur_char == ')')
 	{
 		print_error(true, NULL, NULL, "syntax error near unexpected token `)\'");
-		return (true);
+		return (ERROR);
 	}
-	return (false);
+	return (SUCCESS);
 }
 
 t_token	*classify_sub_str(t_token *token, t_lexer *lexer)
 {
-	if (invalid_char(lexer))
-		return (lexer_error(token), NULL);
 	basic_sign_type(lexer, token);
-	if (!token->type && literal_type(lexer, token) == ERROR)
+	if (!token->type && valid_first_char(lexer) == ERROR)
 		return (lexer_error(token), NULL);
-	if (!token->type && interpreted_type(lexer, token) == ERROR)
+	else if (!token->type && literal_type(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);
-	if (!token->type && redir_type(lexer, token) == ERROR)
+	else if (!token->type && interpreted_type(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);
-	if (!token->type && dollar_lexing(lexer, token) == ERROR)
+	else if (!token->type && redir_type(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);
-	if (!token->type && subshell_type(lexer, token) == ERROR)
+	else if (!token->type && dollar_lexing(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);
-	if (!token->type && literal_type2(lexer, token) == ERROR)
+	else if (!token->type && subshell_type(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);
-	if (!token->type)
+	else if (!token->type && literal_type2(lexer, token) == ERROR)
+		return (lexer_error(token), NULL);
+	else if (!token->type)
 		token->unknown = lexer->cur_char;
 	return (token);
 }
@@ -103,7 +103,6 @@ void	skip_leading_void_whitespace(t_lexer *lexer)
 
 // inits a lexer object, returns the object
 // NOT a pointer to a dynamic memory location!!
-// takes a NULL-terminated str
 t_lexer	new_lexer(char *str)
 {
 	t_lexer		lexer;

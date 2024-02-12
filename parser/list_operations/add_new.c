@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:13:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 18:54:43 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 20:09:55 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,21 @@
 #include "../internals_parser.h"
 
 // util for type_commands()
-bool	insert_dummy(t_parser *parser)
+t_result	insert_dummy(t_parser *parser)
 {
 	t_parser	*dummy;
 
 	dummy = ft_calloc(1, sizeof(t_parser));
 	if (!dummy)
-		return (false);
+		return (ERROR);
 	dummy->next = parser->next;
 	dummy->p_type = COMMAND;
 	dummy->token = new_dummy_token();
 	if (!dummy->token)
-		return (free(dummy), false);
+		return (free(dummy), ERROR);
 	dummy->token->type = DUMMY_COMMAND;
 	parser->next = dummy;
-	return (true);
+	return (SUCCESS);
 }
 
 
