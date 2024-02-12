@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 23:07:57 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 02:36:08 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,10 @@
 #include "internals_parser.h"
 #include "../headers/lexer.h"
 
-bool	parse_redir_paths(t_parser *parser)
+// syntax check for parse_redir_paths()
+// if returns false exection of the current input ends
+bool	redirs_have_arg(t_parser *parser)
 {
-	while (parser->p_type != T_EOF)
-	{
-		if (is_redir(parser->p_type))
-		{
-			if (parser->next->p_type == T_EOF)
-				return (print_error(true, NULL, NULL, type_to_str(parser->next->token->type)), false);
-			move_to_arg(parser, true, is_redir_arg_terminator, REDIR_ARG);
-			 // TODO: parse possible words first so this does not have to be done, also in wrong var atm
-		}
-		parser = parser->next;
-	}
-	parser = parser->next; // reset to head and find syntax errors
 	while (parser->p_type != T_EOF)
 	{
 		if (is_redir(parser->p_type) && parser->arg == NULL)
@@ -41,26 +31,44 @@ bool	parse_redir_paths(t_parser *parser)
 	return (true);
 }
 
-// retuns false on syntax error
-bool	type_commands(t_parser *parser)
+bool	parse_redir_paths(t_parser *parser)
 {
-	bool		found_command;
-	bool		redir;
-	
-	found_command = false;
-	redir = false;
 	while (parser->p_type != T_EOF)
 	{
 		if (is_redir(parser->p_type))
-			redir = true;
-		if (!found_command && !redir && is_operator(parser->p_type))
-			return (print_error(true, NULL, NULL, type_to_str(parser->p_type)), false);
-		else if (is_operator(parser->p_type))
+			move_to_arg(parser, is_redir_arg_terminator, REDIR_ARG);
+		parser = parser->next;
+	}
+	parser = parser->next; // reset to head of circular list
+	return (redirs_have_arg(parser));
+}
+
+bool	handle_operator(t_parser *parser, bool found_command, bool found_redir)
+{
+	if (!found_command && !found_redir && is_operator(parser->p_type))
+		return (print_error(true, NULL, NULL, type_to_str(parser->p_type)), false);
+	if (!found_command && found_redir && !insert_dummy(parser))
+		return (false);
+	return (true);
+}
+
+// retuns false on error
+bool	type_commands(t_parser *parser)
+{
+	bool		found_command;
+	bool		found_redir;
+
+	found_command = false;
+	found_redir = false;
+	while (parser->p_type != T_EOF)
+	{
+		found_redir = is_redir(parser->p_type);
+		if (is_operator(parser->p_type))
 		{
-			if (!found_command && redir && !insert_dummy(parser))
+			if (!handle_operator(parser, found_command, found_redir))
 				return (false);
 			found_command = false;
-			redir = false;
+			found_redir = false;
 		}
 		else if (!found_command && !is_operator(parser->p_type) && parser->p_type != WHITE_SPACE
 				&& !is_redir(parser->p_type))
@@ -70,12 +78,12 @@ bool	type_commands(t_parser *parser)
 		}
 		parser = parser->next;
 	}
-	if (!redir && !found_command)
+	if (!found_redir && !found_command)
 	{
 		print_error(true, NULL, NULL, type_to_str(T_EOF));
 		return (false);
 	}
-	if (redir && !found_command && !insert_dummy(parser))
+	if (found_redir && !found_command && !insert_dummy(parser))
 		return (false);
 	return (true);
 }
@@ -89,12 +97,13 @@ void	type_args(t_parser *parser)
 	{
 		if (parser->p_type == COMMAND)
 		{
-			move_to_arg(parser, true, command_terminator, ARGUMENT);
+			move_to_arg(parser, command_terminator, ARGUMENT);
 		}
 		parser = parser->next;
 	}
 }
 
+// merges concurrent literal nodes to one node
 bool	merge_literals_parser(t_parser *parser)
 {
 	while(parser && parser->token->type != T_EOF)
@@ -113,6 +122,8 @@ bool	merge_literals_parser(t_parser *parser)
 	return (true);
 }
 
+// merges nodes that are next to each other without sepertator to one node
+// these nodes will later be the strings that are the commands and arguments
 void	merge_names(t_parser *parser)
 {
 	t_parser	*rest_name_end;
@@ -123,21 +134,12 @@ void	merge_names(t_parser *parser)
 		{
 			rest_name_end = parser->rest_name;
 			while (rest_name_end && rest_name_end->next)
+			{
 				rest_name_end = rest_name_end->next;
+			}
 			while (!is_word_terminator(parser->next->token->type))
 			{
-				if (!rest_name_end)
-				{
-					parser->rest_name = parser->next;
-					rest_name_end = parser->rest_name;
-				}
-				else
-				{
-					rest_name_end->next = parser->next;
-					rest_name_end = rest_name_end->next;
-				}
-				parser->next = parser->next->next;
-				rest_name_end->next = NULL;
+				move_next_to_name(parser, &rest_name_end);
 			}
 		}
 		parser = parser->next;

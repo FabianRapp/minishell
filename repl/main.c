@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/11 00:39:29 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/11 23:46:25 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,12 +86,9 @@ void	run_command_node(t_ast *ast)
 
 	if (check_edgecases(ast))
 		return ;
-	
 	init_child_data(&data, ast);
-	
 	if (ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
-	
 	ast->pid = fork();
 	if (ast->pid == -1)
 	{
@@ -101,9 +98,10 @@ void	run_command_node(t_ast *ast)
 	}
 	if (ast->pid != 0)
 	{
-		//waitpid(ast->pid, &(ast->exit_status), 0);
-		//ast->exit_status >>= 8;
-		//exit( ast->exit_status);
+		// if (ast->fd[IN] != IN)
+		// 	close(ast->fd[IN]);
+		// if (ast->fd[OUT] != OUT)
+		// 	close(ast->fd[OUT]);
 		return ;
 	}
 	redir_stdio(ast);

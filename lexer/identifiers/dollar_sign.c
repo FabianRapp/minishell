@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 21:33:17 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 21:35:38 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/11 21:48:23 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ static bool	is_dollar_literal(t_lexer *lexer, t_token *token)
 	}
 	return (false);
 }
+
 bool	dollar_lexing(t_lexer *lexer, t_token *token)
 {
 	int	len;

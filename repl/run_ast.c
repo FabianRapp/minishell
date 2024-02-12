@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 22:20:48 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/11 23:47:09 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 bool	ft_pipe(t_ast *ast)
 {
-	int	pipe_fd[2];
+	int		pipe_fd[2];
+	//pid_t	pid;
 
 	if (ast->exit_status > 0)
 		return (false);
@@ -30,7 +31,12 @@ bool	ft_pipe(t_ast *ast)
 		close(ast->right->fd[IN]);
 	ast->right->fd[IN] = pipe_fd[IN];
 	run_node(ast->left);
+	if (ast->left->fd[OUT] != OUT)
+		close(ast->left->fd[OUT]);
 	run_node(ast->right);
+	if (ast->right->fd[IN] != IN)
+		close(ast->right->fd[IN]);
+	//close(pipe_fd[OUT]);
 	if (ast->right->exit_status == DEFAULT_EXIT_STATUS)
 	{
 		//printf("pipe right had no exit status (right type: %s)\n", type_to_str_type(ast->right->type));
@@ -134,7 +140,6 @@ void	ft_or(t_ast *ast)
 	//printf("OR: logical right exit: %d (cur type: %s)\n", ast->right->exit_status, type_to_str_type(ast->type));
 	//printf("OR: RESULT: %d\n", ast->exit_status);
 }
-
 
 // kinda workarround for wrong build ast for multiple condtions without subshell
 void	ft_and(t_ast *ast)

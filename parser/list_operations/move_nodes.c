@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:38:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 22:45:09 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/11 21:23:07 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,49 +15,41 @@
 #include "../../headers/lexer.h"
 #include "../internals_parser.h"
 
-/*
-	moves the next nodes of the parser list to the argument list of the given node
-*/
-void	move_to_arg(t_parser *parser, bool skip_first_whitespace,
-			bool is_terminator(t_type), t_type new_type)
+// returns the parser node after the removed whitespace
+t_parser	*remove_next_whitespaces(t_parser *parser)
 {
-	int			len;
-	t_parser	*node;
-	t_parser	*arg_data;
-	t_type		type;
-
-	node = parser;
-	arg_data = parser->arg;
-	len = 0;
-	parser = parser->next;
-	type = parser->p_type;
-	while (skip_first_whitespace && parser->p_type == WHITE_SPACE)
+	if (!parser)
+		return (NULL);
+	while (parser->p_type == WHITE_SPACE)
 	{
 		remove_parser_node(&parser, true);
 		parser = parser->next;
 	}
-	while (arg_data && arg_data->next && arg_data->p_type != T_EOF)
-		arg_data = arg_data->next;
+	return (parser);
+}
+
+void	move_to_arg(t_parser *parser, bool is_terminator(t_type), t_type new_type)
+{
+	t_parser	*node;
+	t_parser	**next_arg;
+
+	node = parser;
+	next_arg = &(node->arg);
+	parser = remove_next_whitespaces(parser->next);
+	while (*next_arg)
+	{
+		*next_arg = (*next_arg)->next;
+	}
 	while (!is_terminator(parser->p_type))
 	{
 		parser->p_type = new_type;
-		//parser->p_type = type;
-		if (arg_data)
-		{
-			arg_data->next = parser;
-			arg_data = arg_data->next;
-		}
-		else
-		{
-			arg_data = parser;
-			node->arg = arg_data;
-		}
+		*next_arg = parser;
 		parser = parser->next;
 	}
-	if (arg_data)
+	if (*next_arg)
 	{
-		node->next = arg_data->next;
-		arg_data->next = NULL;
+		node->next = (*next_arg)->next;
+		(*next_arg)->next = NULL;
 	}
 }
 
@@ -106,4 +98,21 @@ bool	move_commands_infront(t_parser *parser)
 		parser = parser->next;
 	}
 	return (true);
+}
+
+// util for merge_names
+void	move_next_to_name(t_parser *parser, t_parser **rest_name)
+{
+	if (!*rest_name)
+	{
+		parser->rest_name = parser->next;
+		*rest_name = parser->rest_name;
+	}
+	else
+	{
+		(*rest_name)->next = parser->next;
+		*rest_name = (*rest_name)->next;
+	}
+	parser->next = parser->next->next;
+	(*rest_name)->next = NULL;
 }

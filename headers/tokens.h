@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:16:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 20:01:52 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 03:16:12 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,3 @@ typedef struct s_token
 void		init_token(t_token *token, t_lexer *lexer);
 
 #endif
-

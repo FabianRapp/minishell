@@ -6,13 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/11 02:30:17 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/11 22:26:38 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
-	- $ + any digit as§ here doc args
+	- $ + any digit as here doc args
 	- add relative path  optiopns for commands
 	- env vars rework
 	- subshell lexing: sub shell error handeling if there is other invalid syntax in the subshell is diffrent
@@ -27,6 +27,8 @@ minishell-$: (asd) (asd)
 minishell: asd: command not found
 ./test "asd >asd <sadad (asd) | >a <ad"
 debug move_commands_inform : COMMAND
+
+	grep is bugged?
 
 	echo (asd)
 
