@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 21:32:04 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 19:25:25 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,19 +43,20 @@ t_token	*classify_sub_str(t_token *token, t_lexer *lexer)
 	if (invalid_char(lexer))
 		return (lexer_error(token), NULL);
 	basic_sign_type(lexer, token);
-	if (!token->type && !literal_type(lexer, token))
+	if (!token->type && literal_type(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);
-	if (!token->type && !interpreted_type(lexer, token))
+	if (!token->type && interpreted_type(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);
-	if (!token->type && !redir_type(lexer, token))
+	if (!token->type && redir_type(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);
-	if (!token->type && !dollar_lexing(lexer, token))
+	if (!token->type && dollar_lexing(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);
-	if (!token->type && !subshell_type(lexer, token))
+	if (!token->type && subshell_type(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);
-	if (!token->type && !literal_type2(lexer, token))
+	if (!token->type && literal_type2(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);
-	token->unknown = lexer->cur_char;
+	if (!token->type)
+		token->unknown = lexer->cur_char;
 	return (token);
 }
 
@@ -63,6 +64,8 @@ t_token	*next_new_token(t_lexer *lexer)
 {
 	t_token		*token;
 
+	if (!lexer->str)
+		return (NULL);
 	token = ft_calloc(1, sizeof(t_token));
 	if (!token)
 		return (NULL);
@@ -76,6 +79,28 @@ t_token	*next_new_token(t_lexer *lexer)
 	return (lexer_error(token), exit(1), NULL);
 }
 
+// util for new_lexer
+void	skip_leading_void_whitespace(t_lexer *lexer)
+{
+	t_lexer	last;
+	t_token	*token;
+
+	read_char(lexer);
+	last = *lexer;
+	token = next_new_token(lexer);
+	while (token && (token->type == WHITE_SPACE || token->type == VOID))
+	{
+		free_token(token);
+		last = *lexer;
+		token = next_new_token(lexer);
+	}
+	if (!token)
+		last.str = NULL;
+	else
+		free_token(token);
+	*lexer = last;
+}
+
 // inits a lexer object, returns the object
 // NOT a pointer to a dynamic memory location!!
 // takes a NULL-terminated str
@@ -83,11 +108,9 @@ t_lexer	new_lexer(char *str)
 {
 	t_lexer		lexer;
 
-	while (str && *str && ft_iswhitespace(*str))
-		str++;
 	lexer.position = 0;
 	lexer.read_position = 0;
 	lexer.str = str;
-	read_char(&lexer);
+	skip_leading_void_whitespace(&lexer);
 	return (lexer);
 }

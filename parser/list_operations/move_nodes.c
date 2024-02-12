@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:38:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 18:07:58 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 18:21:39 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ t_result	move_commands_infront(t_parser *parser)
 			if (!is_redir(last->p_type))
 			{
 				print_error(true, NULL, NULL, type_to_str(parser->token->type));
-				return (FAIL_ERROR);
+				return (ERROR);
 			}
 			swap_parsers(parser, last);
 			last = last_parser(parser);

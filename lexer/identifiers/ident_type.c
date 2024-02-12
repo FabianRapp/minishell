@@ -1,19 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ident_type1.c                                      :+:      :+:    :+:   */
+/*   ident_type.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 21:34:52 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 18:52:05 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/lexer.h"
 #include "../internals.h"
 
-bool	basic_sign_type(t_lexer *lexer, t_token *token)
+char	*extract_str_data(t_lexer *lexer)
+{
+	char	*str_data;
+	int		len;
+
+	len = lexer->read_position - lexer->position;
+	str_data = ft_strndup(lexer->str + lexer->position, len);
+	return (str_data);
+}
+/*
+	utils to fill the type if the token should be ignored in case
+	of no str_data (in that case the void type is entered so the
+	parser ignores this token)
+*/
+void	type_token_with_void_check(t_token *token, t_type type)
+{
+	if (!token)
+		return ;
+	if (token->str_data == NULL || ft_strlen(token->str_data) == 0)
+	{
+		my_free((void **)&(token->str_data));
+		token->type = VOID;
+	}
+	else
+		token->type = type;
+}
+
+void	basic_sign_type(t_lexer *lexer, t_token *token)
 {
 	if (lexer->cur_char == 0)
 		token->type = T_EOF;
@@ -38,15 +65,12 @@ bool	basic_sign_type(t_lexer *lexer, t_token *token)
 	}
 	else if (lexer->cur_char == '*')
 		token->type = WILDCARD;
-	return (token->type);
 }
 
-bool	literal_type(t_lexer *lexer, t_token *token)
+t_result	literal_type(t_lexer *lexer, t_token *token)
 {
-	size_t	len;
-
 	if (lexer->cur_char != '\'')
-		return (true);
+		return (SUCCESS);
 	while ((lexer->str)[lexer->read_position] && (lexer->str)[lexer->read_position] != '\'')
 	{
 		(lexer->read_position)++;
@@ -57,21 +81,19 @@ bool	literal_type(t_lexer *lexer, t_token *token)
 		print_error(true, NULL, NULL, "unexpected EOF while looking for matching `\'\'");
 		exit(2);
 	}
-	(lexer->read_position)++; // +1 to remove the signle quote
-	len = lexer->read_position - lexer->position - 2; // -2 to remove the quotes
-	token->type = LITERAL;
-	token->str_data =  ft_strndup(lexer->str + lexer->position + 1, len); // +1 to skip the initial quote
+	lexer->position++;
+	token->str_data = extract_str_data(lexer);
 	if (!token->str_data)
-		return (false);
-	return (true);
+		return (ERROR);
+	lexer->read_position++;
+	type_token_with_void_check(token, LITERAL);
+	return (SUCCESS);
 }
 
-bool	interpreted_type(t_lexer *lexer, t_token *token)
+t_result	interpreted_type(t_lexer *lexer, t_token *token)
 {
-	size_t	len;
-
 	if (lexer->cur_char != '\"')
-		return (true);
+		return (SUCCESS);
 	while ((lexer->str)[lexer->read_position] && (lexer->str)[lexer->read_position] != '\"')
 	{
 		(lexer->read_position)++;
@@ -82,16 +104,16 @@ bool	interpreted_type(t_lexer *lexer, t_token *token)
 		print_error(true, NULL, NULL, "unexpected EOF while looking for matching `\"\'");
 		exit(2);
 	}
-	(lexer->read_position)++;
-	len = lexer->read_position - lexer->position - 2; // -1 to remove the double quite
-	token->type = INTERPRETED;
-	token->str_data =  ft_strndup(lexer->str + lexer->position + 1, len); // +1 to remove the double quite
+	lexer->position++;
+	token->str_data = extract_str_data(lexer);
 	if (!token->str_data)
-		return (false);
-	return (true);
+		return (ERROR);
+	lexer->read_position++;
+	type_token_with_void_check(token, INTERPRETED);
+	return (SUCCESS);
 }
 
-bool	redir_type(t_lexer *lexer, t_token *token)
+t_result	redir_type(t_lexer *lexer, t_token *token)
 {
 	if (lexer->cur_char == '<')
 	{
@@ -113,15 +135,15 @@ bool	redir_type(t_lexer *lexer, t_token *token)
 		else
 			token->type = REDIR_OUT;
 	}
-	return (true);
+	return (SUCCESS);
 }
 
 // has to run after all other typechecks
-bool	literal_type2(t_lexer *lexer, t_token *token)
+t_result	literal_type2(t_lexer *lexer, t_token *token)
 {
 
 	if (is_termination_char(lexer->cur_char))
-		return (true);
+		return (SUCCESS);
 	while (!is_termination_char((lexer->str)[lexer->read_position]))
 	{
 		(lexer->read_position)++;
@@ -129,6 +151,6 @@ bool	literal_type2(t_lexer *lexer, t_token *token)
 	token->type = LITERAL;
 	token->str_data = ft_strndup(lexer->str + lexer->position, lexer->read_position - lexer->position);
 	if (!token->str_data)
-		return (false);
-	return (true);
+		return (ERROR);
+	return (SUCCESS);
 }

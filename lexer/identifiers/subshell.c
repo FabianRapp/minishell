@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 21:34:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 21:34:50 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 18:19:04 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "../internals.h"
 
 // TODO need to reade new lexer process and keep track if there is invalid syntax within the subshell
-bool	subshell_type(t_lexer *lexer, t_token *token)
+t_result	subshell_type(t_lexer *lexer, t_token *token)
 {
 	int		count_open;
 

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 18:06:58 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 18:26:17 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,31 +62,6 @@ weird stuff to keep in mind about bash
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# define SHELL_NAME "minishell\0"
-# define SHELL_PROMPT "minishell: \0"
-
-# define DEBUG 0
-
-# define NEW_FILE_PERMISSIONS 0644
-
-# define DEFAULT_EXIT_STATUS -1
-
-#define ARGS 2
-# define READ 0
-# define WRITE 1
-
-# define NOT_FINISHED 0
-# define FALSE 1
-# define SYNTAX_ERROR 2
-# define EXIT_ERROR 3
-# define FINISHED 4
-# define EXIT 5
-
-typedef bool	t_result;
-// for t_result
-# define FAIL_ERROR false
-# define SUCCESS true
-
 // libs
 # include <stdbool.h>
 # include <stdio.h>
@@ -110,6 +85,31 @@ typedef bool	t_result;
 # include "parser.h"
 # include "eval.h"
 # include "signals.h"
+
+# define SHELL_NAME "minishell\0"
+# define SHELL_PROMPT "minishell: \0"
+
+# define DEBUG 0
+
+# define NEW_FILE_PERMISSIONS 0644
+
+# define DEFAULT_EXIT_STATUS -1
+
+#define ARGS 2
+# define READ 0
+# define WRITE 1
+
+# define NOT_FINISHED 0
+# define FALSE 1
+# define SYNTAX_ERROR 2
+# define EXIT_ERROR 3
+# define FINISHED 4
+# define EXIT 5
+
+typedef bool	t_result;
+// for t_result
+# define ERROR false
+# define SUCCESS true
 
 typedef enum e_type		t_type;
 typedef struct s_lexer	t_lexer;

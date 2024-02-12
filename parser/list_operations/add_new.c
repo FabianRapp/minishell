@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:13:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 22:43:00 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 18:54:43 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ bool	insert_dummy(t_parser *parser)
 	parser->next = dummy;
 	return (true);
 }
+
 
 // creates a cricular singular linked list
 // each node has to be freed and each tokens values as a normal token would

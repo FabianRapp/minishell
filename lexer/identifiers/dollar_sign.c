@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 21:33:17 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/11 21:48:23 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 18:27:38 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,65 +14,65 @@
 #include "../internals.h"
 
 // has to be called from dollar_lexing()
-static bool	pid_req(t_lexer *lexer, t_token *token)
+static t_result	pid_req(t_lexer *lexer, t_token *token)
 {
 	if (!((lexer->str)[lexer->position + 1] == '$'))
-		return (false);
+		return (ERROR);
 	token->type = PID_REQUEST;
 	lexer->read_position = lexer->position + 2;
-	return (true);
+	return (SUCCESS);
 }
 
 // has to be called from dollar_lexing()
-static bool	void_env_type(t_lexer *lexer, t_token *token)
+static t_result	void_env_type(t_lexer *lexer, t_token *token)
 {
 	if (!ft_isdigit((lexer->str)[lexer->position + 1]))
-		return (false);
+		return (ERROR);
 	lexer->read_position = lexer->position + 2;
 	token->type = VOID;
-	return (true);
+	return (SUCCESS);
 }
 
 // has to be called from dollar_lexing()
 // caller has to check for malloc fail
-static bool	is_dollar_literal(t_lexer *lexer, t_token *token)
+static t_result	is_dollar_literal(t_lexer *lexer, t_token *token)
 {
 	if (lexer->cur_char != '$')
-		return (false);
+		return (ERROR);
 	if (ft_iswhitespace(lexer->str[lexer->position + 1])
 			|| !(lexer->str)[lexer->position + 1])
 	{
 		token->type = LITERAL;
 		token->str_data = ft_strdup("$");
-		return (true);
+		return (SUCCESS);
 	}
-	return (false);
+	return (ERROR);
 }
 
-bool	dollar_lexing(t_lexer *lexer, t_token *token)
+t_result	dollar_lexing(t_lexer *lexer, t_token *token)
 {
 	int	len;
 
 	if (lexer->cur_char != '$')
-		return (true);
+		return (SUCCESS);
 	if (pid_req(lexer, token) || void_env_type(lexer, token))
-		return (true);
+		return (SUCCESS);
 	if (is_dollar_literal(lexer, token))
 	{
 		if (token->str_data)
-			return (true);
-		return (false);
+			return (SUCCESS);
+		return (ERROR);
 	}
 	len = name_len((lexer->str) + lexer->position + 1);
 	if (len == 0)
-		return (true);
+		return (SUCCESS);
 	token->type = ENV_VAR;
 	token->str_data = ft_strndup((lexer->str) + lexer->position + 1 , len);
 	if (!token->str_data)
-		return (false);
+		return (ERROR);
 	token->old_data = ft_strdup(token->str_data);
 	if (!token->old_data)
-		return (false);
+		return (ERROR);
 	lexer->read_position = lexer->position + 1 + len;
-	return (true);
+	return (SUCCESS);
 }
