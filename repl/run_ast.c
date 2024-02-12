@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/11 23:47:09 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 17:10:51 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,24 +19,24 @@ bool	ft_pipe(t_ast *ast)
 
 	if (ast->exit_status > 0)
 		return (false);
-	//if (ast->fd[IN] != ast->base_fd[IN])
-		ast->left->fd[IN] = ast->fd[IN];
+	//if (ast->fd[READ] != ast->base_fd[READ])
+		ast->left->fd[READ] = ast->fd[READ];
 	if (pipe(pipe_fd) == -1)
 	{//handle error
 	}
-	if (ast->left->fd[OUT] != OUT)
-		close(ast->left->fd[OUT]);
-	ast->left->fd[OUT] = pipe_fd[OUT];
-	if (ast->right->fd[IN] != IN)
-		close(ast->right->fd[IN]);
-	ast->right->fd[IN] = pipe_fd[IN];
+	if (ast->left->fd[WRITE] != WRITE)
+		close(ast->left->fd[WRITE]);
+	ast->left->fd[WRITE] = pipe_fd[WRITE];
+	if (ast->right->fd[READ] != READ)
+		close(ast->right->fd[READ]);
+	ast->right->fd[READ] = pipe_fd[READ];
 	run_node(ast->left);
-	if (ast->left->fd[OUT] != OUT)
-		close(ast->left->fd[OUT]);
+	if (ast->left->fd[WRITE] != WRITE)
+		close(ast->left->fd[WRITE]);
 	run_node(ast->right);
-	if (ast->right->fd[IN] != IN)
-		close(ast->right->fd[IN]);
-	//close(pipe_fd[OUT]);
+	if (ast->right->fd[READ] != READ)
+		close(ast->right->fd[READ]);
+	//close(pipe_fd[WRITE]);
 	if (ast->right->exit_status == DEFAULT_EXIT_STATUS)
 	{
 		//printf("pipe right had no exit status (right type: %s)\n", type_to_str_type(ast->right->type));
@@ -68,7 +68,7 @@ void	create_sub_shell(t_env sub_env, char *input, t_ast *ast)
 	// TODO: differ between syntax and malloc parser error
 	if (!sub_ast)
 		exit(1);
-	//if (ast->fd[IN] != ast->base_fd[IN] || ast->fd[OUT] != ast->base_fd[OUT])
+	//if (ast->fd[READ] != ast->base_fd[READ] || ast->fd[WRITE] != ast->base_fd[WRITE])
 	add_global_data(sub_ast, &sub_env, ast->envs); // TODO envs
 	sub_ast->exit_status = ast->exit_status;
 	sub_ast->base_fd[0] = ast->fd[0];//

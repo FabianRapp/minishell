@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/11 23:46:25 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 17:10:51 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,10 +98,10 @@ void	run_command_node(t_ast *ast)
 	}
 	if (ast->pid != 0)
 	{
-		// if (ast->fd[IN] != IN)
-		// 	close(ast->fd[IN]);
-		// if (ast->fd[OUT] != OUT)
-		// 	close(ast->fd[OUT]);
+		// if (ast->fd[READ] != READ)
+		// 	close(ast->fd[READ]);
+		// if (ast->fd[WRITE] != WRITE)
+		// 	close(ast->fd[WRITE]);
 		return ;
 	}
 	redir_stdio(ast);
@@ -129,16 +129,16 @@ void	add_global_data(t_ast *ast, t_env *env, char **envs)
 		return ;
 	add_global_data(ast->left, env, envs);
 	add_global_data(ast->right, env, envs);
-	//ast->base_fd[IN] = dup(STDIN_FILENO);
-	//ast->base_fd[OUT] = dup(STDOUT_FILENO);
-	//if (ast->base_fd[IN] == -1 || ast->base_fd[OUT] == -1)
+	//ast->base_fd[READ] = dup(STDIN_FILENO);
+	//ast->base_fd[WRITE] = dup(STDOUT_FILENO);
+	//if (ast->base_fd[READ] == -1 || ast->base_fd[WRITE] == -1)
 	{//handel error
 	}
 	ast->env = env;
-	ast->fd[IN] = IN;
-	ast->fd[OUT] = OUT;
-	// ast->fd[IN] = ast->base_fd[IN];
-	// ast->fd[OUT] = ast->base_fd[OUT];
+	ast->fd[READ] = READ;
+	ast->fd[WRITE] = WRITE;
+	// ast->fd[READ] = ast->base_fd[READ];
+	// ast->fd[WRITE] = ast->base_fd[WRITE];
 	ast->exit_status = DEFAULT_EXIT_STATUS;
 	ast->envs = envs;
 }

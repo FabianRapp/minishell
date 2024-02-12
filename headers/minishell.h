@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/11 22:26:38 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 17:10:51 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,8 @@ weird stuff to keep in mind about bash
 # define DEFAULT_EXIT_STATUS -1
 
 #define ARGS 2
-# define IN 0
-# define OUT 1
+# define READ 0
+# define WRITE 1
 
 # define NOT_FINISHED 0
 # define FALSE 1

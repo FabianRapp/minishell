@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 07:19:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 20:55:39 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 17:10:51 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,9 +162,9 @@ void	update_var(t_env *env, char *new_data)
 		
 // 		// if ready to read data
 // 		{
-// 			read(env->size_name[IN], &size, sizeof(int));
+// 			read(env->size_name[READ], &size, sizeof(int));
 // 			total_var_data = ft_calloc(size + 1, sizeof(char));
-// 			read(env->name_fd[IN], total_var_data, size);
+// 			read(env->name_fd[READ], total_var_data, size);
 // 			update_var(t_env, total_var_data);
 // 		}
 // 	}

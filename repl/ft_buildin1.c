@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 20:53:50 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 17:10:41 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static bool	includes_non_num(char *str)
 
 void	ft_pwd(t_ast *ast)
 {
-	ft_fprintf(ast->fd[OUT], "%s\n", getenv("PWD"));
+	ft_fprintf(ast->fd[WRITE], "%s\n", getenv("PWD"));
 }
 
 // see header file for weird stuff to keep in mind for implentation

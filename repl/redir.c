@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:37:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 00:00:56 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 17:11:25 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@
      [EILSEQ]           The filename does not match the encoding rules.
 */
 
-int	redir_fd_out(char *file, bool append)
+int	redir_fd_write(char *file, bool append)
 {
 	int	fd;
 	int	flag;
@@ -83,7 +83,7 @@ int	redir_fd_out(char *file, bool append)
 	return (fd);
 }
 
-int	redir_in(char *file)
+int	redir_read(char *file)
 {
 	int	fd;
 	int	flag;
@@ -134,16 +134,16 @@ bool	reset_stdio(t_ast *ast)
 	int	*fds;
 
 	fds = ast->fd;
-	fds[IN] = dup2(ast->base_fd[IN], STDIN_FILENO);
-	if (fds[IN] < 0)
+	fds[READ] = dup2(ast->base_fd[READ], STDIN_FILENO);
+	if (fds[READ] < 0)
 	{
 		//print_error(true, NULL, NULL, "error redirecting input");
 		ast->exit_status = 1;
 		
 		return (false);
 	}
-	fds[OUT] = dup2(ast->base_fd[OUT], STDOUT_FILENO);
-	if (fds[OUT] < 0)
+	fds[WRITE] = dup2(ast->base_fd[WRITE], STDOUT_FILENO);
+	if (fds[WRITE] < 0)
 	{
 		//print_error(true, NULL, NULL, "error redirecting output");
 		ast->exit_status = 1;
@@ -157,10 +157,10 @@ bool	redir_stdio(t_ast *ast)
 	int	*fds;
 
 	fds = ast->fd;
-	//if (fds[IN] != ast->base_fd[IN])
+	//if (fds[READ] != ast->base_fd[READ])
 	{
-		fds[IN] = dup2(fds[IN], STDIN_FILENO);
-		if (fds[IN] < 0)
+		fds[READ] = dup2(fds[READ], STDIN_FILENO);
+		if (fds[READ] < 0)
 		{
 			//perror(strerror(errno));
 			//print_error(true, NULL, NULL, "error redirecting input");
@@ -168,10 +168,10 @@ bool	redir_stdio(t_ast *ast)
 			return (false);
 		}
 	}
-	//if (fds[OUT] != ast->base_fd[OUT])
+	//if (fds[WRITE] != ast->base_fd[WRITE])
 	{
-		fds[OUT] = dup2(fds[OUT], STDOUT_FILENO);
-		if (fds[OUT] < 0)
+		fds[WRITE] = dup2(fds[WRITE], STDOUT_FILENO);
+		if (fds[WRITE] < 0)
 		{
 			//perror(strerror(errno));
 			//print_error(true, NULL, NULL, "error redirecting ouput");
@@ -195,30 +195,30 @@ bool	resolve_redirs(t_ast *ast)
 			return (false);
 		if (redir->type == REDIR_OUT)
 		{
-			if (fd[OUT] != 1)
-				close(fd[OUT]);
-			fd[OUT] = redir_fd_out(redir->arg->name->token->str_data, false);
+			if (fd[WRITE] != 1)
+				close(fd[WRITE]);
+			fd[WRITE] = redir_fd_write(redir->arg->name->token->str_data, false);
 		}
 		else if (redir->type == REDIR_APPEND)
 		{
-			if (fd[OUT] != 1)
-				close(fd[OUT]);
-			fd[OUT] = redir_fd_out(redir->arg->name->token->str_data, true);
+			if (fd[WRITE] != 1)
+				close(fd[WRITE]);
+			fd[WRITE] = redir_fd_write(redir->arg->name->token->str_data, true);
 		}
 		else if (redir->type == REDIR_IN)
 		{
-			if (fd[IN] != 0)
-				close(fd[IN]);
-			fd[IN] = redir_in(redir->arg->name->token->str_data);
+			if (fd[READ] != 0)
+				close(fd[READ]);
+			fd[READ] = redir_read(redir->arg->name->token->str_data);
 		}
 		// TODO
 		else if (redir->type == HERE_DOC)
 		{
-			if (fd[IN] != 0)
-				close(fd[IN]);
-			fd[IN] = 0;
+			if (fd[READ] != 0)
+				close(fd[READ]);
+			fd[READ] = 0;
 		}
-		if (fd[OUT] < 0 || fd[IN] < 0)
+		if (fd[WRITE] < 0 || fd[READ] < 0)
 			return (false);
 		redir = redir->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:38:43 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 21:06:41 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 17:11:25 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	fill_args(t_ast *ast, char *argv[], int type)
 	// else if (type == REDIR_OUT)
 	// 	args = ast->redir_out;
 	// else if (type == REDIR_IN)
-	// 	args = ast->redir_in;
+	// 	args = ast->redir_read;
 
 	i = 0;
 	while (args && args->type != T_EOF)
@@ -60,18 +60,18 @@ int	get_pid(void)
 	pid = fork();
 	if (pid != 0 && pid != -1) // main
 	{
-		close(fd[IN]);
-		write(fd[OUT], &pid, sizeof(pid_t));
-		close(fd[OUT]);
+		close(fd[READ]);
+		write(fd[WRITE], &pid, sizeof(pid_t));
+		close(fd[WRITE]);
 		waitpid(pid, &exit_status, 0);
 		exit_status = WEXITSTATUS(exit_status);
 		return (exit(exit_status), 0);
 	}
 	else if (pid == 0)
 	{
-		close(fd[OUT]);
-		read(fd[IN], &pid, sizeof(pid_t));
-		close(fd[IN]);
+		close(fd[WRITE]);
+		read(fd[READ], &pid, sizeof(pid_t));
+		close(fd[READ]);
 		return(pid);
 	}
 	return (print_error(true, NULL, NULL, "error forking main process"), 0);
