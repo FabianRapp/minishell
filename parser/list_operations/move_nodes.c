@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:38:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/11 21:23:07 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 18:07:58 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	swap_parsers(t_parser *node1, t_parser *node2)
 
 // incase of leading redirs infront of command moves the comant infront of them
 // otherwise this situation is bugged duo to parsing order (change needs huge refactor)
-bool	move_commands_infront(t_parser *parser)
+t_result	move_commands_infront(t_parser *parser)
 {
 	t_parser	*last;
 
@@ -91,13 +91,16 @@ bool	move_commands_infront(t_parser *parser)
 		{
 			//TODO: figure out the diffrent syntax errors here (example: echo >aaa <sadad (echo) | >a <ad)
 			if (!is_redir(last->p_type))
-				return (print_error(true, NULL, NULL, type_to_str(parser->token->type)), false);
+			{
+				print_error(true, NULL, NULL, type_to_str(parser->token->type));
+				return (FAIL_ERROR);
+			}
 			swap_parsers(parser, last);
 			last = last_parser(parser);
 		}
 		parser = parser->next;
 	}
-	return (true);
+	return (SUCCESS);
 }
 
 // util for merge_names

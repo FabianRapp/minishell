@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 02:36:08 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 18:08:13 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 // syntax check for parse_redir_paths()
 // if returns false exection of the current input ends
-bool	redirs_have_arg(t_parser *parser)
+t_redir	redirs_have_arg(t_parser *parser)
 {
 	while (parser->p_type != T_EOF)
 	{
@@ -24,14 +24,15 @@ bool	redirs_have_arg(t_parser *parser)
 		{
 			while (parser->next->p_type == WHITE_SPACE)
 				parser = parser->next;
-			return (print_error(true, NULL, NULL, type_to_str(parser->next->token->type)), false);
+			print_error(true, NULL, NULL, type_to_str(parser->next->token->type));
+			return (FAIL_ERROR);
 		}
 		parser = parser->next;
 	}
-	return (true);
+	return (SUCCESS);
 }
 
-bool	parse_redir_paths(t_parser *parser)
+t_result	parse_redir_paths(t_parser *parser)
 {
 	while (parser->p_type != T_EOF)
 	{
@@ -43,17 +44,34 @@ bool	parse_redir_paths(t_parser *parser)
 	return (redirs_have_arg(parser));
 }
 
-bool	handle_operator(t_parser *parser, bool found_command, bool found_redir)
+// abstraction for type_commands
+static bool	handle_operator(t_parser *parser, bool *found_command, bool *found_redir)
 {
-	if (!found_command && !found_redir && is_operator(parser->p_type))
-		return (print_error(true, NULL, NULL, type_to_str(parser->p_type)), false);
-	if (!found_command && found_redir && !insert_dummy(parser))
-		return (false);
-	return (true);
+	if (!is_operator(parser->p_type))
+		return (SUCCESS);
+	if (!*found_command && !*found_redir && is_operator(parser->p_type))
+		return (print_error(true, NULL, NULL, type_to_str(parser->p_type)), FAIL_ERROR);
+	if (!*found_command && *found_redir && !insert_dummy(parser))
+		return (FAIL_ERROR);
+	*found_command = false;
+	*found_redir = false;
+	return (SUCCESS);
 }
 
-// retuns false on error
-bool	type_commands(t_parser *parser)
+// abstraction for type_commands()
+// return value is just for readability and not used
+static void	type_command(t_parser *parser, bool *found_command)
+{
+	if (is_operator(parser->p_type) || *found_command || parser->p_type == WHITE_SPACE
+		|| is_redir(parser->p_type))
+	{
+		return ;
+	}
+	parser->p_type = COMMAND;
+	*found_command = true;
+}
+
+t_result	type_commands(t_parser *parser)
 {
 	bool		found_command;
 	bool		found_redir;
@@ -63,29 +81,16 @@ bool	type_commands(t_parser *parser)
 	while (parser->p_type != T_EOF)
 	{
 		found_redir = is_redir(parser->p_type);
-		if (is_operator(parser->p_type))
-		{
-			if (!handle_operator(parser, found_command, found_redir))
-				return (false);
-			found_command = false;
-			found_redir = false;
-		}
-		else if (!found_command && !is_operator(parser->p_type) && parser->p_type != WHITE_SPACE
-				&& !is_redir(parser->p_type))
-		{
-			parser->p_type = COMMAND;
-			found_command = true;
-		}
+		if (!handle_operator(parser, &found_command, &found_redir))
+			return (FAIL_ERROR);
+		type_command(parser, &found_command);
 		parser = parser->next;
 	}
 	if (!found_redir && !found_command)
-	{
-		print_error(true, NULL, NULL, type_to_str(T_EOF));
-		return (false);
-	}
+		return (print_error(true, NULL, NULL, type_to_str(T_EOF)), FAIL_ERROR);
 	if (found_redir && !found_command && !insert_dummy(parser))
-		return (false);
-	return (true);
+		return (FAIL_ERROR);
+	return (SUCCESS);
 }
 
 void	type_args(t_parser *parser)
@@ -104,7 +109,7 @@ void	type_args(t_parser *parser)
 }
 
 // merges concurrent literal nodes to one node
-bool	merge_literals_parser(t_parser *parser)
+t_result	merge_literals_parser(t_parser *parser)
 {
 	while(parser && parser->token->type != T_EOF)
 	{
@@ -112,14 +117,14 @@ bool	merge_literals_parser(t_parser *parser)
 		{
 			ft_strjoin_inplace(&(parser->token->str_data), parser->next->token->str_data);
 			if (!parser->token->str_data)
-				return (false);
+				return (FAIL_ERROR);
 			parser = parser->next;
 			remove_parser_node(&parser, true);
 		}
 		if (parser && parser->token->type != T_EOF)
 			parser = parser->next;
 	}
-	return (true);
+	return (SUCCESS);
 }
 
 // merges nodes that are next to each other without sepertator to one node
@@ -146,12 +151,12 @@ void	merge_names(t_parser *parser)
 	}
 }
 
-bool	empty_parser(t_parser *parser)
+t_result	has_content(t_parser *parser)
 {
 	t_parser	*head;
 
 	if (!parser)
-		return (true);
+		return (FAIL_ERROR);
 	head = parser;
 	while (parser->p_type == WHITE_SPACE || parser->p_type == VOID
 		|| parser->p_type == ERROR || parser->p_type == T_EOF)
@@ -160,10 +165,10 @@ bool	empty_parser(t_parser *parser)
 		if (parser == head)
 		{
 			free_parser_main(parser, true);
-			return (true);
+			return (FAIL_ERROR);
 		}
 	}
-	return (false);
+	return (SUCCESS);
 }
 
 t_ast	*parser(char *str)
@@ -174,18 +179,18 @@ t_ast	*parser(char *str)
 	if (!str)
 		return (NULL);
 	parser = init_parser(str);
-	if (empty_parser(parser))
+	if (has_content(parser) == FAIL_ERROR)
 		return (NULL);
 	trim_whitespace(parser);
-	if (!merge_literals_parser(parser))
+	if (merge_literals_parser(parser) == FAIL_ERROR)
 		return (free_parser_main(parser, true), NULL);
 	merge_names(parser);
-	if (!parse_redir_paths(parser))
+	if (parse_redir_paths(parser) == FAIL_ERROR)
 		return (free_parser_main(parser, true), NULL);
-	if (!type_commands(parser))
+	if (type_commands(parser) == FAIL_ERROR)
 		return (free_parser_main(parser, true), NULL);
 	remove_whitespace(parser);
-	if (!move_commands_infront(parser))
+	if (move_commands_infront(parser) == FAIL_ERROR)
 	{
 		free_parser_main(parser, true);
 		return (NULL);

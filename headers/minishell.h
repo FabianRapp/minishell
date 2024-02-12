@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 17:10:51 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/12 18:06:58 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,11 @@ weird stuff to keep in mind about bash
 # define EXIT_ERROR 3
 # define FINISHED 4
 # define EXIT 5
+
+typedef bool	t_result;
+// for t_result
+# define FAIL_ERROR false
+# define SUCCESS true
 
 // libs
 # include <stdbool.h>
