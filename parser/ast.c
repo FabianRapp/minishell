@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 04:10:32 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 13:17:41 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,44 @@ t_arg	*append_arg(t_parser *parser, t_arg *head_arg, bool leading_node)
 	return (head_arg);
 }
 
+t_result	append_redir(t_ast *ast_node, t_parser *args, t_redir **cur_redir)
+{
+	if (*cur_redir)
+	{
+		(*cur_redir)->next = ft_calloc(1, sizeof(t_redir));
+		if (!(*cur_redir)->next)
+		{// malloc error
+		}
+		(*cur_redir) = (*cur_redir)->next;
+		(*cur_redir)->type = args->token->type;
+		//printf("redir type: %s \n", type_to_str_type((*cur_redir)->type));
+		(*cur_redir)->arg = append_arg(args->arg, (*cur_redir)->arg, true);
+	}
+	else
+	{
+		*cur_redir = ft_calloc(1, sizeof(t_redir));
+		if (!*cur_redir)
+		{
+			//malloc fail
+		}
+		ast_node->redir = (*cur_redir);
+		(*cur_redir)->type = args->token->type;
+		(*cur_redir)->arg = append_arg(args->arg, (*cur_redir)->arg, true);
+		//printf("redir type: %s \n", type_to_str_type((*cur_redir)->type));
+		// printf("redir args:\n");
+		// print_arg_list((*cur_redir)->arg, 10, 0);
+		// printf("\n");
+	}
+	if ((*cur_redir)->arg)
+	{//malloc error
+	}
+	if (args->token->potential_fd != NULL)
+		(*cur_redir)->left_redir_arg = ft_atoi(args->token->potential_fd);
+	else
+		(*cur_redir)->left_redir_arg = INIT_VAL;
+	return (SUCCESS);
+}
+
 t_ast	*build_leaf_node(t_ast *ast_node, t_parser *parser)
 {
 	t_redir					*cur_redir;
@@ -175,30 +213,11 @@ t_ast	*build_leaf_node(t_ast *ast_node, t_parser *parser)
 	cur_redir = NULL;
 	while (args)
 	{
+		
 		if (is_redir(args->token->type))
 		{
-			if (cur_redir)
-			{
-				cur_redir->next = ft_calloc(1, sizeof(t_redir));
-				cur_redir = cur_redir->next;
-				cur_redir->type = args->token->type;
-				//printf("redir type: %s \n", type_to_str_type(cur_redir->type));
-				cur_redir->arg = append_arg(args->arg, cur_redir->arg, true);
-			}
-			else
-			{
-				cur_redir = ft_calloc(1, sizeof(t_redir));
-				if (!cur_redir)
-				{
-					//malloc fail
-				}
-				ast_node->redir = cur_redir;
-				cur_redir->type = args->token->type;
-				cur_redir->arg = append_arg(args->arg, cur_redir->arg, true);
-				//printf("redir type: %s \n", type_to_str_type(cur_redir->type));
-				// printf("redir args:\n");
-				// print_arg_list(cur_redir->arg, 10, 0);
-				// printf("\n");
+			if (append_redir(ast_node, args, &cur_redir) == ERROR)
+			{// handle error
 			}
 		}
 		else if (args->p_type == ARGUMENT)

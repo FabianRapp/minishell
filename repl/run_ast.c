@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 07:04:30 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 13:33:09 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,10 @@
 
 bool	ft_pipe(t_ast *ast)
 {
-	int		pipe_fd[2];
-	//pid_t	pid;
+	int			pipe_fd[2];
 
 	if (ast->exit_status > 0)
 		return (false);
-	//if (ast->fd[READ] != ast->base_fd[READ])
 		ast->left->fd[READ] = ast->fd[READ];
 	if (pipe(pipe_fd) == -1)
 	{//handle error
@@ -59,7 +57,6 @@ void	create_sub_shell(t_env sub_env, char *input, t_ast *ast)
 	ast->pid = fork();
 	if (ast->pid)
 		return ;
-	redir_stdio(ast);
 	sub_ast = parser(input);
 	if (!input)//TODO syntax error should be found before i think?
 	{
@@ -68,11 +65,8 @@ void	create_sub_shell(t_env sub_env, char *input, t_ast *ast)
 	// TODO: differ between syntax and malloc parser error
 	if (!sub_ast)
 		exit(1);
-	//if (ast->fd[READ] != ast->base_fd[READ] || ast->fd[WRITE] != ast->base_fd[WRITE])
 	add_global_data(sub_ast, &sub_env, ast->envs); // TODO envs
 	sub_ast->exit_status = ast->exit_status;
-	sub_ast->base_fd[0] = ast->fd[0];//
-	sub_ast->base_fd[1] = ast->fd[1];//
 	sub_ast->env = &sub_env;
 	run_node(sub_ast);
 	if (sub_ast->exit_status == DEFAULT_EXIT_STATUS)
@@ -184,9 +178,11 @@ void	init_command(t_ast *ast)
 	}
 	if (resolve_redirs(ast) == ERROR)
 		return ;
+	redir_fds();
 	if (ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
 	run_command_node(ast);
+	reset_fds();
 }
 
 void	run_node(t_ast *ast)

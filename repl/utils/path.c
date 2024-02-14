@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 04:04:00 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 11:29:24 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ bool	next_path(t_path *path_ob)
 	{
 		path_ob->read_postion++;
 	}
-	
 	path_ob->cur_path = ft_strndup(path_ob->all_paths + path_ob->position,
 		path_ob->read_postion - path_ob->position);
 	if (!path_ob->cur_path)
@@ -85,7 +84,6 @@ char	*find_path(t_ast *ast, char *command_name, char *path_env)
 		command_path = ft_strjoin(path_ob.cur_path, command_name);
 		if (!command_path)
 		{
-			
 			ast->exit_status = errno;
 			return (NULL);
 		}
@@ -98,8 +96,10 @@ char	*find_path(t_ast *ast, char *command_name, char *path_env)
 			ast->exit_status = errno;
 			return (print_error(true, "DEBUG find_path", NULL, strerror(errno)), NULL);
 		}
+		errno = 0;
 		if (!next_path(&path_ob))
 			return (NULL);
+		errno = 0;
 	}
 	
 	return (NULL);

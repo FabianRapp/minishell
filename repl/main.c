@@ -6,12 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 07:16:17 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 13:22:43 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 #include "../headers/parser.h"
+
 
 void	child_cleanup(t_child_data *data)
 {
@@ -79,6 +80,18 @@ void	init_child_data(t_child_data *data, t_ast *ast)
 	fill_args(ast, data->argv + 1, ARGS);
 }
 
+void	clean_fds(t_fd_pair *pairs)
+{
+	int	i;
+
+	i = 0;
+	while (pairs + i && pairs[i].base_fd != INIT_VAL)
+	{
+		close(pairs[i].overload_with_fd);
+		i++;
+	}
+}
+
 // for now assumes ast to be the node of exactly one command
 void	run_command_node(t_ast *ast)
 {
@@ -96,6 +109,7 @@ void	run_command_node(t_ast *ast)
 		print_error(true, "debug run_command_node", NULL, strerror(ast->exit_status));
 		return ;
 	}
+	errno = 0;
 	if (ast->pid != 0)
 	{
 		// if (ast->fd[READ] != READ)
@@ -104,23 +118,8 @@ void	run_command_node(t_ast *ast)
 		// 	close(ast->fd[WRITE]);
 		return ;
 	}
-	redir_stdio(ast);
 	execve(data.path, data.argv, ast->envs);
 	exit(errno);
-}
-
-void disableRawMode(struct termios *orig_ter)
-{
-	struct termios *orig_termios;
-	(void)orig_ter;
-	tcsetattr(STDIN_FILENO, TCSAFLUSH, orig_termios);
-}
-
-void	init_signals(struct sigaction *signals)
-{
-	signals->sa_handler = child_exit_handler;
-	sigemptyset(&(signals->sa_mask));
-	signals->sa_flags = SA_RESTART;
 }
 
 void	add_global_data(t_ast *ast, t_env *env, char **envs)
@@ -129,16 +128,9 @@ void	add_global_data(t_ast *ast, t_env *env, char **envs)
 		return ;
 	add_global_data(ast->left, env, envs);
 	add_global_data(ast->right, env, envs);
-	//ast->base_fd[READ] = dup(STDIN_FILENO);
-	//ast->base_fd[WRITE] = dup(STDOUT_FILENO);
-	//if (ast->base_fd[READ] == -1 || ast->base_fd[WRITE] == -1)
-	{//handel error
-	}
 	ast->env = env;
 	ast->fd[READ] = READ;
 	ast->fd[WRITE] = WRITE;
-	// ast->fd[READ] = ast->base_fd[READ];
-	// ast->fd[WRITE] = ast->base_fd[WRITE];
 	ast->exit_status = DEFAULT_EXIT_STATUS;
 	ast->envs = envs;
 }
@@ -151,15 +143,10 @@ int	main(int ac, char **av, char **base_env)
 	t_env			env;
 	int				status;
 
-	//struct sigaction	signals;
-	//struct termios	terminal;
-
-	//init_signals(&signals);
+	errno = 0;
 	if (ac > 1)
 		return (printf("no args allowed\n"), 1);
 	(void)av;
-	//atexit(() -> disableRawMode(&orig_termios));
-	//tcsetattr(STDIN_FILENO, TCSAFLUSH, &terminal);
 	env.main_pid = get_pid();
 	if (!env.main_pid)
 		return (1);
@@ -176,6 +163,7 @@ int	main(int ac, char **av, char **base_env)
 			ast->cleanup_data = &cleanup_data;
 			//print_ast(ast);
 			run_node(ast);
+			
 			while (waitpid(-1, &status, 0) != -1)
 			{
 				set_last_exit(WEXITSTATUS(status));

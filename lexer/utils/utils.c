@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:46:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/10 21:37:36 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 08:51:05 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,5 @@ void	init_token(t_token *token, t_lexer *lexer)
 	token->input_str = lexer->str;
 	token->input_position = lexer->position;
 	token->old_data = NULL;
+	token->potential_fd = NULL;
 }

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 17:10:41 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 12:54:46 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,6 @@ bool	ft_buildin(t_ast *ast)
 	}
 	else if (!ft_strcmp(command_name, "pwd"))
 	{
-		//redir_stdio(ast);
 		ft_pwd(ast);
 		return (true);
 	}

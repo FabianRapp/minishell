@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 20:45:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/18 07:24:41 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 09:15:20 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,16 @@ int	ft_atoi(const char *str)
 
 	num = 0;
 	sign = 1;
-	while (white_space(*str))
+	while (str && white_space(*str))
 		str++;
-	if (*str == '-')
+	if (str && *str == '-')
 	{
 		str++;
 		sign = -1;
 	}
-	else if (*str == '+')
+	else if (str && *str == '+')
 		str++;
-	while (ft_isdigit(*str))
+	while (str && ft_isdigit(*str))
 	{
 		num *= 10;
 		digit = (int)(*str - '0');

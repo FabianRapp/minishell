@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:52:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 05:09:01 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 08:19:04 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct s_parser
 	t_parser	*next;
 	t_parser	*arg;
 	t_parser	*rest_name;
+	bool		is_stdioe_reir[3];
 }	t_parser;
 
 // simplified node of t_parser list

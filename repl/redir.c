@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:37:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 04:05:12 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 13:53:32 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,19 +49,88 @@
      [EILSEQ]           The filename does not match the encoding rules.
 */
 
-int	redir_fd_write(char *file, bool append)
+t_fd_pair	*io_data(int flag, void *data)
 {
-	int	fd;
-	int	flag;
+	static t_fd_pair	*fds = NULL;
 
+	if (flag == SET_NEW_FDS)
+	{
+		if (fds)
+			reset_fds();
+		fds = (t_fd_pair *)data;
+	}
+	if (flag == RESET_FDS)
+		fds = NULL;
+	return (fds);
+}
+
+t_result	redir_fds(void)
+{
+	t_fd_pair	*fds;
+	int			i;
+
+	fds = get_fds();
+	i = 0;
+	while (fds && fds[i].base_fd != INIT_VAL)
+	{
+		dup2(fds[i].overload_with_fd, fds[i].base_fd);
+		if (errno)
+			return (print_error(true, NULL, NULL, strerror(errno)), ERROR);
+		i++;
+	}
+	return (SUCCESS);
+}
+
+t_result	reset_fds(void)
+{
+	t_fd_pair	*fds;
+	int			i;
+
+	fds = get_fds();
+	i = 0;
+	while (fds && fds[i].base_fd != INIT_VAL)
+	{
+		close(fds[i].overload_with_fd);
+		dup2(fds[i].base_fd_backup, fds[i].base_fd);
+		i++;
+	}
+	if (errno)
+	{
+		print_error(true, NULL, NULL, strerror(errno));
+		return (ERROR);
+	}
+	free(fds);
+	io_data(RESET_FDS, NULL);
+	return (SUCCESS);
+}
+
+void	set_new_fds(t_fd_pair *fds)
+{
+	io_data(SET_NEW_FDS, fds);
+}
+
+t_fd_pair	*get_fds(void)
+{
+	return (io_data(GET_FDS, NULL));
+}
+
+
+t_fd_pair	redir_fd_write(char *file, bool append, int base_fd)
+{
+	int			flag;
+	t_fd_pair	fd_pair;
+
+	fd_pair.base_fd = WRITE;
+	if (base_fd != INIT_VAL)
+	{
+		fd_pair.base_fd = base_fd;
+	}
 	flag = O_WRONLY | O_CREAT;
 	if (append)
 		flag |= O_APPEND;
 	else
 		flag |= O_TRUNC;
-	fd = open(file, flag, NEW_FILE_PERMISSIONS);
-	if (fd >= 0)
-		return (fd);
+	fd_pair.overload_with_fd = open(file, flag, NEW_FILE_PERMISSIONS);
 	if (errno == EACCES)
 		print_error(true, "DEBUG redir_fd_write", file, "Permission denied");
 	else if (errno == EINTR)
@@ -78,20 +147,24 @@ int	redir_fd_write(char *file, bool append)
 		print_error(true, "DEBUG redir_fd_write", file, "No such file or directory");
 	else if (errno == ENOTDIR)
 		print_error(true, "DEBUG redir_fd_write", file, "Not a directory");
-	else
-		print_error(true, "DEBUG redir_fd_write", file, strerror(errno));
-	return (fd);
+	else if (errno)
+		print_error(true, "DEBUG redir_fd_write else", file, strerror(errno));
+	errno = 0;
+	return (fd_pair);
 }
 
-int	redir_read(char *file)
+t_fd_pair	redir_read(char *file, int base_fd)
 {
-	int	fd;
-	int	flag;
+	int			flag;
+	t_fd_pair	fd_pair;
 
+	fd_pair.base_fd = READ;
+	if (base_fd != INIT_VAL)
+	{
+		fd_pair.base_fd = base_fd;
+	}
 	flag = O_RDONLY;
-	fd = open(file, flag);
-	if (fd >= 0)
-		return (fd);
+	fd_pair.overload_with_fd = open(file, flag);
 	if (errno == EACCES)
 		print_error(true, "DEBUG redir_read", file, "Permission denied");
 	else if (errno == EINTR)
@@ -110,10 +183,11 @@ int	redir_read(char *file)
 		print_error(true, "DEBUG redir_read", file, "Not a directory");
 	else
 		print_error(true, "DEBUG redir_read", file, strerror(errno));
-	return (fd);
+	errno = 0;
+	return (fd_pair);
 }
 
-bool	check_valid_arg(t_ast *ast, t_redir *redir)
+t_result	check_valid_arg(t_ast *ast, t_redir *redir)
 {
 	if (count_args(redir->arg) != 1)
 	{
@@ -124,103 +198,132 @@ bool	check_valid_arg(t_ast *ast, t_redir *redir)
 			print_error(true, false, redir->arg->name->token->old_data, "ambiguous redirect");
 			ast->exit_status = 1;
 		}
-		return (false);
+		return (ERROR);
 	}
-	return (true);
+	return (SUCCESS);
 }
 
-bool	reset_stdio(t_ast *ast)
+t_result	find_and_replace_from(t_fd_pair *fds, int base_fd, int overload_with_fd)
 {
-	int	*fds;
+	int	i;
 
-	fds = ast->fd;
-	fds[READ] = dup2(ast->base_fd[READ], STDIN_FILENO);
-	if (fds[READ] < 0)
+	i = 0;
+	while (fds && fds[i].base_fd != INIT_VAL)
 	{
-		//print_error(true, NULL, NULL, "error redirecting input");
-		ast->exit_status = 1;
-		
-		return (false);
+		if (fds[i].base_fd == base_fd)
+		{
+			close(fds[i].overload_with_fd);
+			fds[i].overload_with_fd = overload_with_fd;
+			return (SUCCESS);
+		}
+		i++;
 	}
-	fds[WRITE] = dup2(ast->base_fd[WRITE], STDOUT_FILENO);
-	if (fds[WRITE] < 0)
-	{
-		//print_error(true, NULL, NULL, "error redirecting output");
-		ast->exit_status = 1;
-		return (false);
-	}
-	return (true);
+	return (ERROR);
 }
 
-bool	redir_stdio(t_ast *ast)
+// returns new len
+int	extend_fd_array(t_fd_pair **fds)
 {
-	int	*fds;
+	int			len;
+	t_fd_pair	*new;
 
-	fds = ast->fd;
-	//if (fds[READ] != ast->base_fd[READ])
+	len = 0;
+	while (*fds && (*fds)[len].base_fd != INIT_VAL)
 	{
-		fds[READ] = dup2(fds[READ], STDIN_FILENO);
-		if (fds[READ] < 0)
-		{
-			//perror(strerror(errno));
-			//print_error(true, NULL, NULL, "error redirecting input");
-			ast->exit_status = 1;
-			return (false);
-		}
+		len++;
 	}
-	//if (fds[WRITE] != ast->base_fd[WRITE])
-	{
-		fds[WRITE] = dup2(fds[WRITE], STDOUT_FILENO);
-		if (fds[WRITE] < 0)
-		{
-			//perror(strerror(errno));
-			//print_error(true, NULL, NULL, "error redirecting ouput");
-			ast->exit_status = 1;
-			return (false);
-		}
+	new = ft_calloc(len + 2, sizeof(t_fd_pair));
+	if (!new)
+		return (free(*fds), -1);
+	ft_memcpy(new, *fds, sizeof(t_fd_pair) * len);
+	free(*fds);
+	*fds = new;
+	return (len);
+}
+
+t_fd_pair *add_fd_pair(t_fd_pair *fds, t_fd_pair new_fd_pair)
+{
+	int	len;
+
+	if (find_and_replace_from(fds, new_fd_pair.base_fd, new_fd_pair.overload_with_fd) == SUCCESS)
+		return (fds);
+	len = extend_fd_array(&fds);
+	if (len == -1)
+		return (NULL);
+	errno = 0;
+	fds[len].base_fd_backup = dup(fds[len].base_fd);
+	if (errno)
+	{//TODO add error handeling
+		print_error(true, NULL, NULL, strerror(errno));
+		exit(errno);
 	}
-	return (true);
+	fds[len].base_fd = new_fd_pair.base_fd;
+	fds[len].overload_with_fd = new_fd_pair.overload_with_fd;
+	fds[len + 1].base_fd = INIT_VAL;
+	fds[len + 1].base_fd_backup = INIT_VAL;
+	fds[len + 1].overload_with_fd = INIT_VAL;
+	return (fds);
 }
 
 t_result	resolve_redirs(t_ast *ast)
 {
-	t_redir	*redir;
-	int		*fd;
+	t_redir		*redir;
+	int			*fd;
+	int			base_fd;
+	t_fd_pair	new_fd_pair;
+	t_fd_pair	*fds;
 
 	fd = ast->fd;
 	redir = ast->redir;
+	fds = NULL;
+	new_fd_pair.overload_with_fd = ast->fd[WRITE];
+	new_fd_pair.base_fd = WRITE;
+	fds = add_fd_pair(fds, new_fd_pair);
+	if (!fds)
+		return (ERROR);
+	new_fd_pair.overload_with_fd = ast->fd[READ];
+	new_fd_pair.base_fd = READ;
+	fds = add_fd_pair(fds, new_fd_pair);
+	if (!fds)
+		return (ERROR);
 	while (redir)
 	{
 		if (!check_valid_arg(ast, redir))
 			return (ERROR);
+		base_fd = redir->left_redir_arg;
 		if (redir->type == REDIR_OUT)
 		{
-			if (fd[WRITE] != 1)
-				close(fd[WRITE]);
-			fd[WRITE] = redir_fd_write(redir->arg->name->token->str_data, false);
+			new_fd_pair = redir_fd_write(redir->arg->name->token->str_data, false, base_fd);
+			fds = add_fd_pair(fds, new_fd_pair);
+			if (!fds)
+				return (ERROR);
 		}
 		else if (redir->type == REDIR_APPEND)
 		{
-			if (fd[WRITE] != 1)
-				close(fd[WRITE]);
-			fd[WRITE] = redir_fd_write(redir->arg->name->token->str_data, true);
+			new_fd_pair = redir_fd_write(redir->arg->name->token->str_data, true, base_fd);
+			if (new_fd_pair.overload_with_fd == -1)
+			{// TODO error
+				return (ERROR);
+			}
+			fds = add_fd_pair(fds, new_fd_pair);
+			if (!fds)
+				return (ERROR);
 		}
 		else if (redir->type == REDIR_IN)
 		{
-			if (fd[READ] != 0)
-				close(fd[READ]);
-			fd[READ] = redir_read(redir->arg->name->token->str_data);
+			new_fd_pair = redir_read(redir->arg->name->token->str_data, base_fd);
+			fds = add_fd_pair(fds, new_fd_pair);
+			if (!fds)
+				return (ERROR);
 		}
 		// TODO
 		else if (redir->type == HERE_DOC)
 		{
-			if (fd[READ] != 0)
-				close(fd[READ]);
-			fd[READ] = 0;
 		}
 		if (fd[WRITE] < 0 || fd[READ] < 0)
 			return (ERROR);
 		redir = redir->next;
 	}
+	set_new_fds(fds);
 	return (SUCCESS);
 }
