@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 13:22:43 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 16:45:20 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,18 +106,12 @@ void	run_command_node(t_ast *ast)
 	if (ast->pid == -1)
 	{
 		ast->exit_status = errno;
-		print_error(true, "debug run_command_node", NULL, strerror(ast->exit_status));
+		print_error(true, NULL, NULL, strerror(ast->exit_status));
 		return ;
 	}
 	errno = 0;
 	if (ast->pid != 0)
-	{
-		// if (ast->fd[READ] != READ)
-		// 	close(ast->fd[READ]);
-		// if (ast->fd[WRITE] != WRITE)
-		// 	close(ast->fd[WRITE]);
 		return ;
-	}
 	execve(data.path, data.argv, ast->envs);
 	exit(errno);
 }
@@ -129,8 +123,8 @@ void	add_global_data(t_ast *ast, t_env *env, char **envs)
 	add_global_data(ast->left, env, envs);
 	add_global_data(ast->right, env, envs);
 	ast->env = env;
-	ast->fd[READ] = READ;
-	ast->fd[WRITE] = WRITE;
+	ast->pipe[READ] = READ;
+	ast->pipe[WRITE] = WRITE;
 	ast->exit_status = DEFAULT_EXIT_STATUS;
 	ast->envs = envs;
 }
@@ -163,7 +157,7 @@ int	main(int ac, char **av, char **base_env)
 			ast->cleanup_data = &cleanup_data;
 			//print_ast(ast);
 			run_node(ast);
-			
+			reset_fds();
 			while (waitpid(-1, &status, 0) != -1)
 			{
 				set_last_exit(WEXITSTATUS(status));

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:38:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 07:15:00 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 16:16:19 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@ t_parser	*remove_next_whitespaces(t_parser *parser)
 	}
 	return (parser);
 }
-
-
 
 void	move_to_arg(t_parser *parser, bool is_terminator(t_type), t_type new_type, bool as_must_as_possible)
 {

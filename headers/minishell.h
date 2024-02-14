@@ -6,14 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 13:52:14 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 16:50:20 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
-	- left redir arg invalid fd handeling
-	- print error has to go to ast->fd[WRITE] if ast->fd[WRITE] != WRITE
+	- redir.c error hadeling
 	- $ + any digit as here doc args
 	- add relative path  optiopns for commands
 	- env vars rework
@@ -135,15 +134,8 @@ typedef struct s_cleanup_data
 	char	*input;
 }	t_cleanup_data;
 
-typedef struct s_env_var
-{
-	char	*name;
-	char	*val;
-}	t_env_var;
-
 typedef struct s_env
 {
-	t_env_var	*vars;
 	bool		main_process;
 	int			main_pid;
 }	t_env;
@@ -190,7 +182,7 @@ typedef struct s_ast
 	t_redir			*redir;
 	t_ast			*left;
 	t_ast			*right;
-	int				fd[2];
+	int				pipe[2];
 	t_fd_pair		*fds;
 	int				exit_status;
 	t_cleanup_data	*cleanup_data;
@@ -220,10 +212,7 @@ bool		test_lexer_manualy(char *str);
 
 //env
 bool	init_env(t_env *new_env, char **base_env);
-void	free_env(t_env *env);
 int		get_pid(void);
-void	print_env(t_env *env);
-t_env	clone_env(t_env *base);
 
 // utils
 bool	my_free(void **ptr);
@@ -245,12 +234,12 @@ t_ast	*parser(char *str);
 #  define RESET_FDS 3
 #  define REDIR_FDS 4
 
-
-t_fd_pair	*io_data(int	flag, void *data);
+// utils/fd1.c
+t_fd_pair	*io_data(int flag, void *data);
 t_result	redir_fds(void);
 t_result	reset_fds(void);
-void		set_new_fds(t_fd_pair *fds);
 t_fd_pair	*get_fds(void);
+t_result	temp_redir(void);
 
 # ifndef FD_REQUEST_SKIP
 #  define FD_REQUEST_SKIP -1
@@ -279,6 +268,9 @@ t_parser	*parser_testing(char *str);
 (echo A && (echo B || echo C) && (echo D | (echo E && echo F))) || (echo G && (echo H | echo I)) && ((echo J || echo K) && echo L) | (echo M && (echo N || echo O)) && (echo P || (echo Q && echo R)) || echo S && ((echo T && echo U) || echo V) | (echo W || echo X) && echo Y || (echo Z && echo AA) || echo AB && (echo AC || echo AD) && (echo AE | echo AF && echo AG)
 
 (echo B || echo C) && (echo D | (echo E && echo F)) || (echo G && (echo H | echo I)) && ((echo J || echo K) && echo L) | (echo M && (echo N || echo O)) && (echo P || (echo Q && echo R)) || echo S && ((echo T && echo U) || echo V) | (echo W || echo X) && echo Y || (echo Z && echo AA) || echo AB && (echo AC || echo AD) && (echo AE | echo AF && echo AG)
+
+
+(echo A > output.txt && (B 2> error.log || echo C >> output.txt) && (D | (echo E && F >> output.txt))) || (echo G && (echo H | I 2>> error.log)) && ((echo J || K > /dev/null) && echo L >> output.txt) | (echo M && (echo N || O < input.txt) && (echo P || (Q >> output.txt && echo R))) || echo S && ((T && echo U > output.txt) || echo V) | (echo W || X 2> error.log) && echo Y || (echo Z && AA >> output.txt) || echo AB && (echo AC || echo AD < input.txt) && (echo AE | AF > output.txt && echo AG)
 
 
 (echo B) && echo D 

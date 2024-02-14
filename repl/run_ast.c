@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 13:33:09 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 16:54:27 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,22 +18,22 @@ bool	ft_pipe(t_ast *ast)
 
 	if (ast->exit_status > 0)
 		return (false);
-		ast->left->fd[READ] = ast->fd[READ];
+		ast->left->pipe[READ] = ast->pipe[READ];
 	if (pipe(pipe_fd) == -1)
 	{//handle error
 	}
-	if (ast->left->fd[WRITE] != WRITE)
-		close(ast->left->fd[WRITE]);
-	ast->left->fd[WRITE] = pipe_fd[WRITE];
-	if (ast->right->fd[READ] != READ)
-		close(ast->right->fd[READ]);
-	ast->right->fd[READ] = pipe_fd[READ];
+	if (ast->left->pipe[WRITE] != WRITE)
+		close(ast->left->pipe[WRITE]);
+	ast->left->pipe[WRITE] = pipe_fd[WRITE];
+	if (ast->right->pipe[READ] != READ)
+		close(ast->right->pipe[READ]);
+	ast->right->pipe[READ] = pipe_fd[READ];
 	run_node(ast->left);
-	if (ast->left->fd[WRITE] != WRITE)
-		close(ast->left->fd[WRITE]);
+	if (ast->left->pipe[WRITE] != WRITE)
+		close(ast->left->pipe[WRITE]);
 	run_node(ast->right);
-	if (ast->right->fd[READ] != READ)
-		close(ast->right->fd[READ]);
+	if (ast->right->pipe[READ] != READ)
+		close(ast->right->pipe[READ]);
 	//close(pipe_fd[WRITE]);
 	if (ast->right->exit_status == DEFAULT_EXIT_STATUS)
 	{
@@ -57,10 +57,17 @@ void	create_sub_shell(t_env sub_env, char *input, t_ast *ast)
 	ast->pid = fork();
 	if (ast->pid)
 		return ;
+	errno = 0;
 	sub_ast = parser(input);
 	if (!input)//TODO syntax error should be found before i think?
 	{
 		exit(1);
+	}
+	dup2(ast->pipe[WRITE], WRITE);
+	if (errno)
+	{
+		print_error(true, NULL, NULL, strerror(errno));
+		exit(errno);
 	}
 	// TODO: differ between syntax and malloc parser error
 	if (!sub_ast)
@@ -79,7 +86,6 @@ void	create_sub_shell(t_env sub_env, char *input, t_ast *ast)
 	}
 	ast->exit_status = sub_ast->exit_status;
 	free_ast(sub_ast);
-	free_env(&sub_env);
 	exit(ast->exit_status);
 	return ;
 }

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:52:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 08:19:04 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 16:15:30 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 # define PARSER_H
 
 # include "minishell.h"
-
-#define DEBUG_EXTRACT_TOKENS 0
 
 #define NAME 'n'
 #define ARG 'a'

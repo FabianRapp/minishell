@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 13:23:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 14:38:45 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,20 +48,15 @@ void	main_exit(t_cleanup_data *data, bool full_exit, t_env *env, int exit_status
 	if (main_process && full_exit)
 	{
 		my_free((void **)&(data->input));
-		if (env)
-			free_env(env);
 		if (data->root)
 			free_ast(data->root);
 	}
 	else if (!main_process && full_exit)
 	{
-		free_env(env);
 	}
 	else if (!main_process)
 	{
 		exit(exit_status);
-		if (env)
-			free_env(env);
 	}
 	else
 	{

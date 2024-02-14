@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 12:54:46 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 14:41:32 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ static bool	includes_non_num(char *str)
 
 void	ft_pwd(t_ast *ast)
 {
-	ft_fprintf(ast->fd[WRITE], "%s\n", getenv("PWD"));
+	(void) ast;
+	ft_printf("%s\n", getenv("PWD"));
 }
 
 // see header file for weird stuff to keep in mind for implentation
@@ -74,30 +75,6 @@ typedef struct	s_cd
 	t_path	path_ob;
 }	t_cd;
 
-// void	ft_cd(t_ast *ast)
-// {
-// 	t_cd	cd_ob;
-
-// 	init_path(&(cd_ob.path_ob), &(ast->info), "CDPATH");
-// 	if (!getcwd(cd_ob.cur_dir, PATH_MAX + 1))
-// 	{
-// 		//error cur dir too long
-// 		return ;
-// 	}
-// 	if (!ast->arg || !ast->arg->name)
-// 		chdir(getenv("HOME"));
-// 	else if (!ft_strcmp(ast->arg->name->token->str_data, "-"))
-// 	{
-// 		// TODO: change to last buffered dir
-// 		ft_printf("last dir place holder\n");
-// 	}
-// 	my_free((void **)&(cd_ob.path_ob.cur_path));
-// }
-
-//void	ft_export(t_ast *ast)
-//{
-	
-//}
 
 bool	ft_buildin(t_ast *ast)
 {

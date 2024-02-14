@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 13:04:28 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 16:46:21 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,17 @@ t_token	*new_dummy_token(void)
 
 void	print_error(bool shell_name, char *command_name, char *arg, char *str)
 {
-	int	fd;
-
-	fd = 2;
+	temp_redir();
 	if (shell_name)
-		ft_fprintf(fd, "%s: ", SHELL_NAME);
+		ft_fprintf(2, "%s: ", SHELL_NAME);
 	if (command_name)
-		ft_fprintf(fd, "%s: ", command_name);
+		ft_fprintf(2, "%s: ", command_name);
 	if (arg)
-		ft_fprintf(fd, "%s: ", arg);
+		ft_fprintf(1, "%s: ", arg);
 	if (str)
-		ft_fprintf(fd, "%s", str);
-	ft_fprintf(fd, "\n");
+		ft_fprintf(2, "%s", str);
+	ft_fprintf(2, "\n");
+	temp_redir();
 }
 
 bool	my_free(void **ptr)

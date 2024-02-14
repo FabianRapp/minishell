@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 19:47:45 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 06:44:41 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 16:18:53 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,7 @@ t_result	type_commands(t_parser *parser)
 				return (ERROR);
 			parser = temp;
 		}
-		//else
-			type_command(parser, &found_command);
+		type_command(parser, &found_command);
 		parser = parser->next;
 	}
 	return (handle_end(parser, found_command, found_redir));

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 13:17:41 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 16:45:01 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ t_left_right_parsers	split_parser(t_parser *split_location)
 // uses tokens of parser -->> dont free tokens when freeing parser
 t_token_list	*extract_token_list(t_parser *parser, char name_or_arg)
 {
-	t_token_list	*last;
 	t_token_list	*new_list;
 
 	if (!parser || parser->p_type == T_EOF || !parser->token || parser->token->type == T_EOF)
@@ -109,18 +108,6 @@ t_token_list	*extract_token_list(t_parser *parser, char name_or_arg)
 		new_list->next = extract_token_list(parser->rest_name, RECURSIVE_CALL);
 	else // if (name_or_arg == RECURSIVE_CALL)
 		new_list->next = extract_token_list(parser->next, RECURSIVE_CALL);
-	if (DEBUG_EXTRACT_TOKENS && (name_or_arg == ARG || name_or_arg == NAME))
-	{
-		last = new_list;
-		int i = 0;
-		while (last)
-		{
-			printf("extracted token %d: \n", i++);
-			print_token(last->token, NULL, 0);
-			printf("\n");
-			last = last->next;
-		}
-	}
 	return (new_list);
 }
 
@@ -169,28 +156,18 @@ t_result	append_redir(t_ast *ast_node, t_parser *args, t_redir **cur_redir)
 	{
 		(*cur_redir)->next = ft_calloc(1, sizeof(t_redir));
 		if (!(*cur_redir)->next)
-		{// malloc error
-		}
-		(*cur_redir) = (*cur_redir)->next;
-		(*cur_redir)->type = args->token->type;
-		//printf("redir type: %s \n", type_to_str_type((*cur_redir)->type));
-		(*cur_redir)->arg = append_arg(args->arg, (*cur_redir)->arg, true);
+			return (ERROR);
+		*cur_redir = (*cur_redir)->next;
 	}
 	else
 	{
 		*cur_redir = ft_calloc(1, sizeof(t_redir));
 		if (!*cur_redir)
-		{
-			//malloc fail
-		}
+			return (ERROR);
 		ast_node->redir = (*cur_redir);
-		(*cur_redir)->type = args->token->type;
-		(*cur_redir)->arg = append_arg(args->arg, (*cur_redir)->arg, true);
-		//printf("redir type: %s \n", type_to_str_type((*cur_redir)->type));
-		// printf("redir args:\n");
-		// print_arg_list((*cur_redir)->arg, 10, 0);
-		// printf("\n");
 	}
+	(*cur_redir)->type = args->token->type;
+	(*cur_redir)->arg = append_arg(args->arg, (*cur_redir)->arg, true);
 	if ((*cur_redir)->arg)
 	{//malloc error
 	}
@@ -208,34 +185,30 @@ t_ast	*build_leaf_node(t_ast *ast_node, t_parser *parser)
 
 	ast_node->type = parser->p_type;
 	ast_node->name = extract_token_list(parser, NAME);
-	//free_ncircular_parser(parser->rest_name, false);
 	args = parser->arg;
 	cur_redir = NULL;
 	while (args)
 	{
-		
 		if (is_redir(args->token->type))
 		{
 			if (append_redir(ast_node, args, &cur_redir) == ERROR)
-			{// handle error
-			}
+				return (free_parser_main(parser, true), free_ast(ast_node), NULL);
 		}
 		else if (args->p_type == ARGUMENT)
-			ast_node->arg = append_arg(args, ast_node->arg, true);
+		{
+			ast_node->arg = append_arg(args, ast_node->arg, true); //TODO does this even run?
+			if (!ast_node->arg)
+				return (free_parser_main(parser, true), free_ast(ast_node), NULL);
+		}
 		else
 		{
 			printf("build ast debug:\n");
 			print_token(args->token, args, 2);
 			//exit(0);
 		}
-		//system("leaks minishell");
 		args = args->next;
 	}
-	// if ((last_parser(parser) && last_parser(parser)->token->type != T_EOF)
-	// 		|| (parser->next && !is_operator(parser->next) && parser->token->type != T_EOF))
-	//if (ast_node->type != REDIR_ARG)
-		free_parser_main(parser, false);
-	//system("leaks minishell");
+	free_parser_main(parser, false);
 	return (ast_node);
 }
 
@@ -246,17 +219,16 @@ t_ast *build_ast(t_parser *parser)
 	t_left_right_parsers	child_parsers;
 	t_ast					*ast_node;
 
-	ast_node = ft_calloc(3, sizeof(t_ast)); ///TODO why 3??
+	ast_node = ft_calloc(1, sizeof(t_ast));
 	if (!ast_node)
 		return (free_parser_main(parser, true), NULL);
-	//system("leaks minishell");
 	if (parser->p_type != COMMAND)
 	{
 		return (print_error(true, "debug build_ast", NULL, type_to_str(parser->token->type)),
 			free_parser_main(parser, true), NULL);
 	}
 	highest_operator = find_highest_operator(parser);
-	if (!highest_operator)//is leaf node
+	if (!highest_operator)
 		return (build_leaf_node(ast_node, parser));
 	ast_node->type = highest_operator->p_type;
 	if (highest_operator->rest_name || highest_operator->arg)
@@ -264,15 +236,15 @@ t_ast *build_ast(t_parser *parser)
 		printf("debug: build ast wtf\n");
 		exit(1);
 	}
+	
 	child_parsers = split_parser(highest_operator);
 	ast_node->left = build_ast(child_parsers.left);
 	if (!ast_node->left)
-	{// handle error
-	}
+		return (free_ast(ast_node), free_parser_main(child_parsers.right, true), NULL);
 	ast_node->right = build_ast(child_parsers.right);
 	if (!ast_node->right)
-	{// handle error
-	}
+		return (free_ast(ast_node), NULL);
+	
 	return (free_token(highest_operator->token), free(highest_operator), ast_node);
 }
 
@@ -309,10 +281,6 @@ void	free_ast(t_ast *ast)
 		free_ast(ast->left);
 	if (ast->right)
 		free_ast(ast->right);
-	if (ast->fd[READ] != READ)
-		close(ast->fd[READ]);
-	if (ast->fd[WRITE] != WRITE)
-		close (ast->fd[WRITE]);
 	free_token_list(ast->name);
 	free_arg_list(ast->arg);
 	free(ast);
