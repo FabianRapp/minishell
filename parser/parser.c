@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 20:21:57 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 06:50:17 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_result	redirs_have_arg(t_parser *parser)
 		{
 			while (parser->next->p_type == WHITE_SPACE)
 				parser = parser->next;
-			print_error(true, NULL, NULL, type_to_str(parser->next->token->type));
+			print_error(true, "debug redirs_have_arg", NULL, type_to_str(parser->next->token->type));
 			return (ERROR);
 		}
 		parser = parser->next;
@@ -37,7 +37,9 @@ t_result	parse_redir_paths(t_parser *parser)
 	while (parser->p_type != T_EOF)
 	{
 		if (is_redir(parser->p_type))
-			move_to_arg(parser, is_redir_arg_terminator, REDIR_ARG);
+		{
+			move_to_arg(parser, is_redir_arg_terminator, REDIR_ARG, false);
+		}
 		parser = parser->next;
 	}
 	parser = parser->next; // reset to head of circular list
@@ -53,7 +55,7 @@ void	type_args(t_parser *parser)
 	{
 		if (parser->p_type == COMMAND)
 		{
-			move_to_arg(parser, command_terminator, ARGUMENT);
+			move_to_arg(parser, command_terminator, ARGUMENT, true);
 		}
 		parser = parser->next;
 	}
@@ -136,19 +138,12 @@ t_ast	*parser(char *str)
 	if (merge_literals_parser(parser) == ERROR)
 		return (free_parser_main(parser, true), NULL);
 	merge_names(parser);
+	remove_whitespace(parser);
 	if (parse_redir_paths(parser) == ERROR)
 		return (free_parser_main(parser, true), NULL);
 	if (type_commands(parser) == ERROR)
 		return (free_parser_main(parser, true), NULL);
-	remove_whitespace(parser);
-	if (move_commands_infront(parser) == ERROR)
-	{
-		free_parser_main(parser, true);
-		return (NULL);
-		// debug condtion in function will exit atm
-	}
-	//system("leaks minishell");
-	jump_to_start(&parser);
+	move_commands_infront(parser);
 	type_args(parser);
 	//system("leaks minishell");
 	ast = build_ast(parser);
@@ -157,6 +152,31 @@ t_ast	*parser(char *str)
 		// handle cleanup
 	}
 	return (ast);
+}
+
+t_parser	*parser_testing(char *str)
+{
+	t_parser	*parser;
+
+	if (!str)
+		return (NULL);
+	parser = init_parser(str);
+	if (has_content(parser) == ERROR)
+		return (NULL);
+	trim_whitespace(parser);
+	if (merge_literals_parser(parser) == ERROR)
+		return (free_parser_main(parser, true), NULL);
+	merge_names(parser);
+	remove_whitespace(parser);
+	if (parse_redir_paths(parser) == ERROR)
+		return (free_parser_main(parser, true), NULL);
+	
+	if (type_commands(parser) == ERROR)
+		return (free_parser_main(parser, true), NULL);
+	move_commands_infront(parser);
+	type_args(parser);
+	return (parser);
+	//system("leaks minishell");
 }
 
 // echo 'hello_word' | cat && (ls >> file > fil2 || echo 'ls failed') && cat < file && cat < file2

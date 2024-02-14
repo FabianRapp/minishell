@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 17:10:51 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 04:10:32 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,8 +232,10 @@ t_ast *build_ast(t_parser *parser)
 		return (free_parser_main(parser, true), NULL);
 	//system("leaks minishell");
 	if (parser->p_type != COMMAND)
-		return (print_error(true, NULL, NULL, type_to_str(parser->token->type)),
+	{
+		return (print_error(true, "debug build_ast", NULL, type_to_str(parser->token->type)),
 			free_parser_main(parser, true), NULL);
+	}
 	highest_operator = find_highest_operator(parser);
 	if (!highest_operator)//is leaf node
 		return (build_leaf_node(ast_node, parser));

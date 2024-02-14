@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/11 00:43:08 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 04:04:00 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ char	*find_path(t_ast *ast, char *command_name, char *path_env)
 		if (errno != ENOENT && errno != 20)
 		{
 			ast->exit_status = errno;
-			return (print_error(true, NULL, NULL, strerror(errno)), NULL);
+			return (print_error(true, "DEBUG find_path", NULL, strerror(errno)), NULL);
 		}
 		if (!next_path(&path_ob))
 			return (NULL);

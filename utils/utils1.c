@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 20:15:31 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 06:34:40 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,23 +51,24 @@ void	print_parser(t_parser *parser, int tree_level)
 {
 	t_parser *current = parser;
 
-	do
+	while (current && current->p_type != T_EOF)
 	{
-		if (current->p_type == T_EOF)
-			break ;
+		printf("next parser:\n");
 		print_token(current->token, current, tree_level);
+		printf("\n");
 		if (parser->rest_name)
 		{
 			printf("---rest name:----\n");
-			print_parser(parser->rest_name, tree_level + 1);
+			print_parser(parser->rest_name, tree_level);
 		}
 		if (parser->arg)
 		{
 			printf("---rest name:----\n");
-			print_parser(parser->arg, tree_level + 1);
+			print_parser(parser->arg, tree_level);
 		}
 		current = current->next;
-	} while (current != parser && current);
+		tree_level += 2;
+	}
 	//if (!current)
 		//printf("parser object 1 or 0 nodes (should be 1)\n");
 	// if (current->p_type == T_EOF)

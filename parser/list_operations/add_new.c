@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:13:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 20:09:55 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 05:33:16 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 #include "../../headers/lexer.h"
 #include "../internals_parser.h"
 
-// util for type_commands()
-t_result	insert_dummy(t_parser *parser)
+t_result	insert_dummy_after(t_parser *parser)
 {
 	t_parser	*dummy;
 
@@ -33,6 +32,24 @@ t_result	insert_dummy(t_parser *parser)
 	return (SUCCESS);
 }
 
+t_result	insert_dummy_here(t_parser *parser)
+{
+	t_parser	*next;
+
+	next = ft_calloc(1, sizeof(t_parser));
+	if (!next)
+		return (ERROR);
+	*next = *parser;
+	parser->next = next;
+	parser->p_type = COMMAND;
+	parser->token = new_dummy_token();
+	if (!parser->token)
+	{
+		parser->next = parser->next->next;
+		return (free(next), ERROR);
+	}
+	return (SUCCESS);
+}
 
 // creates a cricular singular linked list
 // each node has to be freed and each tokens values as a normal token would

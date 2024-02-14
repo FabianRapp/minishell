@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:37:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 17:11:25 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 04:05:12 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,23 +63,23 @@ int	redir_fd_write(char *file, bool append)
 	if (fd >= 0)
 		return (fd);
 	if (errno == EACCES)
-		print_error(true, NULL, file, "Permission denied");
+		print_error(true, "DEBUG redir_fd_write", file, "Permission denied");
 	else if (errno == EINTR)
-		print_error(true, NULL, file, "Signal interupt");
+		print_error(true, "DEBUG redir_fd_write", file, "Signal interupt");
 	else if (errno == EIO)
-		print_error(true, NULL, file, "Error writing to file");
+		print_error(true, "DEBUG redir_fd_write", file, "Error writing to file");
 	else if (errno == EISDIR)
-		print_error(true, NULL, file, "Is a directory");
+		print_error(true, "DEBUG redir_fd_write", file, "Is a directory");
 	else if (errno == EMFILE)
-		print_error(true, NULL, file, "Too many open files");
+		print_error(true, "DEBUG redir_fd_write", file, "Too many open files");
 	else if (errno == ENAMETOOLONG)
-		print_error(true, NULL, file, "File name too long");
+		print_error(true, "DEBUG redir_fd_write", file, "File name too long");
 	else if (errno == ENOENT)
-		print_error(true, NULL, file, "No such file or directory");
+		print_error(true, "DEBUG redir_fd_write", file, "No such file or directory");
 	else if (errno == ENOTDIR)
-		print_error(true, NULL, file, "Not a directory");
+		print_error(true, "DEBUG redir_fd_write", file, "Not a directory");
 	else
-		print_error(true, NULL, file, strerror(errno));
+		print_error(true, "DEBUG redir_fd_write", file, strerror(errno));
 	return (fd);
 }
 
@@ -93,23 +93,23 @@ int	redir_read(char *file)
 	if (fd >= 0)
 		return (fd);
 	if (errno == EACCES)
-		print_error(true, NULL, file, "Permission denied");
+		print_error(true, "DEBUG redir_read", file, "Permission denied");
 	else if (errno == EINTR)
-		print_error(true, NULL, file, "Signal interupt");
+		print_error(true, "DEBUG redir_read", file, "Signal interupt");
 	else if (errno == EIO)
-		print_error(true, NULL, file, "Error reading from file"); 
+		print_error(true, "DEBUG redir_read", file, "Error reading from file"); 
 	else if (errno == EISDIR)
-		print_error(true, NULL, file, "Is a directory");
+		print_error(true, "DEBUG redir_read", file, "Is a directory");
 	else if (errno == EMFILE)
-		print_error(true, NULL, file, "Too many open files");
+		print_error(true, "DEBUG redir_read", file, "Too many open files");
 	else if (errno == ENAMETOOLONG)
-		print_error(true, NULL, file, "File name too long");
+		print_error(true, "DEBUG redir_read", file, "File name too long");
 	else if (errno == ENOENT)
-		print_error(true, NULL, file, "No such file or directory");
+		print_error(true, "DEBUG redir_read", file, "No such file or directory");
 	else if (errno == ENOTDIR)
-		print_error(true, NULL, file, "Not a directory");
+		print_error(true, "DEBUG redir_read", file, "Not a directory");
 	else
-		print_error(true, NULL, file, strerror(errno));
+		print_error(true, "DEBUG redir_read", file, strerror(errno));
 	return (fd);
 }
 
@@ -182,7 +182,7 @@ bool	redir_stdio(t_ast *ast)
 	return (true);
 }
 
-bool	resolve_redirs(t_ast *ast)
+t_result	resolve_redirs(t_ast *ast)
 {
 	t_redir	*redir;
 	int		*fd;
@@ -192,7 +192,7 @@ bool	resolve_redirs(t_ast *ast)
 	while (redir)
 	{
 		if (!check_valid_arg(ast, redir))
-			return (false);
+			return (ERROR);
 		if (redir->type == REDIR_OUT)
 		{
 			if (fd[WRITE] != 1)
@@ -219,8 +219,8 @@ bool	resolve_redirs(t_ast *ast)
 			fd[READ] = 0;
 		}
 		if (fd[WRITE] < 0 || fd[READ] < 0)
-			return (false);
+			return (ERROR);
 		redir = redir->next;
 	}
-	return (true);
+	return (SUCCESS);
 }

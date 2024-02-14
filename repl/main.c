@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 20:10:30 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 06:51:08 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	run_command_node(t_ast *ast)
 	if (ast->pid == -1)
 	{
 		ast->exit_status = errno;
-		print_error(true, NULL, NULL, strerror(ast->exit_status));
+		print_error(true, "debug run_command_node", NULL, strerror(ast->exit_status));
 		return ;
 	}
 	if (ast->pid != 0)

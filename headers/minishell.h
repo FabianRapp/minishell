@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 19:45:08 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 05:13:20 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ weird stuff to keep in mind about bash
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
+
 
 // libs
 # include <stdbool.h>
@@ -197,9 +199,9 @@ bool	check_edgecases(t_ast *ast);
 void	add_global_data(t_ast *ast, t_env *env, char **envs);
 
 //redir
-bool	resolve_redirs(t_ast *ast);
-bool	reset_stdio(t_ast *ast);
-bool	redir_stdio(t_ast *ast);
+t_result	resolve_redirs(t_ast *ast);
+bool		reset_stdio(t_ast *ast);
+bool		redir_stdio(t_ast *ast);
 
 // debug lexer
 void		print_token(t_token *token, t_parser *parser, int depth);
@@ -226,6 +228,9 @@ typedef struct s_parser	t_parser;
 typedef struct s_ast	t_ast;
 
 t_ast	*parser(char *str);
+
+// delete later
+t_parser	*parser_testing(char *str);
 
 #endif
 

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 21:34:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 18:19:04 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 04:07:42 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_result	subshell_type(t_lexer *lexer, t_token *token)
 		return (true);
 	if ((lexer->str)[lexer->read_position] == ')')
 	{
-		print_error(true, NULL, NULL, "syntax error near unexpected token `)\'");
+		print_error(true, "debug subshell_type", NULL, "syntax error near unexpected token `)\'");
 		return (false);
 	}
 	count_open = 1;
@@ -36,7 +36,7 @@ t_result	subshell_type(t_lexer *lexer, t_token *token)
 	}
 	if (count_open)
 	{
-		print_error(true, NULL, "syntax error", " unexpected end of file");
+		print_error(true, "debug subshell_type", "syntax error", " unexpected end of file");
 		ft_fprintf(2, "exit\n");
 		exit(2);
 	}

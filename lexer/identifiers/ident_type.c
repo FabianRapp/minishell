@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 18:52:05 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 04:08:09 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ t_result	literal_type(t_lexer *lexer, t_token *token)
 	if (!(lexer->str)[lexer->read_position])
 	{
 		ft_fprintf(2, "exit\n");
-		print_error(true, NULL, NULL, "unexpected EOF while looking for matching `\'\'");
+		print_error(true, "debug literal_type", NULL, "unexpected EOF while looking for matching `\'\'");
 		exit(2);
 	}
 	lexer->position++;
@@ -101,7 +101,7 @@ t_result	interpreted_type(t_lexer *lexer, t_token *token)
 	if (!(lexer->str)[lexer->read_position])
 	{
 		ft_fprintf(2, "exit\n");
-		print_error(true, NULL, NULL, "unexpected EOF while looking for matching `\"\'");
+		print_error(true, "debug interpreted_type", NULL, "unexpected EOF while looking for matching `\"\'");
 		exit(2);
 	}
 	lexer->position++;

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:38:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 19:53:55 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 06:49:49 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,79 +28,81 @@ t_parser	*remove_next_whitespaces(t_parser *parser)
 	return (parser);
 }
 
-void	move_to_arg(t_parser *parser, bool is_terminator(t_type), t_type new_type)
+
+
+void	move_to_arg(t_parser *parser, bool is_terminator(t_type), t_type new_type, bool as_must_as_possible)
 {
-	t_parser	*node;
+	t_parser	*command;
 	t_parser	**next_arg;
 
-	node = parser;
-	next_arg = &(node->arg);
-	parser = remove_next_whitespaces(parser->next);
+	command = parser;
+	next_arg = &(command->arg);
 	while (*next_arg)
 	{
-		*next_arg = (*next_arg)->next;
+		next_arg = &((*next_arg)->next);
 	}
-	while (!is_terminator(parser->p_type))
+	parser = parser->next;
+	while (parser && !is_terminator(parser->p_type))
 	{
 		parser->p_type = new_type;
 		*next_arg = parser;
+		next_arg = &(parser->next);
 		parser = parser->next;
+		if (!as_must_as_possible)
+			break ;
 	}
-	if (*next_arg)
-	{
-		node->next = (*next_arg)->next;
-		(*next_arg)->next = NULL;
-	}
+	command->next = parser;
+	*next_arg = NULL;
 }
 
-void	swap_parsers(t_parser *node1, t_parser *node2)
+void	swap_parser_with_next(t_parser *parser)
 {
-	t_parser	*old1_next;
-	t_parser	*old2_next;
-	t_parser	*old1_last;
-	t_parser	*old2_last;
-	t_parser	*temp;
+	t_parser	temp;
+	t_parser	*next_next;
 
-	old1_next = node1->next;
-	old2_next = node2->next;
-	temp = node1;
-	jump_to_start(&temp);
-	old1_last = temp;
-	old2_last = temp;
-	while (old1_last->next != node1)
-		old1_last = old1_last->next;
-	while (old2_last->next != node2)
-		old2_last = old2_last->next;
-	old1_last->next = node2;
-	old2_last->next = node1;
-	temp = node1->next;
-	node1->next = node2->next;
-	node2->next = temp;
+	if (!parser || !parser->next)
+		return ;
+	next_next = parser->next->next;
+	temp = *parser;
+	*parser = *(parser->next);
+	parser->next = temp.next;
+	*(temp.next) = temp;
+	temp.next->next = next_next;
+}
+
+// moves the command of one command block to the head of the block
+// assumes exactly one commmand per block (including dummy commands)
+// returns the parser node after the command block
+t_parser	*fix_command_block(t_parser *parser)
+{
+	t_parser	*head;
+
+	head = parser;
+	if (is_command_block_terminator(parser->next->p_type))
+		return (parser);
+	while (!is_command_block_terminator(parser->next->p_type))
+	{
+		if (parser->next->p_type == COMMAND)
+		{
+			swap_parser_with_next(parser);
+			parser = head;
+		}
+		else
+			parser = parser->next;
+	}
+	return (parser->next);
 }
 
 // incase of leading redirs infront of command moves the comant infront of them
 // otherwise this situation is bugged duo to parsing order (change needs huge refactor)
-t_result	move_commands_infront(t_parser *parser)
+void	move_commands_infront(t_parser *parser)
 {
-	t_parser	*last;
-
 	while (parser->p_type != T_EOF)
 	{
-		last = last_parser(parser);
-		while (parser->p_type == COMMAND && !is_operator(last->p_type) && last->p_type != T_EOF)
-		{
-			//TODO: figure out the diffrent syntax errors here (example: echo >aaa <sadad (echo) | >a <ad)
-			if (!is_redir(last->p_type))
-			{
-				print_error(true, NULL, NULL, type_to_str(parser->token->type));
-				return (ERROR);
-			}
-			swap_parsers(parser, last);
-			last = last_parser(parser);
-		}
-		parser = parser->next;
+		parser = fix_command_block(parser);
+		if (parser->p_type != T_EOF)
+			parser = parser->next;
 	}
-	return (SUCCESS);
 }
 
 // util for merge_names

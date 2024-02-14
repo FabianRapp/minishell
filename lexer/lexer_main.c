@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 19:40:05 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 04:08:29 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_result	valid_first_char(t_lexer *lexer)
 {
 	if (lexer->cur_char == ')')
 	{
-		print_error(true, NULL, NULL, "syntax error near unexpected token `)\'");
+		print_error(true, "debug valid_first_char", NULL, "syntax error near unexpected token `)\'");
 		return (ERROR);
 	}
 	return (SUCCESS);
