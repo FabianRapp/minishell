@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 20:39:29 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 07:04:30 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void	run_subshell(t_ast *ast)
 
 	if (ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
-	memcpy(&sub_env, ast->env, sizeof(t_env));
+	ft_memcpy(&sub_env, ast->env, sizeof(t_env));
 	sub_env.main_process = false;
 	create_sub_shell(sub_env, ast->name->token->str_data, ast);
 	if (ast->pid == -1)

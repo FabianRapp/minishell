@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 06:50:17 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 07:15:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,9 +173,11 @@ t_parser	*parser_testing(char *str)
 	
 	if (type_commands(parser) == ERROR)
 		return (free_parser_main(parser, true), NULL);
+	//return (parser);
 	move_commands_infront(parser);
-	type_args(parser);
 	return (parser);
+	type_args(parser);
+	
 	//system("leaks minishell");
 }
 

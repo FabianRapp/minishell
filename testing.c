@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 15:40:37 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 06:48:14 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 07:08:04 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int main(int ac, char *av[])
 	if (ac > 1)
 		input = av[1];
 	else
-		input = ft_strdup(">a echo >b");
+		input = ft_strdup("(echo B) && echo D");
 	printf("%s\n", input);
 	list = parser_testing(input);
 	print_parser_testing(list);

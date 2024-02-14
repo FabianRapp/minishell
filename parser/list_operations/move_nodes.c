@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:38:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 06:49:49 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/14 07:15:00 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ t_parser	*fix_command_block(t_parser *parser)
 	t_parser	*head;
 
 	head = parser;
-	if (is_command_block_terminator(parser->next->p_type))
+	if (is_command_block_terminator(parser->p_type))
 		return (parser);
 	while (!is_command_block_terminator(parser->next->p_type))
 	{
@@ -100,8 +100,9 @@ void	move_commands_infront(t_parser *parser)
 	while (parser->p_type != T_EOF)
 	{
 		parser = fix_command_block(parser);
-		if (parser->p_type != T_EOF)
-			parser = parser->next;
+		if (parser->p_type == T_EOF)
+			return ;
+		parser = parser->next;
 	}
 }
 
