@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 16:45:20 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/15 06:46:31 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,16 +102,25 @@ void	run_command_node(t_ast *ast)
 	init_child_data(&data, ast);
 	if (ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
+	
 	ast->pid = fork();
 	if (ast->pid == -1)
 	{
+		
 		ast->exit_status = errno;
 		print_error(true, NULL, NULL, strerror(ast->exit_status));
+		errno = 0;
 		return ;
 	}
 	errno = 0;
 	if (ast->pid != 0)
+	{
+		// reset_fds();
 		return ;
+	}
+	// if (resolve_redirs(ast) == ERROR)
+	// 	return ;
+	
 	execve(data.path, data.argv, ast->envs);
 	exit(errno);
 }
@@ -135,15 +144,19 @@ int	main(int ac, char **av, char **base_env)
 	char			*input;
 	t_cleanup_data	cleanup_data;
 	t_env			env;
-	int				status;
 
+	int	base_fd[3];
+
+	base_fd[WRITE] = dup(WRITE);
+	base_fd[READ] = dup(READ);
+	base_fd[STD_ERROR] = dup(STD_ERROR);
 	errno = 0;
 	if (ac > 1)
 		return (printf("no args allowed\n"), 1);
 	(void)av;
-	env.main_pid = get_pid();
-	if (!env.main_pid)
-		return (1);
+	//env.main_pid = get_pid();
+	//if (!env.main_pid)
+		//return (1);
 	if (!init_env(&env, base_env))
 		return (1);
 	ast = get_input(&cleanup_data);
@@ -152,18 +165,19 @@ int	main(int ac, char **av, char **base_env)
 	{
 		if (ast)
 		{
+			errno = 0;
+			dup2(STD_ERROR, WRITE);
 			//print_ast(ast);
 			add_global_data(ast, &env, base_env);
 			ast->cleanup_data = &cleanup_data;
 			//print_ast(ast);
 			run_node(ast);
-			reset_fds();
-			while (waitpid(-1, &status, 0) != -1)
-			{
-				set_last_exit(WEXITSTATUS(status));
-			}
+			wait_all_children();
 			//system("leaks minishell");
 			main_exit(&cleanup_data, false, &env, true);
+			// dup2(base_fd[WRITE], WRITE);
+			// dup2(base_fd[READ], READ);
+			dup2(base_fd[STD_ERROR], STD_ERROR);
 		}
 		ast = get_input(&cleanup_data);
 		input = cleanup_data.input;

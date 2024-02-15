@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:38:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 22:20:48 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/15 06:01:58 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 typedef struct s_cleanup_data	t_cleanup_data;
 typedef struct s_child_data		t_child_data;
 typedef struct s_env			t_env;
-
+typedef	struct s_arg			t_arg;
 
 typedef struct s_path
 {
@@ -45,6 +45,5 @@ void	main_exit(t_cleanup_data *data, bool full_exit, t_env *env, int exit_status
 // data_utils.c
 int		count_args(t_arg *args);
 void	fill_args(t_ast *ast, char *argv[], int type);
-
 
 #endif

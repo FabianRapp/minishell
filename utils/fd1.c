@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 07:42:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 16:46:25 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/15 07:00:39 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,10 @@ t_fd_pair	*io_data(int flag, void *data)
 	}
 	else if (flag == RESET_FDS)
 	{
-		fds = NULL;
+		//fds = NULL;
 	}
+	else if (flag == CLEANUP_FDS)
+		fds = NULL;
 	return (fds);
 }
 
@@ -82,7 +84,7 @@ t_result	reset_fds(void)
 	i = 0;
 	while (fds && fds[i].base_fd != INIT_VAL)
 	{
-		close(fds[i].overload_with_fd);
+		//close(fds[i].overload_with_fd);
 		dup2(fds[i].base_fd_backup, fds[i].base_fd);
 		i++;
 	}
@@ -91,8 +93,28 @@ t_result	reset_fds(void)
 		print_error(true, NULL, NULL, strerror(errno));
 		return (ERROR);
 	}
-	free(fds);
 	io_data(RESET_FDS, NULL);
+	return (SUCCESS);
+}
+
+t_result	cleanup_fds(void)
+{
+	t_fd_pair	*fds;
+	int			i;
+
+	if (reset_fds() == ERROR)
+	{
+		printf("rest_fds error\n");
+		exit(1);
+	}
+	fds = get_fds();
+	i = 0;
+	while (fds && fds[i].base_fd != INIT_VAL)
+	{
+		close(fds[i].base_fd_backup);
+		close(fds[i++].overload_with_fd);
+	}
+	io_data(CLEANUP_FDS, NULL);
 	return (SUCCESS);
 }
 

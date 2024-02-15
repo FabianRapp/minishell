@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 16:45:01 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/15 07:10:57 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,8 +171,8 @@ t_result	append_redir(t_ast *ast_node, t_parser *args, t_redir **cur_redir)
 	if ((*cur_redir)->arg)
 	{//malloc error
 	}
-	if (args->token->potential_fd != NULL)
-		(*cur_redir)->left_redir_arg = ft_atoi(args->token->potential_fd);
+	if (args->token->left_redir_arg != NULL)
+		(*cur_redir)->left_redir_arg = ft_atoi(args->token->left_redir_arg);
 	else
 		(*cur_redir)->left_redir_arg = INIT_VAL;
 	return (SUCCESS);
@@ -236,7 +236,6 @@ t_ast *build_ast(t_parser *parser)
 		printf("debug: build ast wtf\n");
 		exit(1);
 	}
-	
 	child_parsers = split_parser(highest_operator);
 	ast_node->left = build_ast(child_parsers.left);
 	if (!ast_node->left)
@@ -244,7 +243,6 @@ t_ast *build_ast(t_parser *parser)
 	ast_node->right = build_ast(child_parsers.right);
 	if (!ast_node->right)
 		return (free_ast(ast_node), NULL);
-	
 	return (free_token(highest_operator->token), free(highest_operator), ast_node);
 }
 

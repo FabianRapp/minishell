@@ -6,11 +6,11 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/09 19:27:17 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 19:48:31 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/15 05:18:22 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "expansion.h"
+# include "../headers/utils.h"
 
 static int	last_exit_data(t_status_handler data)
 {
@@ -30,7 +30,7 @@ void	set_last_exit(int exit_status)
 	last_exit_data(data);
 }
 
-char	*get_last_exit(void)
+char	*get_last_exit_str(void)
 {
 	t_status_handler	data;
 

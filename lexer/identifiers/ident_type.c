@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 13:15:34 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/15 06:49:06 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,35 +116,35 @@ t_result	interpreted_type(t_lexer *lexer, t_token *token)
 // util for redir_type
 char	*get_potential_fd(t_lexer *lexer)
 {
-	char	*potential_fd;
+	char	*left_redir_arg;
 	t_lexer	lexer_backup;
 
 	lexer_backup = *lexer;
-	potential_fd = NULL;
+	left_redir_arg = NULL;
 	while (ft_isdigit(lexer->cur_char))
 	{
-		if (!ft_strjoin_inplace_char(&potential_fd, lexer->cur_char))
+		if (!ft_strjoin_inplace_char(&left_redir_arg, lexer->cur_char))
 			return (NULL);
 		read_char(lexer);
 	}
-	return (potential_fd);
+	return (left_redir_arg);
 }
 
 // TODO idk if here to check for larger fd than MAX_FD or let open handle that
-char	*check_limis_potential_fd(char *potential_fd, t_lexer *lexer, t_lexer lexer_backup)
+char	*check_limis_potential_fd(char *left_redir_arg, t_lexer *lexer, t_lexer lexer_backup)
 {
 	if (lexer->cur_char != '<' && lexer->cur_char != '>')
-		my_free((void **)&potential_fd);
-	else if (ft_strlen(potential_fd) > ft_strlen("2147483647"))
-		my_free((void **)&potential_fd);
-	else if (ft_strlen(potential_fd) == ft_strlen("2147483647"))
+		my_free((void **)&left_redir_arg);
+	else if (ft_strlen(left_redir_arg) > ft_strlen("2147483647"))
+		my_free((void **)&left_redir_arg);
+	else if (ft_strlen(left_redir_arg) == ft_strlen("2147483647"))
 	{
-		if (ft_strcmp(potential_fd, "2147483647") > 0)
-			my_free((void **)&potential_fd);
+		if (ft_strcmp(left_redir_arg, "2147483647") > 0)
+			my_free((void **)&left_redir_arg);
 	}
-	if (!potential_fd)
+	if (!left_redir_arg)
 		*lexer = lexer_backup;
-	return (potential_fd);
+	return (left_redir_arg);
 }
 
 t_result	redir_type(t_lexer *lexer, t_token *token)
@@ -154,10 +154,10 @@ t_result	redir_type(t_lexer *lexer, t_token *token)
 	if (ft_isdigit(lexer->cur_char))
 	{
 		lexer_backup = *lexer;
-		token->potential_fd = get_potential_fd(lexer);
-		if (!token->potential_fd)
+		token->left_redir_arg = get_potential_fd(lexer);
+		if (!token->left_redir_arg)
 			return (ERROR);
-		token->potential_fd = check_limis_potential_fd(token->potential_fd, lexer, lexer_backup);
+		token->left_redir_arg = check_limis_potential_fd(token->left_redir_arg, lexer, lexer_backup);
 	}
 	
 	if (lexer->cur_char == '<')

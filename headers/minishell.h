@@ -6,12 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 16:50:20 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/15 08:40:27 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
+	- temp_redir() dosnt work
 	- redir.c error hadeling
 	- $ + any digit as here doc args
 	- add relative path  optiopns for commands
@@ -217,6 +218,7 @@ int		get_pid(void);
 // utils
 bool	my_free(void **ptr);
 
+char			*get_last_exit_str(void);
 
 void	print_error(bool shell_name, char *command_name, char *arg, char *str);
 
@@ -233,6 +235,7 @@ t_ast	*parser(char *str);
 #  define SET_NEW_FDS 2
 #  define RESET_FDS 3
 #  define REDIR_FDS 4
+#  define CLEANUP_FDS 5
 
 // utils/fd1.c
 t_fd_pair	*io_data(int flag, void *data);
@@ -240,6 +243,7 @@ t_result	redir_fds(void);
 t_result	reset_fds(void);
 t_fd_pair	*get_fds(void);
 t_result	temp_redir(void);
+t_result	cleanup_fds(void);
 
 # ifndef FD_REQUEST_SKIP
 #  define FD_REQUEST_SKIP -1
@@ -264,6 +268,9 @@ t_parser	*parser_testing(char *str);
 
 
 /*
+
+
+env | sort | grep -v SHLVL | grep -v ^_ | cat >b
 
 (echo A && (echo B || echo C) && (echo D | (echo E && echo F))) || (echo G && (echo H | echo I)) && ((echo J || echo K) && echo L) | (echo M && (echo N || echo O)) && (echo P || (echo Q && echo R)) || echo S && ((echo T && echo U) || echo V) | (echo W || echo X) && echo Y || (echo Z && echo AA) || echo AB && (echo AC || echo AD) && (echo AE | echo AF && echo AG)
 

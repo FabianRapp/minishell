@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 16:54:27 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/15 05:52:02 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,25 +15,64 @@
 bool	ft_pipe(t_ast *ast)
 {
 	int			pipe_fd[2];
+	int			base_fd[2];
 
+	base_fd[READ] = dup(READ);
+	if (errno)
+	{
+		printf("ft_pipe errno: %s\n", strerror(errno));
+		exit(errno);
+	}
+	base_fd[WRITE] = dup(WRITE);
+	if (errno)
+	{
+		printf("ft_pipe errno: %s\n", strerror(errno));
+		exit(errno);
+	}
 	if (ast->exit_status > 0)
 		return (false);
-		ast->left->pipe[READ] = ast->pipe[READ];
+		//ast->left->pipe[READ] = ast->pipe[READ];
 	if (pipe(pipe_fd) == -1)
 	{//handle error
 	}
-	if (ast->left->pipe[WRITE] != WRITE)
-		close(ast->left->pipe[WRITE]);
-	ast->left->pipe[WRITE] = pipe_fd[WRITE];
-	if (ast->right->pipe[READ] != READ)
-		close(ast->right->pipe[READ]);
-	ast->right->pipe[READ] = pipe_fd[READ];
+	// if (ast->left->pipe[WRITE] != WRITE)
+	// 	close(ast->left->pipe[WRITE]);
+	//ast->left->pipe[WRITE] = pipe_fd[WRITE];
+	dup2(pipe_fd[WRITE], WRITE);
+	if (errno)
+	{
+		printf("ft_pipe errno: %s\n", strerror(errno));
+		exit(errno);
+	}
+	// if (ast->right->pipe[READ] != READ)
+	// 	close(ast->right->pipe[READ]);
+	//ast->right->pipe[READ] = pipe_fd[READ];
 	run_node(ast->left);
-	if (ast->left->pipe[WRITE] != WRITE)
-		close(ast->left->pipe[WRITE]);
+	dup2(base_fd[WRITE], WRITE);
+	if (errno)
+	{
+		printf("ft_pipe errno: %s\n", strerror(errno));
+		exit(errno);
+	}
+	close(pipe_fd[WRITE]);
+	// if (ast->left->pipe[WRITE] != WRITE)
+	// 	close(ast->left->pipe[WRITE]);
+	dup2(pipe_fd[READ], READ);
+	if (errno)
+	{
+		printf("ft_pipe errno: %s\n", strerror(errno));
+		exit(errno);
+	}
 	run_node(ast->right);
-	if (ast->right->pipe[READ] != READ)
-		close(ast->right->pipe[READ]);
+	dup2(base_fd[READ], READ);
+	if (errno)
+	{
+		printf("ft_pipe errno: %s\n", strerror(errno));
+		exit(errno);
+	}
+	close(pipe_fd[READ]);
+	// if (ast->right->pipe[READ] != READ)
+	// 	close(ast->right->pipe[READ]);
 	//close(pipe_fd[WRITE]);
 	if (ast->right->exit_status == DEFAULT_EXIT_STATUS)
 	{
@@ -52,7 +91,6 @@ bool	ft_pipe(t_ast *ast)
 void	create_sub_shell(t_env sub_env, char *input, t_ast *ast)
 {
 	t_ast	*sub_ast;
-	int		temp;
 
 	ast->pid = fork();
 	if (ast->pid)
@@ -81,9 +119,7 @@ void	create_sub_shell(t_env sub_env, char *input, t_ast *ast)
 		waitpid(sub_ast->pid, &(sub_ast->exit_status), 0);
 		sub_ast->exit_status = WEXITSTATUS(sub_ast->exit_status);
 	}
-	while (waitpid(-1, &temp, 0) != -1)
-	{
-	}
+	wait_all_children();
 	ast->exit_status = sub_ast->exit_status;
 	free_ast(sub_ast);
 	exit(ast->exit_status);
@@ -188,7 +224,7 @@ void	init_command(t_ast *ast)
 	if (ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
 	run_command_node(ast);
-	reset_fds();
+	cleanup_fds();
 }
 
 void	run_node(t_ast *ast)
@@ -209,4 +245,3 @@ void	run_node(t_ast *ast)
 			init_command(ast);
 	}
 }
-

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 14:38:45 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/15 06:45:04 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,13 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 	char	*input;
 	t_ast	*ast;
 	int		i;
+	//int		std_out;
 
+	// todo: error handeling
+	//std_out = dup(WRITE);
+	//dup2(2, WRITE);
 	input = readline("minishell-$: ");
+	//dup2(std_out, WRITE);
 	if (!input)
 		return (NULL);
 	i = 0;

@@ -96,7 +96,7 @@ t_token_list	*expand_list(t_env *env, t_token_list *list, bool expand_dollar)
 	{
 		if (expand_dollar)
 		{
-			list->token->str_data = get_last_exit();
+			list->token->str_data = get_last_exit_str();
 			if (!list->token->str_data)
 			{//malloc fails
 			}

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:16:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 08:39:26 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/15 06:49:22 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ typedef struct s_token
 	char		unknown;
 	char		*input_str;
 	int			input_position;
-	char		*potential_fd; // for redirs if a specifc fd should be redireceted
+	char		*left_redir_arg;
 	char		*old_data;
 }	t_token;
 

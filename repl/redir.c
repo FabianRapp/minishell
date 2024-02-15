@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:37:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 14:57:04 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/15 05:22:20 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,16 +169,17 @@ t_result	resolve_redirs(t_ast *ast)
 
 	redir = ast->redir;
 	fds = NULL;
-	new_fd_pair.overload_with_fd = ast->pipe[WRITE];
-	new_fd_pair.base_fd = WRITE;
-	fds = add_fd_pair(fds, new_fd_pair);
-	if (!fds)
-		return (ERROR);
-	new_fd_pair.overload_with_fd = ast->pipe[READ];
-	new_fd_pair.base_fd = READ;
-	fds = add_fd_pair(fds, new_fd_pair);
-	if (!fds)
-		return (ERROR);
+	// new_fd_pair.overload_with_fd = ast->pipe[WRITE];
+	// new_fd_pair.base_fd = WRITE;
+	// fds = add_fd_pair(fds, new_fd_pair);
+	// if (!fds)
+	// 	return (ERROR);
+	// new_fd_pair.overload_with_fd = ast->pipe[READ];
+	// new_fd_pair.base_fd = READ;
+	// fds = add_fd_pair(fds, new_fd_pair);
+	// if (!fds)
+	// 	return (ERROR);
+	
 	while (redir)
 	{
 		if (!check_valid_arg(ast, redir))

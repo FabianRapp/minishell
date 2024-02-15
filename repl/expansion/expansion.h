@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:52 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 22:25:50 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/15 05:18:22 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,6 @@
 # define EXPANSION_H
 
 # include "../../headers/minishell.h"
-
-typedef struct s_status_handler
-{
-	bool	set;
-	int		val;
-}	t_status_handler;
 
 // word_splitting.c
 t_token_list	*word_splitting(t_token_list *list);
@@ -36,6 +30,6 @@ char			*expand_dollar(char *dollar_str, t_env *env, int *index);
 t_token_list	*remove_non_literals(t_token_list *list);
 
 // utils3.c
-char			*get_last_exit(void);
+char			*get_last_exit_str(void);
 
 #endif
