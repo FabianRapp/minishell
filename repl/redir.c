@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:37:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/15 09:00:33 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/19 01:10:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,6 @@ t_result	resolve_redirs(t_ast *ast)
 	// fds = add_fd_pair(fds, new_fd_pair);
 	// if (!fds)
 	// 	return (ERROR);
-	
 	while (redir)
 	{
 		if (!check_valid_arg(ast, redir))
