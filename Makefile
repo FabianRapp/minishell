@@ -1,8 +1,10 @@
 CC=cc
-CFLAGS=-Wall -Wextra -Werror -g  -fsanitize=address
+CFLAGS=-Wall -Wextra -Werror
+# -g  -fsanitize=address
 #-fsanitize=undefined 
 # -g  
-LDFLAGS = -fsanitize=address
+LDFLAGS =
+# -fsanitize=address
 #
 NAME=minishell
 

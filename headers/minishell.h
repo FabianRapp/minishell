@@ -6,12 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/15 08:40:27 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/19 01:03:11 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
+	- pipes with redirs are bugged
 	- temp_redir() dosnt work
 	- redir.c error hadeling
 	- $ + any digit as here doc args
