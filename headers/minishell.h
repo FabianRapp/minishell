@@ -6,12 +6,14 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/19 01:32:38 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/19 13:30:25 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
+	- command error show command path instead of command name (/bin/echo: write: Bad file descriptor)
+	- figure out why the dup2 in main is needed when pipes are used and the last command contains redirs
 	- temp_redir() dosnt work
 	- redir.c error hadeling
 	- $ + any digit as here doc args
@@ -244,6 +246,7 @@ t_result	reset_fds(void);
 t_fd_pair	*get_fds(void);
 t_result	temp_redir(void);
 t_result	cleanup_fds(void);
+t_result	reset_stdio(void);
 
 # ifndef FD_REQUEST_SKIP
 #  define FD_REQUEST_SKIP -1

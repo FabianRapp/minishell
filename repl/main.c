@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/19 01:30:36 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/19 13:34:04 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,12 +145,8 @@ int	main(int ac, char **av, char **base_env)
 	t_cleanup_data	cleanup_data;
 	t_env			env;
 
-	int	base_fd[3];
-
-	base_fd[WRITE] = dup(WRITE);
-	base_fd[READ] = dup(READ);
-	base_fd[STD_ERROR] = dup(STD_ERROR);
 	errno = 0;
+	reset_stdio();
 	if (ac > 1)
 		return (printf("no args allowed\n"), 1);
 	(void)av;
@@ -166,7 +162,6 @@ int	main(int ac, char **av, char **base_env)
 		if (ast)
 		{
 			errno = 0;
-			//dup2(STD_ERROR, WRITE);
 			//print_ast(ast);
 			add_global_data(ast, &env, base_env);
 			ast->cleanup_data = &cleanup_data;
@@ -175,9 +170,6 @@ int	main(int ac, char **av, char **base_env)
 			wait_all_children();
 			//system("leaks minishell");
 			main_exit(&cleanup_data, false, &env, true);
-			dup2(base_fd[WRITE], WRITE);
-			dup2(base_fd[READ], READ);
-			dup2(base_fd[STD_ERROR], STD_ERROR);
 		}
 		ast = get_input(&cleanup_data);
 		input = cleanup_data.input;

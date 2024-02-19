@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 07:42:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/19 01:19:15 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/19 13:31:14 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,27 @@ t_fd_pair	*io_data(int flag, void *data)
 	else if (flag == CLEANUP_FDS)
 		fds = NULL;
 	return (fds);
+}
+
+// witout pipes mixed with redirs cause bugs
+t_result	reset_stdio(void)
+{
+	static int	std_write = INIT_VAL;
+	static int	std_read = INIT_VAL;
+
+	if (std_write == INIT_VAL)
+	{
+		std_read = dup(READ);
+		std_write = dup(WRITE);
+	}
+	else
+	{
+		dup2(std_write, WRITE);
+		dup2(std_read, READ);
+	}
+	if (errno)
+		return (ERROR);
+	return (SUCCESS);
 }
 
 // always call this twice
@@ -88,6 +109,7 @@ t_result	reset_fds(void)
 		dup2(fds[i].base_fd_backup, fds[i].base_fd);
 		i++;
 	}
+	reset_stdio();
 	if (errno)
 	{
 		print_error(true, NULL, NULL, strerror(errno));

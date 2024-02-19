@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:37:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/19 01:10:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/19 13:30:50 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,9 @@ t_fd_pair	redir_fd_write(char *file, bool append, int base_fd)
 	errno = 0;
 	return (fd_pair);
 }
+
+
+
 
 t_fd_pair	redir_read(char *file, int base_fd)
 {
