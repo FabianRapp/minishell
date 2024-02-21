@@ -6,20 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/19 13:34:04 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/19 13:36:47 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 #include "../headers/parser.h"
 
-
-void	child_cleanup(t_child_data *data)
-{
-	(void)data;
-}
-
-// if ast->info == NOT_FINISHED afterwards there was a command to execute
 bool	no_command(t_ast *ast)
 {
 	if (!ast->name || ast->name->token->type == DUMMY_COMMAND)
@@ -71,11 +64,9 @@ void	init_child_data(t_child_data *data, t_ast *ast)
 		ast->exit_status = errno;
 		return ;
 	}
-	
 	data->path = find_path(ast, data->command_name, "PATH");
 	if (ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
-	
 	data->argv[0] = data->path;
 	fill_args(ast, data->argv + 1, ARGS);
 }
@@ -102,11 +93,9 @@ void	run_command_node(t_ast *ast)
 	init_child_data(&data, ast);
 	if (ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
-	
 	ast->pid = fork();
 	if (ast->pid == -1)
 	{
-		
 		ast->exit_status = errno;
 		print_error(true, NULL, NULL, strerror(ast->exit_status));
 		errno = 0;
@@ -114,13 +103,7 @@ void	run_command_node(t_ast *ast)
 	}
 	errno = 0;
 	if (ast->pid != 0)
-	{
-		// reset_fds();
 		return ;
-	}
-	// if (resolve_redirs(ast) == ERROR)
-	// 	return ;
-	
 	execve(data.path, data.argv, ast->envs);
 	exit(errno);
 }

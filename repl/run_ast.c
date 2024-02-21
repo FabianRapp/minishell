@@ -6,12 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/19 13:22:38 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/19 14:00:56 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
+// TODO errors
 bool	ft_pipe(t_ast *ast)
 {
 	int			pipe_fd[2];
