@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/19 14:00:56 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/23 21:55:26 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,6 +252,7 @@ void	init_command(t_ast *ast)
 	redir_fds();
 	run_command_node(ast);
 	cleanup_fds();
+	set_last_exit(ast->exit_status);
 }
 
 void	run_node(t_ast *ast)

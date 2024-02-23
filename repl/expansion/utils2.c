@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 13:01:55 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 17:40:08 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/23 21:32:31 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	*expand_dollar(char *dollar_str, t_env *env, int *index)
 		*index += name_len(dollar_str + 1) + 1;
 		env_var = ft_strndup(dollar_str + 1 , name_len(dollar_str + 1));
 		if (!env_var)
-			return (cleanup("expand_interpreted_str"), NULL);
+			return (NULL);
 		str = ft_strdup(getenv(env_var));
 		free(env_var);
 		return (str);
@@ -57,7 +57,7 @@ char	*expand_dollar(char *dollar_str, t_env *env, int *index)
 	}
 }
 
-bool	expand_interpreted(t_token *token, t_env *env)
+t_result	expand_interpreted(t_token *token, t_env *env)
 {
 	char	*data_str;
 	char	*temp;
@@ -73,24 +73,23 @@ bool	expand_interpreted(t_token *token, t_env *env)
 		else
 		{
 			temp = expand_dollar(data_str + index, env, &index);
-			if (!temp)
-			{//malloc fail
-			}
+			if (errno)
+				return (ERROR);
 			ft_strjoin_inplace(&token->str_data, temp);
 			free(temp);
-			if (!token->str_data)
-			{//malloc fail
-			}
 		}
+		if (!token->str_data)
+			return (ERROR);
 	}
 	token->type = LITERAL;
 	free(data_str);
-	return (true);
+	return (SUCCESS);
 }
 
 // copies the data of the nodes into their parent node
 // removes the lst node (while keeping its data in the prev. node)
 // and removes the data of the first node
+// does not needed to be error checked
 t_token_list	*move_nodes_ahead(t_token_list *list, bool set_this_true)
 {
 	if (list && set_this_true)
@@ -115,7 +114,7 @@ t_token_list	*move_nodes_ahead(t_token_list *list, bool set_this_true)
 // intended to remove white space, also removes T_EOF and DUMMY_COMMAND,
 // nothing else besides these and LITERALS(left over) should be in the
 // list at this point
-// errno has to be checked to check for malloc fail
+// does not needed to be error checked
 t_token_list	*remove_non_literals(t_token_list *list)
 {
 	t_token_list	*head;
@@ -129,34 +128,6 @@ t_token_list	*remove_non_literals(t_token_list *list)
 	{
 		if (list->token->type != LITERAL)
 		{
-
-			// if (last && last->token->type == WILDCARD)
-			// {
-			// 	printf("here\n");
-			// 	if (!last_was_whitespace && list->token->type != WHITE_SPACE)
-			// 	{
-			// 		if (!ft_strjoin_inplace(&(last->token->str_data), list->token->str_data))
-			// 			return (list);
-			// 		last->next = list->next;
-			// 		free_token(list->token);
-			// 		free(list);
-			// 		list = last;
-			// 	}
-			// }
-			// else if (list->token->type == WILDCARD)
-			// {
-			// 	if (!last_was_whitespace)
-			// 	{
-			// 		last->token->type = WILDCARD;
-			// 		if (!ft_strjoin_inplace(&(last->token->str_data), list->token->str_data))
-			// 			return (list);
-			// 		last->next = list->next;
-			// 		free_token(list->token);
-			// 		free(list);
-			// 		list = last;
-			// 	}
-			// 	last_was_whitespace = false;
-			// }
 			if (list->token->type != DUMMY_COMMAND)
 			{
 				if (list->token->type != WHITE_SPACE)

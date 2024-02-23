@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 15:26:46 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/23 21:57:11 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@ bool	next_path(t_path *path_ob)
 	{
 		path_ob->cur_path = NULL;
 		path_ob->ast->exit_status = 127;
-		return (set_last_exit(path_ob->ast->exit_status),
-			print_error(SHELL_NAME, path_ob->command_name, NULL, "command not found"), false);
+		return (print_error(SHELL_NAME, path_ob->command_name, NULL, "command not found"), false);
 	}
 	path_ob->position = path_ob->read_postion;
 	while ((path_ob->all_paths)[path_ob->read_postion] != ':'

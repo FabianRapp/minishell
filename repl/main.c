@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 15:53:42 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/23 21:56:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ bool	no_command(t_ast *ast)
 		if (!ast->redir)
 			ast->exit_status = 1;
 		ast->exit_status = 0;
-		set_last_exit(ast->exit_status);
+		//set_last_exit(ast->exit_status);
 		return (true);
 	}
 	else if (is_operator(ast->type))
@@ -29,7 +29,7 @@ bool	no_command(t_ast *ast)
 		{
 			printf("DEBUG: operator with redirs in no_command()\n");
 			ast->exit_status = 1;
-			set_last_exit(ast->exit_status);
+		//set_last_exit(ast->exit_status);
 			return (true);
 		}
 		// TODO: need to enable this condtion
@@ -39,7 +39,7 @@ bool	no_command(t_ast *ast)
 		{
 			print_error(1, "syntax error near unexpected token", "<needs to be converted to actual input:>", (char *)type_to_str_type(ast->type));
 			ast->exit_status = 258;
-			set_last_exit(ast->exit_status);
+			//set_last_exit(ast->exit_status);
 		}
 	}
 	return (false);

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 07:42:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/19 13:31:14 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/23 21:59:36 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,33 +49,6 @@ t_result	reset_stdio(void)
 	}
 	if (errno)
 		return (ERROR);
-	return (SUCCESS);
-}
-
-// always call this twice
-// use this when unsure which state is currently active
-t_result	temp_redir(void)
-{
-	static bool	first_run = true;
-	static bool	reset = false;
-
-	if (first_run)
-	{
-		first_run = false;
-		if (!get_fds())
-		{
-			reset = true;
-			return (redir_fds());
-		}
-		else
-			reset = false;
-	}
-	else
-	{
-		first_run = true;
-		if (reset)
-			return (reset_fds());
-	}
 	return (SUCCESS);
 }
 
@@ -137,6 +110,7 @@ t_result	cleanup_fds(void)
 		close(fds[i++].overload_with_fd);
 	}
 	io_data(CLEANUP_FDS, NULL);
+	free(fds);
 	return (SUCCESS);
 }
 

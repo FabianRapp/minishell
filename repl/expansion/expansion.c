@@ -32,8 +32,8 @@ bool	merge_literals(t_token_list *node)
 	return (true);
 }
 
-// for here doc: dollar sign is not interpreted
-bool	add_dollar(t_token *token)
+// for error messages where the base string is needed and here_doc expansion
+t_result	add_dollar(t_token *token)
 {
 	if (token->type == ENV_VAR)
 	{
@@ -46,68 +46,20 @@ bool	add_dollar(t_token *token)
 		token->str_data = ft_strjoin("$", "?");
 	token->type = LITERAL;
 	if (!token->str_data)
-		return (false);
-	return (true);
+		return (ERROR);
+	return (SUCCESS);
 }
 
-t_token_list	*expand_list(t_env *env, t_token_list *list, bool expand_dollar)
+t_token_list	*expand_list_here_doc(t_env *env, t_token_list *list)
 {
 	if (list->token->type == INTERPRETED)
-	{
-		if (expand_dollar)
-		{
-			if (!expand_interpreted(list->token, env))
-			{//malloc fail
-			}
-		}
 		list->token->type = LITERAL;
-	}
-	if (list->token->type == ENV_VAR)
+	if (list->token->type == ENV_VAR
+		|| list->token->type == PID_REQUEST
+		|| list->token->type == EXIT_STATUS_REQUEST)
 	{
-		if (expand_dollar)
-		{
-			if (!env_to_word_token(list->token))
-			{// malloc fail
-			}
-		}
-		else
-		{
-			if (!add_dollar(list->token))
-			{//malloc fail
-			}
-		}
-	}
-	else if (list->token->type == PID_REQUEST)
-	{
-		if (expand_dollar)
-		{
-			if (!pidreq_to_literal_token(env, list->token))
-			{//malloc fails
-			}
-		}
-		else
-		{
-			if (!add_dollar(list->token))
-			{//malloc fail
-			}
-		}
-	}
-	else if (list->token->type == EXIT_STATUS_REQUEST)
-	{
-		if (expand_dollar)
-		{
-			list->token->str_data = get_last_exit_str();
-			if (!list->token->str_data)
-			{//malloc fails
-			}
-			list->token->type = LITERAL;
-		}
-		else
-		{
-			if (!add_dollar(list->token))
-			{//malloc fail
-			}
-		}
+		if (add_dollar(list->token) == ERROR)
+			return (list);
 	}
 	if (list->token->type == WORD)
 	{
@@ -117,19 +69,105 @@ t_token_list	*expand_list(t_env *env, t_token_list *list, bool expand_dollar)
 			return (NULL);
 	}
 	if (list->next && list->next->token->type != T_EOF)
-		list->next = expand_list(env, list->next, expand_dollar);
+		list->next = expand_list_here_doc(env, list->next);
+	if (errno)
+		return (list);
+	merge_literals(list);
+	return (list);
+}
+
+t_token_list	*expand_list_normal(t_env *env, t_token_list *list)
+{
+	if (list->token->type == INTERPRETED)
+	{
+		if (expand_interpreted(list->token, env) == ERROR)
+			return (list);
+		list->token->type = LITERAL;
+	}
+	if (list->token->type == ENV_VAR)
+	{
+		if (env_to_word_token(list->token) == ERROR)
+			return (list);
+	}
+	else if (list->token->type == PID_REQUEST)
+	{
+		if (pidreq_to_literal_token(env, list->token) == ERROR)
+			return (list);
+	}
+	else if (list->token->type == EXIT_STATUS_REQUEST)
+	{
+		list->token->str_data = get_last_exit_str();
+		if (!list->token->str_data)
+			return (list);
+		list->token->type = LITERAL;
+	}
+	if (list->token->type == WORD)
+	{
+		// TODO: differ between malloc fail in word_splitting and empty list
+		list = word_splitting(list);
+		if (!list)
+			return (NULL);
+	}
+	if (list->next && list->next->token->type != T_EOF)
+		list->next = expand_list_normal(env, list->next);
+	if (errno)
+		return (list);
 	if (!merge_literals(list))
 	{// malloc fail
 	}
 	return (list);
 }
 
+// TODO needs refactor
+t_result	expansion_move_to_arg(t_arg **start_next, t_token_list *list)
+{
+	t_arg	*new_arg;
+	t_arg	old_next;
+	t_arg	*next_arg;
 
-bool	expand_name(t_ast *ast)
+	next_arg = *start_next;
+	while (list && list->next)
+	{
+		new_arg = ft_calloc(1, sizeof(t_arg));
+		if (!new_arg)
+			return (ERROR);
+		new_arg->name = list->next;
+		list->next = list->next->next;
+		new_arg->name->next = NULL;
+		if (!next_arg)
+		{
+			if (!*start_next)
+				*start_next = new_arg;
+			else
+			{
+				next_arg = *start_next;
+				while (next_arg->next)
+					next_arg = next_arg->next;
+				next_arg->next = new_arg;
+				next_arg = NULL;
+			}
+		}
+		else
+		{
+			old_next = *next_arg;
+			*next_arg = *new_arg;
+			*new_arg = old_next;
+			next_arg->next = new_arg;
+			next_arg = next_arg->next;
+		}
+	}
+	return (SUCCESS);
+}
+
+t_result	expand_name(t_ast *ast)
 {
 	if (!ast->name)
-		return (true);
-	ast->name = expand_list(ast->env, ast->name, true);// needs malloc protection
+		return (SUCCESS);
+	ast->name = expand_list_normal(ast->env, ast->name);// needs malloc protection
+	if (errno)
+		return (ERROR);
+	if (wildcards_expand_name(ast->name) == ERROR)
+		return (ERROR);
 	if (ast->name)
 		ast->name = remove_non_literals(ast->name);
 	if (errno)
@@ -140,25 +178,27 @@ bool	expand_name(t_ast *ast)
 		if (!ast->name)
 		{
 			ast->exit_status = errno;
-			return (false);
+			return (ERROR);
 		}
 		ast->name->token = new_dummy_token();
 		if (!ast->name->token)
 		{
 			ast->exit_status = errno;
-			return (false);
+			return (ERROR);
 		}
-		return (true);
+		return (SUCCESS);
 	}
-	if (!move_excess_name_to_arg(ast))
-		return (false);
-	return (true);
+	if (expansion_move_to_arg(&(ast->arg), ast->name->next) == ERROR)
+	{
+		ast->exit_status = errno;
+		return (ERROR);
+	}
+	return (SUCCESS);
 }
 
-bool	expand_args(t_ast *ast, t_arg **base_arg, bool expand_dollar)
+bool	expand_args(t_ast *ast, t_arg **base_arg, bool not_here_doc)
 {
 	t_arg	*cur;
-	t_arg	*new_arg;
 	t_arg	*last;
 
 	cur = *base_arg;
@@ -167,11 +207,27 @@ bool	expand_args(t_ast *ast, t_arg **base_arg, bool expand_dollar)
 	last = NULL;
 	while (cur)
 	{
-		cur->name = expand_list(ast->env, cur->name, expand_dollar);
+		if (not_here_doc)
+			cur->name = expand_list_normal(ast->env, cur->name);
+		else
+			cur->name = expand_list_here_doc(ast->env, cur->name);
+		if (errno)
+		{
+			ast->exit_status = errno;
+			return (ERROR);
+		}
+		if (wildcards_expand_name(cur->name) == ERROR)
+		{
+			ast->exit_status = 1;
+			return (ERROR);
+		}
 		if (cur->name)
 			cur->name = remove_non_literals(cur->name);
 		if (errno)
+		{
+			ast->exit_status = errno;
 			return (ERROR);
+		}
 		if (!cur->name)//remove the current arg
 		{
 			if (last)
@@ -189,26 +245,22 @@ bool	expand_args(t_ast *ast, t_arg **base_arg, bool expand_dollar)
 					*base_arg = cur;
 				}
 				else
-					return (true);
+					return (SUCCESS);
 			}
 			continue ;
 		}
-		while (cur->name && cur->name->next)
+		if (expansion_move_to_arg(&(cur->next), cur->name) == ERROR)
 		{
-			new_arg = ft_calloc(1, sizeof(t_arg));
-			new_arg->next = cur->next;
-			new_arg->name = cur->name->next;
-			cur->name->next = cur->name->next->next;
-			new_arg->name->next = NULL;
-			cur->next = new_arg;
+			ast->exit_status = errno;
+			return (ERROR);
 		}
 		last = cur;
 		cur = cur->next;
 	}
-	return (true);
+	return (SUCCESS);
 }
 
-bool	expand_redirs(t_ast *ast)
+t_result	expand_redirs(t_ast *ast)
 {
 	t_redir	*cur;
 
@@ -218,12 +270,18 @@ bool	expand_redirs(t_ast *ast)
 	while (cur)
 	{
 		if (cur->type != HERE_DOC)
-			expand_args(ast, &(cur->arg), true);
+		{
+			if (expand_args(ast, &(cur->arg), true) == ERROR)
+				return (ERROR);
+		}
 		else
-			expand_args(ast, &(cur->arg), false);
+		{
+			if (expand_args(ast, &(cur->arg), false) == ERROR)
+				return (ERROR);
+		}
 		cur = cur->next;
 	}
-	return (true);
+	return (SUCCESS);
 }
 
 // TODO:
@@ -238,9 +296,9 @@ t_result	expansion_iter(t_ast *ast)
 		return (ERROR);
 	//if (ast->type == COMMAND && ast->name->token->type == SUBSHELL)
 		//ast->type = SUBSHELL;
-	if (!expand_args(ast, &(ast->arg), true))
+	if (expand_args(ast, &(ast->arg), true) == ERROR)
 		return (ERROR);
-	if (!expand_redirs(ast))
+	if (expand_redirs(ast) == ERROR)
 		return (ERROR);
 	return (SUCCESS);
 }
@@ -251,9 +309,9 @@ bool	expansion(t_ast *ast)
 {
 	if (expansion_iter(ast) == ERROR)
 		return (ERROR);
-	if (expand_wildcards(ast) == ERROR)
-		return (ERROR);
-	if (expansion_iter(ast) == ERROR)
-		return (ERROR);
+	//if (expand_wildcards(ast) == ERROR)
+	//	return (ERROR);
+	//if (expansion_iter(ast) == ERROR)
+	//	return (ERROR);
 	return (SUCCESS);
 }

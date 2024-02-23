@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:49:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 17:52:46 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/23 19:43:59 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ void	expand_wildcard_node(t_token_list *node)
 	w_head = next_wildcard_token(cur_dir, &w_data);
 	if (!w_head)
 	{
-		node->token->type = LITERAL;
 		clean_wildcard_data(&w_data);
 		return ;
 	}
@@ -115,12 +114,19 @@ void	expand_wildcard_node(t_token_list *node)
 
 t_result	wildcards_expand_name(t_token_list *name)
 {
+	t_token_list	*debug;
+
 	while (name)
 	{
 		if (ft_strchr(name->token->str_data, '*'))
 		{
-			name->token->type = WILDCARD;
 			expand_wildcard_node(name);
+			debug = name;
+			while (debug)
+			{
+				printf("%s\n", debug->token->str_data);
+				debug = debug->next;
+			}
 		}
 		name = name->next;
 	}

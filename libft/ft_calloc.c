@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 21:18:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/09 21:14:46 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/23 21:55:56 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	*ft_calloc(size_t count, size_t size)
 	if (!arr)
 	{
 		print_error_calloc(true, NULL,"Error", "Memory allocation failed");
-		set_last_exit(errno);
+		//set_last_exit(errno);
 		return (NULL);
 	}
 	i = 0;
