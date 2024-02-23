@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 22:58:47 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/23 23:03:38 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ bool	no_command(t_ast *ast)
 		if (!ast->redir)
 			ast->exit_status = 1;
 		ast->exit_status = 0;
-		//set_last_exit(ast->exit_status);
 		return (true);
 	}
 	else if (is_operator(ast->type))
@@ -147,9 +146,9 @@ int	main(int ac, char **av, char **base_env)
 	if (ac > 1)
 		return (printf("no args allowed\n"), 1);
 	(void)av;
-	//env.main_pid = get_pid();
-	//if (!env.main_pid)
-		//return (1);
+	env.main_pid = get_pid();
+	if (!env.main_pid)
+		return (1);
 	if (!init_env(&env, base_env))
 		return (1);
 	ast = get_input(&cleanup_data);
