@@ -6,12 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 21:59:03 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/23 23:00:12 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
+	- exit is broken
 	- repl/expansion/wildcards + repl/expansion/word_splitting.c errors
 	- command error show command path instead of command name (/bin/echo: write: Bad file descriptor)
 	- redir.c error hadeling

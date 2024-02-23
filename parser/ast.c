@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/15 07:10:57 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/23 22:58:32 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,7 +272,19 @@ void	free_arg_list(t_arg *list)
 	}
 }
 
-//TODO: redir rework
+void	free_redir(t_redir *redir)
+{
+	t_redir	*last;
+
+	while (redir)
+	{
+		free_arg_list(redir->arg);
+		last = redir;
+		redir = redir->next;
+		free(last);
+	}
+}
+
 void	free_ast(t_ast *ast)
 {
 	if (ast->left)
@@ -281,5 +293,6 @@ void	free_ast(t_ast *ast)
 		free_ast(ast->right);
 	free_token_list(ast->name);
 	free_arg_list(ast->arg);
+	free_redir(ast->redir);
 	free(ast);
 }

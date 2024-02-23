@@ -1,6 +1,6 @@
 CC=cc
-FLAGS_NO_LEAK_CHECK = -fsanitize=address -g
-CFLAGS=-Wall -Wextra -Werror 
+FLAGS_NO_LEAK_CHECK = -fsanitize=address
+CFLAGS=-Wall -Wextra -Werror  -g
 # 
 #-fsanitize=undefined 
 #
@@ -59,6 +59,7 @@ $(NAME): $(OBJECTS)
 	cp $(NAME) ../../../bash_testing
 
 leaks: CFLAGS += -DLEAK_CHECK=1
+leaks: fclean
 leaks: libs_leaks
 leaks: $(NAME)
 

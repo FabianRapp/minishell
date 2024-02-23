@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 22:10:28 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/23 22:58:47 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,12 @@ void	clean_fds(t_fd_pair *pairs)
 	}
 }
 
+void	free_child_data(t_child_data *data)
+{
+	my_free((void **)&(data->argv[0]));
+	free(data->argv);
+}
+
 // for now assumes ast to be the node of exactly one command
 void	run_command_node(t_ast *ast)
 {
@@ -99,11 +105,15 @@ void	run_command_node(t_ast *ast)
 		ast->exit_status = errno;
 		print_error(true, NULL, NULL, strerror(ast->exit_status));
 		errno = 0;
+		free_child_data(&data);
 		return ;
 	}
 	errno = 0;
 	if (ast->pid != 0)
+	{
+		free_child_data(&data);
 		return ;
+	}
 	execve(data.path, data.argv, ast->envs);
 	exit(errno);
 }
@@ -151,10 +161,11 @@ int	main(int ac, char **av, char **base_env)
 			errno = 0;
 			//print_ast(ast);
 			add_global_data(ast, &env, base_env);
+
 			ast->cleanup_data = &cleanup_data;
 			//print_ast(ast);
-			run_node(ast);
-			wait_all_children();
+			//run_node(ast);
+			//wait_all_children();
 			main_exit(&cleanup_data, false, &env, true);
 		}
 		if (LEAK_CHECK)
