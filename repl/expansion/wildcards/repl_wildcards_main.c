@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:49:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 16:25:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/23 17:52:46 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ t_token_list	*next_wildcard_token(DIR *cur_dir, t_wildcard_data *w_data)
 	new_token->type = LITERAL;
 	new_node->token = new_token;
 	new_token->str_data = next_file_name(cur_dir);
-	if (errno || !new_token->str_data)
-		return (free(new_token), free(new_node), NULL);
+	//printf("next file name: %s\n", new_token->str_data);
 	while (new_token->str_data && !errno && !matches_wildcard(new_token->str_data, w_data))
 	{
 		free(new_token->str_data);
 		new_token->str_data = next_file_name(cur_dir);
+		//printf("next file name: %s\n", new_token->str_data);
 	}
 	if (!new_token->str_data)
 	{
@@ -117,8 +117,9 @@ t_result	wildcards_expand_name(t_token_list *name)
 {
 	while (name)
 	{
-		if (name->token->type == WILDCARD)
+		if (ft_strchr(name->token->str_data, '*'))
 		{
+			name->token->type = WILDCARD;
 			expand_wildcard_node(name);
 		}
 		name = name->next;

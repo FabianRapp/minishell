@@ -245,7 +245,6 @@ t_result	expansion_iter(t_ast *ast)
 	return (SUCCESS);
 }
 
-
 // TODO:
 // expands the current ast nodes env vars and interpreted strs (if the first)
 bool	expansion(t_ast *ast)

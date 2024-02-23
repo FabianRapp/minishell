@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/22 14:58:23 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/23 17:34:32 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ t_token	*classify_sub_str(t_token *token, t_lexer *lexer)
 		return (lexer_error(token), NULL);
 	else if (!token->type && subshell_type(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);
-	else if (!token->type && wildcard_type(lexer, token) == ERROR)
-		return (lexer_error(token), NULL);
+	// else if (!token->type && wildcard_type(lexer, token) == ERROR)
+	// 	return (lexer_error(token), NULL);
 	else if (!token->type && literal_type2(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);
 	else if (!token->type)

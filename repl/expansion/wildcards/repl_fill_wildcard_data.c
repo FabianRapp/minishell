@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 19:22:05 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 16:23:09 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/23 18:05:35 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ t_result	fill_prefix(char **str, t_wildcard_data *w_data)
 		if (!w_data->prefix)
 			return (ERROR);
 	}
-	return (SUCCESS);
 	(*str) += i;
+	return (SUCCESS);
 }
 
 // check errno for malloc or open/read error
@@ -67,31 +67,78 @@ void	clean_wildcard_data(t_wildcard_data *w_data)
 	}
 }
 
+void print_wildcard_data(const t_wildcard_data *data)
+{
+	if (data == NULL) {
+		printf("The data is NULL.\n");
+		return;
+	}
+	printf("Prefix: %s\n", data->prefix ? data->prefix : "NULL");
+	if (data->sub_str == NULL || data->sub_str[0] == NULL)
+	{
+		printf("no sub strs\n");
+	}
+	else
+	{
+		int	i = 0;
+		while ((data->sub_str)[i])
+		{
+			printf("sub_str %d: %s\n", i +1, (data->sub_str)[i]);
+			i++;
+		}
+	}
+	printf("Suffix: %s\n", data->suffix ? data->suffix : "NULL");
+}
+
+
+
+#define MATCHES_WILDCARD_DEBUG 0
 bool	matches_wildcard(char *str, t_wildcard_data *w_data)
 {
 	int	sub_i;
-	int	str_i;
 
+	char	*debug = str;
+
+	// static bool was_here = false;
+	// if (!was_here)
+	// {
+	// 	was_here = true;
+	// 	print_wildcard_data(w_data);
+	// }
 	sub_i = 0;
-	str_i = 0;
 	if (ft_strncmp(str, w_data->prefix, ft_strlen(w_data->prefix)))
+	{
+		if (MATCHES_WILDCARD_DEBUG) printf("prefix dosnt match: %s\n", debug);
 		return (false);
+	}
 	while (w_data->sub_str && (w_data->sub_str)[sub_i])
 	{
-		while (str[str_i] && ft_strncmp
+		while (*str && ft_strncmp
 			(str, (w_data->sub_str)[sub_i], ft_strlen((w_data->sub_str)[sub_i])))
 		{
-			str_i++;
+			str++;
 		}
-		if (!str[str_i])
+		if (!*str)
+		{
+			if (MATCHES_WILDCARD_DEBUG) printf("str over with subs left: %s\n", debug);
 			return (false);
+		}
+		str += ft_strlen((w_data->sub_str)[sub_i]);
 		sub_i++;
-		str_i += ft_strlen((w_data->sub_str)[sub_i]);
 	}
+	while (ft_strlen(str) > ft_strlen(w_data->suffix))
+		str++;
 	if (ft_strncmp(str, w_data->suffix, ft_strlen(w_data->suffix)))
+	{
+		if (MATCHES_WILDCARD_DEBUG) printf("suffix dosnt match: %s (%s)\n", debug, str);;
 		return (false);
-	str_i += ft_strlen(w_data->suffix);
-	if (str[str_i] && w_data->suffix)
+	}
+	str += ft_strlen(w_data->suffix);
+	if (*str && w_data->suffix)
+	{
+		if (MATCHES_WILDCARD_DEBUG) printf("suffix not found: %s\n", debug);
 		return (false);
+	}
+	if (MATCHES_WILDCARD_DEBUG) printf("str matches: %s\n", debug);
 	return (true);
 }

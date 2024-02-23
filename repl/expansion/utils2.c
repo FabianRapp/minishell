@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 13:01:55 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 16:19:13 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/23 17:40:08 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,27 +129,41 @@ t_token_list	*remove_non_literals(t_token_list *list)
 	{
 		if (list->token->type != LITERAL)
 		{
-			if (list->token->type != WHITE_SPACE && list->token->type != DUMMY_COMMAND && list->token->type != WILDCARD)
+
+			// if (last && last->token->type == WILDCARD)
+			// {
+			// 	printf("here\n");
+			// 	if (!last_was_whitespace && list->token->type != WHITE_SPACE)
+			// 	{
+			// 		if (!ft_strjoin_inplace(&(last->token->str_data), list->token->str_data))
+			// 			return (list);
+			// 		last->next = list->next;
+			// 		free_token(list->token);
+			// 		free(list);
+			// 		list = last;
+			// 	}
+			// }
+			// else if (list->token->type == WILDCARD)
+			// {
+			// 	if (!last_was_whitespace)
+			// 	{
+			// 		last->token->type = WILDCARD;
+			// 		if (!ft_strjoin_inplace(&(last->token->str_data), list->token->str_data))
+			// 			return (list);
+			// 		last->next = list->next;
+			// 		free_token(list->token);
+			// 		free(list);
+			// 		list = last;
+			// 	}
+			// 	last_was_whitespace = false;
+			// }
+			if (list->token->type != DUMMY_COMMAND)
 			{
-				printf("DEBUG remove_non_literals: this token type is unexpected: %s\n", type_to_str_type(list->token->type));
-				exit(0);
-			}
-			if (list->token->type == WILDCARD)
-			{
-				if (!last_was_whitespace)
+				if (list->token->type != WHITE_SPACE)
 				{
-					last->token->type = WILDCARD;
-					if (!ft_strjoin_inplace_char(&(last->token->str_data), '*'))
-						return (list);
-					last->next = list->next;
-					free_token(list->token);
-					free(list);
-					list = last;
+					printf("DEBUG remove_non_literals: this token type is unexpected: %s\n", type_to_str_type(list->token->type));
+					exit(0);
 				}
-				last_was_whitespace = false;
-			}
-			else if (list->token->type != DUMMY_COMMAND)
-			{
 				last_was_whitespace = true;
 				if (list == head)
 				{
