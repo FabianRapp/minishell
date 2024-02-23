@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 21:56:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/23 22:10:28 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,10 @@ void	add_global_data(t_ast *ast, t_env *env, char **envs)
 	ast->envs = envs;
 }
 
+#ifndef LEAK_CHECK
+# define LEAK_CHECK 0
+#endif
+
 int	main(int ac, char **av, char **base_env)
 {
 	t_ast			*ast;
@@ -151,9 +155,10 @@ int	main(int ac, char **av, char **base_env)
 			//print_ast(ast);
 			run_node(ast);
 			wait_all_children();
-			//system("leaks minishell");
 			main_exit(&cleanup_data, false, &env, true);
 		}
+		if (LEAK_CHECK)
+			system("leaks minishell");
 		ast = get_input(&cleanup_data);
 		input = cleanup_data.input;
 	}

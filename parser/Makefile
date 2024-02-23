@@ -1,10 +1,13 @@
-
 CC=cc
-CFLAGS=-Wall -Wextra -Werror -fsanitize=address -g  
+FLAGS_NO_LEAK_CHECK = -fsanitize=address -g
+CFLAGS=-Wall -Wextra -Werror 
 # 
 #-fsanitize=undefined 
 #
-LDFLAGS =  -fsanitize=address  -g  
+LDFLAGS =
+#
+#
+NAME=min
 #
 #
 LIB_PARSER=parser
@@ -23,9 +26,14 @@ LIB_LEXER=lexer
 LIB_LEXER_NAME = lexer.a
 .PHONY: all clean fclean re libs $ $(LIB_PARSER)
 
-$(LIB_PARSER): build
+build: CFLAGS += $(FLAGS_NO_LEAK_CHECK)
+build: LDFLAGS += $(FLAGS_NO_LEAK_CHECK)
+build: $(LIB_PARSER)
 
-build: $(OBJECTS)
+leaks: CFLAGS += -DLEAK_CHECK=1
+leaks: $(LIB_PARSER)
+
+$(LIB_PARSER): $(OBJECTS)
 	@ar rcs $(LIB_PARSER_NAME) $(OBJECTS)
 	@echo "\033[32mparser build\033[0m"
 

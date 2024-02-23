@@ -1,9 +1,10 @@
 CC=cc
-CFLAGS=-Wall -Wextra -Werror -fsanitize=address -g  
+FLAGS_NO_LEAK_CHECK = -fsanitize=address -g
+CFLAGS=-Wall -Wextra -Werror 
 # 
 #-fsanitize=undefined 
 #
-LDFLAGS =  -fsanitize=address  -g  
+LDFLAGS =
 #
 #
 NAME=minishell
@@ -47,12 +48,19 @@ LIBS_NAME = $(LIBFT_NAME) $(LIB_LEXER_NAME) $(LIB_PARSER_NAME)
 
 .PHONY: all clean fclean re clean2 libs $(LIBFT) $(LIB_LEXER) $(LIB_PARSER)
 
-all: $(NAME)
+all: build
 
-$(NAME): libs $(OBJECTS)
+build: CFLAGS += $(FLAGS_NO_LEAK_CHECK)
+build: LDFLAGS += $(FLAGS_NO_LEAK_CHECK)
+build: libs
+build: $(NAME)
+$(NAME): $(OBJECTS)
 	$(CC) $(LIBS_NAME) $(OBJECTS)  -lreadline -o $(NAME) $(CFLAGS) $(LDFLAGS)
 	cp $(NAME) ../../../bash_testing
 
+leaks: CFLAGS += -DLEAK_CHECK=1
+leaks: libs_leaks
+leaks: $(NAME)
 
 libs: $(LIBS)
 
@@ -61,11 +69,19 @@ $(LIBFT):
 	@cp $(LIBFT_PATH) $(LIBFT_NAME)
 
 $(LIB_LEXER):
-	@$(MAKE) -C $(LEXER_DIR) $(LIB_LEXER)
+	@$(MAKE) -C $(LEXER_DIR)
 	@cp $(LEXER_PATH) $(LIB_LEXER_NAME)
 
 $(LIB_PARSER):
-	@$(MAKE) -C $(PARSER_DIR) $(LIB_PARSER)
+	@$(MAKE) -C $(PARSER_DIR)
+	@cp $(PARSER_PATH) $(LIB_PARSER_NAME)
+
+libs_leaks:
+	@$(MAKE) -C $(LIBFT_DIR) leaks
+	@cp $(LIBFT_PATH) $(LIBFT_NAME)
+	@$(MAKE) -C $(LEXER_DIR) $(LIB_LEXER) leaks
+	@cp $(LEXER_PATH) $(LIB_LEXER_NAME)
+	@$(MAKE) -C $(PARSER_DIR) $(LIB_PARSER) leaks
 	@cp $(PARSER_PATH) $(LIB_PARSER_NAME)
 
 %.o: %.c

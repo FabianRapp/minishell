@@ -1,9 +1,10 @@
 CC=cc
-CFLAGS=-Wall -Wextra -Werror -fsanitize=address -g  
+FLAGS_NO_LEAK_CHECK = -fsanitize=address -g
+CFLAGS=-Wall -Wextra -Werror
 # 
 #-fsanitize=undefined 
 #
-LDFLAGS =  -fsanitize=address  -g  
+LDFLAGS =
 #
 #
 NAME = libft.a
@@ -25,11 +26,16 @@ ft_lstclear_bonus.c ft_lstiter_bonus.c ft_lstmap_bonus.c ft_iswhitespace.c\
 OBJECTS = $(SOURCES:.c=.o)
 OBJECTS_BONUS = $(BONUS_SOURCES:.c=.o)
 
-$(NAME): all
 
-all: $(OBJECTS_BONUS) $(OBJECTS)
+build: CFLAGS += $(FLAGS_NO_LEAK_CHECK)
+build: LDFLAGS += $(FLAGS_NO_LEAK_CHECK)
+build: $(NAME)
+$(NAME): $(OBJECTS_BONUS) $(OBJECTS)
 	@ar rcs $(NAME) $< $^
 	@echo "\033[32mlibft build\033[0m"
+
+leaks: CFLAGS += -DLEAK_CHECK=1
+leaks: $(NAME)
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -c $< -o $@

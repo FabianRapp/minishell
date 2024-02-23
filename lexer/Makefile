@@ -1,9 +1,10 @@
 CC=cc
-CFLAGS=-Wall -Wextra -Werror -fsanitize=address -g  
+FLAGS_NO_LEAK_CHECK = -fsanitize=address -g
+CFLAGS=-Wall -Wextra -Werror 
 # 
 #-fsanitize=undefined 
 #
-LDFLAGS =  -fsanitize=address  -g  
+LDFLAGS =
 #
 #
 LIB_LEXER=lexer
@@ -22,11 +23,15 @@ LIBFT_NAME = libft.a
 .PHONY: all clean fclean re libs $ $(LIB_LEXER)
 
 
-$(LIB_LEXER): build
-
-build: $(OBJECTS)
+build: CFLAGS += $(FLAGS_NO_LEAK_CHECK)
+build: LDFLAGS += $(FLAGS_NO_LEAK_CHECK)
+build: $(LIB_LEXER)
+$(LIB_LEXER): $(OBJECTS)
 	@ar rcs $(LIB_LEXER_NAME) $(OBJECTS)
 	@echo "\033[32mlexer build\033[0m"
+
+leaks: CFLAGS += -DLEAK_CHECK=1
+leaks: $(LIB_LEXER)
 
 $(NAME_TESTER): libs $(OBJECTS_TESTER) build
 	@$(CC) $(OBJECTS_TESTER) $(OBJECTS) $(LIBFT_NAME) $(LIB_LEXER_NAME) -o $(NAME_TESTER) $(CFLAGS) $(LDFLAGS)
