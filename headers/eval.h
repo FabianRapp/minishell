@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:38:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/15 06:01:58 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/23 15:26:40 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_path
 	int		position;
 	int		read_postion;
 	char	*command_name;
+	
 	t_ast	*ast;
 }	t_path;
 

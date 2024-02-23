@@ -124,6 +124,7 @@ t_token_list	*expand_list(t_env *env, t_token_list *list, bool expand_dollar)
 	return (list);
 }
 
+
 bool	expand_name(t_ast *ast)
 {
 	if (!ast->name)
@@ -131,6 +132,8 @@ bool	expand_name(t_ast *ast)
 	ast->name = expand_list(ast->env, ast->name, true);// needs malloc protection
 	if (ast->name)
 		ast->name = remove_non_literals(ast->name);
+	if (errno)
+		return (ERROR);
 	if (!ast->name)
 	{
 		ast->name = ft_calloc(1, sizeof(t_token_list));
@@ -167,6 +170,8 @@ bool	expand_args(t_ast *ast, t_arg **base_arg, bool expand_dollar)
 		cur->name = expand_list(ast->env, cur->name, expand_dollar);
 		if (cur->name)
 			cur->name = remove_non_literals(cur->name);
+		if (errno)
+			return (ERROR);
 		if (!cur->name)//remove the current arg
 		{
 			if (last)
@@ -222,21 +227,34 @@ bool	expand_redirs(t_ast *ast)
 }
 
 // TODO:
-// expands the current ast nodes env vars and interpreted strs (if the first)
-bool	expansion(t_ast *ast)
+t_result	expansion_iter(t_ast *ast)
 {
 	//t_token_list	*temp;
 	if (!ast)
-		return (false);
+		return (ERROR);
 	if (ast->type != COMMAND)
-		return (true);
+		return (SUCCESS);
 	if (!expand_name(ast))
-		return (false);
+		return (ERROR);
 	//if (ast->type == COMMAND && ast->name->token->type == SUBSHELL)
 		//ast->type = SUBSHELL;
 	if (!expand_args(ast, &(ast->arg), true))
-		return (false);
+		return (ERROR);
 	if (!expand_redirs(ast))
-		return (false);
-	return (true);
+		return (ERROR);
+	return (SUCCESS);
+}
+
+
+// TODO:
+// expands the current ast nodes env vars and interpreted strs (if the first)
+bool	expansion(t_ast *ast)
+{
+	if (expansion_iter(ast) == ERROR)
+		return (ERROR);
+	if (expand_wildcards(ast) == ERROR)
+		return (ERROR);
+	if (expansion_iter(ast) == ERROR)
+		return (ERROR);
+	return (SUCCESS);
 }

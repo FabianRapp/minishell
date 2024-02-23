@@ -6,13 +6,14 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:21:49 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 18:23:17 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/22 14:48:12 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/lexer.h"
 
 //types
+t_result		wildcard_type(t_lexer *lexer, t_token *token);
 t_result		dollar_lexing(t_lexer *lexer, t_token *token);
 void			basic_sign_type(t_lexer *lexer, t_token *token);
 t_result		literal_type(t_lexer *lexer, t_token *token);

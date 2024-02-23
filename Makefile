@@ -1,10 +1,10 @@
 CC=cc
-CFLAGS=-Wall -Wextra -Werror
-# -g  -fsanitize=address
+CFLAGS=-Wall -Wextra -Werror -fsanitize=address -g  
+# 
 #-fsanitize=undefined 
-# -g  
-LDFLAGS =
-# -fsanitize=address
+#
+LDFLAGS =  -fsanitize=address  -g  
+#
 #
 NAME=minishell
 
@@ -16,6 +16,8 @@ SOURCES=repl/main.c  repl/utils/path.c repl/ft_buildin1.c repl/redir.c \
  utils/fd1.c \
  repl/expansion/expansion.c repl/expansion/utils1.c repl/expansion/word_splitting.c \
  repl/expansion/utils2.c \
+  repl/expansion/wildcards/repl_wildcards_main.c repl/expansion/wildcards/repl_wildcards_utils1.c\
+  repl/expansion/wildcards/repl_fill_wildcard_data.c\
  utils/utils3.c\
 \
  repl/signals/child_parent_coms.c

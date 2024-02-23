@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/15 06:49:06 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/23 16:07:25 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,40 @@ void	type_token_with_void_check(t_token *token, t_type type)
 		token->type = type;
 }
 
+t_result	wildcard_type(t_lexer *lexer, t_token *token)
+{
+	// bool	wildcard;
+	// t_lexer	lexer_start;
+
+	if (lexer->cur_char == '*')
+	{
+		token->type = WILDCARD;
+		token->str_data = ft_strdup("*");
+		if (!token->str_data)
+			return (ERROR);
+	}
+
+	// lexer_start = *lexer;
+	// wildcard = false;
+	// while (!is_termination_char(lexer->cur_char))
+	// {
+	// 	if (lexer->cur_char == '*')
+	// 		wildcard = true;
+		
+	// 	if (!ft_strjoin_inplace_char(&(token->str_data), lexer->cur_char))
+	// 		return (ERROR);
+	// 	read_char(lexer);
+	// }
+	// if ((ft_iswhitespace(lexer->cur_char) || (lexer->cur_char == 0)) && wildcard)
+	// 	token->type = WILDCARD;
+	// else
+	// {
+	// 	*lexer = lexer_start;
+	// 	my_free((void **)&(token->str_data));
+	// }
+	return (SUCCESS);
+}
+
 void	basic_sign_type(t_lexer *lexer, t_token *token)
 {
 	if (lexer->cur_char == 0)
@@ -63,8 +97,8 @@ void	basic_sign_type(t_lexer *lexer, t_token *token)
 		token->type = EXIT_STATUS_REQUEST;
 		lexer->read_position = lexer->position + 2;
 	}
-	else if (lexer->cur_char == '*')
-		token->type = WILDCARD;
+	// else if (lexer->cur_char == '*')
+	// 	token->type = WILDCARD;
 }
 
 t_result	literal_type(t_lexer *lexer, t_token *token)

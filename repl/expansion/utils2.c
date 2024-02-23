@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 13:01:55 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/15 05:18:22 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/23 16:19:13 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,24 +115,42 @@ t_token_list	*move_nodes_ahead(t_token_list *list, bool set_this_true)
 // intended to remove white space, also removes T_EOF and DUMMY_COMMAND,
 // nothing else besides these and LITERALS(left over) should be in the
 // list at this point
+// errno has to be checked to check for malloc fail
 t_token_list	*remove_non_literals(t_token_list *list)
 {
 	t_token_list	*head;
 	t_token_list	*last;
+	bool			last_was_whitespace;
 
 	head = list;
 	last = NULL;
+	last_was_whitespace = true;
 	while (list)
 	{
 		if (list->token->type != LITERAL)
 		{
-			if (list->token->type != WHITE_SPACE && list->token->type != DUMMY_COMMAND)
+			if (list->token->type != WHITE_SPACE && list->token->type != DUMMY_COMMAND && list->token->type != WILDCARD)
 			{
 				printf("DEBUG remove_non_literals: this token type is unexpected: %s\n", type_to_str_type(list->token->type));
 				exit(0);
 			}
-			if (list->token->type != DUMMY_COMMAND)
+			if (list->token->type == WILDCARD)
 			{
+				if (!last_was_whitespace)
+				{
+					last->token->type = WILDCARD;
+					if (!ft_strjoin_inplace_char(&(last->token->str_data), '*'))
+						return (list);
+					last->next = list->next;
+					free_token(list->token);
+					free(list);
+					list = last;
+				}
+				last_was_whitespace = false;
+			}
+			else if (list->token->type != DUMMY_COMMAND)
+			{
+				last_was_whitespace = true;
 				if (list == head)
 				{
 					list = move_nodes_ahead(list, true);
@@ -144,7 +162,11 @@ t_token_list	*remove_non_literals(t_token_list *list)
 					last->next = list;
 				}
 			}
+			else
+				last_was_whitespace = false;
 		}
+		else
+			last_was_whitespace = false;
 		last = list;
 		if (list)
 			list = list->next;

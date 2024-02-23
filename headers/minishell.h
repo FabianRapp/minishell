@@ -6,12 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/19 14:01:47 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/23 15:58:23 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
+	- sort output of wildcards
 	- command error show command path instead of command name (/bin/echo: write: Bad file descriptor)
 	- temp_redir() dosnt work
 	- redir.c error hadeling
