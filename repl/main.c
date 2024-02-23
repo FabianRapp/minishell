@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 23:03:38 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/23 23:09:52 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,9 +146,9 @@ int	main(int ac, char **av, char **base_env)
 	if (ac > 1)
 		return (printf("no args allowed\n"), 1);
 	(void)av;
-	env.main_pid = get_pid();
-	if (!env.main_pid)
-		return (1);
+	// env.main_pid = get_pid();
+	// if (!env.main_pid)
+	// 	return (1);
 	if (!init_env(&env, base_env))
 		return (1);
 	ast = get_input(&cleanup_data);
@@ -160,11 +160,10 @@ int	main(int ac, char **av, char **base_env)
 			errno = 0;
 			//print_ast(ast);
 			add_global_data(ast, &env, base_env);
-
 			ast->cleanup_data = &cleanup_data;
 			//print_ast(ast);
-			//run_node(ast);
-			//wait_all_children();
+			run_node(ast);
+			wait_all_children();
 			main_exit(&cleanup_data, false, &env, true);
 		}
 		if (LEAK_CHECK)

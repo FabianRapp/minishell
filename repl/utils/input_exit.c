@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 22:56:43 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/23 23:14:44 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,15 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 		{
 			add_history(input);
 			ast = parser(input);
-			cleanup_data->input = input;
-			cleanup_data->root = ast;
+			if (ast)
+			{
+				cleanup_data->input = input;
+				cleanup_data->root = ast;
+			}
+			else
+			{
+				break ;
+			}
 			return (ast);
 		}
 		i++;
