@@ -14,22 +14,24 @@
 
 // merges the current node with the next nodes until one of them is not
 // a LITERAL node
-bool	merge_literals(t_token_list *node)
+t_result	merge_literals(t_token_list *node)
 {
 	t_token_list	*to_free;
 
-	while (node && node->token->type == LITERAL && node->next && node->next->token->type == LITERAL)
+	while (node && node->token->type == LITERAL && node->next
+		&& node->next->token->type == LITERAL)
 	{
-		if (!ft_strjoin_inplace(&(node->token->str_data), node->next->token->str_data))
-		{//handle malloc fail
-			return (false);
+		if (!ft_strjoin_inplace(&(node->token->str_data),
+				node->next->token->str_data))
+		{
+			return (ERROR);
 		}
 		to_free = node->next;
 		node->next = node->next->next;
 		free_token(to_free->token);
 		free(to_free);
 	}
-	return (true);
+	return (SUCCESS);
 }
 
 // for error messages where the base string is needed and here_doc expansion
@@ -50,6 +52,7 @@ t_result	add_dollar(t_token *token)
 	return (SUCCESS);
 }
 
+// check errno for error after calling this (from merge_literals())
 t_token_list	*expand_list_here_doc(t_env *env, t_token_list *list)
 {
 	if (list->token->type == INTERPRETED)
@@ -63,11 +66,11 @@ t_token_list	*expand_list_here_doc(t_env *env, t_token_list *list)
 	}
 	if (list->token->type == WORD)
 	{
-		// TODO: differ between malloc fail in word_splitting and empty list
-		list = word_splitting(list);
-		if (!list)
-			return (NULL);
+		if (word_splitting(&list) == ERROR)
+			return (list);
 	}
+	if (!list)
+		return (NULL);
 	if (list->next && list->next->token->type != T_EOF)
 		list->next = expand_list_here_doc(env, list->next);
 	if (errno)
@@ -76,85 +79,67 @@ t_token_list	*expand_list_here_doc(t_env *env, t_token_list *list)
 	return (list);
 }
 
+// check errno for error after calling
 t_token_list	*expand_list_normal(t_env *env, t_token_list *list)
 {
-	if (list->token->type == INTERPRETED)
-	{
-		if (expand_interpreted(list->token, env) == ERROR)
-			return (list);
-		list->token->type = LITERAL;
-	}
-	if (list->token->type == ENV_VAR)
-	{
-		if (env_to_word_token(list->token) == ERROR)
-			return (list);
-	}
-	else if (list->token->type == PID_REQUEST)
-	{
-		if (pidreq_to_literal_token(env, list->token) == ERROR)
-			return (list);
-	}
-	else if (list->token->type == EXIT_STATUS_REQUEST)
+	if (!list)
+		return (NULL);
+	if (list->token->type == INTERPRETED
+		&& expand_interpreted(list->token, env) == ERROR)
+		return (list);
+	if (list->token->type == ENV_VAR && env_to_word_token(list->token) == ERROR)
+		return (list);
+	if (list->token->type == PID_REQUEST
+		&& pidreq_to_literal_token(env, list->token) == ERROR)
+		return (list);
+	if (list->token->type == EXIT_STATUS_REQUEST)
 	{
 		list->token->str_data = get_last_exit_str();
 		if (!list->token->str_data)
 			return (list);
 		list->token->type = LITERAL;
 	}
-	if (list->token->type == WORD)
+	
+	if (list->token->type == WORD && word_splitting(&list) == ERROR)
 	{
-		// TODO: differ between malloc fail in word_splitting and empty list
-		list = word_splitting(list);
-		if (!list)
-			return (NULL);
-	}
-	if (list->next && list->next->token->type != T_EOF)
-		list->next = expand_list_normal(env, list->next);
-	if (errno)
 		return (list);
-	if (!merge_literals(list))
-	{// malloc fail
 	}
+	if (!list)
+		return (NULL);
+	// t_token_list	*debug = list;
+	// while (debug)
+	// {
+	// 	printf("debug: %s\n", debug->token->str_data);
+	// 	debug = debug->next;
+	// }
+	
+	if (list->token->type == WORD)
+		list->token->type = LITERAL;
+	list->next = expand_list_normal(env, list->next);
+	if (errno)
+	{
+		printf("did failed here (%s)\n", strerror(errno));
+		return (list);
+	}
+	merge_literals(list);
+	
 	return (list);
 }
 
-// TODO needs refactor
-t_result	expansion_move_to_arg(t_arg **start_next, t_token_list *list)
+t_result	expansion_move_to_arg(t_arg **next_arg, t_token_list *list)
 {
-	t_arg	*new_arg;
-	t_arg	old_next;
-	t_arg	*next_arg;
+	t_arg	*new;
 
-	next_arg = *start_next;
 	while (list && list->next)
 	{
-		new_arg = ft_calloc(1, sizeof(t_arg));
-		if (!new_arg)
+		new = ft_calloc(1, sizeof(t_arg));
+		if (!new)
 			return (ERROR);
-		new_arg->name = list->next;
+		new->name = list->next;
 		list->next = list->next->next;
-		new_arg->name->next = NULL;
-		if (!next_arg)
-		{
-			if (!*start_next)
-				*start_next = new_arg;
-			else
-			{
-				next_arg = *start_next;
-				while (next_arg->next)
-					next_arg = next_arg->next;
-				next_arg->next = new_arg;
-				next_arg = NULL;
-			}
-		}
-		else
-		{
-			old_next = *next_arg;
-			*next_arg = *new_arg;
-			*new_arg = old_next;
-			next_arg->next = new_arg;
-			next_arg = next_arg->next;
-		}
+		new->name->next = NULL;
+		add_arg_front(next_arg, new);
+		next_arg = &((*next_arg)->next);
 	}
 	return (SUCCESS);
 }
@@ -163,9 +148,9 @@ t_result	expand_name(t_ast *ast)
 {
 	if (!ast->name)
 		return (SUCCESS);
-	ast->name = expand_list_normal(ast->env, ast->name);// needs malloc protection
+	ast->name = expand_list_normal(ast->env, ast->name);
 	if (errno)
-		return (ERROR);
+		return (set_errno_as_exit(ast));
 	if (wildcards_expand_name(ast->name) == ERROR)
 		return (ERROR);
 	if (ast->name)
@@ -176,23 +161,14 @@ t_result	expand_name(t_ast *ast)
 	{
 		ast->name = ft_calloc(1, sizeof(t_token_list));
 		if (!ast->name)
-		{
-			ast->exit_status = errno;
-			return (ERROR);
-		}
+			return (set_errno_as_exit(ast));
 		ast->name->token = new_dummy_token();
 		if (!ast->name->token)
-		{
-			ast->exit_status = errno;
-			return (ERROR);
-		}
+			return (set_errno_as_exit(ast));
 		return (SUCCESS);
 	}
-	if (expansion_move_to_arg(&(ast->arg), ast->name->next) == ERROR)
-	{
-		ast->exit_status = errno;
-		return (ERROR);
-	}
+	if (expansion_move_to_arg(&(ast->arg), ast->name) == ERROR)
+		return (set_errno_as_exit(ast));
 	return (SUCCESS);
 }
 
@@ -212,22 +188,13 @@ bool	expand_args(t_ast *ast, t_arg **base_arg, bool not_here_doc)
 		else
 			cur->name = expand_list_here_doc(ast->env, cur->name);
 		if (errno)
-		{
-			ast->exit_status = errno;
-			return (ERROR);
-		}
+			return (set_errno_as_exit(ast));
 		if (wildcards_expand_name(cur->name) == ERROR)
-		{
-			ast->exit_status = 1;
-			return (ERROR);
-		}
+			return (set_errno_as_exit(ast));
 		if (cur->name)
 			cur->name = remove_non_literals(cur->name);
 		if (errno)
-		{
-			ast->exit_status = errno;
-			return (ERROR);
-		}
+			return (set_errno_as_exit(ast));
 		if (!cur->name)//remove the current arg
 		{
 			if (last)
@@ -240,6 +207,10 @@ bool	expand_args(t_ast *ast, t_arg **base_arg, bool not_here_doc)
 			{
 				if (*base_arg)
 				{
+					// ast->arg = ast->arg->next;
+					// free(cur);
+					// cur = ast->arg;
+		
 					cur = ast->arg->next;
 					free(ast->arg);
 					*base_arg = cur;
@@ -250,10 +221,7 @@ bool	expand_args(t_ast *ast, t_arg **base_arg, bool not_here_doc)
 			continue ;
 		}
 		if (expansion_move_to_arg(&(cur->next), cur->name) == ERROR)
-		{
-			ast->exit_status = errno;
-			return (ERROR);
-		}
+			return (set_errno_as_exit(ast));
 		last = cur;
 		cur = cur->next;
 	}
@@ -285,33 +253,18 @@ t_result	expand_redirs(t_ast *ast)
 }
 
 // TODO:
-t_result	expansion_iter(t_ast *ast)
+// expands the current ast nodes env vars and interpreted strs (if the first)
+t_result	expansion(t_ast *ast)
 {
-	//t_token_list	*temp;
 	if (!ast)
 		return (ERROR);
 	if (ast->type != COMMAND)
 		return (SUCCESS);
 	if (!expand_name(ast))
 		return (ERROR);
-	//if (ast->type == COMMAND && ast->name->token->type == SUBSHELL)
-		//ast->type = SUBSHELL;
 	if (expand_args(ast, &(ast->arg), true) == ERROR)
 		return (ERROR);
 	if (expand_redirs(ast) == ERROR)
 		return (ERROR);
-	return (SUCCESS);
-}
-
-// TODO:
-// expands the current ast nodes env vars and interpreted strs (if the first)
-bool	expansion(t_ast *ast)
-{
-	if (expansion_iter(ast) == ERROR)
-		return (ERROR);
-	//if (expand_wildcards(ast) == ERROR)
-	//	return (ERROR);
-	//if (expansion_iter(ast) == ERROR)
-	//	return (ERROR);
 	return (SUCCESS);
 }

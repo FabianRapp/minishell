@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 23:09:52 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/24 21:48:04 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,38 +17,17 @@ bool	no_command(t_ast *ast)
 {
 	if (!ast->name || ast->name->token->type == DUMMY_COMMAND)
 	{
-		if (!ast->redir)
-			ast->exit_status = 1;
 		ast->exit_status = 0;
 		return (true);
-	}
-	else if (is_operator(ast->type))
-	{
-		if (ast->redir)
-		{
-			printf("DEBUG: operator with redirs in no_command()\n");
-			ast->exit_status = 1;
-		//set_last_exit(ast->exit_status);
-			return (true);
-		}
-		// TODO: need to enable this condtion
-		//if (not first command)
-			//return (printf(SHELL_NAME": syntax error: unexpected end of file\n"), false);
-		//else
-		{
-			print_error(1, "syntax error near unexpected token", "<needs to be converted to actual input:>", (char *)type_to_str_type(ast->type));
-			ast->exit_status = 258;
-			//set_last_exit(ast->exit_status);
-		}
 	}
 	return (false);
 }
 
 bool	check_edgecases(t_ast *ast)
 {
-	if (no_command(ast))
+	if (no_command(ast) == true)
 		return (true);
-	if (ft_buildin(ast))
+	if (ft_buildin(ast) == true)
 		return (true);
 	return (false);
 }
@@ -68,18 +47,6 @@ void	init_child_data(t_child_data *data, t_ast *ast)
 		return ;
 	data->argv[0] = data->path;
 	fill_args(ast, data->argv + 1, ARGS);
-}
-
-void	clean_fds(t_fd_pair *pairs)
-{
-	int	i;
-
-	i = 0;
-	while (pairs + i && pairs[i].base_fd != INIT_VAL)
-	{
-		close(pairs[i].overload_with_fd);
-		i++;
-	}
 }
 
 void	free_child_data(t_child_data *data)

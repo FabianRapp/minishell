@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 14:41:32 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/24 21:42:25 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,27 +80,26 @@ bool	ft_buildin(t_ast *ast)
 {
 	char	*command_name;
 
-	if (ast->name->token->str_data && !ft_strcmp(ast->name->token->str_data, "exit"))
+	command_name = ft_strdup(ast->name->token->str_data);
+	if (!command_name)
 	{
-		resolve_redirs(ast);
-		ft_exit(ast);
+		ast->exit_status = 1;
 		return (true);
 	}
-	command_name = ast->name->token->str_data;
+	ft_strtolower(command_name);
 	//if (!ft_strcmp(command_name, "echo"))
-	{
-	//	ft_exit(ast);
-		//return ;
-	}
-	if (!ft_strcmp(command_name, "export"))
-	{
-		///ft_export(ast);
-		return (true);
-	}
-	else if (!ft_strcmp(command_name, "pwd"))
-	{
-		ft_pwd(ast);
-		return (true);
-	}
-	return (false);
+		//return (ft_echo(ast), true);
+	//if (!ft_strcmp(command_name, "cd"))
+		//return (ft_cd(ast), true);
+	if (!ft_strcmp(command_name, "pwd"))
+		return (ft_pwd(ast), free(command_name), true);
+	//if (!ft_strcmp(command_name, "export"))
+		//return (ft_export(ast), true);
+	//if (!ft_strcmp(command_name, "unset"))
+		//return (ft_unset(ast), true);
+	//if (!ft_strcmp(command_name, "env"))
+		//return (ft_env(ast), true);
+	if (!ft_strcmp(command_name, "exit"))
+		return (ft_exit(ast), true);
+	return (free(command_name), false);
 }

@@ -53,15 +53,18 @@ all: build
 build: CFLAGS += $(FLAGS_NO_LEAK_CHECK)
 build: LDFLAGS += $(FLAGS_NO_LEAK_CHECK)
 build: libs
+build: $(OBJECTS)
 build: $(NAME)
 $(NAME): $(OBJECTS)
 	$(CC) $(LIBS_NAME) $(OBJECTS)  -lreadline -o $(NAME) $(CFLAGS) $(LDFLAGS)
 	cp $(NAME) ../../../bash_testing
 
 leaks: CFLAGS += -DLEAK_CHECK=1
-leaks: fclean
 leaks: libs_leaks
+leaks: $(OBJECTS)
 leaks: $(NAME)
+
+#leaks: fclean
 
 libs: $(LIBS)
 

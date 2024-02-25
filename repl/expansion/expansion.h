@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:52 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 21:35:21 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 01:25:06 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 
 # include "../../headers/minishell.h"
 
+typedef enum e_result	t_result;
+
 // word_splitting.c
-t_token_list	*word_splitting(t_token_list *list);
-t_token_list	*insert_whitespace_before(t_token_list *before);
+t_result		word_splitting(t_token_list **list);
+t_result		insert_whitespace_before(t_token_list **head);
 
 // utils1.c
 t_result		env_to_word_token(t_token *token);
@@ -33,25 +35,22 @@ char			*get_last_exit_str(void);
 
 // wildcards:
 
-typedef struct s_wildcard_data
+typedef struct s_wildcard_parameters
 {
 	char	*prefix;
 	char	*suffix;
 	char	**sub_str;
-}	t_wildcard_data;
+}	t_wildcard_parameters;
 
 // repl_wildcards_main.c
 t_result		wildcards_expand_name(t_token_list *name);
-t_result		wildcards_expand_arg(t_arg *arg);
-t_result		wildcards_expand_redir(t_redir *redir);
-t_result		expand_wildcards(t_ast *ast);
 
 // repl_wildcards_utils1.c
 char			*next_file_name(DIR *dir);
-void		clean_wildcard_data(t_wildcard_data *data);
+void		clean_wildcard_data(t_wildcard_parameters *data);
 
 // repl_fill_wildcard_data.c
-void		fill_wildcard_data(char *wildcard_str, t_wildcard_data *w_data);
-bool		matches_wildcard(char *str, t_wildcard_data *w_data);
+void		fill_wildcard_data(char *wildcard_str, t_wildcard_parameters *w_para);
+bool		matches_wildcard(char *str, t_wildcard_parameters *w_para);
 
 #endif

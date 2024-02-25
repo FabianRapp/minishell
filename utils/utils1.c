@@ -6,11 +6,112 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 21:59:15 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 05:35:44 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
+void	add_token_back_node(t_token_list **list, t_token_list *new_node)
+{
+	if (!*list)
+	{
+		*list = new_node;
+		return ;
+	}
+	while ((*list)->next)
+	{
+		list = &((*list)->next);
+	}
+	(*list)->next = new_node;
+	return ;
+}
+
+t_result	add_token_back(t_token_list **list, t_token *token)
+{
+	t_token_list	*new_node;
+
+	new_node = ft_calloc(1, sizeof(t_token_list));
+	if (!new_node)
+		return (ERROR);
+	new_node->token = token;
+	if (!*list)
+	{
+		*list = new_node;
+		return (SUCCESS);
+	}
+	while ((*list)->next)
+	{
+		list = &((*list)->next);
+	}
+	(*list)->next = new_node;
+	return (SUCCESS);
+}
+
+void	free_token_list(t_token_list *list)
+{
+	t_token_list	*last;
+
+	while (list)
+	{
+		last = list;
+		list = list->next;
+		free_token(last->token);
+		free(last);
+	}
+}
+
+t_result	insert_whitespace_end(t_token_list **list)
+{
+	t_token	*new;
+
+	new = ft_calloc(1, sizeof(t_token));
+	if (!new)
+		return (ERROR);
+	new->type = WHITE_SPACE;
+	if (add_token_back(list, new) == ERROR)
+		return (free(new), ERROR);
+	return (SUCCESS);
+}
+
+t_result	insert_whitespace_before(t_token_list **head)
+{
+	t_token_list	*new;
+
+	new = ft_calloc(1, sizeof(t_token_list));
+	if (!new)
+		return (ERROR);
+	new->token = ft_calloc(1, sizeof(t_token));
+	if (!new->token)
+		return (free(new), ERROR);
+	new->token->type = WHITE_SPACE;
+	add_token_node_front(head, new);
+	return (SUCCESS);
+}
+
+void	add_token_node_front(t_token_list **head, t_token_list *new)
+{
+	t_token_list	*temp;
+
+	temp = *head;
+	*head = new;
+	new->next = temp;
+}
+
+t_result	errno_to_result(void)
+{
+	if (errno)
+		return (ERROR);
+	return (SUCCESS);
+}
+
+t_result	set_errno_as_exit(t_ast *ast)
+{
+	ast->exit_status = errno;
+	if (errno)
+		return (ERROR);
+	return (SUCCESS);
+}
 
 // TODO make set_last_exit only run if the children did not exit yet when this function was called
 t_result	wait_all_children(void)
@@ -24,7 +125,6 @@ t_result	wait_all_children(void)
 		if (errno != ECHILD)
 		{
 			set_last_exit(WEXITSTATUS(status));
-			//printf("last exit: %s\n", get_last_exit_str());
 		}
 	}
 	errno = 0;

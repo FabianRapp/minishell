@@ -6,13 +6,14 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 23:00:12 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 03:16:04 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
-	- exit is broken
+	- update the old_data in the token in the str expansion correctly 
+		(">"asd"$a bash: "asd"$a: ambiguous redirect")
 	- repl/expansion/wildcards + repl/expansion/word_splitting.c errors
 	- command error show command path instead of command name (/bin/echo: write: Bad file descriptor)
 	- redir.c error hadeling

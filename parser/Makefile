@@ -10,6 +10,7 @@ LDFLAGS =
 NAME=min
 #
 #
+
 LIB_PARSER=parser
 LIB_PARSER_NAME = parser.a
 SOURCES= parser.c ../utils/utils1.c groups1.c ast.c \
@@ -28,9 +29,11 @@ LIB_LEXER_NAME = lexer.a
 
 build: CFLAGS += $(FLAGS_NO_LEAK_CHECK)
 build: LDFLAGS += $(FLAGS_NO_LEAK_CHECK)
+build: $(OBJECTS)
 build: $(LIB_PARSER)
 
 leaks: CFLAGS += -DLEAK_CHECK=1
+leaks: $(OBJECTS)
 leaks: $(LIB_PARSER)
 
 $(LIB_PARSER): $(OBJECTS)

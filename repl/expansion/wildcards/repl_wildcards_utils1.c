@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:51:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 19:32:39 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/24 22:13:26 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ char	*next_file_name(DIR *dir)
 	return (ft_strdup(file->d_name));
 }
 
-void	clean_wildcard_data(t_wildcard_data *w_data)
+void	clean_wildcard_data(t_wildcard_parameters *w_para)
 {
-	my_free((void **)&(w_data->prefix));
-	my_free((void **)&(w_data->suffix));
-	if (w_data->sub_str)
+	my_free((void **)&(w_para->prefix));
+	my_free((void **)&(w_para->suffix));
+	if (w_para->sub_str)
 	{
-		free_str_ar(w_data->sub_str);
+		free_str_ar(w_para->sub_str);
 	}
 }

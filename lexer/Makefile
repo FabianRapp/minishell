@@ -25,12 +25,15 @@ LIBFT_NAME = libft.a
 
 build: CFLAGS += $(FLAGS_NO_LEAK_CHECK)
 build: LDFLAGS += $(FLAGS_NO_LEAK_CHECK)
+build: $(OBJECTS)
 build: $(LIB_LEXER)
 $(LIB_LEXER): $(OBJECTS)
 	@ar rcs $(LIB_LEXER_NAME) $(OBJECTS)
 	@echo "\033[32mlexer build\033[0m"
 
+
 leaks: CFLAGS += -DLEAK_CHECK=1
+leaks: $(OBJECTS)
 leaks: $(LIB_LEXER)
 
 $(NAME_TESTER): libs $(OBJECTS_TESTER) build

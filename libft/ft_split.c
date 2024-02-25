@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/08 01:18:40 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/27 21:11:41 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 02:19:13 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ char	**free_str_ar(char **str_arr)
 {
 	int	i;
 
+	if (!str_arr)
+		return (NULL);
 	i = 0;
 	while (str_arr[i] != 0)
 		free(str_arr[i++]);

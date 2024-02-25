@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 22:22:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 14:19:53 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/24 21:23:22 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ size_t	ft_strlcat(char *dst, const char *src,
 			size_t dstsize);
 int		ft_toupper(int c);
 int		ft_tolower(int c);
+void	ft_strtolower(char *str);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strchr_fn(const char *s, bool fn(char));
 char	*ft_strrchr(const char *s, int c);

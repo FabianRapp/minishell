@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 22:58:32 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 01:03:35 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,18 +246,7 @@ t_ast *build_ast(t_parser *parser)
 	return (free_token(highest_operator->token), free(highest_operator), ast_node);
 }
 
-void	free_token_list(t_token_list *list)
-{
-	t_token_list	*last;
 
-	while (list)
-	{
-		last = list;
-		list = list->next;
-		free_token(last->token);
-		free(last);
-	}
-}
 
 void	free_arg_list(t_arg *list)
 {

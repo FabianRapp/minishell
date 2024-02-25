@@ -6,111 +6,66 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:33:33 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 21:53:45 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 05:36:08 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansion.h"
 
-// copies the given node to a new which is inserted after it
-// empties the given node and makes it a white space node
-// (after this the given node should be white space and the next (data) should be the old given node)
-t_token_list	*insert_whitespace_before(t_token_list *before)
+static t_token	*create_new_token(char *data, char *old_data)
 {
-	t_token_list	*new;
+	t_token	*new;
 
-	new = ft_calloc(1, sizeof(t_token_list));
+	new = ft_calloc(1, sizeof(t_token));
 	if (!new)
-	{//malloc fail
-	}
-	new->token = before->token;
-	new->next = before->next;
-	before->next = new;
-	before->token = ft_calloc(1, sizeof(t_token));
-	if (!before->token)
-	{// malloc fail
-	}
-	before->token->type = WHITE_SPACE;
+		return (NULL);
+	new->type = LITERAL;
+	new->str_data = ft_strdup(data);
+	if (!new->str_data)
+		return (free(new), NULL);
+	new->old_data = ft_strdup(old_data);
+	if (!new->old_data)
+		return (free_token(new), NULL);
+	new->type = LITERAL;
 	return (new);
 }
 
-t_token	*next_literal_token(char *str, int *index)
+static t_result	word_split_baseclean(t_token *old, char **arr,
+	t_token_list *next, t_token *new)
 {
-	t_token	*token;
-
-	token = ft_calloc(1, sizeof(t_token));
-	if (!token)
-		return (NULL);
-	while (str[*index] && !ft_iswhitespace(str[*index]))
-	{
-		ft_strjoin_inplace_char(&(token->str_data), str[*index]);
-		if (!token->str_data)
-			return (free(token), NULL);
-		(*index)++;
-	}
-	token->type = LITERAL;
-	return (token);
+	if (new)
+		free_token(new);
+	free_token(old);
+	free_str_ar(arr);
+	free_token_list(next);
+	return (ERROR);
 }
 
-// fills the old node with the new data and appends a new node with the old data
-bool	insert_next_literal_node(t_token_list *list, char *str, int *index)
+t_result	word_splitting(t_token_list **list)
 {
-	t_token_list	*new;
+	char			**arr;
+	int				i;
+	t_token			*new;
+	t_token			*old;
+	t_token_list	*next;
 
-	if (!list)
-		return (false);
-	new = ft_calloc(1, sizeof(t_token_list));
-	if (!new)
-		return (false);
-	new->token = list->token;
-	list->token = next_literal_token(str, index);
-	if (!new->token)
-		return (free(new), NULL);
-	new->next = list->next;
-	list->next = new;
-	return (true);
-}
-
-//TODO should clean list incase of malloc fail
-t_token_list	*word_splitting(t_token_list *list)
-{
-	int				index;
-	t_token_list	*head;
-	char			*str;
-	t_token_list	*last;
-
-	if (!list)
-		return (NULL);
-	head = list;
-	index = 0;
-	str = list->token->str_data;
-	last = NULL;
-	while (str[index])
+	if (!*list)
+		return (SUCCESS);
+	old = (*list)->token;
+	next = (*list)->next;
+	arr = ft_split_fn(old->str_data, ft_iswhitespace);
+	if (!my_free((void **)list) || !arr || !*arr)
+		return (word_split_baseclean(old, arr, next, NULL), errno_to_result());
+	i = 0;
+	while (arr[i])
 	{
-		if (ft_iswhitespace(str[index]))
-		{
-			if (!insert_whitespace_before(list))
-			{//malloc fail
-			}
-			while (str[index] && ft_iswhitespace(str[index]))
-				index++;
-			last = list;
-			list = list->next;
-		}
-		if (str[index])
-		{
-			if (!insert_next_literal_node(list, str, &index))
-			{//handle error
-			}
-			last = list;
-			list = list->next;
-		}
+		if (*list && insert_whitespace_end(list) == ERROR)
+			return (word_split_baseclean(old, arr, next, NULL));
+		new = create_new_token(arr[i], old->old_data);
+		if (!new || add_token_back(list, new) == ERROR)
+			return (word_split_baseclean(old, arr, next, new));
+		i++;
 	}
-	if (last)
-		last->next = list->next;
-	free_token(list->token);
-	free(list);
-	if (head != list)
-		return (head);
-	return (NULL);
+	add_token_back_node(list, next);
+	return (free_str_ar(arr), free_token(old), SUCCESS);
 }

@@ -26,15 +26,17 @@ ft_lstclear_bonus.c ft_lstiter_bonus.c ft_lstmap_bonus.c ft_iswhitespace.c\
 OBJECTS = $(SOURCES:.c=.o)
 OBJECTS_BONUS = $(BONUS_SOURCES:.c=.o)
 
-
 build: CFLAGS += $(FLAGS_NO_LEAK_CHECK)
 build: LDFLAGS += $(FLAGS_NO_LEAK_CHECK)
+build: $(OBJECTS_BONUS) $(OBJECTS)
 build: $(NAME)
+
 $(NAME): $(OBJECTS_BONUS) $(OBJECTS)
 	@ar rcs $(NAME) $< $^
 	@echo "\033[32mlibft build\033[0m"
 
 leaks: CFLAGS += -DLEAK_CHECK=1
+leaks: $(OBJECTS_BONUS) $(OBJECTS)
 leaks: $(NAME)
 
 %.o: %.c
@@ -48,5 +50,5 @@ fclean: clean
 	@rm -f $(NAME)
 	@echo "\033[33mlibft fclean\033[0m"
 
-re: fclean all
+re: fclean build
 

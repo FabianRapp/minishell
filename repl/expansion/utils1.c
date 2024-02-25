@@ -6,11 +6,20 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:00 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 21:25:25 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 00:45:31 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansion.h"
+
+void	add_arg_front(t_arg **head, t_arg *new)
+{
+	t_arg	*temp;
+
+	temp = *head;
+	*head = new;
+	new->next = temp;
+}
 
 t_result	env_to_word_token(t_token *token)
 {
