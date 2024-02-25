@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 07:02:51 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 07:35:36 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,94 +29,19 @@ void	ft_pipe(t_ast *ast)
 	dup2(pipe_fd[WRITE], WRITE);
 	run_node(ast->left);
 	dup2(base_fd[WRITE], WRITE);
-	//close(base_fd[WRITE]);
+	close(base_fd[WRITE]);
 	close(pipe_fd[WRITE]);
 	ast->env->stop_execution = false;
 	dup2(pipe_fd[READ], READ);
 	run_node(ast->right);
 	dup2(base_fd[READ], READ);
 	close(pipe_fd[READ]);
-	//close(base_fd[READ]);
+	close(base_fd[READ]);
 	if (ast->right->exit_status == DEFAULT_EXIT_STATUS)
 		ast->pid = ast->right->pid;
 	else
 		ast->exit_status = ast->right->exit_status;
 }
-
-// bool	ft_pipe(t_ast *ast)
-// {
-// 	int			pipe_fd[2];
-// 	int			base_fd[2];
-
-// 	base_fd[READ] = dup(READ);
-// 	if (errno)
-// 	{
-// 		printf("ft_pipe errno: %s\n", strerror(errno));
-// 		exit(errno);
-// 	}
-// 	base_fd[WRITE] = dup(WRITE);
-// 	if (errno)
-// 	{
-// 		printf("ft_pipe errno: %s\n", strerror(errno));
-// 		exit(errno);
-// 	}
-// 	if (ast->exit_status > 0)
-// 		return (false);
-// 		//ast->left->pipe[READ] = ast->pipe[READ];
-// 	if (pipe(pipe_fd) == -1)
-// 	{//handle error
-// 	}
-// 	// if (ast->left->pipe[WRITE] != WRITE)
-// 	// 	close(ast->left->pipe[WRITE]);
-// 	//ast->left->pipe[WRITE] = pipe_fd[WRITE];
-// 	dup2(pipe_fd[WRITE], WRITE);
-// 	if (errno)
-// 	{
-// 		printf("ft_pipe errno: %s\n", strerror(errno));
-// 		exit(errno);
-// 	}
-// 	// if (ast->right->pipe[READ] != READ)
-// 	// 	close(ast->right->pipe[READ]);
-// 	//ast->right->pipe[READ] = pipe_fd[READ];
-// 	run_node(ast->left);
-// 	dup2(base_fd[WRITE], WRITE);
-// 	if (errno)
-// 	{
-// 		printf("ft_pipe errno: %s\n", strerror(errno));
-// 		exit(errno);
-// 	}
-// 	close(pipe_fd[WRITE]);
-// 	// if (ast->left->pipe[WRITE] != WRITE)
-// 	// 	close(ast->left->pipe[WRITE]);
-// 	dup2(pipe_fd[READ], READ);
-// 	if (errno)
-// 	{
-// 		printf("ft_pipe errno: %s\n", strerror(errno));
-// 		exit(errno);
-// 	}
-// 	run_node(ast->right);
-// 	dup2(base_fd[READ], READ);
-// 	if (errno)
-// 	{
-// 		printf("ft_pipe errno: %s\n", strerror(errno));
-// 		exit(errno);
-// 	}
-// 	close(pipe_fd[READ]);
-// 	// if (ast->right->pipe[READ] != READ)
-// 	// 	close(ast->right->pipe[READ]);
-// 	//close(pipe_fd[WRITE]);
-// 	if (ast->right->exit_status == DEFAULT_EXIT_STATUS)
-// 	{
-// 		//printf("pipe right had no exit status (right type: %s)\n", type_to_str_type(ast->right->type));
-// 		ast->pid = ast->right->pid;
-// 	}
-// 	else
-// 	{
-// 		//printf("pipe right had exit status (right type: %s)\n", type_to_str_type(ast->right->type));
-// 		ast->exit_status = ast->right->exit_status;
-// 	}
-// 	return (true);
-// }
 
 // TODO: does every sub process command update the last exit?
 void	create_sub_shell(t_env sub_env, char *input, t_ast *ast)

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/24 21:48:04 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 08:14:23 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,10 +97,6 @@ void	add_global_data(t_ast *ast, t_env *env, char **envs)
 	ast->envs = envs;
 }
 
-#ifndef LEAK_CHECK
-# define LEAK_CHECK 0
-#endif
-
 int	main(int ac, char **av, char **base_env)
 {
 	t_ast			*ast;
@@ -109,7 +105,8 @@ int	main(int ac, char **av, char **base_env)
 	t_env			env;
 
 	errno = 0;
-	reset_stdio();
+	
+	reset_stdio(RESET_STDIO_INIT);
 	if (ac > 1)
 		return (printf("no args allowed\n"), 1);
 	(void)av;
@@ -131,7 +128,7 @@ int	main(int ac, char **av, char **base_env)
 			//print_ast(ast);
 			run_node(ast);
 			wait_all_children();
-			main_exit(&cleanup_data, false, &env, true);
+			main_exit(&cleanup_data, false, &env, -1);
 		}
 		if (LEAK_CHECK)
 			system("leaks minishell");

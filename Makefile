@@ -21,7 +21,8 @@ SOURCES=repl/main.c  repl/utils/path.c repl/ft_buildin1.c repl/redir.c \
   repl/expansion/wildcards/repl_fill_wildcard_data.c\
  utils/utils3.c\
 \
- repl/signals/child_parent_coms.c
+ repl/signals/child_parent_coms.c \
+ utils/debugging.c \
 
 OBJECTS= $(SOURCES:.c=.o)
 

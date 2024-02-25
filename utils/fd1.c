@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 07:42:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 21:59:36 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 07:34:22 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,24 +32,43 @@ t_fd_pair	*io_data(int flag, void *data)
 }
 
 // witout pipes mixed with redirs cause bugs
-t_result	reset_stdio(void)
+t_result	reset_stdio(int flag)
 {
 	static int	std_write = INIT_VAL;
 	static int	std_read = INIT_VAL;
 
-	if (std_write == INIT_VAL)
+	if (flag == RESET_STDIO_CLEAN)
 	{
+		if (std_write != INIT_VAL)
+			close(std_write);
+		std_write = INIT_VAL;
+		if (std_read != INIT_VAL)
+			close(std_read);
+		std_read = INIT_VAL;
+		return (errno_to_result());
+	}
+	if (flag == RESET_STDIO_INIT)
+	{
+		reset_stdio(RESET_STDIO_CLEAN);
 		std_read = dup(READ);
 		std_write = dup(WRITE);
+		return (errno_to_result());
 	}
-	else
+	//for fd leak function:
+	if (flag == RESET_STDIO_GET_VALS)
 	{
-		dup2(std_write, WRITE);
-		dup2(std_read, READ);
+		int	return_val = 0;
+		if (std_write != INIT_VAL)
+			return_val = std_write * 1000;
+		if (std_read != INIT_VAL)
+			return_val += std_read;
+		return (return_val);
 	}
-	if (errno)
+	if (std_read == INIT_VAL || std_write == INIT_VAL)
 		return (ERROR);
-	return (SUCCESS);
+	dup2(std_write, WRITE);
+	dup2(std_read, READ);
+	return (errno_to_result());
 }
 
 t_result	redir_fds(void)
@@ -82,7 +101,7 @@ t_result	reset_fds(void)
 		dup2(fds[i].base_fd_backup, fds[i].base_fd);
 		i++;
 	}
-	reset_stdio();
+	reset_stdio(RESET_STDIO);
 	if (errno)
 	{
 		print_error(true, NULL, NULL, strerror(errno));

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 07:05:12 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 07:57:19 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,10 @@ weird stuff to keep in mind about bash
 # define EXIT_ERROR 3
 # define FINISHED 4
 # define EXIT 5
+
+#ifndef LEAK_CHECK
+# define LEAK_CHECK 0
+#endif
 
 typedef enum e_result
 {
@@ -245,7 +249,12 @@ t_result	redir_fds(void);
 t_result	reset_fds(void);
 t_fd_pair	*get_fds(void);
 t_result	cleanup_fds(void);
-t_result	reset_stdio(void);
+
+#  define RESET_STDIO_INIT 0
+#  define RESET_STDIO 1
+#  define RESET_STDIO_CLEAN 2
+#  define RESET_STDIO_GET_VALS 3
+t_result	reset_stdio(int flag);
 
 # ifndef FD_REQUEST_SKIP
 #  define FD_REQUEST_SKIP -1

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 07:01:48 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 08:02:32 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ void	ft_exit(t_ast *ast)
 	{
 		if (ast->arg && ast->arg->name)
 			print_error(1, "exit", ast->arg->name->token->str_data, "numeric argument required");
-		exit(255);
+		main_exit(ast->cleanup_data, true, ast->env, 255);
+		//exit(255);
 	}
 	else if (ast->arg && count_args(ast->arg) > 1)
 	{
@@ -49,18 +50,18 @@ void	ft_exit(t_ast *ast)
 			ast->env->stop_execution = true;
 			return ;
 		}
-		exit(1);
+		main_exit(ast->cleanup_data, true, ast->env, 1);
+		//exit(1);
 	}
 	else if (!ast->arg || count_args(ast->arg) == 0)
 	{
-		exit( 0);
+		main_exit(ast->cleanup_data, true, ast->env, 0);
+		//exit(0);
 	}
 	else
 	{
-		if (ast->arg->name)
-			exit(ft_atoi(ast->arg->name->token->str_data));
-		else
-			exit( 0);; // should not be needed later on
+		main_exit(ast->cleanup_data, true, ast->env, ft_atoi(ast->arg->name->token->str_data));
+		//exit(ft_atoi(ast->arg->name->token->str_data));
 	}
 }
 
@@ -83,18 +84,18 @@ bool	ft_buildin(t_ast *ast)
 	}
 	ft_strtolower(command_name);
 	//if (!ft_strcmp(command_name, "echo"))
-		//return (ft_echo(ast), true);
+		//return (free(command_name), ft_echo(ast), true);
 	//if (!ft_strcmp(command_name, "cd"))
-		//return (ft_cd(ast), true);
+		//return (free(command_name), ft_cd(ast), true);
 	if (!ft_strcmp(command_name, "pwd"))
-		return (ft_pwd(ast), free(command_name), true);
+		return (free(command_name), ft_pwd(ast), true);
 	//if (!ft_strcmp(command_name, "export"))
-		//return (ft_export(ast), true);
+		//return (free(command_name),ft_export(ast), true);
 	//if (!ft_strcmp(command_name, "unset"))
-		//return (ft_unset(ast), true);
+		//return (free(command_name),ft_unset(ast), true);
 	//if (!ft_strcmp(command_name, "env"))
-		//return (ft_env(ast), true);
+		//return (free(command_name), ft_env(ast), true);
 	if (!ft_strcmp(command_name, "exit"))
-		return (ft_exit(ast), true);
+		return (free(command_name), ft_exit(ast), true);
 	return (free(command_name), false);
 }
