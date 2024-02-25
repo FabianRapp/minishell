@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 16:00:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/03 16:38:26 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 06:40:06 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,5 +15,4 @@
 #ifndef SIGNALS_H
 # define SIGNALS_H
 
-void	child_exit_handler(int sig);
 #endif

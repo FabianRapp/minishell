@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:37:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/19 13:30:50 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 06:28:44 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,6 +219,10 @@ t_result	resolve_redirs(t_ast *ast)
 		// TODO
 		else if (redir->type == HERE_DOC)
 		{
+			printf("here doc place holder\n");
+			printf("first here doc arg: %s\n", redir->arg->name->token->str_data);
+			if (redir->arg->next)
+				printf("second here doc arg: %s(syntax error) (not more listed)\n", redir->arg->next->name->token->str_data);
 		}
 		redir = redir->next;
 	}

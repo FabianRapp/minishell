@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:33:33 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 05:36:08 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 05:57:27 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ t_result	word_splitting(t_token_list **list)
 	i = 0;
 	while (arr[i])
 	{
-		if (*list && insert_whitespace_end(list) == ERROR)
+		if (insert_whitespace_end(list) == ERROR)
 			return (word_split_baseclean(old, arr, next, NULL));
 		new = create_new_token(arr[i], old->old_data);
 		if (!new || add_token_back(list, new) == ERROR)

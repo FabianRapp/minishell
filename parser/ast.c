@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 01:03:35 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 06:37:32 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,6 @@
 
 t_parser	*find_highest_operator(t_parser *parser)
 {
-	if (!parser)
-	{
-		printf("bug shows in last_parser\n");
-		return (NULL);
-	}
 	while (parser->p_type != AND && parser->p_type != OR && parser->p_type != T_EOF)
 		parser = parser->next;
 	if (parser->p_type == T_EOF)
@@ -48,9 +43,7 @@ t_parser	*remove_back(t_parser *cut_location)
 
 	right_head = cut_location->next;
 	if (right_head == cut_location || cut_location->p_type == T_EOF)
-	{
 		return (NULL);
-	}
 	left_head = cut_location;
 	jump_to_start(&left_head);
 	left_last = last_parser(cut_location);
@@ -212,7 +205,7 @@ t_ast	*build_leaf_node(t_ast *ast_node, t_parser *parser)
 	return (ast_node);
 }
 
-// TODO: handle errors and cleanup correctly
+// TODO: handle errors correctly
 t_ast *build_ast(t_parser *parser)
 {
 	t_parser				*highest_operator;
@@ -245,8 +238,6 @@ t_ast *build_ast(t_parser *parser)
 		return (free_ast(ast_node), NULL);
 	return (free_token(highest_operator->token), free(highest_operator), ast_node);
 }
-
-
 
 void	free_arg_list(t_arg *list)
 {

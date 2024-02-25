@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 03:16:04 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 07:05:12 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,16 @@ TODO:
 	- repl/expansion/wildcards + repl/expansion/word_splitting.c errors
 	- command error show command path instead of command name (/bin/echo: write: Bad file descriptor)
 	- redir.c error hadeling
-	- $ + any digit as here doc args
 	- add relative path  optiopns for commands
 	- env vars rework
 	- subshell lexing: sub shell error handeling if there is other invalid syntax in the subshell is diffrent
-	- exit behivior with two numeric args (stops curent command execution but does not exit)
 	- parser must print syntax error and return NULL in case of error
 	- add early exits for sytax error in parser
 	- implement other ft functions
 	- implement here doc
 	- update path functions to use new error print fn
 	- change white space identification: not all whitespace is the same (mb dosnt matter since no multi line)
+
 minishell-$: (asd) (asd)
 minishell: asd: command not found
 ./test "asd >asd <sadad (asd) | >a <ad"
@@ -141,6 +140,7 @@ typedef struct s_env
 {
 	bool		main_process;
 	int			main_pid;
+	bool		stop_execution;
 }	t_env;
 
 typedef	struct s_arg	t_arg;

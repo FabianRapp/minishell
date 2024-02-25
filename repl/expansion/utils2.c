@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 13:01:55 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 02:30:25 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 06:11:02 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,43 +115,29 @@ t_token_list	*move_nodes_ahead(t_token_list *list, bool set_this_true)
 // nothing else besides these and LITERALS(left over) should be in the
 // list at this point
 // does not needed to be error checked
+// might case bugs if white more whitespace gets to this point? works now tho
 t_token_list	*remove_non_literals(t_token_list *list)
 {
 	t_token_list	*head;
 	t_token_list	*last;
-	bool			last_was_whitespace;
 
 	head = list;
 	last = NULL;
-	last_was_whitespace = true;
 	while (list)
 	{
-		if (list->token->type != LITERAL)
+		if (list->token->type != LITERAL && list->token->type != DUMMY_COMMAND)
 		{
-			if (list->token->type != DUMMY_COMMAND)
+			if (list == head)
 			{
-				if (list->token->type != WHITE_SPACE)
-				{
-					printf("DEBUG remove_non_literals: this token type is unexpected: %s\n", type_to_str_type(list->token->type));
-					exit(0);
-				}
-				last_was_whitespace = true;
-				if (list == head)
-				{
-					list = move_nodes_ahead(list, true);
-					head = list;
-				}
-				else
-				{
-					list = move_nodes_ahead(list, true);
-					last->next = list;
-				}
+				list = move_nodes_ahead(list, true);
+				head = list;
 			}
 			else
-				last_was_whitespace = false;
+			{
+				list = move_nodes_ahead(list, true);
+				last->next = list;
+			}
 		}
-		else
-			last_was_whitespace = false;
 		last = list;
 		if (list)
 			list = list->next;

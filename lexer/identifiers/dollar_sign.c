@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 21:33:17 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/12 18:27:38 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 06:23:16 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,15 @@ static t_result	pid_req(t_lexer *lexer, t_token *token)
 	return (SUCCESS);
 }
 
-// has to be called from dollar_lexing()
-static t_result	void_env_type(t_lexer *lexer, t_token *token)
-{
-	if (!ft_isdigit((lexer->str)[lexer->position + 1]))
-		return (ERROR);
-	lexer->read_position = lexer->position + 2;
-	token->type = VOID;
-	return (SUCCESS);
-}
+// // has to be called from dollar_lexing()
+// t_result	void_env_type(t_lexer *lexer, t_token *token)
+// {
+// 	if (!ft_isdigit((lexer->str)[lexer->position + 1]))
+// 		return (ERROR);
+// 	lexer->read_position = lexer->position + 2;
+// 	token->type = VOID;
+// 	return (SUCCESS);
+// }
 
 // has to be called from dollar_lexing()
 // caller has to check for malloc fail
@@ -55,7 +55,7 @@ t_result	dollar_lexing(t_lexer *lexer, t_token *token)
 
 	if (lexer->cur_char != '$')
 		return (SUCCESS);
-	if (pid_req(lexer, token) || void_env_type(lexer, token))
+	if (pid_req(lexer, token))// || void_env_type(lexer, token))
 		return (SUCCESS);
 	if (is_dollar_literal(lexer, token))
 	{
@@ -64,6 +64,8 @@ t_result	dollar_lexing(t_lexer *lexer, t_token *token)
 		return (ERROR);
 	}
 	len = name_len((lexer->str) + lexer->position + 1);
+	if (ft_isdigit(lexer->str[lexer->position + 1]))
+		len = 1;
 	if (len == 0)
 		return (SUCCESS);
 	token->type = ENV_VAR;

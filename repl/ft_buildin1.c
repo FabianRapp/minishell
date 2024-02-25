@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/24 21:42:25 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 07:01:48 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void	ft_pwd(t_ast *ast)
 	ft_printf("%s\n", getenv("PWD"));
 }
 
-// see header file for weird stuff to keep in mind for implentation
 void	ft_exit(t_ast *ast)
 {
 	if (ast->env->main_process)
@@ -46,7 +45,10 @@ void	ft_exit(t_ast *ast)
 		print_error(1, "exit", ast->arg->name->token->str_data, "too many arguments");
 		ast->exit_status = 1;
 		if (ast->env->main_process)
+		{
+			ast->env->stop_execution = true;
 			return ;
+		}
 		exit(1);
 	}
 	else if (!ast->arg || count_args(ast->arg) == 0)
@@ -56,16 +58,9 @@ void	ft_exit(t_ast *ast)
 	else
 	{
 		if (ast->arg->name)
-			exit( ft_atoi(ast->arg->name->token->str_data));
+			exit(ft_atoi(ast->arg->name->token->str_data));
 		else
 			exit( 0);; // should not be needed later on
-	}
-	printf("debug exit, why is it getting here\n");
-	//if (ast->env->main_process)
-	{
-		
-		//exit( exit_status);
-
 	}
 }
 

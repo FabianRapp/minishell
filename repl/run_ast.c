@@ -6,18 +6,23 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/24 22:02:32 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 07:02:51 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
 // TODO errors
-bool	ft_pipe(t_ast *ast)
+void	ft_pipe(t_ast *ast)
 {
 	int			pipe_fd[2];
 	int			base_fd[2];
 
+	if (ast->env->stop_execution)
+	{
+		ast->exit_status = 1;
+		return ;
+	}
 	base_fd[READ] = dup(READ);
 	base_fd[WRITE] = dup(WRITE);
 	pipe(pipe_fd);
@@ -26,6 +31,7 @@ bool	ft_pipe(t_ast *ast)
 	dup2(base_fd[WRITE], WRITE);
 	//close(base_fd[WRITE]);
 	close(pipe_fd[WRITE]);
+	ast->env->stop_execution = false;
 	dup2(pipe_fd[READ], READ);
 	run_node(ast->right);
 	dup2(base_fd[READ], READ);
@@ -35,7 +41,6 @@ bool	ft_pipe(t_ast *ast)
 		ast->pid = ast->right->pid;
 	else
 		ast->exit_status = ast->right->exit_status;
-	return (true);
 }
 
 // bool	ft_pipe(t_ast *ast)
@@ -157,6 +162,8 @@ void	run_subshell(t_ast *ast)
 {
 	t_env	sub_env;
 
+	if (ast->env->stop_execution && ast->exit_status == DEFAULT_EXIT_STATUS)
+		ast->exit_status = 1;
 	if (ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
 	ft_memcpy(&sub_env, ast->env, sizeof(t_env));
@@ -238,6 +245,11 @@ void	ft_and(t_ast *ast)
 
 void	init_command(t_ast *ast)
 {
+	if (ast->env->stop_execution)
+	{
+		ast->exit_status = 1;
+		return ;
+	}
 	if (!expansion(ast))
 	{
 		printf("DEBUG create_sub\n");

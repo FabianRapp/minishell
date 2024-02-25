@@ -99,30 +99,12 @@ t_token_list	*expand_list_normal(t_env *env, t_token_list *list)
 			return (list);
 		list->token->type = LITERAL;
 	}
-	
-	if (list->token->type == WORD && word_splitting(&list) == ERROR)
-	{
+	list->next = expand_list_normal(env, list->next);
+	if ((list->token->type == WORD && word_splitting(&list) == ERROR) || !list)
 		return (list);
-	}
-	if (!list)
-		return (NULL);
-	// t_token_list	*debug = list;
-	// while (debug)
-	// {
-	// 	printf("debug: %s\n", debug->token->str_data);
-	// 	debug = debug->next;
-	// }
-	
 	if (list->token->type == WORD)
 		list->token->type = LITERAL;
-	list->next = expand_list_normal(env, list->next);
-	if (errno)
-	{
-		printf("did failed here (%s)\n", strerror(errno));
-		return (list);
-	}
 	merge_literals(list);
-	
 	return (list);
 }
 
@@ -189,7 +171,7 @@ bool	expand_args(t_ast *ast, t_arg **base_arg, bool not_here_doc)
 			cur->name = expand_list_here_doc(ast->env, cur->name);
 		if (errno)
 			return (set_errno_as_exit(ast));
-		if (wildcards_expand_name(cur->name) == ERROR)
+		if (not_here_doc && wildcards_expand_name(cur->name) == ERROR)
 			return (set_errno_as_exit(ast));
 		if (cur->name)
 			cur->name = remove_non_literals(cur->name);
