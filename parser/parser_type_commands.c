@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 19:47:45 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 16:18:53 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 08:59:05 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,16 @@ static t_parser	*handle_operator(t_parser *parser, bool *found_command, bool *fo
 {
 	if (!is_operator(parser->p_type))
 		return (parser);
+	if (!parser->next || is_operator(parser->next->p_type) || parser->next->p_type == T_EOF)
+	{
+		if (parser->next)
+			print_error(true, NULL, NULL, type_to_str(parser->next->p_type));
+		else
+			print_error(true, NULL, NULL, type_to_str(T_EOF));
+		return (NULL);
+	}
 	if (!*found_command && !*found_redir)
-		return (print_error(true, "handle_operator", "debug handle_operator", type_to_str(parser->p_type)), NULL);
+		return (print_error(true, NULL, NULL, type_to_str(parser->p_type)), NULL);
 	if (!*found_command)
 	{ 
 		if (insert_dummy_here(parser) == ERROR)
@@ -50,7 +58,7 @@ static void	type_command(t_parser *parser, bool *found_command)
 t_result	handle_end(t_parser *parser, bool found_command, bool found_redir)
 {
 	if (!found_redir && !found_command)
-		return (print_error(true, "DEBUG: handle_end", NULL, type_to_str(T_EOF)), ERROR);
+		return (print_error(true, NULL, NULL, type_to_str(T_EOF)), ERROR);
 	if (!found_command && insert_dummy_here(parser) == ERROR)
 		return (ERROR);
 	return (SUCCESS);
@@ -74,9 +82,11 @@ t_result	type_commands(t_parser *parser)
 			if (temp == NULL)
 				return (ERROR);
 			parser = temp;
+				printf("hereee\n");
 		}
 		type_command(parser, &found_command);
 		parser = parser->next;
+	
 	}
 	return (handle_end(parser, found_command, found_redir));
 }

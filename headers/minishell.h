@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 07:57:19 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 08:30:48 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,7 +285,7 @@ cat *.a > c.a
 cat *.a > c.a
 
 
-
+(echo T && echo U && echo V) | echo W
 
 env | sort | grep -v SHLVL | grep -v ^_ | cat >b
 

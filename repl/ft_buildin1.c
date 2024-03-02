@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 08:02:32 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 08:19:57 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ void	ft_exit(t_ast *ast)
 		if (ast->arg && ast->arg->name)
 			print_error(1, "exit", ast->arg->name->token->str_data, "numeric argument required");
 		main_exit(ast->cleanup_data, true, ast->env, 255);
-		//exit(255);
 	}
 	else if (ast->arg && count_args(ast->arg) > 1)
 	{
@@ -51,18 +50,11 @@ void	ft_exit(t_ast *ast)
 			return ;
 		}
 		main_exit(ast->cleanup_data, true, ast->env, 1);
-		//exit(1);
 	}
 	else if (!ast->arg || count_args(ast->arg) == 0)
-	{
 		main_exit(ast->cleanup_data, true, ast->env, 0);
-		//exit(0);
-	}
 	else
-	{
 		main_exit(ast->cleanup_data, true, ast->env, ft_atoi(ast->arg->name->token->str_data));
-		//exit(ft_atoi(ast->arg->name->token->str_data));
-	}
 }
 
 typedef struct	s_cd

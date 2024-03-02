@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 07:35:36 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 08:36:49 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void	ft_pipe(t_ast *ast)
 void	create_sub_shell(t_env sub_env, char *input, t_ast *ast)
 {
 	t_ast	*sub_ast;
+	int		sub_stdio[2];
 
 	ast->pid = fork();
 	if (ast->pid)
@@ -57,7 +58,13 @@ void	create_sub_shell(t_env sub_env, char *input, t_ast *ast)
 	{
 		exit(1);
 	}
-	dup2(ast->pipe[WRITE], WRITE);
+	// dup2(ast->pipe[WRITE], WRITE);
+	sub_stdio[READ] = dup(READ);
+	sub_stdio[WRITE] = dup(WRITE);
+	reset_stdio(RESET_STDIO_CLEAN);
+	dup2(sub_stdio[READ], READ);
+	dup2(sub_stdio[WRITE], WRITE);
+	reset_stdio(RESET_STDIO_INIT);
 	if (errno)
 	{
 		print_error(true, NULL, NULL, strerror(errno));

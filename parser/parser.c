@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 23:13:27 by frapp            ###   ########.fr       */
+/*   Updated: 2024/02/25 09:01:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,35 @@ t_result	has_content(t_parser *parser)
 	return (SUCCESS);
 }
 
+
+// TODO: dosnt work: would print error for echo (echo)
+t_result	validate_command_oder(t_parser *parser)
+{
+	bool	in_command_block;
+
+	if (!parser)
+		return (ERROR);
+	in_command_block = true;
+	// if (parser->p_type != COMMAND)
+	// 	return (print_error(true, false, false, type_to_str(parser->p_type)), ERROR);
+	parser = parser->next;
+	while (parser && parser->p_type != T_EOF)
+	{
+		if ((parser->p_type == COMMAND || parser->p_type == SUBSHELL || parser->p_type == DUMMY_COMMAND) && in_command_block)
+			return (print_error(true, false, false, type_to_str(parser->p_type)), ERROR);
+		else if ((parser->p_type == COMMAND || parser->p_type == SUBSHELL || parser->p_type == DUMMY_COMMAND))
+			in_command_block = true;
+		else if (is_operator(parser->p_type) && !in_command_block)
+			return (print_error(true, false, false, type_to_str(parser->p_type)), ERROR);
+		else if (is_operator(parser->p_type))
+			in_command_block = false;
+		parser = parser->next;
+	}
+	if (!in_command_block)
+		return (print_error(true, false, false, type_to_str(T_EOF)), ERROR);
+	return (SUCCESS);
+}
+
 t_ast	*parser(char *str)
 {
 	t_parser	*parser;
@@ -131,6 +160,7 @@ t_ast	*parser(char *str)
 	if (!str)
 		return (NULL);
 	parser = init_parser(str);
+	
 	if (has_content(parser) == ERROR)
 		return (NULL);
 	trim_whitespace(parser);
@@ -144,6 +174,9 @@ t_ast	*parser(char *str)
 		return (free_parser_main(parser, true), NULL);
 	move_commands_infront(parser);
 	type_args(parser);
+	
+	if (validate_command_oder(parser) == ERROR)
+		return (free_parser_main(parser, true), NULL);
 	//system("leaks minishell");
 	return (build_ast(parser));
 }
