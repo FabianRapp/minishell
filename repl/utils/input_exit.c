@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_exit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 07:58:42 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/02 20:13:36 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,7 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 				cleanup_data->root = ast;
 			}
 			else
-			{
 				break ;
-			}
 			return (ast);
 		}
 		i++;
@@ -94,6 +92,5 @@ void	main_exit(t_cleanup_data *data, bool full_exit, t_env *env, int exit_status
 		if (data->root)
 			free_ast(data->root);
 	}
-	
 	//system("leaks minishell");
 }

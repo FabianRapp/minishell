@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 08:14:23 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/02 23:54:07 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,22 +97,53 @@ void	add_global_data(t_ast *ast, t_env *env, char **envs)
 	ast->envs = envs;
 }
 
+char	**ft_initialize_our_env(char **base_env)
+{
+	int		i;
+	char	**ret;
+
+	i = 0;
+	while (base_env[i])
+		i++;
+	ret = malloc((i + 1) * sizeof(char *));
+	if (ret == NULL)
+		return (NULL);
+	ret[i] = NULL;
+	i = -1;
+	while (base_env[++i])
+		ret[i] = ft_strdup(base_env[i]);
+	return (ret);
+}
+
 int	main(int ac, char **av, char **base_env)
 {
 	t_ast			*ast;
 	char			*input;
 	t_cleanup_data	cleanup_data;
 	t_env			env;
+	char			**our_env;
 
+	(void)av;
 	errno = 0;
-	
+	// Initializes the standard in and out file descriptors by first cleaning
+	// up and then duplicating the file descriptors for reading and writing:
 	reset_stdio(RESET_STDIO_INIT);
 	if (ac > 1)
-		return (printf("no args allowed\n"), 1);
-	(void)av;
+		return (printf("No arguments allowed\n"), 0);
 	// env.main_pid = get_pid();
 	// if (!env.main_pid)
 	// 	return (1);
+	//? my stuff:
+	our_env = ft_initialize_our_env(base_env);
+	if (our_env == NULL)
+		return (printf(ERR "malloc failed\n"), 1);
+
+	// //to test whethere i saved the env correctly:
+	// int i = -1;
+	// while(our_env[++i])
+	// 	printf("%s$\n", our_env[i]);
+	// // return (0);
+	//? my stuff:end
 	if (!init_env(&env, base_env))
 		return (1);
 	ast = get_input(&cleanup_data);

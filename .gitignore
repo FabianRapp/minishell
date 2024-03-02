@@ -1,0 +1,14 @@
+testing.c
+minishell
+.vscode
+.dist
+lexer/tempCodeRunnerFile.clexer/tempCodeRunnerFile.tempCodeRunnerFile.c
+lexer/tempCodeRunnerFile.c
+test123/*
+repl/tempCodeRunnerFile.c
+*/*.o
+*/*/*.o
+*/*/*/*.o
+
+*.a
+
