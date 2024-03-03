@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:51:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/24 22:13:26 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/03 22:39:03 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 
 char	*next_file_name(DIR *dir)
 {
-	struct 	dirent	*file;
+	struct dirent	*file;
 
 	file = readdir(dir);
-	while (file && (!ft_strcmp(file->d_name, ".") || !ft_strcmp(file->d_name, "..")))
+	while (file && (!ft_strcmp(file->d_name, ".")
+			|| !ft_strcmp(file->d_name, "..")))
 		file = readdir(dir);
 	if (!file)
 		return (NULL);

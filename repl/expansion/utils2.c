@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 13:01:55 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/03 21:44:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/03 23:29:27 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,48 +15,29 @@
 char	*expand_dollar(char *dollar_str, t_env *env, int *index)
 {
 	char	*env_var;
-	char	*str;
+	char	*return_str;
 
 	if (!*(dollar_str + 1))
-	{
-		*index += 1;
-		return (ft_strdup("$"));
-	}
+		return ((*index)++, ft_strdup("$"));
 	else if (*(dollar_str + 1) == '?')
-	{
-		*index += 2;
-		return (get_last_exit_str());
-	}
+		return_str = get_last_exit_str();
 	else if (*(dollar_str + 1) == '$')
-	{
-		*index += 2;
-		return (ft_itoa(env->main_pid));
-	}
+		return_str = ft_itoa(env->main_pid);
 	else if (ft_isdigit(*(dollar_str + 1)))
-	{
-		*index += 2;
-		return (ft_strdup(""));
-	}
+		return_str = ft_strdup("");
 	else if (ft_isalpha(*(dollar_str + 1)) || *(dollar_str + 1) == '_')
 	{
 		*index += name_len(dollar_str + 1) + 1;
-		env_var = ft_strndup(dollar_str + 1 , name_len(dollar_str + 1));
+		env_var = ft_strndup(dollar_str + 1, name_len(dollar_str + 1));
 		if (!env_var)
 			return (NULL);
-		str = ft_strdup(getenv(env_var));
-		//static int i = 0;
-		//printf("%d: %s\n", i++, str);
-		free(env_var);
-		return (str);
+		return_str = ft_strdup(getenv(env_var));
+		return (free(env_var), return_str);
 	}
-	else //
-	{
-		printf("bug in expand_dollar(): what is this char: %c\n", *dollar_str);
-		printf("and what is this: %c\n", dollar_str[1]);
-		exit(0);// debug
-		*index += 1;
-		return (ft_strdup(""));
-	}
+	else
+		return ((*index)++, ft_strdup(""));
+	*index += 2;
+	return (return_str);
 }
 
 t_result	expand_interpreted(t_token *token, t_env *env)
@@ -123,27 +104,43 @@ t_token_list	*remove_non_literals(t_token_list *list)
 	t_token_list	*head;
 	t_token_list	*last;
 
+	if (!list || errno)
+		return (NULL);
 	head = list;
 	last = NULL;
 	while (list)
 	{
 		merge_literals(list);
-		if (list->token->type != LITERAL && list->token->type != DUMMY_COMMAND && list->token->type != WILDCARD)
+		if (list->token->type != LITERAL && list->token->type
+			!= DUMMY_COMMAND && list->token->type != WILDCARD)
 		{
+			list = move_nodes_ahead(list, true);
 			if (list == head)
-			{
-				list = move_nodes_ahead(list, true);
 				head = list;
-			}
 			else
-			{
-				list = move_nodes_ahead(list, true);
 				last->next = list;
-			}
 		}
 		last = list;
 		if (list)
 			list = list->next;
 	}
 	return (head);
+}
+
+t_result	expansion_move_to_arg(t_arg **next_arg, t_token_list *list)
+{
+	t_arg	*new;
+
+	while (list && list->next)
+	{
+		new = ft_calloc(1, sizeof(t_arg));
+		if (!new)
+			return (ERROR);
+		new->name = list->next;
+		list->next = list->next->next;
+		new->name->next = NULL;
+		add_arg_front(next_arg, new);
+		next_arg = &((*next_arg)->next);
+	}
+	return (SUCCESS);
 }

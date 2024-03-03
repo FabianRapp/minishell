@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:33:33 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/03 21:46:46 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/03 22:53:00 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,16 @@ static t_result	word_split_baseclean(t_token *old, char **arr,
 	return (ERROR);
 }
 
+static t_result	handle_end(int i, t_token *old, t_token_list **list, char **arr)
+{
+	free_str_ar(arr);
+	if (i && ft_iswhitespace(old->str_data[ft_strlen(old->str_data) - 1]))
+	{
+		return (insert_whitespace_end(list));
+	}
+	return (SUCCESS);
+}
+
 t_result	word_splitting(t_token_list **list)
 {
 	char			**arr;
@@ -63,17 +73,12 @@ t_result	word_splitting(t_token_list **list)
 	while (arr[i])
 	{
 		new = create_new_node_wordsplit(arr[i], old->old_data);
-		if (!new)
-			return (word_split_baseclean(old, arr, next, NULL));
-		if ((i || ft_iswhitespace(*(old->str_data))) && insert_whitespace_before(&new) == ERROR)
-				return (word_split_baseclean(old, arr, next, new));
+		if (!new || ((i++ || ft_iswhitespace(*(old->str_data)))
+				&& insert_whitespace_before(&new) == ERROR))
+			return (word_split_baseclean(old, arr, next, new));
 		add_token_back_node(list, new);
-		i++;
 	}
-	if (i && ft_iswhitespace(old->str_data[ft_strlen(old->str_data) - 1]))
-	{
-		if (insert_whitespace_end(list) == ERROR)
-			return (word_split_baseclean(old, arr, next, NULL));
-	}
-	return (add_token_back_node(list, next), free_str_ar(arr), free_token(old), SUCCESS);
+	if (handle_end(i, old, list, arr) == ERROR)
+		return (word_split_baseclean(old, NULL, next, NULL));
+	return (add_token_back_node(list, next), free_token(old), SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 22:35:55 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/04 00:28:06 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ bool	init_path(t_path *path_ob, char *env_var)
 	path_ob->cur_path = NULL;
 	path_ob->read_postion = 0;
 	path_ob->position = 0;
-	
 	return (next_path(path_ob));
 }
 
