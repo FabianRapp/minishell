@@ -172,8 +172,7 @@ bool	expand_args(t_ast *ast, t_arg **base_arg, bool not_here_doc)
 			cur->name = expand_list_here_doc(ast->env, cur->name);
 		if (errno)
 			return (set_errno_as_exit(ast));
-		if (not_here_doc && wildcards_expand_name(cur->name) == ERROR)
-			return (set_errno_as_exit(ast));
+
 	// t_token_list	*temp2 = cur->name;
 	// while (temp2)
 	// {
@@ -185,6 +184,8 @@ bool	expand_args(t_ast *ast, t_arg **base_arg, bool not_here_doc)
 	// }
 		if (cur->name)
 			cur->name = remove_non_literals(cur->name);
+		if (not_here_doc && wildcards_expand_name(cur->name) == ERROR)
+			return (set_errno_as_exit(ast));
 	// t_token_list	*temp2 = cur->name;
 	// while (temp2)
 	// {
