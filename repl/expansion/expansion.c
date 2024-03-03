@@ -12,24 +12,26 @@
 
 #include "expansion.h"
 
-// merges the current node with the next nodes until one of them is not
-// a LITERAL node
 t_result	merge_literals(t_token_list *node)
 {
 	t_token_list	*to_free;
 
-	while (node && node->token->type == LITERAL && node->next
-		&& node->next->token->type == LITERAL)
+	while (node)
 	{
-		if (!ft_strjoin_inplace(&(node->token->str_data),
-				node->next->token->str_data))
+		while (node && node->token->type == LITERAL && node->next
+			&& node->next->token->type == LITERAL)
 		{
-			return (ERROR);
+			if (!ft_strjoin_inplace(&(node->token->str_data),
+					node->next->token->str_data))
+			{
+				return (ERROR);
+			}
+			to_free = node->next;
+			node->next = node->next->next;
+			free_token(to_free->token);
+			free(to_free);
 		}
-		to_free = node->next;
-		node->next = node->next->next;
-		free_token(to_free->token);
-		free(to_free);
+		node = node->next;
 	}
 	return (SUCCESS);
 }
@@ -102,8 +104,6 @@ t_token_list	*expand_list_normal(t_env *env, t_token_list *list)
 	list->next = expand_list_normal(env, list->next);
 	if ((list->token->type == WORD && word_splitting(&list) == ERROR) || !list)
 		return (list);
-	if (list->token->type == WORD)
-		list->token->type = LITERAL;
 	merge_literals(list);
 	return (list);
 }
@@ -133,10 +133,11 @@ t_result	expand_name(t_ast *ast)
 	ast->name = expand_list_normal(ast->env, ast->name);
 	if (errno)
 		return (set_errno_as_exit(ast));
-	if (wildcards_expand_name(ast->name) == ERROR)
-		return (ERROR);
+
 	if (ast->name)
 		ast->name = remove_non_literals(ast->name);
+	if (wildcards_expand_name(ast->name) == ERROR)
+		return (ERROR);
 	if (errno)
 		return (ERROR);
 	if (!ast->name)
@@ -173,8 +174,26 @@ bool	expand_args(t_ast *ast, t_arg **base_arg, bool not_here_doc)
 			return (set_errno_as_exit(ast));
 		if (not_here_doc && wildcards_expand_name(cur->name) == ERROR)
 			return (set_errno_as_exit(ast));
+	// t_token_list	*temp2 = cur->name;
+	// while (temp2)
+	// {
+	// 	if (temp2->token)
+	// 		printf("%s; |%s|\n", type_to_str_type(temp2->token->type), temp2->token->str_data);
+	// 	else
+	// 		printf("no token\n");
+	// 	temp2 = temp2->next;
+	// }
 		if (cur->name)
 			cur->name = remove_non_literals(cur->name);
+	// t_token_list	*temp2 = cur->name;
+	// while (temp2)
+	// {
+	// 	if (temp2->token)
+	// 		printf("%s; |%s|\n", type_to_str_type(temp2->token->type), temp2->token->str_data);
+	// 	else
+	// 		printf("no token\n");
+	// 	temp2 = temp2->next;
+	// }
 		if (errno)
 			return (set_errno_as_exit(ast));
 		if (!cur->name)//remove the current arg
@@ -202,6 +221,15 @@ bool	expand_args(t_ast *ast, t_arg **base_arg, bool not_here_doc)
 			}
 			continue ;
 		}
+	// t_token_list	*temp2 = cur->name;
+	// while (temp2)
+	// {
+	// 	if (temp2->token)
+	// 		printf("%s; |%s|\n", type_to_str_type(temp2->token->type), temp2->token->str_data);
+	// 	else
+	// 		printf("no token\n");
+	// 	temp2 = temp2->next;
+	// }
 		if (expansion_move_to_arg(&(cur->next), cur->name) == ERROR)
 			return (set_errno_as_exit(ast));
 		last = cur;

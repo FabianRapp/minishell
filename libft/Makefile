@@ -1,5 +1,6 @@
 CC=cc
-FLAGS_NO_LEAK_CHECK = -fsanitize=address -g
+FLAGS_NO_LEAK_CHECK = 
+#-fsanitize=address -g
 CFLAGS=-Wall -Wextra -Werror
 # 
 #-fsanitize=undefined 

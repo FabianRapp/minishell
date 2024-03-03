@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:52:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 16:15:30 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/02 22:33:41 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include "minishell.h"
 
 #define NAME 'n'
-#define ARG 'a'
 #define RECURSIVE_CALL 'r'
 
 typedef struct s_parser	t_parser;

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 13:01:55 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 06:11:02 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/03 21:44:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ char	*expand_dollar(char *dollar_str, t_env *env, int *index)
 		if (!env_var)
 			return (NULL);
 		str = ft_strdup(getenv(env_var));
+		//static int i = 0;
+		//printf("%d: %s\n", i++, str);
 		free(env_var);
 		return (str);
 	}
@@ -125,7 +127,8 @@ t_token_list	*remove_non_literals(t_token_list *list)
 	last = NULL;
 	while (list)
 	{
-		if (list->token->type != LITERAL && list->token->type != DUMMY_COMMAND)
+		merge_literals(list);
+		if (list->token->type != LITERAL && list->token->type != DUMMY_COMMAND && list->token->type != WILDCARD)
 		{
 			if (list == head)
 			{

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 09:01:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/02 22:32:54 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,6 @@ t_result	has_content(t_parser *parser)
 	return (SUCCESS);
 }
 
-
 // TODO: dosnt work: would print error for echo (echo)
 t_result	validate_command_oder(t_parser *parser)
 {
@@ -177,7 +176,6 @@ t_ast	*parser(char *str)
 	
 	if (validate_command_oder(parser) == ERROR)
 		return (free_parser_main(parser, true), NULL);
-	//system("leaks minishell");
 	return (build_ast(parser));
 }
 

@@ -6,13 +6,12 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/02 17:48:18 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/03 19:12:39 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
-	- var expansion inserted in next arg not cur
 	- update the old_data in the token in the str expansion correctly 
 		(">"asd"$a bash: "asd"$a: ambiguous redirect")
 	- repl/expansion/wildcards + repl/expansion/word_splitting.c errors
@@ -285,6 +284,12 @@ echo x > b.a
 cat *.a > c.a
 cat *.a > c.a
 
+
+minishell-$: <echasdqw
+minishell: NULL: echasdqw: No such file or directory
+minishell: Bad file descriptor
+minishell: Bad file descriptor
+rest_fds error
 
 (echo T && echo U && echo V) | echo W
 

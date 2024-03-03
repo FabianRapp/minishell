@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:37:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 06:28:44 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/03 00:59:36 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ t_fd_pair	redir_fd_write(char *file, bool append, int base_fd)
 		flag |= O_TRUNC;
 	fd_pair.overload_with_fd = open(file, flag, NEW_FILE_PERMISSIONS);
 	if (errno)
-		print_error(true, "NULL", file, strerror(errno));
+		print_error(true, NULL, file, strerror(errno));
 	// if (errno == EACCES)
 	// 	print_error(true, "DEBUG redir_fd_write", file, "Permission denied");
 	// else if (errno == EINTR)
@@ -68,7 +68,7 @@ t_fd_pair	redir_read(char *file, int base_fd)
 	flag = O_RDONLY;
 	fd_pair.overload_with_fd = open(file, flag);
 	if (errno)
-		print_error(true, "NULL", file, strerror(errno));
+		print_error(true, NULL, file, strerror(errno));
 	// if (errno == EACCES)
 	// 	print_error(true, "DEBUG redir_read", file, "Permission denied");
 	// else if (errno == EINTR)
@@ -189,32 +189,40 @@ t_result	resolve_redirs(t_ast *ast)
 	while (redir)
 	{
 		if (!check_valid_arg(ast, redir))
-			return (ERROR);
+			return (io_data(SET_NEW_FDS, fds), ERROR);
 		base_fd = redir->left_redir_arg;
 		if (redir->type == REDIR_OUT)
 		{
 			new_fd_pair = redir_fd_write(redir->arg->name->token->str_data, false, base_fd);
+			if (new_fd_pair.overload_with_fd == -1)
+			{// TODO error
+				return (io_data(SET_NEW_FDS, fds), ERROR);
+			}
 			fds = add_fd_pair(fds, new_fd_pair);
 			if (!fds)
-				return (ERROR);
+				return (io_data(SET_NEW_FDS, fds), ERROR);
 		}
 		else if (redir->type == REDIR_APPEND)
 		{
 			new_fd_pair = redir_fd_write(redir->arg->name->token->str_data, true, base_fd);
 			if (new_fd_pair.overload_with_fd == -1)
 			{// TODO error
-				return (ERROR);
+				return (io_data(SET_NEW_FDS, fds), ERROR);
 			}
 			fds = add_fd_pair(fds, new_fd_pair);
 			if (!fds)
-				return (ERROR);
+				return (io_data(SET_NEW_FDS, fds), ERROR);
 		}
 		else if (redir->type == REDIR_IN)
 		{
 			new_fd_pair = redir_read(redir->arg->name->token->str_data, base_fd);
+			if (new_fd_pair.overload_with_fd == -1)
+			{// TODO error
+				return (io_data(SET_NEW_FDS, fds), ERROR);
+			}
 			fds = add_fd_pair(fds, new_fd_pair);
 			if (!fds)
-				return (ERROR);
+				return (io_data(SET_NEW_FDS, fds), ERROR);
 		}
 		// TODO
 		else if (redir->type == HERE_DOC)

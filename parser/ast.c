@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 08:44:27 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/03 00:34:05 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 t_parser	*find_highest_operator(t_parser *parser)
 {
-	while (parser->p_type != AND && parser->p_type != OR && parser->p_type != T_EOF)
+	while (!is_command_block_terminator(parser->p_type))
 		parser = parser->next;
 	if (parser->p_type == T_EOF)
 		parser = parser->next;
@@ -95,11 +95,9 @@ t_token_list	*extract_token_list(t_parser *parser, char name_or_arg)
 	if (!new_list)
 		return (cleanup("extract_token_list"), NULL);
 	new_list->token = parser->token;
-	if (name_or_arg == ARG)
-		new_list->next = extract_token_list(parser->arg, RECURSIVE_CALL);
-	else if (name_or_arg == NAME)
+	if (name_or_arg == NAME)
 		new_list->next = extract_token_list(parser->rest_name, RECURSIVE_CALL);
-	else // if (name_or_arg == RECURSIVE_CALL)
+	else
 		new_list->next = extract_token_list(parser->next, RECURSIVE_CALL);
 	return (new_list);
 }
@@ -205,38 +203,47 @@ t_ast	*build_leaf_node(t_ast *ast_node, t_parser *parser)
 	return (ast_node);
 }
 
+t_result	build_operator_node(t_ast *ast_node, t_parser *highest_operator)
+{
+	t_left_right_parsers	child_parsers;
+
+	// if (highest_operator->rest_name || highest_operator->arg)
+	// {
+	// 	printf("debug: build ast wtf\n");
+	// 	exit(1);
+	// }
+	ast_node->type = highest_operator->p_type;
+	child_parsers = split_parser(highest_operator);
+	ast_node->left = build_ast(child_parsers.left);
+	if (!ast_node->left)
+		return (free_token(highest_operator->token), free(highest_operator), free_ast(ast_node), free_parser_main(child_parsers.right, true), ERROR);
+	ast_node->right = build_ast(child_parsers.right);
+	if (!ast_node->right)
+		return (free_token(highest_operator->token), free(highest_operator), free_ast(ast_node), ERROR);
+	return (free_token(highest_operator->token), free(highest_operator), SUCCESS);
+}
+
 // TODO: handle errors correctly
 t_ast *build_ast(t_parser *parser)
 {
 	t_parser				*highest_operator;
-	t_left_right_parsers	child_parsers;
+	
 	t_ast					*ast_node;
 
 	ast_node = ft_calloc(1, sizeof(t_ast));
 	if (!ast_node)
 		return (free_parser_main(parser, true), NULL);
-	if (parser->p_type != COMMAND)
-	{
-		return (print_error(true, "debug build_ast", NULL, type_to_str(parser->token->type)),
-			free_parser_main(parser, true), NULL);
-	}
+	// if (parser->p_type != COMMAND)
+	// {
+	// 	return (print_error(true, "debug build_ast", NULL, type_to_str(parser->token->type)),
+	// 		free_parser_main(parser, true), NULL);
+	// }
 	highest_operator = find_highest_operator(parser);
 	if (!highest_operator)
 		return (build_leaf_node(ast_node, parser));
-	ast_node->type = highest_operator->p_type;
-	if (highest_operator->rest_name || highest_operator->arg)
-	{
-		printf("debug: build ast wtf\n");
-		exit(1);
-	}
-	child_parsers = split_parser(highest_operator);
-	ast_node->left = build_ast(child_parsers.left);
-	if (!ast_node->left)
-		return (free_ast(ast_node), free_parser_main(child_parsers.right, true), NULL);
-	ast_node->right = build_ast(child_parsers.right);
-	if (!ast_node->right)
-		return (free_ast(ast_node), NULL);
-	return (free_token(highest_operator->token), free(highest_operator), ast_node);
+	if (build_operator_node(ast_node, highest_operator) == ERROR)
+		return (NULL);
+	return (ast_node);
 }
 
 void	free_arg_list(t_arg *list)

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:52 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 01:25:06 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/03 20:28:03 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include "../../headers/minishell.h"
 
 typedef enum e_result	t_result;
+
+t_result		merge_literals(t_token_list *node);
 
 // word_splitting.c
 t_result		word_splitting(t_token_list **list);
@@ -34,7 +36,6 @@ t_token_list	*remove_non_literals(t_token_list *list);
 char			*get_last_exit_str(void);
 
 // wildcards:
-
 typedef struct s_wildcard_parameters
 {
 	char	*prefix;
@@ -47,10 +48,10 @@ t_result		wildcards_expand_name(t_token_list *name);
 
 // repl_wildcards_utils1.c
 char			*next_file_name(DIR *dir);
-void		clean_wildcard_data(t_wildcard_parameters *data);
+void			clean_wildcard_data(t_wildcard_parameters *data);
 
 // repl_fill_wildcard_data.c
-void		fill_wildcard_data(char *wildcard_str, t_wildcard_parameters *w_para);
-bool		matches_wildcard(char *str, t_wildcard_parameters *w_para);
+void			fill_wildcard_data(char *wildcard_str, t_wildcard_parameters *w_para);
+bool			matches_wildcard(char *str, t_wildcard_parameters *w_para);
 
 #endif
