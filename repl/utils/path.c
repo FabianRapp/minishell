@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/04 00:28:06 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/04 04:17:09 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,18 +62,29 @@ bool	init_path(t_path *path_ob, char *env_var)
 	return (next_path(path_ob));
 }
 
+char	*handle_absolute_path(char *path)
+{
+		if (!access(path, X_OK))
+			return (ft_strdup(path));
+		print_error(true, path, NULL, strerror(errno));
+		errno = 0;
+		return (NULL);
+}
+
 // changes the global errno
 char	*find_path(t_ast *ast, char *command_name, char *path_env)
 {
 	t_path	path_ob;
 	char	*command_path;
 
+	if (!command_name)
+		return (NULL);
+	if (*command_name == '/' || *command_name == '.')
+		return (handle_absolute_path(command_name));
 	path_ob.ast = ast;
 	path_ob.command_name = command_name;
 	if (!init_path(&path_ob, path_env))
-	{
 		return (NULL);
-	}
 	if (!path_ob.cur_path || !*(path_ob.cur_path))
 		return (NULL);
 	while (path_ob.cur_path && *(path_ob.cur_path))

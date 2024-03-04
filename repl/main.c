@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/03 00:11:58 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/04 04:23:20 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,31 @@ bool	check_edgecases(t_ast *ast)
 	return (false);
 }
 
+// check errno when calling this
+char	*extract_command_name(char *path)
+{
+	char	*name;
+	int		i;
+	char	**arr;
+
+	if (ft_strncmp("/", path, 1) && ft_strncmp(".", path, 1) && ft_strncmp("..", path, 2))
+		return (ft_strdup(path));
+	arr = ft_split(path, '/');
+	if (!arr)
+		return (NULL);
+	i = 0;
+	while (arr[i])
+	{
+		i++;
+	}
+	if (!i)
+		return (free_str_ar(arr), NULL);
+	name = arr[i - 1];
+	arr[i - 1] = NULL;
+	free_str_ar(arr);
+	return (name);
+}
+
 void	init_child_data(t_child_data *data, t_ast *ast)
 {
 	data->path = NULL;
@@ -45,17 +70,20 @@ void	init_child_data(t_child_data *data, t_ast *ast)
 	data->path = find_path(ast, data->command_name, "PATH");
 	if (ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
-	data->argv[0] = data->path;
+	data->argv[0] = extract_command_name(data->path); // TODO: mall error
+	data->command_name = extract_command_name(data->path); // TODO: mall error
 	fill_args(ast, data->argv + 1, ARGS);
 }
 
 void	free_child_data(t_child_data *data)
 {
 	my_free((void **)&(data->argv[0]));
+	free(data->command_name);
+	free(data->argv[0]);
 	free(data->argv);
+	free(data->path);
 }
 
-// for now assumes ast to be the node of exactly one command
 void	run_command_node(t_ast *ast)
 {
 	t_child_data	data;
@@ -81,6 +109,7 @@ void	run_command_node(t_ast *ast)
 		return ;
 	}
 	execve(data.path, data.argv, ast->envs);
+	print_error("true", NULL, NULL, "execve failed\n");
 	exit(errno);
 }
 
@@ -97,6 +126,22 @@ void	add_global_data(t_ast *ast, t_env *env, char **envs)
 	ast->envs = envs;
 }
 
+
+t_result	init_main(int ac, char **av, char **base_env, t_env *env)
+{
+	errno = 0;
+	(void)av;
+	reset_stdio(RESET_STDIO_INIT);
+	if (ac > 1)
+		return (printf("no args allowed\n"), ERROR);
+	// env->main_pid = get_pid();
+	// if (!env->main_pid)
+	// 	return (1);
+	if (!init_env(env, base_env))
+		return (ERROR);
+	return (SUCCESS);
+}
+
 int	main(int ac, char **av, char **base_env)
 {
 	t_ast			*ast;
@@ -104,17 +149,8 @@ int	main(int ac, char **av, char **base_env)
 	t_cleanup_data	cleanup_data;
 	t_env			env;
 
-	errno = 0;
-	
-	reset_stdio(RESET_STDIO_INIT);
-	if (ac > 1)
-		return (printf("no args allowed\n"), 1);
-	(void)av;
-	// env.main_pid = get_pid();
-	// if (!env.main_pid)
-	// 	return (1);
-	if (!init_env(&env, base_env))
-		return (1);
+	if (init_main(ac, av, base_env, &env) == ERROR)
+		return (1);//todo: needs correct exit val
 	ast = get_input(&cleanup_data);
 	input = cleanup_data.input;
 	while (1)
@@ -130,8 +166,8 @@ int	main(int ac, char **av, char **base_env)
 			wait_all_children();
 			main_exit(&cleanup_data, false, &env, -1);
 		}
-		if (LEAK_CHECK)
-			system("leaks minishell");
+		//if (LEAK_CHECK)
+			//system("leaks minishell");
 		ast = get_input(&cleanup_data);
 		input = cleanup_data.input;
 	}

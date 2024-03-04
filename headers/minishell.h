@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/03 19:12:39 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/04 04:19:51 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,23 @@ TODO:
 	- update the old_data in the token in the str expansion correctly 
 		(">"asd"$a bash: "asd"$a: ambiguous redirect")
 	- repl/expansion/wildcards + repl/expansion/word_splitting.c errors
-	- command error show command path instead of command name (/bin/echo: write: Bad file descriptor)
 	- redir.c error hadeling
-	- add relative path  optiopns for commands
 	- env vars rework
 	- subshell lexing: sub shell error handeling if there is other invalid syntax in the subshell is diffrent
 	- parser must print syntax error and return NULL in case of error
 	- add early exits for sytax error in parser
 	- implement other ft functions
 	- implement here doc
-	- update path functions to use new error print fn
-	- change white space identification: not all whitespace is the same (mb dosnt matter since no multi line)
 
 minishell-$: (asd) (asd)
 minishell: asd: command not found
 ./test "asd >asd <sadad (asd) | >a <ad"
 debug move_commands_inform : COMMAND
 
+minishell-$: a (b)
+Segmentation fault: 11
+
+minishell-$: a(b)  : leaks
 
 	echo (asd)
 
