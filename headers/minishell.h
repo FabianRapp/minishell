@@ -6,12 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/04 04:19:51 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/04 04:57:09 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
+	- >a (b) somehow no dummy is found and subshell is moeved to front (parser)
 	- update the old_data in the token in the str expansion correctly 
 		(">"asd"$a bash: "asd"$a: ambiguous redirect")
 	- repl/expansion/wildcards + repl/expansion/word_splitting.c errors
@@ -23,13 +24,12 @@ TODO:
 	- implement other ft functions
 	- implement here doc
 
-minishell-$: (asd) (asd)
-minishell: asd: command not found
 ./test "asd >asd <sadad (asd) | >a <ad"
 debug move_commands_inform : COMMAND
 
-minishell-$: a (b)
-Segmentation fault: 11
+
+minishell-$: (echo a) && >b
+minishell: syntax error: unexpected end of file
 
 minishell-$: a(b)  : leaks
 

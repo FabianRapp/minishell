@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/02 22:32:54 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/04 04:55:58 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	type_args(t_parser *parser)
 	last_command_start = parser;
 	while (parser->p_type != T_EOF)
 	{
-		if (parser->p_type == COMMAND)
+		if (parser->p_type == COMMAND && parser->token->type != SUBSHELL)
 		{
 			move_to_arg(parser, command_terminator, ARGUMENT, true);
 		}
@@ -128,22 +128,31 @@ t_result	has_content(t_parser *parser)
 t_result	validate_command_oder(t_parser *parser)
 {
 	bool	in_command_block;
+	char	*temp;
 
 	if (!parser)
 		return (ERROR);
-	in_command_block = true;
-	// if (parser->p_type != COMMAND)
-	// 	return (print_error(true, false, false, type_to_str(parser->p_type)), ERROR);
-	parser = parser->next;
+	in_command_block = false;
+	print_parser(parser, 0);
 	while (parser && parser->p_type != T_EOF)
 	{
 		if ((parser->p_type == COMMAND || parser->p_type == SUBSHELL || parser->p_type == DUMMY_COMMAND) && in_command_block)
-			return (print_error(true, false, false, type_to_str(parser->p_type)), ERROR);
-		else if ((parser->p_type == COMMAND || parser->p_type == SUBSHELL || parser->p_type == DUMMY_COMMAND))
+		{
+			if (parser->p_type == COMMAND || parser->p_type == SUBSHELL)
+			{
+				temp = ft_strjoin("syntax error near unexpected token ", parser->token->str_data);
+				print_error(true, "", false, temp);
+				free(temp);
+			}
+			else
+				print_error(true, NULL, NULL, "Error");
+			return (ERROR);
+		}
+		if (parser->p_type == COMMAND || parser->p_type == SUBSHELL || parser->p_type == DUMMY_COMMAND)
 			in_command_block = true;
-		else if (is_operator(parser->p_type) && !in_command_block)
+		if (is_operator(parser->p_type) && !in_command_block)
 			return (print_error(true, false, false, type_to_str(parser->p_type)), ERROR);
-		else if (is_operator(parser->p_type))
+		if (is_operator(parser->p_type))
 			in_command_block = false;
 		parser = parser->next;
 	}
@@ -159,7 +168,6 @@ t_ast	*parser(char *str)
 	if (!str)
 		return (NULL);
 	parser = init_parser(str);
-	
 	if (has_content(parser) == ERROR)
 		return (NULL);
 	trim_whitespace(parser);
@@ -173,7 +181,6 @@ t_ast	*parser(char *str)
 		return (free_parser_main(parser, true), NULL);
 	move_commands_infront(parser);
 	type_args(parser);
-	
 	if (validate_command_oder(parser) == ERROR)
 		return (free_parser_main(parser, true), NULL);
 	return (build_ast(parser));
@@ -195,7 +202,6 @@ t_parser	*parser_testing(char *str)
 	remove_whitespace(parser);
 	if (parse_redir_paths(parser) == ERROR)
 		return (free_parser_main(parser, true), NULL);
-	
 	if (type_commands(parser) == ERROR)
 		return (free_parser_main(parser, true), NULL);
 	//return (parser);
