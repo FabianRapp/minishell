@@ -50,13 +50,14 @@ LIBS_NAME = $(LIBFT_NAME) $(LIB_LEXER_NAME) $(LIB_PARSER_NAME)
 
 .PHONY: all clean fclean re clean2 libs $(LIBFT) $(LIB_LEXER) $(LIB_PARSER)
 
-all: build
+all: normal
 
-build: CFLAGS += $(FLAGS_NO_LEAK_CHECK)
-build: LDFLAGS += $(FLAGS_NO_LEAK_CHECK)
-build: libs
-build: $(OBJECTS)
-build: $(NAME)
+normal: CFLAGS += $(FLAGS_NO_LEAK_CHECK)
+normal: LDFLAGS += $(FLAGS_NO_LEAK_CHECK)
+normal: $(OBJECTS) libs
+	$(CC) $(LIBS_NAME) $(OBJECTS)  -lreadline -o $(NAME) $(CFLAGS) $(LDFLAGS)
+	cp $(NAME) ../../../bash_testing
+
 $(NAME): $(OBJECTS)
 	$(CC) $(LIBS_NAME) $(OBJECTS)  -lreadline -o $(NAME) $(CFLAGS) $(LDFLAGS)
 	cp $(NAME) ../../../bash_testing

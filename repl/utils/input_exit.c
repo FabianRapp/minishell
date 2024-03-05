@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 07:58:42 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/05 07:42:21 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 	// todo: error handeling
 	//std_out = dup(WRITE);
 	//dup2(2, WRITE);
+	cleanup_data->root = NULL;
+	cleanup_data->input = NULL;
 	input = readline("minishell-$: ");
 	//dup2(std_out, WRITE);
 	if (!input)
@@ -50,14 +52,10 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 	return (NULL);
 }
 
-void	main_exit(t_cleanup_data *data, bool full_exit, t_env *env, int exit_status)
+void	main_exit(t_cleanup_data *data, bool full_exit)
 {
-	bool	main_process;
-
-	data->root->env->stop_execution = false;
-	// if (!data || !data->root)
-	// 	exit(exit_status);
-	main_process = env->main_process;
+	if (data->root && data->root->env)
+		data->root->env->stop_execution = false;
 	if (full_exit)
 	{
 		my_free((void **)&(data->input));
@@ -68,32 +66,17 @@ void	main_exit(t_cleanup_data *data, bool full_exit, t_env *env, int exit_status
 		if (LEAK_CHECK)
 			system("leaks minishell");
 		check_fds(true);
-		exit(exit_status);
+		exit(get_last_exit());
 	}
 	else if (!full_exit)
 	{
 		my_free((void **)&(data->input));
 		if (data->root)
 			free_ast(data->root);
+		data->root = NULL;
 		cleanup_fds();
 		if (LEAK_CHECK)
 			system("leaks minishell");
 		check_fds(false);
 	}
-	// else if (!main_process && full_exit)
-	// {
-	// 	exit(exit_status);
-	// }
-	// else if (!main_process)
-	// {
-	// 	exit(exit_status);
-	// }
-	else
-	{
-		my_free((void **)&(data->input));
-		if (data->root)
-			free_ast(data->root);
-	}
-	
-	//system("leaks minishell");
 }

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/04 04:23:20 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/05 07:43:09 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,6 @@ void	add_global_data(t_ast *ast, t_env *env, char **envs)
 	ast->envs = envs;
 }
 
-
 t_result	init_main(int ac, char **av, char **base_env, t_env *env)
 {
 	errno = 0;
@@ -142,6 +141,14 @@ t_result	init_main(int ac, char **av, char **base_env, t_env *env)
 	return (SUCCESS);
 }
 
+void	check_exit_and_cleanup(t_cleanup_data *cleanup_data)
+{
+	if (full_exit_status(false) == true)
+		main_exit(cleanup_data, true);
+	else
+		main_exit(cleanup_data, false);
+}
+
 int	main(int ac, char **av, char **base_env)
 {
 	t_ast			*ast;
@@ -152,6 +159,8 @@ int	main(int ac, char **av, char **base_env)
 	if (init_main(ac, av, base_env, &env) == ERROR)
 		return (1);//todo: needs correct exit val
 	ast = get_input(&cleanup_data);
+	if (!ast)
+		check_exit_and_cleanup(&cleanup_data);
 	input = cleanup_data.input;
 	while (1)
 	{
@@ -164,11 +173,14 @@ int	main(int ac, char **av, char **base_env)
 			//print_ast(ast);
 			run_node(ast);
 			wait_all_children();
-			main_exit(&cleanup_data, false, &env, -1);
+			check_exit_and_cleanup(&cleanup_data);
 		}
 		//if (LEAK_CHECK)
 			//system("leaks minishell");
 		ast = get_input(&cleanup_data);
+		//add_global_data(ast, &env, base_env);
+		if (!ast)
+			check_exit_and_cleanup(&cleanup_data);
 		input = cleanup_data.input;
 	}
 	return (0);

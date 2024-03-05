@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/04 04:08:24 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/05 08:58:27 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,30 +49,36 @@ void	create_sub_shell(t_env sub_env, char *input, t_ast *ast)
 	t_ast	*sub_ast;
 	int		sub_stdio[2];
 
-	ast->pid = fork();
-	if (ast->pid)
-		return ;
-	errno = 0;
+	sub_shell_mode(SET_SUB_SHELL);
 	sub_ast = parser(input);
-	if (!input)//TODO syntax error should be found before i think?
+	if (!sub_ast)
 	{
-		exit(1);
+		ast->exit_status = get_last_exit();
+		return ;
 	}
-	// dup2(ast->pipe[WRITE], WRITE);
+	ast->pid = fork();
+	printf("pid: %d\n", ast->pid);
+	if (errno)
+		printf("errno\n");
+	else
+	printf("no errno\n");
+	errno = 0;
+	if (ast->pid)
+	{
+		free_ast(sub_ast);
+		sub_shell_mode(UNSET_SUB_SHELL);
+		return ;
+	}
+	exit(0);
 	sub_stdio[READ] = dup(READ);
 	sub_stdio[WRITE] = dup(WRITE);
-	reset_stdio(RESET_STDIO_CLEAN);
-	dup2(sub_stdio[READ], READ);
-	dup2(sub_stdio[WRITE], WRITE);
-	reset_stdio(RESET_STDIO_INIT);
-	if (errno)
+	if (sub_stdio[READ] == -1 || sub_stdio[WRITE] == -1
+		|| reset_stdio(RESET_STDIO_CLEAN) == ERROR || dup2(sub_stdio[READ], READ) == -1
+		|| dup2(sub_stdio[WRITE], WRITE) == -1 || reset_stdio(RESET_STDIO_INIT) == ERROR)
 	{
 		print_error(true, NULL, NULL, strerror(errno));
 		exit(errno);
 	}
-	// TODO: differ between syntax and malloc parser error
-	if (!sub_ast)
-		exit(1);
 	add_global_data(sub_ast, &sub_env, ast->envs); // TODO envs
 	sub_ast->exit_status = ast->exit_status;
 	sub_ast->env = &sub_env;
@@ -93,19 +99,42 @@ void	create_sub_shell(t_env sub_env, char *input, t_ast *ast)
 void	run_subshell(t_ast *ast)
 {
 	t_env	sub_env;
+	char	*input;
 
 	if (ast->env->stop_execution && ast->exit_status == DEFAULT_EXIT_STATUS)
 		ast->exit_status = 1;
 	if (ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
 	ft_memcpy(&sub_env, ast->env, sizeof(t_env));
-	sub_env.main_process = false;
-	create_sub_shell(sub_env, ast->name->token->str_data, ast);
+	if (resolve_redirs(ast) == ERROR)
+	{
+		cleanup_fds();
+		return ;
+	}
+	redir_fds();
+	input = ast->name->token->str_data;
+	if (!input)
+	{
+		print_error(true, "DEBUG leave this error check in but it should never show (create_sub_shell)", NULL, "Error");
+		ast->exit_status = 2;
+		set_last_exit(2);
+		return ;
+	}
+	if (!*input)
+	{
+		print_error(true, NULL, NULL, "syntax error near unexpected token `)'");
+		ast->exit_status = 2;
+		set_last_exit(2);
+		exit(2);
+		return ;
+	}
+	create_sub_shell(sub_env, input, ast);
 	if (ast->pid == -1)
 	{
 		ast->exit_status = errno;
-		print_error(true, "Subshell", NULL, strerror(errno));
+		print_error(true, NULL, NULL, strerror(errno));
 	}
+	cleanup_fds();
 }
 
 // kinda workarround for wrong build ast for multiple condtions without subshell

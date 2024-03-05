@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 08:19:57 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/05 07:53:42 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,29 +32,37 @@ void	ft_pwd(t_ast *ast)
 
 void	ft_exit(t_ast *ast)
 {
-	if (ast->env->main_process)
+	if (sub_shell_mode(GET_SUB_SHELL_MODE) == false)
 		print_error(false, NULL, NULL, "exit");
 	if (ast->arg && includes_non_num(ast->arg->name->token->str_data))
 	{
 		if (ast->arg && ast->arg->name)
 			print_error(1, "exit", ast->arg->name->token->str_data, "numeric argument required");
-		main_exit(ast->cleanup_data, true, ast->env, 255);
+		set_last_exit(255);
+		main_exit(ast->cleanup_data, true);
 	}
 	else if (ast->arg && count_args(ast->arg) > 1)
 	{
 		print_error(1, "exit", ast->arg->name->token->str_data, "too many arguments");
 		ast->exit_status = 1;
-		if (ast->env->main_process)
+		if (sub_shell_mode(GET_SUB_SHELL_MODE) == true)
 		{
 			ast->env->stop_execution = true;
 			return ;
 		}
-		main_exit(ast->cleanup_data, true, ast->env, 1);
+		set_last_exit(1);
+		main_exit(ast->cleanup_data, true);
 	}
 	else if (!ast->arg || count_args(ast->arg) == 0)
-		main_exit(ast->cleanup_data, true, ast->env, 0);
+	{
+		set_last_exit(0);
+		main_exit(ast->cleanup_data, true);
+	}
 	else
-		main_exit(ast->cleanup_data, true, ast->env, ft_atoi(ast->arg->name->token->str_data));
+	{
+		set_last_exit(ft_atoi(ast->arg->name->token->str_data));
+		main_exit(ast->cleanup_data, true);
+	}
 }
 
 typedef struct	s_cd

@@ -6,13 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/04 04:57:09 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/05 08:53:30 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
-	- >a (b) somehow no dummy is found and subshell is moeved to front (parser)
+	- cleanup_fds() errno checks
 	- update the old_data in the token in the str expansion correctly 
 		(">"asd"$a bash: "asd"$a: ambiguous redirect")
 	- repl/expansion/wildcards + repl/expansion/word_splitting.c errors
@@ -142,7 +142,6 @@ typedef struct s_cleanup_data
 
 typedef struct s_env
 {
-	bool		main_process;
 	int			main_pid;
 	bool		stop_execution;
 }	t_env;
@@ -224,7 +223,23 @@ int		get_pid(void);
 // utils
 bool	my_free(void **ptr);
 
-char			*get_last_exit_str(void);
+char	*get_last_exit_str(void);
+int		get_last_exit(void);
+bool	full_exit_status(bool set_full_exit);
+
+# ifndef SET_SUB_SHELL
+#  define SET_SUB_SHELL 1
+# endif
+
+# ifndef UNSET_SUB_SHELL
+#  define UNSET_SUB_SHELL 2
+# endif
+
+# ifndef GET_SUB_SHELL_MODE
+#  define GET_SUB_SHELL_MODE 3
+# endif
+
+bool	sub_shell_mode(int flag);
 
 void	print_error(bool shell_name, char *command_name, char *arg, char *str);
 
@@ -279,6 +294,19 @@ t_parser	*parser_testing(char *str);
 
 
 /*
+
+
+bash-5.2$ echo &&
+>
+bash: syntax error: unexpected end of file
+exit
+
+bash-5.2$ (echo
+>
+bash: syntax error: unexpected end of file
+exit
+
+(echo && && echo qwe) && echo xx || echo qq | echo qqqqqq
 
 echo x > b.a
 cat *.a > c.a

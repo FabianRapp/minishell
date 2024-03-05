@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/04 04:55:58 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/05 06:48:49 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	type_args(t_parser *parser)
 	last_command_start = parser;
 	while (parser->p_type != T_EOF)
 	{
-		if (parser->p_type == COMMAND && parser->token->type != SUBSHELL)
+		if (parser->p_type == COMMAND)// && parser->token->type != SUBSHELL)
 		{
 			move_to_arg(parser, command_terminator, ARGUMENT, true);
 		}
@@ -124,6 +124,35 @@ t_result	has_content(t_parser *parser)
 	return (SUCCESS);
 }
 
+
+bool	has_redir_arg(t_parser *parser)
+{
+	t_parser	*cur_arg;
+
+	cur_arg = parser->arg;
+	while (cur_arg)
+	{
+		if (is_redir(cur_arg->p_type) || is_redir(cur_arg->token->type))
+			return (true);
+		cur_arg = cur_arg->next;
+	}
+	return (false);
+}
+
+t_parser	*has_none_redir_arg(t_parser *parser)
+{
+	t_parser	*cur_arg;
+
+	cur_arg = parser->arg;
+	while (cur_arg)
+	{
+		if (!(is_redir(cur_arg->p_type) || is_redir(cur_arg->token->type)))
+			return (cur_arg);
+		cur_arg = cur_arg->next;
+	}
+	return (NULL);
+}
+
 // TODO: dosnt work: would print error for echo (echo)
 t_result	validate_command_oder(t_parser *parser)
 {
@@ -133,31 +162,43 @@ t_result	validate_command_oder(t_parser *parser)
 	if (!parser)
 		return (ERROR);
 	in_command_block = false;
-	print_parser(parser, 0);
+	//print_parser(parser, 0);
 	while (parser && parser->p_type != T_EOF)
 	{
+		if (parser->token && parser->token->type == SUBSHELL && has_none_redir_arg(parser))
+		{
+			temp = ft_strjoin("syntax error near unexpected token ", has_none_redir_arg(parser)->token->str_data);
+			print_error(true, NULL, NULL, temp);
+			set_last_exit(2);
+			return (ERROR);
+		}
 		if ((parser->p_type == COMMAND || parser->p_type == SUBSHELL || parser->p_type == DUMMY_COMMAND) && in_command_block)
 		{
-			if (parser->p_type == COMMAND || parser->p_type == SUBSHELL)
+			if (parser->p_type == COMMAND)
 			{
 				temp = ft_strjoin("syntax error near unexpected token ", parser->token->str_data);
-				print_error(true, "", false, temp);
+				print_error(true, NULL, NULL, temp);
 				free(temp);
+			}
+			else if (parser->p_type == SUBSHELL)
+			{
+				print_error(true, "DEBUG 3", NULL, "syntax error near unexpected token `('");
 			}
 			else
 				print_error(true, NULL, NULL, "Error");
+			set_last_exit(2);
 			return (ERROR);
 		}
 		if (parser->p_type == COMMAND || parser->p_type == SUBSHELL || parser->p_type == DUMMY_COMMAND)
 			in_command_block = true;
 		if (is_operator(parser->p_type) && !in_command_block)
-			return (print_error(true, false, false, type_to_str(parser->p_type)), ERROR);
+			return (set_last_exit(2), print_error(true, "debug test123", false, type_to_str(parser->p_type)), ERROR);
 		if (is_operator(parser->p_type))
 			in_command_block = false;
 		parser = parser->next;
 	}
 	if (!in_command_block)
-		return (print_error(true, false, false, type_to_str(T_EOF)), ERROR);
+		return (set_last_exit(2), print_error(true, false, false, type_to_str(T_EOF)), ERROR);
 	return (SUCCESS);
 }
 
