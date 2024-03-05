@@ -6,33 +6,19 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 17:34:32 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/05 23:54:57 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/lexer.h"
 #include "internals.h"
 
-/*
-	for cleanup:
-	token.str has to be checked for NULL
-	if not NULL "free(token.str)" has to be called
-*/
-void	lexer_error(t_token *token)
-{
-	if (token)
-	{
-		my_free((void **)&(token->str_data));
-		my_free((void **)&(token->old_data));
-		my_free((void **)&(token));
-	}
-}
-
 t_result	valid_first_char(t_lexer *lexer)
 {
 	if (lexer->cur_char == ')')
 	{
-		print_error(true, "debug valid_first_char", NULL, "syntax error near unexpected token `)\'");
+		print_error(true, "debug valid_first_char",
+			NULL, "syntax error near unexpected token `)\'");
 		return (ERROR);
 	}
 	return (SUCCESS);
@@ -53,8 +39,6 @@ t_token	*classify_sub_str(t_token *token, t_lexer *lexer)
 		return (lexer_error(token), NULL);
 	else if (!token->type && subshell_type(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);
-	// else if (!token->type && wildcard_type(lexer, token) == ERROR)
-	// 	return (lexer_error(token), NULL);
 	else if (!token->type && literal_type2(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);
 	else if (!token->type)

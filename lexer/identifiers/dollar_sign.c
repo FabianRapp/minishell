@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 21:33:17 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 06:23:16 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/05 23:58:48 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static t_result	is_dollar_literal(t_lexer *lexer, t_token *token)
 	if (lexer->cur_char != '$')
 		return (ERROR);
 	if (ft_iswhitespace(lexer->str[lexer->position + 1])
-			|| !(lexer->str)[lexer->position + 1])
+		|| !(lexer->str)[lexer->position + 1])
 	{
 		token->type = LITERAL;
 		token->str_data = ft_strdup("$");
@@ -55,7 +55,7 @@ t_result	dollar_lexing(t_lexer *lexer, t_token *token)
 
 	if (lexer->cur_char != '$')
 		return (SUCCESS);
-	if (pid_req(lexer, token))// || void_env_type(lexer, token))
+	if (pid_req(lexer, token))
 		return (SUCCESS);
 	if (is_dollar_literal(lexer, token))
 	{
@@ -69,11 +69,9 @@ t_result	dollar_lexing(t_lexer *lexer, t_token *token)
 	if (len == 0)
 		return (SUCCESS);
 	token->type = ENV_VAR;
-	token->str_data = ft_strndup((lexer->str) + lexer->position + 1 , len);
-	if (!token->str_data)
-		return (ERROR);
-	token->old_data = ft_strdup(token->str_data);
-	if (!token->old_data)
+	token->str_data = ft_strndup((lexer->str) + lexer->position + 1, len);
+	token->old_data = ft_strndup((lexer->str) + lexer->position + 1, len);
+	if (!token->str_data || !token->old_data)
 		return (ERROR);
 	lexer->read_position = lexer->position + 1 + len;
 	return (SUCCESS);

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:37:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/03 00:59:36 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/05 09:14:08 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,30 +30,9 @@ t_fd_pair	redir_fd_write(char *file, bool append, int base_fd)
 	fd_pair.overload_with_fd = open(file, flag, NEW_FILE_PERMISSIONS);
 	if (errno)
 		print_error(true, NULL, file, strerror(errno));
-	// if (errno == EACCES)
-	// 	print_error(true, "DEBUG redir_fd_write", file, "Permission denied");
-	// else if (errno == EINTR)
-	// 	print_error(true, "DEBUG redir_fd_write", file, "Signal interupt");
-	// else if (errno == EIO)
-	// 	print_error(true, "DEBUG redir_fd_write", file, "Error writing to file");
-	// else if (errno == EISDIR)
-	// 	print_error(true, "DEBUG redir_fd_write", file, "Is a directory");
-	// else if (errno == EMFILE)
-	// 	print_error(true, "DEBUG redir_fd_write", file, "Too many open files");
-	// else if (errno == ENAMETOOLONG)
-	// 	print_error(true, "DEBUG redir_fd_write", file, "File name too long");
-	// else if (errno == ENOENT)
-	// 	print_error(true, "DEBUG redir_fd_write", file, "No such file or directory");
-	// else if (errno == ENOTDIR)
-	// 	print_error(true, "DEBUG redir_fd_write", file, "Not a directory");
-	// else if (errno)
-	// 	print_error(true, "DEBUG redir_fd_write else", file, strerror(errno));
 	errno = 0;
 	return (fd_pair);
 }
-
-
-
 
 t_fd_pair	redir_read(char *file, int base_fd)
 {
@@ -69,22 +48,6 @@ t_fd_pair	redir_read(char *file, int base_fd)
 	fd_pair.overload_with_fd = open(file, flag);
 	if (errno)
 		print_error(true, NULL, file, strerror(errno));
-	// if (errno == EACCES)
-	// 	print_error(true, "DEBUG redir_read", file, "Permission denied");
-	// else if (errno == EINTR)
-	// 	print_error(true, "DEBUG redir_read", file, "Signal interupt");
-	// else if (errno == EIO)
-	// 	print_error(true, "DEBUG redir_read", file, "Error reading from file"); 
-	// else if (errno == EISDIR)
-	// 	print_error(true, "DEBUG redir_read", file, "Is a directory");
-	// else if (errno == EMFILE)
-	// 	print_error(true, "DEBUG redir_read", file, "Too many open files");
-	// else if (errno == ENOENT)
-	// 	print_error(true, "DEBUG redir_read", file, "No such file or directory");
-	// else if (errno == ENOTDIR)
-	// 	print_error(true, "DEBUG redir_read", file, "Not a directory");
-	// else if (errno)
-	// 	print_error(true, "DEBUG redir_read", file, strerror(errno));
 	errno = 0;
 	return (fd_pair);
 }
