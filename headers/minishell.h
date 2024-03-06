@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 02:22:15 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 04:01:53 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -314,12 +314,12 @@ cat *.a > c.a
 cat *.a > c.a
 
 
-(echo A > output.txt && (B 2> error.log || echo C >> output.txt) && (D | (echo E && F >> output.txt))) || (echo G && (echo H | I 2>> error.log)) && ((echo J || K > /dev/null) && echo L >> output.txt) | (echo M && (echo N || O < input.txt) && (echo P || (Q >> output.txt && echo R))) || echo S && ((T && echo U > output.txt) || echo V) | (echo W || X 2> error.log) && echo Y || (echo Z && AA >> output.txt) || echo AB && (echo AC || echo AD < input.txt) && (echo AE | AF > output.txt && echo AG)
+(echo A > output.txt && (B 2> error.log || echo C >> output.txt) && (D | (echo E && F >> output.txt))) || (echo G && (echo H | I 2>> error.log)) && ((echo J || K > error.log) && echo L >> output.txt) | (echo M && (echo N || O < input.txt) && (echo P || (Q >> output.txt && echo R))) || echo S && ((T && echo U > output.txt) || echo V) | (echo W || X 2> error.log) && echo Y || (echo Z && AA >> output.txt) || echo AB && (echo AC || echo AD < input.txt) && (echo AE | AF > output.txt && echo AG)
 
 
 
 
-
+((A > output.txt && (B 2> error.log || echo C >> output.txt) && (D | (echo E && F >> output.txt))) || (echo G && (echo H | I 2>> error.log)) && ((echo J || K > error.log) && echo L >> output.txt) | (echo M && (echo N || O < input.txt) && (echo P || (Q >> output.txt && echo R))) || echo S && ((T && echo U > output.txt) || echo V) | (echo W || X 2> error.log) && echo Y || (echo Z && AA >> output.txt) || echo AB && (echo AC || echo AD < input.txt) && (echo AE | AF > output.txt && echo AG)) 2>eb >ob
 
 minishell-$: <echasdqw
 minishell: NULL: echasdqw: No such file or directory
@@ -336,13 +336,13 @@ env | sort | grep -v SHLVL | grep -v ^_ | cat >b
 (echo B || echo C) && (echo D | (echo E && echo F)) || (echo G && (echo H | echo I)) && ((echo J || echo K) && echo L) | (echo M && (echo N || echo O)) && (echo P || (echo Q && echo R)) || echo S && ((echo T && echo U) || echo V) | (echo W || echo X) && echo Y || (echo Z && echo AA) || echo AB && (echo AC || echo AD) && (echo AE | echo AF && echo AG)
 
 
-(echo A > output.txt && (B 2> error.log || echo C >> output.txt) && (D | (echo E && F >> output.txt))) || (echo G && (echo H | I 2>> error.log)) && ((echo J || K > /dev/null) && echo L >> output.txt) | (echo M && (echo N || O < input.txt) && (echo P || (Q >> output.txt && echo R))) || echo S && ((T && echo U > output.txt) || echo V) | (echo W || X 2> error.log) && echo Y || (echo Z && AA >> output.txt) || echo AB && (echo AC || echo AD < input.txt) && (echo AE | AF > output.txt && echo AG)
+(echo A > output.txt && (B 2> error.log || echo C >> output.txt) && (D | (echo E && F >> output.txt))) || (echo G && (echo H | I 2>> error.log)) && ((echo J || K > error.log) && echo L >> output.txt) | (echo M && (echo N || O < input.txt) && (echo P || (Q >> output.txt && echo R))) || echo S && ((T && echo U > output.txt) || echo V) | (echo W || X 2> error.log) && echo Y || (echo Z && AA >> output.txt) || echo AB && (echo AC || echo AD < input.txt) && (echo AE | AF > output.txt && echo AG)
 
 
 (echo B) && echo D 
 
 
-(echo A > output.txt && (B 2> error.log || echo C >> output.txt) && (D | (echo E && F >> output.txt))) || (echo G && (echo H | I 2>> error.log)) && ((echo J || K > /dev/null) && echo L >> output.txt) | (echo M && (echo N || O < input.txt) && (echo P || (Q >> output.txt && echo R))) || echo S && ((T && echo U > output.txt) || echo V) | (echo W || X 2> error.log) && echo Y || (echo Z && AA >> output.txt) || echo AB && (echo AC || echo AD < input.txt) && (echo AE | AF > output.txt && echo AG)
+(echo A > output.txt && (B 2> error.log || echo C >> output.txt) && (D | (echo E && F >> output.txt))) || (echo G && (echo H | I 2>> error.log)) && ((echo J || K > error.log) && echo L >> output.txt) | (echo M && (echo N || O < input.txt) && (echo P || (Q >> output.txt && echo R))) || echo S && ((T && echo U > output.txt) || echo V) | (echo W || X 2> error.log) && echo Y || (echo Z && AA >> output.txt) || echo AB && (echo AC || echo AD < input.txt) && (echo AE | AF > output.txt && echo AG)
 
 (echo A > output.txt && (B 2> error.log || echo C >> output.txt) && (D | (echo E && F >> output.txt)))
 

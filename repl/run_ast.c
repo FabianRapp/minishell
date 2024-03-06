@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 02:23:37 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 04:09:42 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,6 +208,7 @@ void	ft_and(t_ast *ast)
 
 void	init_command(t_ast *ast)
 {
+	
 	if (ast->env->stop_execution)
 	{
 		ast->exit_status = 1;
@@ -224,10 +225,14 @@ void	init_command(t_ast *ast)
 		cleanup_fds();
 		return ;
 	}
+	
 	if (ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
+	
 	redir_fds();
+	
 	run_command_node(ast);
+	
 	cleanup_fds();
 	set_last_exit(ast->exit_status);
 }
@@ -247,6 +252,8 @@ void	run_node(t_ast *ast)
 		if (ast->name && ast->name->token->type == SUBSHELL)
 			run_subshell(ast);
 		else if (ast->type == COMMAND)
+		{
 			init_command(ast);
+		}
 	}
 }

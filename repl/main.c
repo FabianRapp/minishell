@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 02:22:37 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 04:16:44 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,16 +59,20 @@ char	*extract_command_name(char *path)
 
 void	init_child_data(t_child_data *data, t_ast *ast)
 {
+	
+	data->argv = NULL;
 	data->path = NULL;
-	data->command_name = ast->name->token->str_data;
+	data->command_name = NULL;
 	data->argv = ft_calloc(count_args(ast->arg) + 2, sizeof (char *const));
 	if (!data->argv)
 	{
 		ast->exit_status = errno;
 		return ;
 	}
+	data->command_name = ast->name->token->str_data;
 	data->path = find_path(ast, data->command_name, "PATH");
-	if (ast->exit_status != DEFAULT_EXIT_STATUS)
+	data->command_name = NULL;
+	if (!data->path || ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
 	data->argv[0] = extract_command_name(data->path); // TODO: mall error
 	data->command_name = extract_command_name(data->path); // TODO: mall error
@@ -91,8 +95,11 @@ void	run_command_node(t_ast *ast)
 	if (check_edgecases(ast))
 		return ;
 	init_child_data(&data, ast);
-	if (ast->exit_status != DEFAULT_EXIT_STATUS)
+	if (!data.path || ast->exit_status != DEFAULT_EXIT_STATUS)
+	{
+		free_child_data(&data);
 		return ;
+	}
 	ast->pid = fork();
 	if (ast->pid == -1)
 	{
@@ -172,6 +179,7 @@ int	main(int ac, char **av, char **base_env)
 			ast->cleanup_data = &cleanup_data;
 			//print_ast(ast);
 			run_node(ast);
+			// system("leaks minishell");
 			wait_all_children();
 			check_exit_and_cleanup(&cleanup_data);
 		}

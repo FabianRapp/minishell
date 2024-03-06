@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/05 02:29:20 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 03:17:12 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -325,6 +325,7 @@ void	free_token(t_token *token)
 		return ;
 	my_free((void **)&(token->str_data));
 	my_free((void **)&(token->old_data));
+	my_free((void **)&(token->left_redir_arg));
 	free(token);
 }
 
