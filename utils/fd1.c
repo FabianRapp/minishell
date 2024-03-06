@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 07:42:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 07:20:01 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 09:20:50 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ t_fd_pair	*io_data(int flag, void *data)
 	if (flag == SET_NEW_FDS)
 	{
 		if (fds)
-			reset_fds();
+			cleanup_fds();
 		fds = (t_fd_pair *)data;
 	}
 	else if (flag == CLEANUP_FDS)
@@ -40,7 +40,10 @@ t_result	redir_fds(void)
 	{
 		dup2(fds[i].overload_with_fd, fds[i].base_fd);
 		if (errno)
+		{
+			errno = 0;
 			return (print_error(true, NULL, NULL, strerror(errno)), ERROR);
+		}
 		i++;
 	}
 	//printf("AFTER redir_fds():\n");

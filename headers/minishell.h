@@ -6,12 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 09:00:39 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 09:39:40 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
+	- leaking fd: echo 123>a (123 is leaking somehow, where is it even opend?)
 	- make insert_token() return value and error handeling mor clear
 	- cleanup_fds() return val checks
 	- update the old_data in the token in the str expansion correctly 

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:37:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 09:05:36 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 09:32:00 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,8 @@ t_result	find_and_replace_existing(t_fd_pair *fds, int base_fd, int overload_wit
 	{
 		if (fds[i].base_fd == base_fd)
 		{
-			close(fds[i].overload_with_fd);
+			if (close(fds[i].overload_with_fd) == -1)
+				return (ERROR);
 			fds[i].overload_with_fd = overload_with_fd;
 			return (SUCCESS);
 		}
@@ -106,21 +107,39 @@ int	extend_fd_array(t_fd_pair **fds)
 	return (len);
 }
 
+static void	*add_fd_pair_error(t_fd_pair *fds, t_fd_pair new_fd_pair)
+{
+	set_last_exit(errno);
+	print_error(true, NULL, NULL, strerror(errno));
+	errno = 0;
+	if (new_fd_pair.overload_with_fd != INIT_VAL)
+		close(new_fd_pair.overload_with_fd);
+	if (new_fd_pair.base_fd_backup != INIT_VAL)
+		close(new_fd_pair.base_fd_backup);
+	io_data(SET_NEW_FDS, fds);
+	cleanup_fds();
+	return (NULL);
+}
+
 t_fd_pair *add_fd_pair(t_fd_pair *fds, t_fd_pair new_fd_pair)
 {
 	int	len;
 
+	errno = 0;
 	if (find_and_replace_existing(fds, new_fd_pair.base_fd, new_fd_pair.overload_with_fd) == SUCCESS)
 		return (fds);
+	if (errno)
+		return (add_fd_pair_error(fds, new_fd_pair));
 	len = extend_fd_array(&fds);
 	if (len == -1)
-		return (NULL);
+	{
+		return (add_fd_pair_error(fds, new_fd_pair));
+	}
 	errno = 0;
 	fds[len].base_fd_backup = dup(fds[len].base_fd);
 	if (errno)
-	{//TODO add error handeling
-		print_error(true, NULL, NULL, strerror(errno));
-		exit(errno);
+	{
+		return (add_fd_pair_error(fds, new_fd_pair));
 	}
 	fds[len].base_fd = new_fd_pair.base_fd;
 	fds[len].overload_with_fd = new_fd_pair.overload_with_fd;
@@ -152,40 +171,34 @@ t_result	resolve_redirs(t_ast *ast)
 	while (redir)
 	{
 		if (!check_valid_arg(ast, redir))
-			return (io_data(SET_NEW_FDS, fds), ERROR);
+			return (io_data(SET_NEW_FDS, NULL), ERROR);
 		base_fd = redir->left_redir_arg;
 		if (redir->type == REDIR_OUT)
 		{
 			new_fd_pair = redir_fd_write(redir->arg->name->token->str_data, false, base_fd);
 			if (new_fd_pair.overload_with_fd == -1)
-			{// TODO error
-				return (io_data(SET_NEW_FDS, fds), ERROR);
-			}
+				return (io_data(SET_NEW_FDS, NULL), ERROR);
 			fds = add_fd_pair(fds, new_fd_pair);
 			if (!fds)
-				return (io_data(SET_NEW_FDS, fds), ERROR);
+				return (io_data(SET_NEW_FDS, NULL), ERROR);
 		}
 		else if (redir->type == REDIR_APPEND)
 		{
 			new_fd_pair = redir_fd_write(redir->arg->name->token->str_data, true, base_fd);
 			if (new_fd_pair.overload_with_fd == -1)
-			{// TODO error
-				return (io_data(SET_NEW_FDS, fds), ERROR);
-			}
+				return (io_data(SET_NEW_FDS, NULL), ERROR);
 			fds = add_fd_pair(fds, new_fd_pair);
 			if (!fds)
-				return (io_data(SET_NEW_FDS, fds), ERROR);
+				return (io_data(SET_NEW_FDS, NULL), ERROR);
 		}
 		else if (redir->type == REDIR_IN)
 		{
 			new_fd_pair = redir_read(redir->arg->name->token->str_data, base_fd);
 			if (new_fd_pair.overload_with_fd == -1)
-			{// TODO error
-				return (io_data(SET_NEW_FDS, fds), ERROR);
-			}
+				return (io_data(SET_NEW_FDS, NULL), ERROR);
 			fds = add_fd_pair(fds, new_fd_pair);
 			if (!fds)
-				return (io_data(SET_NEW_FDS, fds), ERROR);
+				return (io_data(SET_NEW_FDS, NULL), ERROR);
 		}
 		// TODO
 		else if (redir->type == HERE_DOC)

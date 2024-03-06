@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 08:37:21 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 09:42:29 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,10 @@ t_result	init_main(int ac, char **base_env, t_env *env)
 {
 	errno = 0;
 	if (ac > 2)
-		return (printf("max one arg allowed\n"), ERROR);
+	{
+		print_error(true, NULL, NULL, "max one arg allowed");
+		exit(1);
+	}
 	// env->main_pid = get_pid();
 	// if (!env->main_pid)
 	// 	return (1);

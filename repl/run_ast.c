@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 08:37:17 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 09:12:15 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,24 +48,19 @@ void	ft_or(t_ast *ast)
 	bool	success_left;
 
 	if (ast->exit_status != DEFAULT_EXIT_STATUS)
-	{
-		//printf("or gives this exit to left node: %d\n", ast->exit_status);
 		ast->left->exit_status = ast->exit_status;
-	}
 	else
 	{
 		run_node(ast->left);
 		if (ast->left->exit_status == DEFAULT_EXIT_STATUS)
 		{
-			//printf("or waiting pid\n");
 			waitpid(ast->left->pid, &(ast->left->exit_status), 0);
 			ast->left->exit_status = WEXITSTATUS(ast->left->exit_status);
 		}
 	}
 	set_last_exit(ast->left->exit_status);//TODO mb out this behind a condtion so it only updates for process nodes not operators
-	//printf("OR: left exit: %d (cur type: %s)\n", ast->left->exit_status, type_to_str_type(ast->type));
 	success_left = !((bool)ast->left->exit_status);
-	if (success_left)//if left had no error
+	if (success_left)
 		ast->right->exit_status = 0;
 	run_node(ast->right);
 	if (ast->right->exit_status == DEFAULT_EXIT_STATUS)
@@ -92,16 +87,10 @@ void	ft_and(t_ast *ast)
 			waitpid(ast->left->pid, &(ast->left->exit_status), 0);
 			ast->left->exit_status = WEXITSTATUS(ast->left->exit_status);
 		}
-		// if (ast->left->exit_status > 0)
-		// {
-		// 	ast->exit_status = ast->left->exit_status;
-		// 	ast->right->exit_status = ast->left->exit_status;
-		// }
 	}
 	set_last_exit(ast->left->exit_status);//TODO mb out this behind a condtion so it only updates for process nodes not operators
-	//printf("AND: logical left exit: %d (cur type: %s)\n", ast->left->exit_status, type_to_str_type(ast->type));
 	success_left = !((bool)ast->left->exit_status);
-	if (!success_left)//if left had an error
+	if (!success_left)
 		ast->right->exit_status = ast->left->exit_status;
 	run_node(ast->right);
 	if (ast->right->exit_status == DEFAULT_EXIT_STATUS)
@@ -111,8 +100,6 @@ void	ft_and(t_ast *ast)
 	}
 	set_last_exit(ast->right->exit_status);//TODO mb out this behind a condtion so it only updates for process nodes not operators
 	ast->exit_status = ast->right->exit_status;
-	//printf("AND: logical right exit: %d (cur type: %s)\n", ast->right->exit_status, type_to_str_type(ast->type));
-	//printf("AND: RESULT : %d\n", ast->exit_status);
 }
 
 void	init_command(t_ast *ast)

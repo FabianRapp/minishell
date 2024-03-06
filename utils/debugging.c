@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 07:01:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 08:38:09 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 09:34:32 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	check_fds(void)
 	{
 		if (fcntl(fd, F_GETFD) != -1) // TODO: DEBUG: unallowed function for debugging and finding leaks (fcntl)
 		{
+			printf("%d is open(fd)\n", fd);
 			open_fd_count++;
 		}
 		fd++;
@@ -31,7 +32,10 @@ void	check_fds(void)
 	errno = prev_errno;
 	//if (LEAK_CHECK)// if some how dosnt work
 	if (open_fd_count)
+	{
 		printf("open fds: %d\n", open_fd_count);
+		print_fds();
+	}
 }
 
 void print_colored(const char *text, int color_index)
