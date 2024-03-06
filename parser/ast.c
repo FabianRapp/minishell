@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/03 00:34:05 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 02:21:44 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 t_parser	*find_highest_operator(t_parser *parser)
 {
-	while (!is_command_block_terminator(parser->p_type))
+	while (!is_command_block_terminator(parser->p_type) || parser->p_type == PIPE)
 		parser = parser->next;
 	if (parser->p_type == T_EOF)
 		parser = parser->next;
@@ -67,21 +67,107 @@ t_parser	*remove_back(t_parser *cut_location)
 	return (right_head);
 }
 
+t_parser	*unlink_left_get_left(t_parser *cut_location)
+{
+	t_parser	*left_head;
+	t_parser	*left_last;
+	t_parser	*temp;
+	t_token		*left_eof_token;
+
+	left_head = cut_location;
+	jump_to_start(&left_head);
+	if (left_head == cut_location)
+	{
+		print_error(true, NULL, NULL, type_to_str(cut_location->p_type));
+		set_last_exit(2);
+		return (NULL);
+	}
+	left_last = last_parser(cut_location);
+	left_eof_token = ft_calloc(1, sizeof(t_token));
+	if (!left_eof_token)
+		return (NULL);
+	left_eof_token->type = T_EOF;
+	if (!insert_token(&left_last, left_eof_token))
+	{
+		free(left_eof_token);
+		return (NULL);
+	}
+	left_last->next = left_head;
+	temp = cut_location;
+	while (temp->next && temp->p_type != T_EOF)
+		temp = temp->next;
+	temp->next = cut_location;
+	return (left_head);
+}
+
+t_parser	*unlink_right_get_right(t_parser *cut_location)
+{
+	t_parser	*right_head;
+	t_parser	*right_end;
+	t_token		*eof_token;
+	t_parser	*temp;
+
+	right_head = cut_location->next;
+	if (right_head == cut_location || cut_location->p_type == T_EOF)
+		return (NULL);
+	right_end = right_head;
+	while (right_end->p_type != T_EOF)
+		right_end = right_end->next;
+	right_end->next = right_head;
+	eof_token = ft_calloc(1, sizeof(t_token));
+	temp = cut_location;
+	if (!eof_token || !insert_token(&cut_location, eof_token))
+	{
+		right_end->next = temp;
+		return (NULL);
+	}
+	cut_location = temp;
+	eof_token->type = T_EOF;
+	cut_location->next->next = cut_location;
+	return (right_head);
+}
+
 t_left_right_parsers	split_parser(t_parser *split_location)
 {
 	t_left_right_parsers	new_parsers;
 
 	if (split_location->next == split_location 
 		|| (split_location->next->p_type == T_EOF && split_location->next->next == split_location))
+	{
 		new_parsers.left = NULL;
+		new_parsers.right = NULL;
+	}
 	else
 	{
-		new_parsers.left = split_location;
-		jump_to_start(&(new_parsers.left));
+		new_parsers.left = unlink_left_get_left(split_location);
+		new_parsers.right = unlink_right_get_right(split_location);
 	}
-	new_parsers.right = remove_back(split_location);
+	if (new_parsers.left == NULL || new_parsers.right == NULL)
+	{
+		free_parser_main(new_parsers.left, true);
+		free_parser_main(new_parsers.right, true);
+		free_parser_main(split_location, true);
+		new_parsers.left = NULL;
+		new_parsers.right = NULL;
+	}
 	return (new_parsers);
 }
+
+// t_left_right_parsers	split_parser(t_parser *split_location)
+// {
+// 	t_left_right_parsers	new_parsers;
+
+// 	if (split_location->next == split_location 
+// 		|| (split_location->next->p_type == T_EOF && split_location->next->next == split_location))
+// 		new_parsers.left = NULL;
+// 	else
+// 	{
+// 		new_parsers.left = split_location;
+// 		jump_to_start(&(new_parsers.left));
+// 	}
+// 	new_parsers.right = remove_back(split_location);
+// 	return (new_parsers);
+// }
 
 // does not clean up the parser
 // uses tokens of parser -->> dont free tokens when freeing parser
@@ -114,7 +200,7 @@ t_arg	*append_arg(t_parser *parser, t_arg *head_arg, bool leading_node)
 	{
 		head_arg = ft_calloc(1, sizeof(t_arg));
 		if (!head_arg)
-			return (cleanup("extract_token_list"), NULL);
+			return (NULL);
 		cur = head_arg;
 	}
 	else
@@ -187,15 +273,15 @@ t_ast	*build_leaf_node(t_ast *ast_node, t_parser *parser)
 		}
 		else if (args->p_type == ARGUMENT)
 		{
-			ast_node->arg = append_arg(args, ast_node->arg, true); //TODO does this even run?
+			ast_node->arg = append_arg(args, ast_node->arg, true);
 			if (!ast_node->arg)
 				return (free_parser_main(parser, true), free_ast(ast_node), NULL);
 		}
 		else
 		{
-			printf("build ast debug:\n");
-			print_token(args->token, args, 2);
-			//exit(0);
+			print_error(true, "dubg (should not show)", "parser build_leaf_node", type_to_str(args->token->type));
+			set_last_exit(2);
+			return (free_parser_main(parser, true), free_ast(ast_node), NULL);
 		}
 		args = args->next;
 	}
@@ -214,6 +300,8 @@ t_result	build_operator_node(t_ast *ast_node, t_parser *highest_operator)
 	// }
 	ast_node->type = highest_operator->p_type;
 	child_parsers = split_parser(highest_operator);
+	if (!child_parsers.left || !child_parsers.right)
+		return (ERROR);
 	ast_node->left = build_ast(child_parsers.left);
 	if (!ast_node->left)
 		return (free_token(highest_operator->token), free(highest_operator), free_ast(ast_node), free_parser_main(child_parsers.right, true), ERROR);

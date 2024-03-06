@@ -6,11 +6,12 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 21:18:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 21:55:56 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 00:33:20 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/libft.h"
+#include "../headers/minishell.h"
 
 // minishell
 static void	print_error_calloc(bool shell_name, char *command_name, char *arg, char *str)
@@ -37,7 +38,7 @@ void	*ft_calloc(size_t count, size_t size)
 	if (!arr)
 	{
 		print_error_calloc(true, NULL,"Error", "Memory allocation failed");
-		//set_last_exit(errno);
+		set_last_exit(errno);
 		return (NULL);
 	}
 	i = 0;

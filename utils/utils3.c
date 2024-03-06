@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/09 19:27:17 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/05 07:57:12 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 00:33:40 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,6 @@ bool	full_exit_status(bool set_full_exit)
 		full_exit = true;
 	return (full_exit);
 }
-
-
 
 bool	sub_shell_mode(int flag)
 {

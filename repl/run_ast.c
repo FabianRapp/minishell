@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/05 08:58:27 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 02:23:37 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,6 @@ void	create_sub_shell(t_env sub_env, char *input, t_ast *ast)
 		return ;
 	}
 	ast->pid = fork();
-	printf("pid: %d\n", ast->pid);
-	if (errno)
-		printf("errno\n");
-	else
-	printf("no errno\n");
 	errno = 0;
 	if (ast->pid)
 	{
@@ -69,7 +64,6 @@ void	create_sub_shell(t_env sub_env, char *input, t_ast *ast)
 		sub_shell_mode(UNSET_SUB_SHELL);
 		return ;
 	}
-	exit(0);
 	sub_stdio[READ] = dup(READ);
 	sub_stdio[WRITE] = dup(WRITE);
 	if (sub_stdio[READ] == -1 || sub_stdio[WRITE] == -1
@@ -143,7 +137,10 @@ void	ft_or(t_ast *ast)
 	bool	success_left;
 
 	if (ast->exit_status != DEFAULT_EXIT_STATUS)
+	{
+		//printf("or gives this exit to left node: %d\n", ast->exit_status);
 		ast->left->exit_status = ast->exit_status;
+	}
 	else
 	{
 		run_node(ast->left);
@@ -186,6 +183,11 @@ void	ft_and(t_ast *ast)
 			waitpid(ast->left->pid, &(ast->left->exit_status), 0);
 			ast->left->exit_status = WEXITSTATUS(ast->left->exit_status);
 		}
+		// if (ast->left->exit_status > 0)
+		// {
+		// 	ast->exit_status = ast->left->exit_status;
+		// 	ast->right->exit_status = ast->left->exit_status;
+		// }
 	}
 	set_last_exit(ast->left->exit_status);//TODO mb out this behind a condtion so it only updates for process nodes not operators
 	//printf("AND: logical left exit: %d (cur type: %s)\n", ast->left->exit_status, type_to_str_type(ast->type));
