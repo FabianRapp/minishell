@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 04:01:53 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 07:09:02 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,7 +206,7 @@ t_lexer		new_lexer(char *str);
 // main
 void	run_node(t_ast *ast);
 void	run_command_node(t_ast *ast);
-
+char	*extract_command_name(char *path);
 bool	check_edgecases(t_ast *ast);
 void	add_global_data(t_ast *ast, t_env *env, char **envs);
 
@@ -266,11 +266,7 @@ t_result	reset_fds(void);
 t_fd_pair	*get_fds(void);
 t_result	cleanup_fds(void);
 
-#  define RESET_STDIO_INIT 0
-#  define RESET_STDIO 1
-#  define RESET_STDIO_CLEAN 2
-#  define RESET_STDIO_GET_VALS 3
-t_result	reset_stdio(int flag);
+void	print_fds(void);
 
 # ifndef FD_REQUEST_SKIP
 #  define FD_REQUEST_SKIP -1
@@ -346,7 +342,7 @@ env | sort | grep -v SHLVL | grep -v ^_ | cat >b
 
 (echo A > output.txt && (B 2> error.log || echo C >> output.txt) && (D | (echo E && F >> output.txt)))
 
-(echo A && (B || echo C) && (D | (echo E && F))) || (echo G && (echo H | I)) && ((echo J || K) && echo L) | (echo M && (echo N || O)) && (echo P || (Q && echo R)) || echo S && ((T && echo U) || echo V) | (echo W || X) && echo Y || (echo Z && AA) || echo AB && (echo AC || echo AD) && (echo AE | AF && echo AG)
+((echo A && (B || echo C) && (D | (echo E && F))) || (echo G && (echo H | I)) && ((echo J || K) && echo L) | (echo M && (echo N || O)) && (echo P || (Q && echo R)) || echo S && ((T && echo U) || echo V) | (echo W || X) && echo Y || (echo Z && AA) || echo AB && (echo AC || echo AD) && (echo AE | AF && echo AG)) 2>a
 
 I && echo L | O || echo XXX
 

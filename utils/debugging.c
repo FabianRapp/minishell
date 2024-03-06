@@ -6,43 +6,27 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 07:01:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/05 05:21:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 07:12:02 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/lexer.h"
 #include "../headers/parser.h"
 
-void	check_fds(bool check_all)
+void	check_fds(void)
 {
-	int		reset_fds[2];
-	int		temp;
 	int		fd;
 	int		open_fd_count = 0;
 
 	int prev_errno = errno;
-
-	temp = reset_stdio(RESET_STDIO_GET_VALS);
-	reset_fds[READ] = temp % 1000;
-	reset_fds[WRITE] = (temp - reset_fds[READ]) / 1000;
 	fd = 3;
 	while (fd < OPEN_MAX)
 	{
-		if (!check_all && (fd == reset_fds[READ] || fd == reset_fds[WRITE]))
-		{
-			fd++;
-			continue ;
-		}
 		if (fcntl(fd, F_GETFD) != -1) // unallowed function for debugging and finding leaks (fcntl)
 		{
-			if (fd == reset_fds[READ] || fd == reset_fds[WRITE])
-				printf("rest fd is leaking (%d)\n", fd);
-			else
-				printf("File descriptor %d is open\n", fd);
 			open_fd_count++;
 		}
 		fd++;
-		
 	}
 	errno = prev_errno;
 	//if (LEAK_CHECK)// if some how dosnt work

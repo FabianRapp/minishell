@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 04:03:59 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 04:19:53 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,16 +271,13 @@ t_result	build_operator_node(t_ast *ast_node, t_parser *highest_operator)
 		return (ERROR);
 	ast_node->left = build_ast(child_parsers.left);
 	if (!ast_node->left)
-		//return (free_parser_main(highest_operator, true),
-return (
+		return (free_parser_main(highest_operator, true),
 			free_ast(ast_node), free_parser_main(child_parsers.right, true), ERROR);
 	ast_node->right = build_ast(child_parsers.right);
 	if (!ast_node->right)
-		//return (free_parser_main(highest_operator, true),
-return (
+		return (free_parser_main(highest_operator, true),
 			free_ast(ast_node), ERROR);
-	//return (free_parser_main(highest_operator, true),
-return (
+	return (free_parser_main(highest_operator, true),
 		SUCCESS);
 }
 

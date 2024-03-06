@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 03:59:11 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 07:11:52 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,9 @@ void	main_exit(t_cleanup_data *data, bool full_exit)
 		if (data->root)
 			free_ast(data->root);
 		cleanup_fds();
-		reset_stdio(RESET_STDIO_CLEAN);
 		if (LEAK_CHECK)
 			system("leaks minishell");
-		check_fds(true);
+		check_fds();
 		exit(get_last_exit());
 	}
 	else if (!full_exit)
@@ -77,6 +76,6 @@ void	main_exit(t_cleanup_data *data, bool full_exit)
 		cleanup_fds();
 		if (LEAK_CHECK)
 			system("leaks minishell");
-		check_fds(false);
+		check_fds();
 	}
 }

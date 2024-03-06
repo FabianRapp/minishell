@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 04:16:44 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 07:09:05 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,6 @@ t_result	init_main(int ac, char **av, char **base_env, t_env *env)
 {
 	errno = 0;
 	(void)av;
-	reset_stdio(RESET_STDIO_INIT);
 	if (ac > 1)
 		return (printf("no args allowed\n"), ERROR);
 	// env->main_pid = get_pid();

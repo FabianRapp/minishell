@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:23:25 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 02:43:25 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 07:11:43 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void			print_indent(int depth, bool left);
 void			print_colored(const char *text, int color_index);
 void			print_new_indent(int depth, bool left);
 void			print_indent_arg(int depth);
-void			check_fds(bool check_all);
+void			check_fds(void); // for debbuging (needs to be removed, un allowed fn)
 
 typedef	struct s_token_list	t_token_list;
 typedef	struct s_arg		t_arg;

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 04:09:42 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 07:11:17 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,8 @@ void	ft_pipe(t_ast *ast)
 void	create_sub_shell(t_env sub_env, char *input, t_ast *ast)
 {
 	t_ast	*sub_ast;
-	int		sub_stdio[2];
+	//int		sub_stdio[2];
 
-	sub_shell_mode(SET_SUB_SHELL);
 	sub_ast = parser(input);
 	if (!sub_ast)
 	{
@@ -60,23 +59,36 @@ void	create_sub_shell(t_env sub_env, char *input, t_ast *ast)
 	errno = 0;
 	if (ast->pid)
 	{
+		//check_fds();
 		free_ast(sub_ast);
-		sub_shell_mode(UNSET_SUB_SHELL);
 		return ;
 	}
-	sub_stdio[READ] = dup(READ);
-	sub_stdio[WRITE] = dup(WRITE);
-	if (sub_stdio[READ] == -1 || sub_stdio[WRITE] == -1
-		|| reset_stdio(RESET_STDIO_CLEAN) == ERROR || dup2(sub_stdio[READ], READ) == -1
-		|| dup2(sub_stdio[WRITE], WRITE) == -1 || reset_stdio(RESET_STDIO_INIT) == ERROR)
+	
+	// sub_stdio[READ] = dup(READ);
+	// sub_stdio[WRITE] = dup(WRITE);
+	// dup2(sub_stdio[READ], READ);
+	// dup2(sub_stdio[WRITE], WRITE);
+	if (resolve_redirs(ast) == ERROR)
+	{
+		cleanup_fds();
+		return ;
+	}
+	redir_fds();
+	io_data(RESET_FDS, NULL);
+	
+	// if (sub_stdio[READ] == -1 || sub_stdio[WRITE] == -1
+	// 	|| dup2(sub_stdio[READ], READ) == -1
+	// 	|| dup2(sub_stdio[WRITE], WRITE) == -1)
+	if (errno)
 	{
 		print_error(true, NULL, NULL, strerror(errno));
 		exit(errno);
 	}
-	add_global_data(sub_ast, &sub_env, ast->envs); // TODO envs
+	add_global_data(sub_ast, &sub_env, ast->envs);
 	sub_ast->exit_status = ast->exit_status;
 	sub_ast->env = &sub_env;
 	run_node(sub_ast);
+	//ft_fprintf(2, "test\n");
 	if (sub_ast->exit_status == DEFAULT_EXIT_STATUS)
 	{
 		waitpid(sub_ast->pid, &(sub_ast->exit_status), 0);
@@ -100,12 +112,6 @@ void	run_subshell(t_ast *ast)
 	if (ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
 	ft_memcpy(&sub_env, ast->env, sizeof(t_env));
-	if (resolve_redirs(ast) == ERROR)
-	{
-		cleanup_fds();
-		return ;
-	}
-	redir_fds();
 	input = ast->name->token->str_data;
 	if (!input)
 	{
@@ -122,13 +128,16 @@ void	run_subshell(t_ast *ast)
 		exit(2);
 		return ;
 	}
+
+	sub_shell_mode(SET_SUB_SHELL);
 	create_sub_shell(sub_env, input, ast);
+	sub_shell_mode(UNSET_SUB_SHELL);
+	// cleanup_fds();
 	if (ast->pid == -1)
 	{
 		ast->exit_status = errno;
 		print_error(true, NULL, NULL, strerror(errno));
 	}
-	cleanup_fds();
 }
 
 // kinda workarround for wrong build ast for multiple condtions without subshell
