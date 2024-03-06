@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 07:42:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 07:14:09 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 07:20:01 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,6 @@ t_fd_pair	*io_data(int flag, void *data)
 		if (fds)
 			reset_fds();
 		fds = (t_fd_pair *)data;
-	}
-	else if (flag == RESET_FDS)
-	{
-		fds = NULL;
 	}
 	else if (flag == CLEANUP_FDS)
 		fds = NULL;
@@ -68,9 +64,9 @@ t_result	reset_fds(void)
 	if (errno)
 	{
 		print_error(true, NULL, NULL, strerror(errno));
+		full_exit_status(true);
 		return (ERROR);
 	}
-	//io_data(RESET_FDS, NULL);
 	return (SUCCESS);
 }
 
@@ -78,12 +74,9 @@ t_result	cleanup_fds(void)
 {
 	t_fd_pair	*fds;
 	int			i;
+	t_result	return_val;
 
-	if (reset_fds() == ERROR)
-	{
-		printf("rest_fds error\n");
-		exit(1);
-	}
+	return_val = reset_fds();
 	fds = get_fds();
 	i = 0;
 	while (fds && fds[i].base_fd != INIT_VAL)
@@ -93,8 +86,7 @@ t_result	cleanup_fds(void)
 	}
 	io_data(CLEANUP_FDS, NULL);
 	free(fds);
-	//io_data(RESET_FDS, NULL);
-	return (SUCCESS);
+	return (return_val);
 }
 
 t_fd_pair	*get_fds(void)

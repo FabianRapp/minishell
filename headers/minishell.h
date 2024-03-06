@@ -6,16 +6,16 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 07:09:02 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 09:00:39 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
 	- make insert_token() return value and error handeling mor clear
-	- cleanup_fds() errno checks
+	- cleanup_fds() return val checks
 	- update the old_data in the token in the str expansion correctly 
-		(">"asd"$a bash: "asd"$a: ambiguous redirect")
+		(export a=" a"   >"asd"$a bash: "asd"$a: ambiguous redirect)
 	- repl/expansion/wildcards + repl/expansion/word_splitting.c errors
 	- redir.c error hadeling
 	- env vars rework
@@ -219,6 +219,8 @@ bool		test_lexer_manualy(char *str);
 
 //env
 bool	init_env(t_env *new_env, char **base_env);
+
+// repl/utils/repl_get_pid.c
 int		get_pid(void);
 
 // utils
@@ -242,6 +244,10 @@ bool	full_exit_status(bool set_full_exit);
 
 bool	sub_shell_mode(int flag);
 
+//repl/repl_sub_shell.c
+void	create_sub_shell(t_ast *ast);
+
+
 void	print_error(bool shell_name, char *command_name, char *arg, char *str);
 
 //repl/expansion/utils3.c
@@ -255,7 +261,6 @@ t_ast	*parser(char *str);
 
 #  define GET_FDS 1
 #  define SET_NEW_FDS 2
-#  define RESET_FDS 3
 #  define REDIR_FDS 4
 #  define CLEANUP_FDS 5
 

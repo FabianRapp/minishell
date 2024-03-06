@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 07:01:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 07:12:02 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 08:38:09 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	check_fds(void)
 	fd = 3;
 	while (fd < OPEN_MAX)
 	{
-		if (fcntl(fd, F_GETFD) != -1) // unallowed function for debugging and finding leaks (fcntl)
+		if (fcntl(fd, F_GETFD) != -1) // TODO: DEBUG: unallowed function for debugging and finding leaks (fcntl)
 		{
 			open_fd_count++;
 		}

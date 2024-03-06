@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/05 07:53:42 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 08:18:57 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,27 +37,20 @@ void	ft_exit(t_ast *ast)
 	if (ast->arg && includes_non_num(ast->arg->name->token->str_data))
 	{
 		if (ast->arg && ast->arg->name)
-			print_error(1, "exit", ast->arg->name->token->str_data, "numeric argument required");
+			print_error(true, "exit", ast->arg->name->token->str_data, "numeric argument required");
 		set_last_exit(255);
 		main_exit(ast->cleanup_data, true);
 	}
 	else if (ast->arg && count_args(ast->arg) > 1)
 	{
-		print_error(1, "exit", ast->arg->name->token->str_data, "too many arguments");
+		print_error(true, "exit", NULL, "too many arguments");
 		ast->exit_status = 1;
-		if (sub_shell_mode(GET_SUB_SHELL_MODE) == true)
-		{
-			ast->env->stop_execution = true;
-			return ;
-		}
 		set_last_exit(1);
-		main_exit(ast->cleanup_data, true);
+		ast->env->stop_execution = true;
+		return ;
 	}
 	else if (!ast->arg || count_args(ast->arg) == 0)
-	{
-		set_last_exit(0);
 		main_exit(ast->cleanup_data, true);
-	}
 	else
 	{
 		set_last_exit(ft_atoi(ast->arg->name->token->str_data));

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 22:22:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/04 02:47:49 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 08:14:31 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 void	set_last_exit(int exit_status);
 //minishell end
 
-
+bool	contains_non_white_spcace(char *str);
 
 //part 1
 int		ft_isalpha(int c);
