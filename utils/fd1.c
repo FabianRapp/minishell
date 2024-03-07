@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 07:42:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 09:20:50 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/07 07:13:47 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@ t_fd_pair	*io_data(int flag, void *data)
 	return (fds);
 }
 
+// Redirects file descriptors based on the prepared fd pairs before command execution.
+// Iterates over fd pairs, using dup2 to apply redirections for command input/output.
+// Ensures commands use the correct inputs and outputs, including here-doc content.
 t_result	redir_fds(void)
 {
 	t_fd_pair	*fds;
@@ -36,7 +39,7 @@ t_result	redir_fds(void)
 	//print_fds();
 	fds = get_fds();
 	i = 0;
-	while (fds && fds[i].base_fd != INIT_VAL && fds[i].overload_with_fd != INIT_VAL)
+	while(fds + i && !is_buffer_all_zeros(fds + i, sizeof(t_fd_pair)))
 	{
 		dup2(fds[i].overload_with_fd, fds[i].base_fd);
 		if (errno)
@@ -51,6 +54,9 @@ t_result	redir_fds(void)
 	return (SUCCESS);
 }
 
+// Resets file descriptors to their original state after command execution.
+// Uses stored backup file descriptors to restore the original file descriptor state.
+// Ensures the shell's file descriptor environment is clean for subsequent commands.
 t_result	reset_fds(void)
 {
 	t_fd_pair	*fds;
@@ -58,7 +64,8 @@ t_result	reset_fds(void)
 
 	fds = get_fds();
 	i = 0;
-	while (fds && fds[i].base_fd != INIT_VAL)
+	//while (fds && fds[i].base_fd != INIT_VAL)
+	while(fds + i && !is_buffer_all_zeros(fds + i, sizeof(t_fd_pair)))
 	{
 		//close(fds[i].overload_with_fd);
 		dup2(fds[i].base_fd_backup, fds[i].base_fd);
@@ -73,6 +80,9 @@ t_result	reset_fds(void)
 	return (SUCCESS);
 }
 
+// Cleans up file descriptors and resets them, freeing associated resources.
+// Closes both original and duplicated file descriptors, and frees the fd pairs array.
+// Calls `reset_fds` to ensure a clean state before performing cleanup actions.
 t_result	cleanup_fds(void)
 {
 	t_fd_pair	*fds;
@@ -82,7 +92,8 @@ t_result	cleanup_fds(void)
 	return_val = reset_fds();
 	fds = get_fds();
 	i = 0;
-	while (fds && fds[i].base_fd != INIT_VAL)
+	//while (fds && fds[i].base_fd != INIT_VAL)
+	while(fds + i && !is_buffer_all_zeros(fds + i, sizeof(t_fd_pair)))
 	{
 		close(fds[i].base_fd_backup);
 		close(fds[i++].overload_with_fd);
@@ -131,7 +142,8 @@ void	print_fds(void)
 	printf("\n");
 	fds = io_data(-1, NULL);
 	printf("| base_fd | overload_with_fd | backup_fd |\n");
-	while (fds && fds->overload_with_fd != INIT_VAL)
+	//while (fds && fds->overload_with_fd != INIT_VAL)
+	while(fds && !is_buffer_all_zeros(fds, sizeof(t_fd_pair)))
 	{
 		base_fd_str = get_file_name(fds->base_fd);
 		over_load_fd_str = get_file_name(fds->overload_with_fd);

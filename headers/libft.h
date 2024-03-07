@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 22:22:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 08:14:31 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/07 03:11:34 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ void	set_last_exit(int exit_status);
 //minishell end
 
 bool	contains_non_white_spcace(char *str);
+void	*ft_realloc_copy_until_zeroed(void *ptr, size_t new_count, size_t size);
+bool	is_buffer_all_zeros(void *buffer, size_t size);
 
 //part 1
 int		ft_isalpha(int c);

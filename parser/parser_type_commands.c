@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 19:47:45 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/05 07:53:37 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/07 08:50:00 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ t_result	handle_end(t_parser *parser, bool found_command, bool found_redir)
 	}
 	if (!found_command)
 	{
-		printf("DEBUG inserting dummy end\n");
 		if (insert_dummy_here(parser) == ERROR)
 			return (ERROR);
 	}

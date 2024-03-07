@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 03:51:00 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/07 08:54:43 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ t_result	redirs_have_arg(t_parser *parser)
 {
 	while (parser->p_type != T_EOF)
 	{
-		if (is_redir(parser->p_type) && parser->arg == NULL)
+		if (is_redir(parser->p_type) && parser->arg == NULL)// && parser->p_type != HERE_DOC)
 		{
 			while (parser->next->p_type == WHITE_SPACE)
 				parser = parser->next;
@@ -36,7 +36,7 @@ t_result	parse_redir_paths(t_parser *parser)
 {
 	while (parser->p_type != T_EOF)
 	{
-		if (is_redir(parser->p_type))
+		if (is_redir(parser->p_type))// && parser->p_type != HERE_DOC)
 		{
 			move_to_arg(parser, is_redir_arg_terminator, REDIR_ARG, false);
 		}
@@ -218,7 +218,7 @@ t_ast	*parser(char *str)
 	remove_whitespace(parser);
 	if (parse_redir_paths(parser) == ERROR)
 		return (free_parser_main(parser, true), NULL);
-	if (type_commands(parser) == ERROR)
+	if (type_commands(parser) == ERROR)//
 		return (free_parser_main(parser, true), NULL);
 	move_commands_infront(parser);
 	type_args(parser);

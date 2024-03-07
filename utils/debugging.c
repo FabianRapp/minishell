@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 07:01:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 09:34:32 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/07 06:44:45 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ char	*type_to_str(t_type tokenType)
 		case INTERPRETED: return "syntax error near unexpected token `''";
 		case REDIR_IN: return "syntax error near unexpected token `<'";
 		case REDIR_OUT: return "syntax error near unexpected token `>'";
-		case REDIR_APPEND: return "syntax error near unexpected token `>>'";
-		case HERE_DOC: return "syntax error near unexpected token `<<'";
+		case REDIR_APPEND: return "syntax error near unexpected token `>'";
+		case HERE_DOC: return "syntax error near unexpected token `<'";
 		case SUBSHELL: return "syntax error near unexpected token `("; //TODO this is not sufficent for error msgs
 		//case FLAG: return "FLAG";
 		case COMMAND: return "COMMAND";

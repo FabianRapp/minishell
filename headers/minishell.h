@@ -6,13 +6,14 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 09:39:40 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/07 08:58:29 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
-	- leaking fd: echo 123>a (123 is leaking somehow, where is it even opend?)
+	- rework here doc lexing and parser and remove herdoc from expansion
+	- type_to_str() needs refactor to follow norm with same returns
 	- make insert_token() return value and error handeling mor clear
 	- cleanup_fds() return val checks
 	- update the old_data in the token in the str expansion correctly 
@@ -164,6 +165,7 @@ typedef	struct s_redir
 	t_arg			*arg;
 	t_redir			*next;
 	int				left_redir_arg;
+	//char			*token_str_data; //dont free, lazy fix for here doc
 }	t_redir;
 
 typedef struct s_child_data

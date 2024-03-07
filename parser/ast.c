@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 04:19:53 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/07 09:09:03 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,6 +221,53 @@ t_result	append_redir(t_ast *ast_node, t_parser *args, t_redir **cur_redir)
 	return (SUCCESS);
 }
 
+// Initializes a pipe and captures input until a termination string is encountered.
+// Stores the read-end file descriptor as a string in the redir structure for later use.
+// Writes each line of input to the write-end of the pipe, excluding the termination line.
+t_result	parser_resovle_here_doc(t_redir *redir)
+{
+	int				pipe_fd[2];
+	char			*termination;
+	char			*line;
+	char			*temp;
+
+	termination = ft_strjoin(redir->arg->name->token->str_data, "\n");
+	printf("termination: %s", termination);
+	if (!termination)
+		return (ERROR);
+	//(void)redir;
+	if (pipe(pipe_fd) == -1)
+		return (free(termination), ERROR);
+	free(redir->arg->name->token->str_data);
+	redir->arg->name->token->str_data = ft_itoa(pipe_fd[READ]);
+	temp = NULL;
+	if (redir->arg->name->token->str_data)
+		temp = ft_strjoin("<<<<", redir->arg->name->token->str_data);
+	free(redir->arg->name->token->str_data);
+	redir->arg->name->token->str_data = temp;
+	if (!redir->arg->name->token->str_data)
+	{
+		close(pipe_fd[READ]);
+		close(pipe_fd[WRITE]);
+		free(termination);
+		return (ERROR);
+	}
+	line = get_next_line(0);
+	while (line)
+	{
+		if (ft_strcmp(line, termination) == 0)
+		{
+			my_free((void **)&line);
+			break ;
+		}
+		ft_fprintf(pipe_fd[WRITE], "%s", line);
+		my_free((void **)&line);
+		line = get_next_line(0);
+	}
+	close(pipe_fd[WRITE]);
+	return (SUCCESS);
+}
+
 t_ast	*build_leaf_node(t_ast *ast_node, t_parser *parser)
 {
 	t_redir					*cur_redir;
@@ -237,9 +284,17 @@ t_ast	*build_leaf_node(t_ast *ast_node, t_parser *parser)
 	{
 		if (is_redir(args->token->type))
 		{
+			// if (args->p_type != HERE_DOC && append_redir(ast_node, args, &cur_redir) == ERROR)
+			// 	return (free_parser_main(parser, true),
 			if (append_redir(ast_node, args, &cur_redir) == ERROR)
 				return (free_parser_main(parser, true),
 					free_ast(ast_node), NULL);
+			if (cur_redir->type == HERE_DOC)
+			{
+				if (parser_resovle_here_doc(cur_redir) == ERROR)
+				{//todo error
+				}
+			}
 		}
 		else if (args->p_type == ARGUMENT)
 		{
@@ -277,8 +332,8 @@ t_result	build_operator_node(t_ast *ast_node, t_parser *highest_operator)
 	if (!ast_node->right)
 		return (free_parser_main(highest_operator, true),
 			free_ast(ast_node), ERROR);
-	return (free_parser_main(highest_operator, true),
-		SUCCESS);
+	free_parser_main(highest_operator, true);
+	return (SUCCESS);
 }
 
 // TODO: handle errors correctly
@@ -317,12 +372,24 @@ void	free_arg_list(t_arg *list)
 	}
 }
 
+// Iterates through and frees all associated redirection and argument structures.
+// If the here-doc arg starts with "<<<<" that means the following integer string
+// corresponds to an open fd
 void	free_redir(t_redir *redir)
 {
 	t_redir	*last;
 
 	while (redir)
 	{
+		if (redir->type == HERE_DOC)
+		{
+			if (redir->arg->name->token->str_data
+				&& !ft_strncmp(redir->arg->name->token->str_data,
+					"<<<<", 4))
+			{
+				close(ft_atoi(redir->arg->name->token->str_data + 4));
+			}
+		}
 		free_arg_list(redir->arg);
 		last = redir;
 		redir = redir->next;

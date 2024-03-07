@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:04:11 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 01:31:04 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/07 08:55:43 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ t_parser	*insert_token(t_parser **parser, t_token *token)
 	}
 	(*parser)->next->token = token;
 	(*parser)->next->p_type = token->type;
+	//(*parser)->token->str_data = token->str_data;
 	*parser = (*parser)->next;
 	(*parser)->next = next;
 	return (next);
