@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:23:25 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 03:26:04 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 05:42:34 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void		add_token_back_node(t_token_list **list, t_token_list *new_node);
 void		add_token_node_front(t_token_list **head, t_token_list *new);
 t_result	insert_whitespace_before(t_token_list **head);
 void		free_token_list(t_token_list *list);
+void	free_arg_list(t_arg *list);
 
 t_token		*new_dummy_token(void);
 void		free_token(t_token *token);

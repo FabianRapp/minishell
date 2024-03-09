@@ -14,12 +14,18 @@ NAME=min
 
 LIB_PARSER=parser
 LIB_PARSER_NAME = parser.a
-SOURCES= parser.c ../utils/utils1.c ast.c \
-parser_type_commands.c\
-\
-list_operations/utils1.c list_operations/add_new.c\
-list_operations/move_nodes.c list_operations/remove_nodes.c\
-../utils/utils1.c
+SOURCES= parser.c ../utils/utils1.c\
+ parser_ast/parser_ast.c \
+ parser_ast/parser_ast_redir.c\
+ parser_ast/parser_ast_utils1.c\
+ parser_ast/parser_ast_utils2.c\
+ parser_type_commands.c\
+ \
+ ../cleanup/cleanup1.c\
+ \
+ list_operations/utils1.c list_operations/add_new.c\
+ list_operations/move_nodes.c list_operations/remove_nodes.c\
+ ../utils/utils1.c
 
 OBJECTS= $(SOURCES:.c=.o)
 

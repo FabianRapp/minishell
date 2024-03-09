@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:04:11 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/07 08:55:43 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 06:57:30 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ void	remove_parser_node(t_parser **node, bool free_tok)
 
 	if (!node || !*node)
 		return ;
-	if (free_tok || (*node)->token->type == T_EOF
-		|| is_redir((*node)->token->type))
+	if (free_tok || (((*node)->token) &&
+		((*node)->token->type == T_EOF || is_redir((*node)->token->type))))
 	{
 		free_token((*node)->token);
 	}

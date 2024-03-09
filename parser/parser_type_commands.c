@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 19:47:45 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/07 08:50:00 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 05:16:41 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,34 +21,24 @@ static t_parser	*handle_operator(t_parser *parser, bool *found_command, bool *fo
 		return (parser);
 	if (!parser->next || is_operator(parser->next->p_type) || parser->next->p_type == T_EOF)
 	{
+		set_last_exit(2);
 		if ((!parser->next || parser->next->p_type == T_EOF) && *found_command)
 		{
-			set_last_exit(2);
 			if (sub_shell_mode(GET_SUB_SHELL_MODE) == true)
-			{
-				set_last_exit(2);
 				print_error(true, NULL, NULL, "syntax error near unexpected token `)'");
-				return (NULL);
-			}
-			else
-			{
-				print_error(true, NULL, NULL, "syntax error: unexpected end of file");
-				print_error(false, NULL, NULL, "exit");
-				full_exit_status(true);
-				return (NULL);
-			}
+			else if (full_exit_status(true))
+				print_error(true, NULL, NULL, "syntax error: unexpected end of file\nexit");
 		}
-		if (parser->next)
+		else if (parser->next)
 			print_error(true, "debug 0987", NULL, type_to_str(parser->next->p_type));
 		else
 			print_error(true, NULL, NULL, type_to_str(T_EOF));
 		return (NULL);
 	}
 	if (!*found_command && !*found_redir)
-		return (print_error(true, "DEBUG12311", NULL, type_to_str(parser->p_type)), NULL);
+		return (set_last_exit(2), print_error(true, "DEBUG12311", NULL, type_to_str(parser->p_type)), NULL);
 	if (!*found_command)
 	{ 
-		printf("DEBUG insert dummy at operator\n");
 		if (insert_dummy_here(parser) == ERROR)
 			return (NULL);
 		parser = parser->next;

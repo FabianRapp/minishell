@@ -28,6 +28,7 @@ SOURCES=repl/main.c  repl/utils/path.c repl/ft_buildin1.c \
   repl/expansion/wildcards/repl_fill_wildcard_data.c\
  utils/utils3.c\
  repl/utils/repl_get_pid.c\
+ cleanup/cleanup1.c\
 \
  repl/signals/child_parent_coms.c \
  utils/debugging.c \
