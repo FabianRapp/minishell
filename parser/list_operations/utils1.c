@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:04:11 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 06:57:30 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 07:13:27 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,9 @@ void	remove_parser_node(t_parser **node, bool free_tok)
 
 	if (!node || !*node)
 		return ;
-	if (free_tok || (((*node)->token) &&
-		((*node)->token->type == T_EOF || is_redir((*node)->token->type))))
+	if (free_tok || (((*node)->token)
+			&& ((*node)->token->type == T_EOF
+				|| is_redir((*node)->token->type))))
 	{
 		free_token((*node)->token);
 	}
@@ -83,7 +84,6 @@ t_parser	*insert_token(t_parser **parser, t_token *token)
 	}
 	(*parser)->next->token = token;
 	(*parser)->next->p_type = token->type;
-	//(*parser)->token->str_data = token->str_data;
 	*parser = (*parser)->next;
 	(*parser)->next = next;
 	return (next);

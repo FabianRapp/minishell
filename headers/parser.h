@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:52:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/07 08:56:07 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 08:00:27 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ typedef struct s_parser
 	t_parser	*next;
 	t_parser	*arg;
 	t_parser	*rest_name;
-	bool		is_stdioe_reir[3];
-	//char		*token_str_data;//dont free, just for here doc atm (lazy fix)
 }	t_parser;
 
 // simplified node of t_parser list

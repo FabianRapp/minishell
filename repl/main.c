@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 07:00:14 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 07:59:26 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,8 +127,6 @@ void	add_global_data(t_ast *ast, t_env *env, char **envs)
 	add_global_data(ast->left, env, envs);
 	add_global_data(ast->right, env, envs);
 	ast->env = env;
-	ast->pipe[READ] = READ;
-	ast->pipe[WRITE] = WRITE;
 	ast->exit_status = DEFAULT_EXIT_STATUS;
 	ast->envs = envs;
 }
@@ -164,7 +162,7 @@ int	main(int ac, char **av, char **base_env)
 	t_env			env;
 
 	if (init_main(ac, base_env, &env) == ERROR)
-		return (1);//todo: needs correct exit val
+		return (1);
 	if (ac == 2)
 		ast = handle_manunal_input(av, &cleanup_data);
 	else

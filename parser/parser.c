@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 02:35:35 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 07:11:17 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,7 @@ bool	has_redir_arg(t_parser *parser)
 	return (false);
 }
 
+// might not be needed
 t_parser	*has_none_redir_arg(t_parser *parser)
 {
 	t_parser	*cur_arg;

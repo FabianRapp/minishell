@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:36:42 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 06:55:35 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 07:12:41 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	free_ncircular_parser(t_parser *parser, bool free_tok)
 		last = parser;
 		parser = parser->next;
 		if (free_tok || (last->token && (last->token->type == T_EOF
-			|| is_redir(last->token->type))))
+					|| is_redir(last->token->type))))
 			free_token(last->token);
 		free(last);
 	}

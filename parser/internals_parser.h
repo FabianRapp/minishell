@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 19:21:02 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 06:08:55 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 07:12:00 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ void					move_to_arg(t_parser *parser,
 							bool is_terminator(t_type), t_type new_type,
 							bool as_must_as_possible);
 void					move_commands_infront(t_parser *parser);
-void					move_next_to_restname(t_parser *parser, t_parser **rest_name);
+void					move_next_to_restname(t_parser *parser,
+							t_parser **rest_name);
 
 // list_operations/remove_nodes.c
 void					trim_whitespace(t_parser *parser);
@@ -41,7 +42,8 @@ t_parser				*insert_token(t_parser **parser, t_token *token);
 t_parser				*last_parser(t_parser *parser);
 
 // parser_ast/parser_ast_redir.c
-t_result				append_redir(t_ast *ast_node, t_parser *args, t_redir **cur_redir);
+t_result				append_redir(t_ast *ast_node, t_parser *args,
+							t_redir **cur_redir);
 t_result				parser_resovle_here_doc(t_redir *redir);
 
 // parser_ast/parser_ast_utils1.c

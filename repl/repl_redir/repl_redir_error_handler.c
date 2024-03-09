@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 04:24:43 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 02:19:33 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 07:56:07 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ t_result	check_valid_arg(t_ast *ast, t_redir *redir)
 		}
 		else
 		{
-			print_error(true, false, redir->arg->name->token->old_data,
+			print_error(true, NULL, redir->arg->name->token->old_data,
 				"ambiguous redirect");
 			ast->exit_status = 1;
 			set_last_exit(1);

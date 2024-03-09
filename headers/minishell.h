@@ -6,15 +6,14 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 03:38:19 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 07:59:57 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
-	- rework here doc lexing and parser and remove herdoc from expansion
 	- type_to_str() needs refactor to follow norm with same returns
-	- make insert_token() return value and error handeling mor clear
+	- make insert_token() return value and error handeling more clear
 	- cleanup_fds() return val checks
 	- update the old_data in the token in the str expansion correctly 
 		(export a=" a"   >"asd"$a bash: "asd"$a: ambiguous redirect)
@@ -22,10 +21,7 @@ TODO:
 	- redir.c error hadeling
 	- env vars rework
 	- subshell lexing: sub shell error handeling if there is other invalid syntax in the subshell is diffrent
-	- parser must print syntax error and return NULL in case of error
-	- add early exits for sytax error in parser
 	- implement other ft functions
-	- implement here doc
 
 ./test "asd >asd <sadad (asd) | >a <ad"
 debug move_commands_inform : COMMAND
@@ -165,7 +161,7 @@ typedef	struct s_redir
 	t_arg			*arg;
 	t_redir			*next;
 	int				left_redir_arg;
-	char			*token_str_data; //dont free, lazy fix for here doc
+	char			*token_str_data;
 }	t_redir;
 
 typedef struct s_child_data
@@ -188,17 +184,14 @@ typedef struct s_ast
 	t_type			type;
 	t_token_list	*name;
 	t_arg			*arg;
-	t_parser		*val;
 	t_redir			*redir;
 	t_ast			*left;
 	t_ast			*right;
-	int				pipe[2];
 	t_fd_pair		*fds;
 	int				exit_status;
 	t_cleanup_data	*cleanup_data;
 	t_env			*env;
 	pid_t			pid;
-	int				*all_pids;
 	char			**envs;
 }	t_ast;
 
