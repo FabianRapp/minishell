@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 02:47:48 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 04:12:27 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,6 +225,26 @@ t_result	append_redir(t_ast *ast_node, t_parser *args, t_redir **cur_redir)
 	return (SUCCESS);
 }
 
+//for parser_resovle_here_doc
+t_result	parser_resolve_here_doc(char *termination, int pipe_fd[2])
+{
+	char	*line;
+
+	line = get_next_line(0);
+	while (line)
+	{
+		if (ft_strcmp(line, termination) == 0)
+		{
+			ft_free((void **)&line);
+			return (SUCCESS);
+		}
+		ft_fprintf(pipe_fd[WRITE], "%s", line);
+		ft_free((void **)&line);
+		line = get_next_line(0);
+	}
+	return (ERROR);
+}
+
 // Initializes a pipe and captures input until a termination string is encountered.
 // Stores the read-end file descriptor as a string in the redir structure for later use.
 // Writes each line of input to the write-end of the pipe, excluding the termination line.
@@ -232,11 +252,9 @@ t_result	parser_resovle_here_doc(t_redir *redir)
 {
 	int				pipe_fd[2];
 	char			*termination;
-	char			*line;
 	char			*temp;
 
 	termination = ft_strjoin(redir->token_str_data, "\n");
-	//printf("termination: %s", termination);
 	if (!termination)
 		return (ERROR);
 	if (pipe(pipe_fd) == -1)
@@ -248,25 +266,9 @@ t_result	parser_resovle_here_doc(t_redir *redir)
 		temp = ft_strjoin("<<<<", redir->token_str_data);
 	free(redir->token_str_data);
 	redir->token_str_data = temp;
-	if (!redir->token_str_data)
-	{
-		close(pipe_fd[READ]);
-		close(pipe_fd[WRITE]);
-		free(termination);
-		return (ERROR);
-	}
-	line = get_next_line(0);
-	while (line)
-	{
-		if (ft_strcmp(line, termination) == 0)
-		{
-			ft_free((void **)&line);
-			break ;
-		}
-		ft_fprintf(pipe_fd[WRITE], "%s", line);
-		ft_free((void **)&line);
-		line = get_next_line(0);
-	}
+	if (!redir->token_str_data || parser_resolve_here_doc(termination, pipe_fd) == ERROR)
+		return (close(pipe_fd[READ]), close(pipe_fd[WRITE]),
+			free(termination), ERROR);
 	close(pipe_fd[WRITE]);
 	free(termination);
 	return (SUCCESS);
