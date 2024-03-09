@@ -31,6 +31,8 @@ SOURCES=repl/main.c  repl/utils/path.c repl/ft_buildin1.c \
 \
  repl/signals/child_parent_coms.c \
  utils/debugging.c \
+ utils/utils1.c\
+ utils/groups1.c
 
 OBJECTS= $(SOURCES:.c=.o)
 

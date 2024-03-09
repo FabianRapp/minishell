@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 00:07:24 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 02:40:29 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	type_token_with_void_check(t_token *token, t_type type)
 		return ;
 	if (token->str_data == NULL || ft_strlen(token->str_data) == 0)
 	{
-		my_free((void **)&(token->str_data));
+		ft_free((void **)&(token->str_data));
 		token->type = VOID;
 	}
 	else

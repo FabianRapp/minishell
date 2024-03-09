@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 00:06:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 02:20:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 04:00:01 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,13 @@ char	*check_limis_potential_fd(char *left_redir_arg,
 	t_lexer *lexer, t_lexer lexer_backup)
 {
 	if (lexer->cur_char != '<' && lexer->cur_char != '>')
-		my_free((void **)&left_redir_arg);
+		ft_free((void **)&left_redir_arg);
 	else if (ft_strlen(left_redir_arg) > ft_strlen("2147483647"))
-		my_free((void **)&left_redir_arg);
+		ft_free((void **)&left_redir_arg);
 	else if (ft_strlen(left_redir_arg) == ft_strlen("2147483647"))
 	{
 		if (ft_strcmp(left_redir_arg, "2147483647") > 0)
-			my_free((void **)&left_redir_arg);
+			ft_free((void **)&left_redir_arg);
 	}
 	if (!left_redir_arg)
 		*lexer = lexer_backup;
@@ -64,73 +64,77 @@ t_result	handle_redir_fd(t_lexer *lexer, t_token *token)
 	return (SUCCESS);
 }
 
-bool	is_here_doc_arg_terminator(char c)
+bool	is_redir_terminator_char(char c)
 {
 	if (ft_iswhitespace(c) || c == '|' || c == '&' || c == '('
-		|| c == ')' || c == '\0')
+		|| c == ')' || c == '\0' || c == '<' || c == '>')
 	{
 		return (true);
 	}
 	return (false);
 }
 
+bool	valid_redir_arg(t_lexer *redir_arg_start_lex)
+{
+	t_token	*error_token;
+
+	while (ft_iswhitespace(redir_arg_start_lex->cur_char))
+	{
+		read_char(redir_arg_start_lex);
+	}
+	if (!is_redir_terminator_char(redir_arg_start_lex->cur_char))
+		return (true);
+	set_last_exit(2);
+	error_token = next_new_token(redir_arg_start_lex, true);
+	if (error_token)
+	{
+		print_error(true, NULL, NULL, type_to_str(error_token->type));
+	}
+	free_token(error_token);
+	return (false);
+}
+
 t_result	lexer_here_doc(t_lexer *lexer, t_token *token)
 {
-	token->type = HERE_DOC;
-	lexer->read_position = lexer->position + 2;
-	read_char(lexer);
-	while (ft_iswhitespace(lexer->cur_char))
-	{
-		read_char(lexer);
-	}
-	if (is_here_doc_arg_terminator(lexer->cur_char))
-	{
-		lexer->read_position = lexer->position;
+	if (token->type != HERE_DOC)
 		return (SUCCESS);
-	}
-	while (!is_here_doc_arg_terminator(lexer->cur_char))
+	while (!is_redir_terminator_char(lexer->cur_char))
 	{
 		if (!ft_strjoin_inplace_char(&(token->str_data), lexer->cur_char))
 		{//todo error
 		}
 		read_char(lexer);
 	}
-	//lexer->position -= 1;
-	//lexer->read_position -= 1;
 	return (SUCCESS);
 }
 
-t_result	redir_type(t_lexer *lexer, t_token *token)
+t_result	redir_type(t_lexer *lexer, t_token *token, bool recursive_call)
 {
 	if (handle_redir_fd(lexer, token) == ERROR)
 		return (ERROR);
 	if (lexer->cur_char == '<')
 	{
-		if ((lexer->str)[lexer->position + 1] == '<')
+		token->type = REDIR_IN;
+		read_char(lexer);
+		if (lexer->cur_char == '<')
 		{
-			if (lexer_here_doc(lexer, token) == ERROR)
-			{//todo error
-				//printf("debug lexer-here_doc error\n");
-			}
-			//printf("lexer heredoc str data: %s\n", token->str_data);
+			read_char(lexer);
+			token->type = HERE_DOC;
 		}
-		// if ((lexer->str)[lexer->position + 1] == '<')
-		// 	token->type = HERE_DOC;
-		else
-			token->type = REDIR_IN;
 	}
 	else if (lexer->cur_char == '>')
 	{
-		if ((lexer->str)[lexer->position + 1] == '>')
+		token->type = REDIR_OUT;
+		read_char(lexer);
+		if (lexer->cur_char == '>')
+		{
+			read_char(lexer);
 			token->type = REDIR_APPEND;
-		else
-			token->type = REDIR_OUT;
+		}
 	}
-	// if (token->type == REDIR_APPEND || token->type == HERE_DOC)
-	// 	lexer->read_position += 1;
-	if (token->type == REDIR_APPEND)
-		lexer->read_position += 1;
-	return (SUCCESS);
+	if (!recursive_call && is_redir(token->type) && !valid_redir_arg(lexer))
+		return (ERROR);
+	return (lexer_here_doc(lexer, token));
 }
 
 // has to run after all other typechecks

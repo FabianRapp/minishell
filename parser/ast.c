@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 02:21:13 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 02:47:48 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,10 +236,9 @@ t_result	parser_resovle_here_doc(t_redir *redir)
 	char			*temp;
 
 	termination = ft_strjoin(redir->token_str_data, "\n");
-	printf("termination: %s", termination);
+	//printf("termination: %s", termination);
 	if (!termination)
 		return (ERROR);
-	//(void)redir;
 	if (pipe(pipe_fd) == -1)
 		return (free(termination), ERROR);
 	free(redir->token_str_data);
@@ -261,14 +260,15 @@ t_result	parser_resovle_here_doc(t_redir *redir)
 	{
 		if (ft_strcmp(line, termination) == 0)
 		{
-			my_free((void **)&line);
+			ft_free((void **)&line);
 			break ;
 		}
 		ft_fprintf(pipe_fd[WRITE], "%s", line);
-		my_free((void **)&line);
+		ft_free((void **)&line);
 		line = get_next_line(0);
 	}
 	close(pipe_fd[WRITE]);
+	free(termination);
 	return (SUCCESS);
 }
 
@@ -288,8 +288,6 @@ t_ast	*build_leaf_node(t_ast *ast_node, t_parser *parser)
 	{
 		if (is_redir(args->token->type))
 		{
-			// if (args->p_type != HERE_DOC && append_redir(ast_node, args, &cur_redir) == ERROR)
-			// 	return (free_parser_main(parser, true),
 			if (append_redir(ast_node, args, &cur_redir) == ERROR)
 				return (free_parser_main(parser, true),
 					free_ast(ast_node), NULL);

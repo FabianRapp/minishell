@@ -6,12 +6,11 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:34:43 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/04 04:54:07 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 03:31:00 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/parser.h"
-#include "internals_parser.h"
 #include "../headers/lexer.h"
 
 bool	is_command_block_terminator(t_type type)

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/07 08:24:34 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 03:52:21 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_result	valid_first_char(t_lexer *lexer)
 	return (SUCCESS);
 }
 
-t_token	*classify_sub_str(t_token *token, t_lexer *lexer)
+t_token	*classify_sub_str(t_token *token, t_lexer *lexer, bool recursive_call)
 {
 	basic_sign_type(lexer, token);
 	if (!token->type && valid_first_char(lexer) == ERROR)
@@ -33,7 +33,7 @@ t_token	*classify_sub_str(t_token *token, t_lexer *lexer)
 		return (lexer_error(token), NULL);
 	else if (!token->type && interpreted_type(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);
-	else if (!token->type && redir_type(lexer, token) == ERROR)
+	else if (!token->type && redir_type(lexer, token, recursive_call) == ERROR)
 		return (lexer_error(token), NULL);
 	else if (!token->type && dollar_lexing(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);
@@ -46,7 +46,7 @@ t_token	*classify_sub_str(t_token *token, t_lexer *lexer)
 	return (token);
 }
 
-t_token	*next_new_token(t_lexer *lexer)
+t_token	*next_new_token(t_lexer *lexer, bool recursive_call)
 {
 	t_token		*token;
 
@@ -56,10 +56,14 @@ t_token	*next_new_token(t_lexer *lexer)
 	if (!token)
 		return (NULL);
 	init_token(token, lexer);
-	if (!classify_sub_str(token, lexer))
+	if (!classify_sub_str(token, lexer, recursive_call))
 		return (NULL);
 	if (token->type)
-		return (read_char(lexer), token);
+	{
+		if (!is_redir(token->type))
+			return (read_char(lexer), token);
+		return (token);
+	}
 	printf("DEBUG: no function IDed the type\n");
 	printf("%s\n", lexer->str + lexer->position);
 	return (lexer_error(token), exit(1), NULL);
@@ -73,12 +77,12 @@ void	skip_leading_void_whitespace(t_lexer *lexer)
 
 	read_char(lexer);
 	last = *lexer;
-	token = next_new_token(lexer);
+	token = next_new_token(lexer, false);
 	while (token && (token->type == WHITE_SPACE || token->type == VOID))
 	{
 		free_token(token);
 		last = *lexer;
-		token = next_new_token(lexer);
+		token = next_new_token(lexer, false);
 	}
 	if (!token)
 		last.str = NULL;

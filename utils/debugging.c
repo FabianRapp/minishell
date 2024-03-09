@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 07:01:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/07 06:44:45 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 03:42:11 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ char	*type_to_str(t_type tokenType)
 		case INTERPRETED: return "syntax error near unexpected token `''";
 		case REDIR_IN: return "syntax error near unexpected token `<'";
 		case REDIR_OUT: return "syntax error near unexpected token `>'";
-		case REDIR_APPEND: return "syntax error near unexpected token `>'";
-		case HERE_DOC: return "syntax error near unexpected token `<'";
+		case REDIR_APPEND: return "syntax error near unexpected token `>>'";
+		case HERE_DOC: return "syntax error near unexpected token `<<'";
 		case SUBSHELL: return "syntax error near unexpected token `("; //TODO this is not sufficent for error msgs
 		//case FLAG: return "FLAG";
 		case COMMAND: return "COMMAND";
@@ -233,13 +233,13 @@ bool	test_lexer_manualy(char *str)
 	printf("test str: \"%s\"\n", str);
 	printf("lexer output before in list:\n");
 	lexer = new_lexer(str);
-	token = next_new_token(&lexer);
+	token = next_new_token(&lexer, false);
 	while (token->type != T_EOF)
 	{
 		printf("\t");
 		print_token(token, NULL, 0);
 		printf("\n");
-		token = next_new_token(&lexer);
+		token = next_new_token(&lexer, false);
 	}
 	printf("\t");
 	print_token(token, NULL, 0);

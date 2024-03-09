@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 02:29:20 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 02:35:35 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,8 +164,6 @@ t_result	validate_command_oder(t_parser *parser)
 	if (!parser)
 		return (ERROR);
 	in_command_block = false;
-	//print_parser(parser, 0);
-	//printf("validate_command_oder\n");
 	while (parser && parser->p_type != T_EOF)
 	{
 		if (parser->token && parser->token->type == SUBSHELL && has_none_redir_arg(parser))
@@ -221,14 +219,12 @@ t_ast	*parser(char *str)
 	remove_whitespace(parser);
 	if (parse_redir_paths(parser) == ERROR)
 		return (free_parser_main(parser, true), NULL);
-	if (type_commands(parser) == ERROR)//
+	if (type_commands(parser) == ERROR)
 		return (free_parser_main(parser, true), NULL);
 	move_commands_infront(parser);
 	type_args(parser);
 	if (validate_command_oder(parser) == ERROR)
 		return (free_parser_main(parser, true), NULL);
-	//printf("full parser:\n");
-	//print_parser(parser, 0);
 	return (build_ast(parser));
 }
 

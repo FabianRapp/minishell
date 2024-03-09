@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:23:25 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 07:11:43 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 03:26:04 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,13 @@ typedef	struct s_arg		t_arg;
 typedef	struct s_parser		t_parser;
 typedef struct s_ast		t_ast;
 typedef enum e_result		t_result;
+
+// groups.c
+bool		is_command_block_terminator(t_type type);
+bool		is_redir(t_type type);
+bool		is_redir_arg_terminator(t_type type);
+bool		is_word_terminator(t_type type);
+bool		command_terminator(t_type type);
 
 t_result	insert_whitespace_end(t_token_list **list);
 t_result	add_token_back(t_token_list **list, t_token *token);

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:19:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 03:30:38 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 03:38:08 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,6 @@ typedef struct s_lexer
 
 t_lexer			new_lexer(char *str);
 void			read_char(t_lexer *lexer);
-t_token			*next_new_token(t_lexer *lexer);
+t_token			*next_new_token(t_lexer *lexer, bool recursive_call);
 
 #endif

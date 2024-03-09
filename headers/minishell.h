@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 01:54:18 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 03:38:19 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,7 +203,7 @@ typedef struct s_ast
 }	t_ast;
 
 // lexer
-t_token		*next_new_token(t_lexer *lexer);
+t_token		*next_new_token(t_lexer *lexer, bool recursuve_call);
 t_lexer		new_lexer(char *str);
 
 // main
@@ -227,7 +227,7 @@ bool	init_env(t_env *new_env, char **base_env);
 int		get_pid(void);
 
 // utils
-bool	my_free(void **ptr);
+bool	ft_free(void **ptr);
 
 char	*get_last_exit_str(void);
 int		get_last_exit(void);

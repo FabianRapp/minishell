@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 02:21:21 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 02:40:29 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	init_child_data(t_child_data *data, t_ast *ast)
 
 void	free_child_data(t_child_data *data)
 {
-	my_free((void **)&(data->argv[0]));
+	ft_free((void **)&(data->argv[0]));
 	free(data->command_name);
 	free(data->argv[0]);
 	free(data->argv);

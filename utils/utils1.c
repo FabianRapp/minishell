@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 02:16:54 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 02:40:29 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ void	print_error(bool shell_name, char *command_name, char *arg, char *str)
 	ft_fprintf(2, "\n");
 }
 
-bool	my_free(void **ptr)
+bool	ft_free(void **ptr)
 {
 	if (!ptr)
 		return (false);
@@ -330,9 +330,9 @@ void	free_token(t_token *token)
 {
 	if (!token)
 		return ;
-	my_free((void **)&(token->str_data));
-	my_free((void **)&(token->old_data));
-	my_free((void **)&(token->left_redir_arg));
+	ft_free((void **)&(token->str_data));
+	ft_free((void **)&(token->old_data));
+	ft_free((void **)&(token->left_redir_arg));
 	free(token);
 }
 

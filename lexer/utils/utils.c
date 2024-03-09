@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:46:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/05 23:53:36 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 02:59:08 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,9 @@ void	lexer_error(t_token *token)
 {
 	if (token)
 	{
-		my_free((void **)&(token->str_data));
-		my_free((void **)&(token->old_data));
-		my_free((void **)&(token));
+		ft_free((void **)&(token->str_data));
+		ft_free((void **)&(token->old_data));
+		ft_free((void **)&(token->left_redir_arg));
+		ft_free((void **)&(token));
 	}
 }

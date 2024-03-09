@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 19:21:02 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 06:49:57 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 03:25:58 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,6 @@ void		trim_whitespace(t_parser *parser);
 void		free_ncircular_parser(t_parser *parser, bool free_tok);
 void		free_parser_main(t_parser *parser, bool free_tokens);
 void		remove_whitespace(t_parser *parser);
-
-// groups.c
-bool		is_command_block_terminator(t_type type);
-bool		is_redir(t_type type);
-bool		is_redir_arg_terminator(t_type type);
-bool		is_word_terminator(t_type type);
-bool		command_terminator(t_type type);
 
 // list_operations/utils1.c
 void		jump_to_start(t_parser **parser);

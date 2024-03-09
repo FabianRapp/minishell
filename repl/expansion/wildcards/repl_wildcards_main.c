@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:49:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/04 00:31:02 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 02:40:29 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ t_token_list	*next_wildcard_token(DIR *cur_dir,
 	if (!new_token->str_data)
 	{
 		free_token(new_token);
-		return (my_free((void **) &(new_node)), NULL);
+		return (ft_free((void **) &(new_node)), NULL);
 	}
 	return (new_node);
 }
