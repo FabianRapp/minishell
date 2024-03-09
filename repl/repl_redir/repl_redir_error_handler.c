@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 04:24:43 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/07 04:27:40 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 02:19:33 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ void	*add_fd_pair_error(t_fd_pair *fds, t_fd_pair new_fd_pair)
 // TODO: first if not correct (this can be many diffrent errors)
 t_result	check_valid_arg(t_ast *ast, t_redir *redir)
 {
-	if (count_args(redir->arg) != 1)
+	if ((count_args(redir->arg) != 1 && redir->type != HERE_DOC)
+		|| (redir->type == HERE_DOC && count_args(redir->arg) != 0))
 	{
 		if (count_args(redir->arg) == 0)
 		{

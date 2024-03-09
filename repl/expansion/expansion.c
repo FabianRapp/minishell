@@ -67,8 +67,7 @@ t_result	expand_name(t_ast *ast)
 	return (SUCCESS);
 }
 
-t_result	expand_args(t_ast *ast, t_arg **base_arg,
-		t_token_list *expa(t_env*, t_token_list*))
+t_result	expand_args(t_ast *ast, t_arg **base_arg, bool here_doc)
 {
 	t_arg	*cur;
 	t_arg	*last;
@@ -80,9 +79,10 @@ t_result	expand_args(t_ast *ast, t_arg **base_arg,
 	last = NULL;
 	while (cur)
 	{
-		cur->name = expa(ast->env, cur->name);
+		if (!here_doc)
+			cur->name = expand_list(ast->env, cur->name);
 		cur->name = remove_non_literals(cur->name);
-		if (errno || (expa == expand_list && wildcards(cur->name) == ERROR))
+		if (errno || (!here_doc && wildcards(cur->name) == ERROR))
 			return (set_errno_as_exit(ast));
 		flag = check_empty_arg(last, &cur, ast, base_arg);
 		if (flag == RETURN_NOW)
@@ -108,12 +108,12 @@ t_result	expand_redirs(t_ast *ast)
 	{
 		if (cur->type != HERE_DOC)
 		{
-			if (expand_args(ast, &(cur->arg), expand_list) == ERROR)
+			if (expand_args(ast, &(cur->arg), false) == ERROR)
 				return (ERROR);
 		}
 		else
 		{
-			if (expand_args(ast, &(cur->arg), expand_list_here_doc) == ERROR)
+			if (expand_args(ast, &(cur->arg), true) == ERROR)
 				return (ERROR);
 		}
 		cur = cur->next;
@@ -131,7 +131,7 @@ t_result	expansion(t_ast *ast)
 		return (SUCCESS);
 	if (!expand_name(ast))
 		return (ERROR);
-	if (expand_args(ast, &(ast->arg), expand_list) == ERROR)
+	if (expand_args(ast, &(ast->arg), false) == ERROR)
 		return (ERROR);
 	if (expand_redirs(ast) == ERROR)
 		return (ERROR);

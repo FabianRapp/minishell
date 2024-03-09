@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 04:20:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/07 09:09:37 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 02:05:50 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,15 +58,15 @@ t_result	repl_handle_here_doc(t_ast *ast, t_redir *redir, t_fd_pair **fds)
 	new_fd_pair.base_fd = redir->left_redir_arg;
 	if (new_fd_pair.base_fd == INIT_VAL)
 		new_fd_pair.base_fd = 0;
-	new_fd_pair.overload_with_fd = ft_atoi(redir->arg->name->token->str_data + 4);
+	new_fd_pair.overload_with_fd = ft_atoi(redir->token_str_data + 4);
 	//printf("overload with: %d\n", new_fd_pair.overload_with_fd);
 	(*fds) = add_fd_pair((*fds), new_fd_pair);
 	if (!(*fds))
 	{
 		ast->exit_status = get_last_exit();
-		return (my_free((void **)&(redir->arg->name->token->str_data)), io_data(SET_NEW_FDS, NULL), ERROR);
+		return (my_free((void **)&(redir->token_str_data)), io_data(SET_NEW_FDS, NULL), ERROR);
 	}
-	return (my_free((void **)&(redir->arg->name->token->str_data)), SUCCESS);
+	return (my_free((void **)&(redir->token_str_data)), SUCCESS);
 }
 
 t_result	resolve_redirs(t_ast *ast)

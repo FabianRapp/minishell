@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 21:11:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/07 09:09:03 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 02:21:13 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,6 +209,10 @@ t_result	append_redir(t_ast *ast_node, t_parser *args, t_redir **cur_redir)
 		ast_node->redir = (*cur_redir);
 	}
 	(*cur_redir)->type = args->token->type;
+	(*cur_redir)->token_str_data = ft_strdup(args->token->str_data);
+	if (args->token->str_data && !(*cur_redir)->token_str_data)
+	{//todo mall err
+	}
 	(*cur_redir)->arg = append_arg(args->arg, (*cur_redir)->arg, true);
 	if ((*cur_redir)->arg)
 	{
@@ -231,21 +235,21 @@ t_result	parser_resovle_here_doc(t_redir *redir)
 	char			*line;
 	char			*temp;
 
-	termination = ft_strjoin(redir->arg->name->token->str_data, "\n");
+	termination = ft_strjoin(redir->token_str_data, "\n");
 	printf("termination: %s", termination);
 	if (!termination)
 		return (ERROR);
 	//(void)redir;
 	if (pipe(pipe_fd) == -1)
 		return (free(termination), ERROR);
-	free(redir->arg->name->token->str_data);
-	redir->arg->name->token->str_data = ft_itoa(pipe_fd[READ]);
+	free(redir->token_str_data);
+	redir->token_str_data = ft_itoa(pipe_fd[READ]);
 	temp = NULL;
-	if (redir->arg->name->token->str_data)
-		temp = ft_strjoin("<<<<", redir->arg->name->token->str_data);
-	free(redir->arg->name->token->str_data);
-	redir->arg->name->token->str_data = temp;
-	if (!redir->arg->name->token->str_data)
+	if (redir->token_str_data)
+		temp = ft_strjoin("<<<<", redir->token_str_data);
+	free(redir->token_str_data);
+	redir->token_str_data = temp;
+	if (!redir->token_str_data)
 	{
 		close(pipe_fd[READ]);
 		close(pipe_fd[WRITE]);
@@ -340,9 +344,9 @@ t_result	build_operator_node(t_ast *ast_node, t_parser *highest_operator)
 t_ast *build_ast(t_parser *parser)
 {
 	t_parser				*highest_operator;
-	
 	t_ast					*ast_node;
 
+	//printf("build_ast\n");
 	ast_node = ft_calloc(1, sizeof(t_ast));
 	if (!ast_node)
 		return (free_parser_main(parser, true), NULL);
@@ -383,11 +387,11 @@ void	free_redir(t_redir *redir)
 	{
 		if (redir->type == HERE_DOC)
 		{
-			if (redir->arg->name->token->str_data
-				&& !ft_strncmp(redir->arg->name->token->str_data,
+			if (redir->token_str_data
+				&& !ft_strncmp(redir->token_str_data,
 					"<<<<", 4))
 			{
-				close(ft_atoi(redir->arg->name->token->str_data + 4));
+				close(ft_atoi(redir->token_str_data + 4));
 			}
 		}
 		free_arg_list(redir->arg);

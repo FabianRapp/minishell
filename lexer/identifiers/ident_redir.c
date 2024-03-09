@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 00:06:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/07 08:55:20 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 02:20:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,8 @@ t_result	lexer_here_doc(t_lexer *lexer, t_token *token)
 		}
 		read_char(lexer);
 	}
-	lexer->position -= 1;
-	lexer->read_position -= 1;
+	//lexer->position -= 1;
+	//lexer->read_position -= 1;
 	return (SUCCESS);
 }
 
@@ -106,16 +106,16 @@ t_result	redir_type(t_lexer *lexer, t_token *token)
 		return (ERROR);
 	if (lexer->cur_char == '<')
 	{
-		// if ((lexer->str)[lexer->position + 1] == '<')
-		// {
-		// 	if (lexer_here_doc(lexer, token) == ERROR)
-		// 	{//todo error
-		// 		//printf("debug lexer-here_doc error\n");
-		// 	}
-		// 	//printf("lexer heredoc str data: %s\n", token->str_data);
-		// }
 		if ((lexer->str)[lexer->position + 1] == '<')
-			token->type = HERE_DOC;
+		{
+			if (lexer_here_doc(lexer, token) == ERROR)
+			{//todo error
+				//printf("debug lexer-here_doc error\n");
+			}
+			//printf("lexer heredoc str data: %s\n", token->str_data);
+		}
+		// if ((lexer->str)[lexer->position + 1] == '<')
+		// 	token->type = HERE_DOC;
 		else
 			token->type = REDIR_IN;
 	}
@@ -126,10 +126,10 @@ t_result	redir_type(t_lexer *lexer, t_token *token)
 		else
 			token->type = REDIR_OUT;
 	}
-	if (token->type == REDIR_APPEND || token->type == HERE_DOC)
-		lexer->read_position += 1;
-	// if (token->type == REDIR_APPEND)
+	// if (token->type == REDIR_APPEND || token->type == HERE_DOC)
 	// 	lexer->read_position += 1;
+	if (token->type == REDIR_APPEND)
+		lexer->read_position += 1;
 	return (SUCCESS);
 }
 

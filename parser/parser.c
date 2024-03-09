@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/07 08:54:43 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 02:29:20 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ t_result	redirs_have_arg(t_parser *parser)
 {
 	while (parser->p_type != T_EOF)
 	{
-		if (is_redir(parser->p_type) && parser->arg == NULL)// && parser->p_type != HERE_DOC)
+		// if (is_redir(parser->p_type) && parser->arg == NULL)// && parser->p_type != HERE_DOC)
+		if (is_redir(parser->p_type) && parser->arg == NULL && parser->p_type != HERE_DOC)
 		{
 			while (parser->next->p_type == WHITE_SPACE)
 				parser = parser->next;
@@ -36,7 +37,8 @@ t_result	parse_redir_paths(t_parser *parser)
 {
 	while (parser->p_type != T_EOF)
 	{
-		if (is_redir(parser->p_type))// && parser->p_type != HERE_DOC)
+		// if (is_redir(parser->p_type))// && parser->p_type != HERE_DOC)
+		if (is_redir(parser->p_type) && parser->p_type != HERE_DOC)
 		{
 			move_to_arg(parser, is_redir_arg_terminator, REDIR_ARG, false);
 		}
@@ -132,7 +134,7 @@ bool	has_redir_arg(t_parser *parser)
 	cur_arg = parser->arg;
 	while (cur_arg)
 	{
-		if (is_redir(cur_arg->p_type) || is_redir(cur_arg->token->type))
+		if ((is_redir(cur_arg->p_type) || is_redir(cur_arg->token->type)) && cur_arg->token->type != HERE_DOC)
 			return (true);
 		cur_arg = cur_arg->next;
 	}
@@ -163,6 +165,7 @@ t_result	validate_command_oder(t_parser *parser)
 		return (ERROR);
 	in_command_block = false;
 	//print_parser(parser, 0);
+	//printf("validate_command_oder\n");
 	while (parser && parser->p_type != T_EOF)
 	{
 		if (parser->token && parser->token->type == SUBSHELL && has_none_redir_arg(parser))

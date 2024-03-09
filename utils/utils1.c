@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 03:17:12 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 02:16:54 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,11 +244,18 @@ void	print_redir_list(t_redir *redir, int level, bool left)
 		print_indent_arg(level);
 		print_colored(type_to_str_type(redir->type), level);
 		print_colored(": ", level);
-		arg = redir->arg;
-		while (arg)
+		if (redir->type == HERE_DOC)
 		{
-			print_token_list(arg->name, level);
-			arg = arg->next;
+			print_colored(redir->token_str_data, level);
+		}
+		else
+		{
+			arg = redir->arg;
+			while (arg)
+			{
+				print_token_list(arg->name, level);
+				arg = arg->next;
+			}
 		}
 		redir = redir->next;
 	}

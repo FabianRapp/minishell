@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/07 08:58:29 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 01:54:18 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,7 @@ typedef	struct s_redir
 	t_arg			*arg;
 	t_redir			*next;
 	int				left_redir_arg;
-	//char			*token_str_data; //dont free, lazy fix for here doc
+	char			*token_str_data; //dont free, lazy fix for here doc
 }	t_redir;
 
 typedef struct s_child_data
