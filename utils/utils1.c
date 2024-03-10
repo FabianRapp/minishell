@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 06:46:59 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 11:17:45 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ t_result	wait_all_children(void)
 		waitpid(-1, &status, 0);
 		if (errno != ECHILD)
 		{
-			set_last_exit(WEXITSTATUS(status));
+			//set_last_exit(WEXITSTATUS(status));
 		}
 	}
 	errno = 0;
@@ -158,15 +158,18 @@ t_token	*new_dummy_token(void)
 
 void	print_error(bool shell_name, char *command_name, char *arg, char *str)
 {
-	if (shell_name)
-		ft_fprintf(2, "%s: ", SHELL_NAME);
-	if (command_name)
-		ft_fprintf(2, "%s: ", command_name);
-	if (arg)
-		ft_fprintf(1, "%s: ", arg);
-	if (str)
-		ft_fprintf(2, "%s", str);
-	ft_fprintf(2, "\n");
+	//if (!TESTER)
+	{
+		if (shell_name)
+			ft_fprintf(2, "%s: ", SHELL_NAME);
+		if (command_name)
+			ft_fprintf(2, "%s: ", command_name);
+		if (arg)
+			ft_fprintf(1, "%s: ", arg);
+		if (str)
+			ft_fprintf(2, "%s", str);
+		ft_fprintf(2, "\n");
+	}
 }
 
 bool	ft_free(void **ptr)

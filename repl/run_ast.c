@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/07 02:11:41 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/10 06:56:24 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,27 +16,27 @@
 void	ft_pipe(t_ast *ast)
 {
 	int			pipe_fd[2];
-	int			base_fd[2];
+	int			base;
 
 	if (ast->env->stop_execution)
 	{
 		ast->exit_status = 1;
 		return ;
 	}
-	base_fd[READ] = dup(READ);
-	base_fd[WRITE] = dup(WRITE);
+	base = dup(WRITE);
 	pipe(pipe_fd);
 	dup2(pipe_fd[WRITE], WRITE);
 	run_node(ast->left);
-	dup2(base_fd[WRITE], WRITE);
-	close(base_fd[WRITE]);
+	dup2(base, WRITE);
+	close(base);
 	close(pipe_fd[WRITE]);
 	ast->env->stop_execution = false;
+	base = dup(READ);
 	dup2(pipe_fd[READ], READ);
 	run_node(ast->right);
-	dup2(base_fd[READ], READ);
+	dup2(base, READ);
 	close(pipe_fd[READ]);
-	close(base_fd[READ]);
+	close(base);
 	if (ast->right->exit_status == DEFAULT_EXIT_STATUS)
 		ast->pid = ast->right->pid;
 	else
@@ -104,7 +104,6 @@ void	ft_and(t_ast *ast)
 
 void	init_command(t_ast *ast)
 {
-	
 	if (ast->env->stop_execution)
 	{
 		ast->exit_status = 1;
@@ -112,7 +111,7 @@ void	init_command(t_ast *ast)
 	}
 	if (!expansion(ast))
 	{
-		printf("DEBUG create_sub\n");
+		//printf("DEBUG create_sub\n");
 		exit(1);
 		return ;
 	}

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 08:18:57 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/10 07:39:37 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,15 @@ void	ft_pwd(t_ast *ast)
 
 void	ft_exit(t_ast *ast)
 {
-	if (sub_shell_mode(GET_SUB_SHELL_MODE) == false)
+
+	if (sub_shell_mode(GET_SUB_SHELL_MODE) == false && !TESTER)
 		print_error(false, NULL, NULL, "exit");
 	if (ast->arg && includes_non_num(ast->arg->name->token->str_data))
 	{
 		if (ast->arg && ast->arg->name)
 			print_error(true, "exit", ast->arg->name->token->str_data, "numeric argument required");
 		set_last_exit(255);
-		main_exit(ast->cleanup_data, true);
+		main_exit(ast->cleanup_data, true, true);
 	}
 	else if (ast->arg && count_args(ast->arg) > 1)
 	{
@@ -50,11 +51,18 @@ void	ft_exit(t_ast *ast)
 		return ;
 	}
 	else if (!ast->arg || count_args(ast->arg) == 0)
-		main_exit(ast->cleanup_data, true);
+	{
+		main_exit(ast->cleanup_data, true, true);
+	}
 	else
 	{
 		set_last_exit(ft_atoi(ast->arg->name->token->str_data));
-		main_exit(ast->cleanup_data, true);
+		ast->exit_status = ft_atoi(ast->arg->name->token->str_data);
+		// if (sub_shell_mode(GET_SUB_SHELL_MODE) == true)
+		// 	printf("exit in sub mode: %d/%d\n", ast->exit_status, get_last_exit());
+		// else
+		// 	printf("exit not sub mode: %d/%d\n", ast->exit_status, get_last_exit());
+		main_exit(ast->cleanup_data, true, true);
 	}
 }
 

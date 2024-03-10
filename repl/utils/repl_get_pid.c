@@ -66,10 +66,10 @@ int	get_pid(void)
 		print_error(true, NULL, NULL, strerror(errno));
 		exit(errno);
 	}
+	errno = 0;
 	if (pid > 0)
 	{
 		send_pid(fd, pid);
 	}
-	errno = 0;
 	return (catch_pid(fd));
 }

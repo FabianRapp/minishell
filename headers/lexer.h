@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:19:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 08:00:58 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/10 06:01:16 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ typedef struct s_lexer
 	int		position;
 	int		read_position;
 	char	cur_char;
+	char	last_char;
 }	t_lexer;
 
 t_lexer			new_lexer(char *str);

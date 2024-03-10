@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/08 00:57:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/18 07:24:41 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 11:35:58 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ char	*ft_strtrim(char const *s1, char const *set)
 	char	*trim_ret;
 	int		len;
 
+	if (!s1)
+		return (NULL);
 	len = ft_strlen(s1);
 	while (*s1 && in_set(set, *s1))
 	{

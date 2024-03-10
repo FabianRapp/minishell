@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 03:52:21 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/10 10:57:09 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,19 @@ t_result	valid_first_char(t_lexer *lexer)
 	return (SUCCESS);
 }
 
+t_result	handle_exception_char(t_lexer *lexer, t_token *token)
+{
+	if (lexer->cur_char != '\\')
+		return (SUCCESS);
+	read_char(lexer);
+	return (literal_type2(lexer, token));
+}
+
 t_token	*classify_sub_str(t_token *token, t_lexer *lexer, bool recursive_call)
 {
+	//printf("lexer str at start: %s\n", lexer-> str + lexer->position);
+	if (handle_exception_char(lexer, token) == ERROR)
+		return (lexer_error(token), NULL);
 	basic_sign_type(lexer, token);
 	if (!token->type && valid_first_char(lexer) == ERROR)
 		return (lexer_error(token), NULL);
@@ -60,9 +71,9 @@ t_token	*next_new_token(t_lexer *lexer, bool recursive_call)
 		return (NULL);
 	if (token->type)
 	{
-		if (!is_redir(token->type))
-			return (read_char(lexer), token);
-		return (token);
+		//if (!is_redir(token->type))
+		return (read_char(lexer), token);
+		//return (token);
 	}
 	printf("DEBUG: no function IDed the type\n");
 	printf("%s\n", lexer->str + lexer->position);
@@ -97,6 +108,7 @@ t_lexer	new_lexer(char *str)
 {
 	t_lexer		lexer;
 
+	lexer.last_char = 0;
 	lexer.position = 0;
 	lexer.read_position = 0;
 	lexer.str = str;

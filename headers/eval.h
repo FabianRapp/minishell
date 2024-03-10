@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:38:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 08:29:17 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 13:28:04 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ bool		ft_buildin(t_ast *ast);
 
 // input_exit.c
 t_ast		*get_input(t_cleanup_data *cleanup_data);
-void		main_exit(t_cleanup_data *data, bool full_exit);
+void		main_exit(t_cleanup_data *data, bool full_exit, bool ft_exit_call);
 t_ast		*handle_manunal_input(char **av, t_cleanup_data *cleanup_data);
 
 // data_utils.c

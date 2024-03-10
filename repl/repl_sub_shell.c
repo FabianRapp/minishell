@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 07:36:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 07:52:55 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/10 07:40:51 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,35 +20,51 @@ static t_result	mange_sub_shell_fds(t_ast *ast)
 		return (ERROR);
 	}
 	redir_fds();
+	if (errno)
+	{
+		print_error(true, NULL, NULL, strerror(errno));
+		ast->exit_status = errno;
+		set_last_exit(errno);
+		return (ERROR);
+	}
 	free(io_data(-1, NULL));
 	io_data(CLEANUP_FDS, NULL);
 	if (errno)
 	{
 		print_error(true, NULL, NULL, strerror(errno));
 		ast->exit_status = errno;
+		set_last_exit(errno);
 		return (ERROR);
 	}
 	return (SUCCESS);
 }
 
-static t_ast	*init_sub_shell(t_ast *ast, char *input, t_env *sub_env)
+static t_ast	*init_sub_shell(t_ast *ast, char *input, t_env *sub_env, t_cleanup_data *cleanup_data)
 {
 	t_ast	*sub_ast;
 
+	ast->pid = fork();
+	errno = 0;
+	if (ast->pid)
+	{
+		// waitpid(ast->pid, &(ast->exit_status), 0);
+		// ast->exit_status = WEXITSTATUS(ast->exit_status);
+		// set_last_exit(ast->exit_status);
+		// printf("val: %d\n", ast->exit_status);
+		return (NULL);
+	}
+	// if (!contains_non_white_spcace(input))
+	// {
+	// 	return (NULL);
+	// }
 	sub_ast = parser(input);
 	if (!sub_ast)
 	{
-		ast->exit_status = get_last_exit();
-		return (NULL);
+		main_exit(cleanup_data, true, false);
 	}
-	ast->pid = fork();
-	if (ast->pid)
-	{
-		free_ast(sub_ast);
-		return (NULL);
-	}
-	errno = 0;
-	add_global_data(sub_ast, sub_env, ast->envs);
+	cleanup_data->input = input;
+	cleanup_data->root = sub_ast;
+	add_global_data(sub_ast, sub_env, ast->envs, cleanup_data);
 	if (mange_sub_shell_fds(ast) == ERROR)
 		return (free_ast(sub_ast), exit(ast->exit_status), NULL);
 	return (sub_ast);
@@ -57,9 +73,12 @@ static t_ast	*init_sub_shell(t_ast *ast, char *input, t_env *sub_env)
 // TODO: does every sub process command update the last exit?
 static void	run_sub_shell(t_env sub_env, char *input, t_ast *ast)
 {
-	t_ast	*sub_ast;
+	t_ast			*sub_ast;
+	t_cleanup_data	cleanup_data;
 
-	sub_ast = init_sub_shell(ast, input, &sub_env);
+	cleanup_data.root = NULL;
+	cleanup_data.input = NULL;
+	sub_ast = init_sub_shell(ast, input, &sub_env, &cleanup_data);
 	if (sub_ast == NULL)
 		return ;
 	sub_ast->exit_status = ast->exit_status;
@@ -70,9 +89,11 @@ static void	run_sub_shell(t_env sub_env, char *input, t_ast *ast)
 		sub_ast->exit_status = WEXITSTATUS(sub_ast->exit_status);
 	}
 	wait_all_children();
+	set_last_exit(sub_ast->exit_status);
 	//sub_ast->exit_status = get_last_exit();
 	ast->exit_status = sub_ast->exit_status;
 	free_ast(sub_ast);
+	//printf("%d\n", ast->exit_status);
 	exit(ast->exit_status);
 	return ;
 }

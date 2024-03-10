@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 02:40:29 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 10:55:53 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ bool	next_path(t_path *path_ob)
 	{
 		path_ob->cur_path = NULL;
 		path_ob->ast->exit_status = 127;
+		set_last_exit(127);
 		return (print_error(SHELL_NAME, path_ob->command_name, NULL, "command not found"), false);
 	}
 	path_ob->position = path_ob->read_postion;
@@ -105,6 +106,7 @@ char	*find_path(t_ast *ast, char *command_name, char *path_env)
 		if (errno != ENOENT && errno != 20)
 		{
 			ast->exit_status = errno;
+			set_last_exit(errno);
 			return (print_error(true, "DEBUG find_path", NULL, strerror(errno)), NULL);
 		}
 		errno = 0;

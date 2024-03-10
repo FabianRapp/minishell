@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 00:06:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 04:00:01 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/10 10:59:26 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,28 +74,46 @@ bool	is_redir_terminator_char(char c)
 	return (false);
 }
 
-bool	valid_redir_arg(t_lexer *redir_arg_start_lex)
+bool	valid_redir_arg(t_lexer *lexer, t_type type)
 {
 	t_token	*error_token;
+	int		temp_pipe[2];
+	int		base_std_err;
+	t_lexer	temp;
 
-	while (ft_iswhitespace(redir_arg_start_lex->cur_char))
+	temp = *lexer;
+	if (type != HERE_DOC)
+		read_char(lexer);
+	while (ft_iswhitespace(lexer->cur_char))
 	{
-		read_char(redir_arg_start_lex);
+		read_char(lexer);
 	}
-	if (!is_redir_terminator_char(redir_arg_start_lex->cur_char))
+	if (!is_redir_terminator_char(lexer->cur_char))
+	{
+		*lexer = temp;
 		return (true);
+	}
 	set_last_exit(2);
-	error_token = next_new_token(redir_arg_start_lex, true);
+	pipe(temp_pipe);
+	base_std_err = dup(2);
+	dup2(temp_pipe[WRITE], 2);
+	error_token = next_new_token(lexer, true);
+	dup2(base_std_err, 2);
+	close(base_std_err);
+	close(temp_pipe[0]);
+	close(temp_pipe[1]);
 	if (error_token)
 	{
 		print_error(true, NULL, NULL, type_to_str(error_token->type));
 	}
 	free_token(error_token);
+	*lexer = temp;
 	return (false);
 }
 
 t_result	lexer_here_doc(t_lexer *lexer, t_token *token)
 {
+	//printf("rest str: %s\n", lexer->str + lexer->position);
 	if (token->type != HERE_DOC)
 		return (SUCCESS);
 	while (!is_redir_terminator_char(lexer->cur_char))
@@ -115,9 +133,12 @@ t_result	redir_type(t_lexer *lexer, t_token *token, bool recursive_call)
 	if (lexer->cur_char == '<')
 	{
 		token->type = REDIR_IN;
-		read_char(lexer);
-		if (lexer->cur_char == '<')
+		//printf("read pos(%d) char: %c\ncur char: %c\n", lexer->read_position, lexer->str[lexer->read_position], lexer->cur_char);
+		//read_char(lexer);
+		//if (lexer->cur_char == '<')
+		if (lexer->str[lexer->read_position] == '<')
 		{
+			read_char(lexer);
 			read_char(lexer);
 			token->type = HERE_DOC;
 		}
@@ -125,15 +146,19 @@ t_result	redir_type(t_lexer *lexer, t_token *token, bool recursive_call)
 	else if (lexer->cur_char == '>')
 	{
 		token->type = REDIR_OUT;
-		read_char(lexer);
-		if (lexer->cur_char == '>')
+		// read_char(lexer);
+		// if (lexer->cur_char == '>')
+		if (lexer->str[lexer->read_position] == '>')
 		{
 			read_char(lexer);
+			//read_char(lexer);
 			token->type = REDIR_APPEND;
 		}
 	}
-	if (!recursive_call && is_redir(token->type) && !valid_redir_arg(lexer))
+	if (!recursive_call && is_redir(token->type) && !valid_redir_arg(lexer, token->type))
 		return (ERROR);
+	if (token->type != HERE_DOC)
+		return (SUCCESS);
 	return (lexer_here_doc(lexer, token));
 }
 

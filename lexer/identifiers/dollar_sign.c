@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 21:33:17 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/05 23:58:48 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 12:31:28 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,20 @@ static t_result	is_dollar_literal(t_lexer *lexer, t_token *token)
 	return (ERROR);
 }
 
+static	t_result	hande_quote(t_lexer *lexer, t_token *token)
+{
+	read_char(lexer);
+	read_char(lexer);
+	while (lexer->cur_char != '\'' && lexer->cur_char != '\"')
+	{
+		if (!ft_strjoin_inplace_char(&(token->str_data), lexer->cur_char))
+			return (ERROR);
+		read_char(lexer);
+	}
+	token->type = INTERPRETED;
+	return (SUCCESS);
+}
+
 t_result	dollar_lexing(t_lexer *lexer, t_token *token)
 {
 	int	len;
@@ -63,11 +77,17 @@ t_result	dollar_lexing(t_lexer *lexer, t_token *token)
 			return (SUCCESS);
 		return (ERROR);
 	}
+	if (lexer->str[lexer->position + 1] == '\'' || lexer->str[lexer->position + 1] == '\"')
+	{
+		if (hande_quote(lexer, token) == ERROR)
+		{
+		}
+		if (token->type)
+			return (SUCCESS);
+	}
 	len = name_len((lexer->str) + lexer->position + 1);
 	if (ft_isdigit(lexer->str[lexer->position + 1]))
 		len = 1;
-	if (len == 0)
-		return (SUCCESS);
 	token->type = ENV_VAR;
 	token->str_data = ft_strndup((lexer->str) + lexer->position + 1, len);
 	token->old_data = ft_strndup((lexer->str) + lexer->position + 1, len);

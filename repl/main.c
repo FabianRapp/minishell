@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 07:59:26 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/10 10:25:58 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ void	run_command_node(t_ast *ast)
 		return ;
 	}
 	ast->pid = fork();
+	errno = 0;
 	if (ast->pid == -1)
 	{
 		ast->exit_status = errno;
@@ -109,7 +110,6 @@ void	run_command_node(t_ast *ast)
 		free_child_data(&data);
 		return ;
 	}
-	errno = 0;
 	if (ast->pid != 0)
 	{
 		free_child_data(&data);
@@ -120,28 +120,30 @@ void	run_command_node(t_ast *ast)
 	exit(errno);
 }
 
-void	add_global_data(t_ast *ast, t_env *env, char **envs)
+void	add_global_data(t_ast *ast, t_env *env, char **envs, t_cleanup_data *cleanup_data)
 {
 	if (!ast)
 		return ;
-	add_global_data(ast->left, env, envs);
-	add_global_data(ast->right, env, envs);
+	add_global_data(ast->left, env, envs, cleanup_data);
+	add_global_data(ast->right, env, envs, cleanup_data);
 	ast->env = env;
 	ast->exit_status = DEFAULT_EXIT_STATUS;
 	ast->envs = envs;
+	ast->cleanup_data = cleanup_data;
 }
 
 t_result	init_main(int ac, char **base_env, t_env *env)
 {
 	errno = 0;
+	set_last_exit(0);
 	if (ac > 2)
 	{
 		print_error(true, NULL, NULL, "max one arg allowed");
 		exit(1);
 	}
-	// env->main_pid = get_pid();
-	// if (!env->main_pid)
-	// 	return (1);
+	env->main_pid = get_pid();
+	if (!env->main_pid)
+		return (1);
 	if (!init_env(env, base_env))
 		return (ERROR);
 	return (SUCCESS);
@@ -150,9 +152,9 @@ t_result	init_main(int ac, char **base_env, t_env *env)
 void	check_exit_and_cleanup(t_cleanup_data *cleanup_data)
 {
 	if (full_exit_status(false) == true)
-		main_exit(cleanup_data, true);
+		main_exit(cleanup_data, true, false);
 	else
-		main_exit(cleanup_data, false);
+		main_exit(cleanup_data, false, false);
 }
 
 int	main(int ac, char **av, char **base_env)
@@ -161,28 +163,50 @@ int	main(int ac, char **av, char **base_env)
 	t_cleanup_data	cleanup_data;
 	t_env			env;
 
+	cleanup_data.in_arr = NULL;
+	cleanup_data.input_i = 0;
 	if (init_main(ac, base_env, &env) == ERROR)
 		return (1);
-	if (ac == 2)
-		ast = handle_manunal_input(av, &cleanup_data);
-	else
+	(void)av;
+	//if (ac >= 2)
+		//ast = handle_manunal_input(av, &cleanup_data);
+	//else
 		ast = get_input(&cleanup_data);
 	if (!ast)
 		check_exit_and_cleanup(&cleanup_data);
+	if (TESTER && !ast && !cleanup_data.in_arr[cleanup_data.input_i])
+	{
+		free_str_ar(cleanup_data.in_arr);
+		cleanup_data.in_arr = NULL;
+		exit(get_last_exit());
+	}
 	while (1)
 	{
 		if (ast)
 		{
-			print_ast(ast);
-			add_global_data(ast, &env, base_env);
-			ast->cleanup_data = &cleanup_data;
+			//print_ast(ast);
+			add_global_data(ast, &env, base_env, &cleanup_data);
 			//print_ast(ast);
 			run_node(ast);
 			check_exit_and_cleanup(&cleanup_data);
+			//if (TESTER)
+				//exit(get_last_exit());
+			if (TESTER && !cleanup_data.in_arr[cleanup_data.input_i])
+			{
+				free_str_ar(cleanup_data.in_arr);
+				cleanup_data.in_arr = NULL;
+				exit(get_last_exit());
+			}
 		}
 		ast = get_input(&cleanup_data);
 		if (!ast)
 			check_exit_and_cleanup(&cleanup_data);
+		if (TESTER && !ast && !cleanup_data.in_arr[cleanup_data.input_i])
+		{
+			free_str_ar(cleanup_data.in_arr);
+			cleanup_data.in_arr = NULL;
+			exit(get_last_exit());
+		}
 	}
 	return (0);
 }

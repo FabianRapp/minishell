@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 04:20:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 02:40:29 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/10 11:27:23 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,19 @@ t_result	handle_redir_out(t_ast *ast, t_fd_pair **fds, t_redir *redir, bool appe
 
 	base_fd = redir->left_redir_arg;
 	new_fd_pair = redir_fd_write(redir->arg->name->token->str_data, append, base_fd);
-	if (handle_open_error(ast, &new_fd_pair) == ERROR)
+	if (errno)
+	{
+		print_error(true, NULL, NULL, strerror(errno));
+		ast->exit_status = 1;
+		set_last_exit(1);
+		errno = 0;
 		return (ERROR);
+	}
+	if (handle_open_error(ast, &new_fd_pair) == ERROR)
+	{
+		ast->exit_status = get_last_exit();
+		return (ERROR);
+	}
 	(*fds) = add_fd_pair((*fds), new_fd_pair);
 	if (!(*fds))
 	{
@@ -37,8 +48,19 @@ t_result	handle_redir_in(t_ast *ast, t_fd_pair **fds, t_redir *redir)
 
 	base_fd = redir->left_redir_arg;
 	new_fd_pair = redir_read(redir->arg->name->token->str_data, base_fd);
-	if (handle_open_error(ast, &new_fd_pair) == ERROR)
+	if (errno)
+	{
+		print_error(true, NULL, NULL, strerror(errno));
+		ast->exit_status = 1;
+		set_last_exit(1);
+		errno = 0;
 		return (ERROR);
+	}
+	if (handle_open_error(ast, &new_fd_pair) == ERROR)
+	{
+		ast->exit_status = get_last_exit();
+		return (ERROR);
+	}
 	(*fds) = add_fd_pair((*fds), new_fd_pair);
 	if (!(*fds))
 	{

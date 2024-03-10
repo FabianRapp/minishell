@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:46:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 02:59:08 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/10 06:01:33 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 // reads the next char into the lexer and updates indexes
 void	read_char(t_lexer *lexer)
 {
+	lexer->last_char = lexer->cur_char;
 	lexer->cur_char = (lexer->str)[lexer->read_position];
 	lexer->position = lexer->read_position;
 	if (lexer->read_position < ((int)ft_strlen(lexer->str)))

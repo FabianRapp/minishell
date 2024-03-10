@@ -6,12 +6,14 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 07:59:57 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/10 10:58:01 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 TODO:
+	- redir error msgs
+	- wildcards should not expand in signle quotes
 	- type_to_str() needs refactor to follow norm with same returns
 	- make insert_token() return value and error handeling more clear
 	- cleanup_fds() return val checks
@@ -90,6 +92,7 @@ weird stuff to keep in mind about bash
 # include "eval.h"
 # include "signals.h"
 
+# define TESTER 1
 # define SHELL_NAME "minishell\0"
 # define SHELL_PROMPT "minishell: \0"
 
@@ -137,6 +140,8 @@ typedef struct s_cleanup_data
 {
 	t_ast	*root;
 	char	*input;
+	char	**in_arr;
+	int		input_i;
 }	t_cleanup_data;
 
 typedef struct s_env
@@ -204,7 +209,7 @@ void	run_node(t_ast *ast);
 void	run_command_node(t_ast *ast);
 char	*extract_command_name(char *path);
 bool	check_edgecases(t_ast *ast);
-void	add_global_data(t_ast *ast, t_env *env, char **envs);
+void	add_global_data(t_ast *ast, t_env *env, char **envs, t_cleanup_data *cleanup_data);
 
 //redir
 t_result	resolve_redirs(t_ast *ast);
@@ -292,6 +297,17 @@ t_parser	*parser_testing(char *str);
 
 
 /*
+
+
+echo segfault <"<<<"<<amazing
+.
+amazing
+
+
+/usr/bin/printf "%s\n" '*'
+
+
+echo 1 | (/usr/bin/read)
 
 
 bash-5.2$ echo &&

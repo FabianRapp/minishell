@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:49:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 02:40:29 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 13:16:48 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,10 @@ t_result	wildcards(t_token_list *name)
 {
 	while (name)
 	{
+		// if (name->token->type == WILDCARD && ft_strchr(name->token->str_data, '*'))
 		if (ft_strchr(name->token->str_data, '*'))
 		{
+			name->token->type = LITERAL;
 			expand_wildcard_node(name);
 		}
 		name = name->next;

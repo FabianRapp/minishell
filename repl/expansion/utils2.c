@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 13:01:55 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/03 23:29:27 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 12:56:33 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,9 @@ char	*expand_dollar(char *dollar_str, t_env *env, int *index)
 	else if (*(dollar_str + 1) == '$')
 		return_str = ft_itoa(env->main_pid);
 	else if (ft_isdigit(*(dollar_str + 1)))
-		return_str = ft_strdup("");
+		return ((*index)++, ft_strdup("$"));
+	else if (name_len(dollar_str + 1) == 0)
+		return ((*index)++, ft_strdup("$"));
 	else if (ft_isalpha(*(dollar_str + 1)) || *(dollar_str + 1) == '_')
 	{
 		*index += name_len(dollar_str + 1) + 1;
@@ -114,15 +116,27 @@ t_token_list	*remove_non_literals(t_token_list *list)
 		if (list->token->type != LITERAL && list->token->type
 			!= DUMMY_COMMAND && list->token->type != WILDCARD)
 		{
+			if (list == head)
+			{
+			list = move_nodes_ahead(list, true);
 			list = move_nodes_ahead(list, true);
 			if (list == head)
+				list = move_nodes_ahead(list, true);
+			if (list == head)
 				head = list;
+			}
 			else
+			{
 				last->next = list;
+			}
 		}
 		last = list;
 		if (list)
+		{
+			// if (list->token && ft_strchr(list->token->str_data, '*'))
+			// 	list->token->type = WILDCARD;
 			list = list->next;
+		}
 	}
 	return (head);
 }

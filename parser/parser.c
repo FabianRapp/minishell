@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 07:11:17 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/10 10:10:02 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,7 +184,7 @@ t_result	validate_command_oder(t_parser *parser)
 			}
 			else if (parser->p_type == SUBSHELL)
 			{
-				print_error(true, "DEBUG 3", NULL, "syntax error near unexpected token `('");
+				print_error(true, NULL, NULL, "syntax error near unexpected token `('");
 			}
 			else
 				print_error(true, NULL, NULL, "Error");
@@ -194,7 +194,7 @@ t_result	validate_command_oder(t_parser *parser)
 		if (parser->p_type == COMMAND || parser->p_type == SUBSHELL || parser->p_type == DUMMY_COMMAND)
 			in_command_block = true;
 		if (is_operator(parser->p_type) && !in_command_block)
-			return (set_last_exit(2), print_error(true, "debug test123", false, type_to_str(parser->p_type)), ERROR);
+			return (set_last_exit(2), print_error(true, NULL, false, type_to_str(parser->p_type)), ERROR);
 		if (is_operator(parser->p_type))
 			in_command_block = false;
 		parser = parser->next;
@@ -217,6 +217,7 @@ t_ast	*parser(char *str)
 	if (merge_literals_parser(parser) == ERROR)
 		return (free_parser_main(parser, true), NULL);
 	merge_names(parser);
+	
 	remove_whitespace(parser);
 	if (parse_redir_paths(parser) == ERROR)
 		return (free_parser_main(parser, true), NULL);
