@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 06:56:24 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/10 14:39:47 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,24 +23,29 @@ void	ft_pipe(t_ast *ast)
 		ast->exit_status = 1;
 		return ;
 	}
+	//check_fds();
 	base = dup(WRITE);
 	pipe(pipe_fd);
 	dup2(pipe_fd[WRITE], WRITE);
+	close(pipe_fd[WRITE]);
+	ast->left->fd_to_close = pipe_fd[READ];
 	run_node(ast->left);
 	dup2(base, WRITE);
 	close(base);
-	close(pipe_fd[WRITE]);
 	ast->env->stop_execution = false;
 	base = dup(READ);
 	dup2(pipe_fd[READ], READ);
+	close(pipe_fd[READ]);
 	run_node(ast->right);
 	dup2(base, READ);
-	close(pipe_fd[READ]);
 	close(base);
 	if (ast->right->exit_status == DEFAULT_EXIT_STATUS)
 		ast->pid = ast->right->pid;
 	else
 		ast->exit_status = ast->right->exit_status;
+	if (errno)
+		printf("errno: %s\n", strerror(errno));
+	//check_fds();
 }
 
 void	ft_or(t_ast *ast)

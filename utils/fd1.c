@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 07:42:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 08:02:22 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/10 14:04:25 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,9 @@ t_result	redir_fds(void)
 	t_fd_pair	*fds;
 	int			i;
 
-	//printf("BEFORE redir_fds():\n");
-	//print_fds();
+	// printf("BEFORE redir_fds():\n");
+	// check_fds();
+	// print_fds();
 	fds = get_fds();
 	i = 0;
 	while(fds + i && !is_buffer_all_zeros(fds + i, sizeof(t_fd_pair)))
@@ -49,7 +50,8 @@ t_result	redir_fds(void)
 		}
 		i++;
 	}
-	//printf("AFTER redir_fds():\n");
+	// printf("AFTER redir_fds():\n");
+	// check_fds();
 	//print_fds();
 	return (SUCCESS);
 }

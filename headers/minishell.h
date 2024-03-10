@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 10:58:01 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/10 14:41:28 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,8 +140,6 @@ typedef struct s_cleanup_data
 {
 	t_ast	*root;
 	char	*input;
-	char	**in_arr;
-	int		input_i;
 }	t_cleanup_data;
 
 typedef struct s_env
@@ -198,6 +196,7 @@ typedef struct s_ast
 	t_env			*env;
 	pid_t			pid;
 	char			**envs;
+	int				fd_to_close;
 }	t_ast;
 
 // lexer
@@ -272,6 +271,8 @@ t_result	reset_fds(void);
 t_fd_pair	*get_fds(void);
 t_result	cleanup_fds(void);
 
+
+char	*get_file_name(int fd);
 void	print_fds(void);
 
 # ifndef FD_REQUEST_SKIP
@@ -297,11 +298,6 @@ t_parser	*parser_testing(char *str);
 
 
 /*
-
-
-echo segfault <"<<<"<<amazing
-.
-amazing
 
 
 /usr/bin/printf "%s\n" '*'

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 10:57:09 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/10 13:08:45 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ t_token	*classify_sub_str(t_token *token, t_lexer *lexer, bool recursive_call)
 		return (lexer_error(token), NULL);
 	else if (!token->type)
 		token->unknown = lexer->cur_char;
+	//ft_fprintf(2, "token data: %s\n", token->str_data);
 	return (token);
 }
 

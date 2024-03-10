@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 05:35:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 11:18:44 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/10 12:42:14 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ t_result	parser_resolve_here_doc(char *termination, int pipe_fd[2])
 {
 	char	*line;
 	bool	start;
+	int		count;
 
 	line = NULL;
 	start = true;
@@ -27,16 +28,23 @@ t_result	parser_resolve_here_doc(char *termination, int pipe_fd[2])
 		start = false;
 		free(line);
 		if (!isatty(fileno(stdin)))
-		{
 			line = get_next_line(fileno(stdin));
-			// temp = line;
-			// line = ft_strtrim(line, "\n");
-			// free(temp);
-		}
 		else
 		{
+			//line = ft_read_line(">");
 			line = readline(">");
 			ft_strjoin_inplace(&line, "\n");
+		}
+		count = line_counter();
+		if (!line && errno)
+		{
+			errno = 0;
+			return (ERROR);
+		}
+		if (!line || !*line)
+		{
+			ft_fprintf(2, "%s: warning: here-document at line %d delimited by end-of-file (wanted `%s')", SHELL_NAME, count, termination);
+			return (SUCCESS);
 		}
 		if (ft_strcmp(line, termination) == 0)
 		{

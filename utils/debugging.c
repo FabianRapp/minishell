@@ -6,12 +6,14 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 07:01:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 03:42:11 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/10 14:00:08 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/lexer.h"
 #include "../headers/parser.h"
+
+
 
 void	check_fds(void)
 {
@@ -24,7 +26,7 @@ void	check_fds(void)
 	{
 		if (fcntl(fd, F_GETFD) != -1) // TODO: DEBUG: unallowed function for debugging and finding leaks (fcntl)
 		{
-			printf("%d is open(fd)\n", fd);
+			printf("%d is open(fd): %s\n", fd, get_file_name(fd));
 			open_fd_count++;
 		}
 		fd++;

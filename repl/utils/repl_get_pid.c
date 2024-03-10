@@ -19,8 +19,8 @@ static int	catch_pid(int fd[2])
 
 	if (close(fd[WRITE]) == -1 || read(fd[READ], &pid, sizeof(pid_t)) == -1)
 	{
-		print_error(true, NULL, NULL, strerror(errno));
 		close(fd[READ]);
+		print_error(true, NULL, NULL, strerror(errno));
 		exit(errno);
 	}
 	if (close(fd[READ]) == -1)
@@ -37,13 +37,10 @@ static void	send_pid(int fd[2], int pid)
 {
 	int	exit_status;
 
-	if (close(fd[READ]) == -1 || write(fd[WRITE], &pid, sizeof(pid_t)) == -1)
+	if (pid == -1 || close(fd[READ]) == -1 || write(fd[WRITE], &pid, sizeof(pid_t)) == -1 || close(fd[WRITE]) == -1)
 	{
-		close(fd[WRITE]);
 		exit(errno);
 	}
-	if (close(fd[WRITE]) == -1)
-		exit(errno);
 	if (waitpid(pid, &exit_status, 0) == -1)
 		exit(errno);
 	exit_status = WEXITSTATUS(exit_status);

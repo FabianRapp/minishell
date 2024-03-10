@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 11:18:48 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/10 14:39:52 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,38 +42,13 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 {
 	char	*input;
 	t_ast	*ast;
-	char	*temp;
 
 	cleanup_data->root = NULL;
 	cleanup_data->input = NULL;
-	if (cleanup_data->in_arr && !cleanup_data->in_arr[cleanup_data->input_i])
-	{
-		free_str_ar(cleanup_data->in_arr);
-		cleanup_data->in_arr = NULL;
-		cleanup_data->input_i = 0;
-	}
-	if (!cleanup_data->in_arr)
-	{
-		if (!isatty(fileno(stdin)))
-		{
-			input = get_next_line(fileno(stdin));
-			temp = input;
-			input = ft_strtrim(input, "\n");
-			free(temp);
-		}
-		else
-			input = readline("minishell-$: ");
-		cleanup_data->in_arr = ft_split(input, '\n');
-		if (!cleanup_data->in_arr)
-		{
-		}
-	}
-	input = cleanup_data->in_arr[cleanup_data->input_i];
-	cleanup_data->input_i += 1;
+	input = ft_read_line("minishell-$: ");
+	//input = readline("minishell-$: ");
 	if (!input)
 	{
-		free_str_ar(cleanup_data->in_arr);
-		cleanup_data->in_arr = NULL;
 		//exit(get_last_exit());
 		//if (TESTER)
 			//exit(get_last_exit());
@@ -89,10 +64,13 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 	ast = parser(input);
 	if (ast)
 	{
-		//cleanup_data->input = input;
+		cleanup_data->input = input;
+		cleanup_data->input = input;
 		cleanup_data->root = ast;
 		return (ast);
 	}
+	else
+		free(input);
 	//exit(get_last_exit());
 	return (NULL);
 }
@@ -114,7 +92,7 @@ void	main_exit(t_cleanup_data *data, bool full_exit, bool ft_exit_call)
 		data->root->exit_status = WEXITSTATUS(data->root->exit_status);
 		set_last_exit(data->root->exit_status);
 	}
-	wait_all_children();
+	wait_all_children(data->root);
 	// if (!data)
 	// 	printf("no cleanup data\n");
 	// else if (!data->root)
@@ -127,7 +105,7 @@ void	main_exit(t_cleanup_data *data, bool full_exit, bool ft_exit_call)
 		data->root->env->stop_execution = false;
 	if (full_exit)
 	{
-		free_str_ar(data->in_arr);
+		free(data->input);
 		//ft_free((void **)&(data->input));
 		if (data->root)
 			free_ast(data->root);
@@ -140,6 +118,7 @@ void	main_exit(t_cleanup_data *data, bool full_exit, bool ft_exit_call)
 	else if (!full_exit)
 	{
 		//ft_free((void **)&(data->input));
+		free(data->input);
 		if (data->root)
 			free_ast(data->root);
 		data->root = NULL;

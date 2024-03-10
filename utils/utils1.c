@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 11:17:45 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/10 14:39:06 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,12 +127,82 @@ t_result	set_errno_as_exit(t_ast *ast)
 	return (SUCCESS);
 }
 
+int	line_counter(void)
+{
+	static int	line_count = -1;
+
+	line_count++;
+	return (line_count);
+}
+
+// char	*ft_read_line(char *header)
+// {
+// 	char	*line;
+// 	char	*temp;
+// 	int		pid;
+// 	int		pipe_fd[2];
+// 	int		ret;
+
+// 	pipe(pipe_fd);
+// 	pid = fork();
+// 	errno = 0;
+// 	if (pid)
+// 	{
+// 		line_counter();
+// 		close(pipe_fd[WRITE]);
+// 		if (pid < 0)
+// 		{
+// 			set_last_exit(errno);
+// 			errno = 0;
+// 			close(pipe_fd[READ]);
+// 			return (NULL);
+// 		}
+// 		line = get_next_line(pipe_fd[READ]);
+// 		if (waitpid(pid, &ret, 0) == - 1 || WEXITSTATUS(ret))
+// 			return (free(line), set_last_exit(WEXITSTATUS(ret)), NULL);
+// 		return (line);
+// 	}
+// 	if (!isatty(fileno(stdin)))
+// 	{
+// 		temp = get_next_line(fileno(stdin));
+// 		line = ft_strtrim(temp, "\n");
+// 		free(temp);
+// 	}
+// 	else
+// 		line = readline(header);
+// 	write(pipe_fd[WRITE], line, ft_strlen(line));
+// 	exit(errno);
+// }
+
+char	*ft_read_line(char *header)
+{
+	char	*line;
+	char	*temp;
+
+	if (!isatty(fileno(stdin)))
+	{
+		temp = get_next_line(fileno(stdin));
+		line = ft_strtrim(temp, "\n");
+		free(temp);
+	}
+	else
+		line = readline(header);
+	line_counter();
+	return (line);
+}
+
 // TODO make set_last_exit only run if the children did not exit yet when this function was called
-t_result	wait_all_children(void)
+t_result	wait_all_children(t_ast *ast)
 {
 	int		status;
 
 	errno = 0;
+	if (ast && ast->pid != INIT_VAL && ast->exit_status == INIT_VAL)
+		waitpid(ast->pid, &status, 0);
+	// if (ast->type == PIPE && ast->left->exit_status == DEFAULT_EXIT_STATUS && ast->left->pid != INIT_VAL)
+	// 	waitpid(ast->left->pid, &(ast->left->exit_status), WNOHANG);
+	// if (ast->type == PIPE && ast->left->exit_status == DEFAULT_EXIT_STATUS && ast->left->pid != INIT_VAL)
+	// 	kill(ast->left->pid, SIGINT);
 	while (errno != ECHILD)
 	{
 		waitpid(-1, &status, 0);
