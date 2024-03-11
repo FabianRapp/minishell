@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_exit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/02 20:13:36 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/07 00:41:03 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	main_exit(t_cleanup_data *data, bool full_exit, t_env *env, int exit_status
 			free_ast(data->root);
 		cleanup_fds();
 		if (LEAK_CHECK)
-			system("leaks minishell");
+			system("leaks minishell"); //! we can not turn that at the end - forbidden function
 		check_fds(false);
 	}
 	// else if (!main_process && full_exit)

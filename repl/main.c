@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/02 23:54:07 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/10 23:06:58 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,17 @@ char	**ft_initialize_our_env(char **base_env)
 	return (ret);
 }
 
+bool	init_env(t_env *new_env, char **base_env)
+{
+	if (!new_env)
+		return (false);
+	if (!base_env)
+		return (false);
+	new_env->main_process = true;
+	new_env->stop_execution = false;
+	return (true);
+}
+
 int	main(int ac, char **av, char **base_env)
 {
 	t_ast			*ast;
@@ -136,7 +147,7 @@ int	main(int ac, char **av, char **base_env)
 	//? my stuff:
 	our_env = ft_initialize_our_env(base_env);
 	if (our_env == NULL)
-		return (printf(ERR "malloc failed\n"), 1);
+		return (printf(PR_ERR "malloc failed\n"), 1);
 
 	// //to test whethere i saved the env correctly:
 	// int i = -1;
@@ -144,9 +155,10 @@ int	main(int ac, char **av, char **base_env)
 	// 	printf("%s$\n", our_env[i]);
 	// // return (0);
 	//? my stuff:end
-	if (!init_env(&env, base_env))
-		return (1);
-	ast = get_input(&cleanup_data);
+	if (!init_env(&env, our_env))
+		return (ft_free_2darr(our_env), 1);
+	ast = get_input(&cleanup_data); 
+	//? shouldn't we protect the return of the get_input. in some cases you're returning NULL
 	input = cleanup_data.input;
 	while (1)
 	{
@@ -154,7 +166,7 @@ int	main(int ac, char **av, char **base_env)
 		{
 			errno = 0;
 			//print_ast(ast);
-			add_global_data(ast, &env, base_env);
+			add_global_data(ast, &env, our_env);
 			ast->cleanup_data = &cleanup_data;
 			//print_ast(ast);
 			run_node(ast);
@@ -162,7 +174,7 @@ int	main(int ac, char **av, char **base_env)
 			main_exit(&cleanup_data, false, &env, -1);
 		}
 		if (LEAK_CHECK)
-			system("leaks minishell");
+			system("leaks minishell"); //! we can not turn in that at the end. FORBIDDEN function
 		ast = get_input(&cleanup_data);
 		input = cleanup_data.input;
 	}

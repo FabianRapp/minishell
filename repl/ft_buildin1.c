@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_buildin1.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 08:19:57 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 01:50:28 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,6 @@ static bool	includes_non_num(char *str)
 		str++;
 	}
 	return (false);
-}
-
-void	ft_pwd(t_ast *ast)
-{
-	(void) ast;
-	ft_printf("%s\n", getenv("PWD"));
 }
 
 void	ft_exit(t_ast *ast)
@@ -66,28 +60,29 @@ typedef struct	s_cd
 
 bool	ft_buildin(t_ast *ast)
 {
-	char	*command_name;
+	char	*cmd_name;
 
-	command_name = ft_strdup(ast->name->token->str_data);
-	if (!command_name)
+	cmd_name = ft_strdup(ast->name->token->str_data); //? why dynamically allocated and not just copy the ptr?
+	// cmd_name = ast->name->token->str_data; //since we don't want to do modifications but just read
+	if (!cmd_name)
 	{
 		ast->exit_status = 1;
 		return (true);
 	}
-	ft_strtolower(command_name);
-	//if (!ft_strcmp(command_name, "echo"))
-		//return (free(command_name), ft_echo(ast), true);
-	//if (!ft_strcmp(command_name, "cd"))
-		//return (free(command_name), ft_cd(ast), true);
-	if (!ft_strcmp(command_name, "pwd"))
-		return (free(command_name), ft_pwd(ast), true);
-	//if (!ft_strcmp(command_name, "export"))
-		//return (free(command_name),ft_export(ast), true);
-	//if (!ft_strcmp(command_name, "unset"))
-		//return (free(command_name),ft_unset(ast), true);
-	//if (!ft_strcmp(command_name, "env"))
-		//return (free(command_name), ft_env(ast), true);
-	if (!ft_strcmp(command_name, "exit"))
-		return (free(command_name), ft_exit(ast), true);
-	return (free(command_name), false);
+	ft_strtolower(cmd_name);
+	if (!ft_strcmp(cmd_name, "exit"))
+		return (free(cmd_name), ft_exit(ast), true);
+	//if (!ft_strcmp(cmd_name, "echo"))
+		//return (free(cmd_name), ft_echo(ast), true);
+	// if (!ft_strcmp(cmd_name, "cd"))
+	// 	return (free(cmd_name), ft_cd(ast), true);
+	if (!ft_strcmp(cmd_name, "pwd"))
+		return (free(cmd_name), ft_pwd(), true);
+	if (!ft_strcmp(cmd_name, "export"))
+		return (free(cmd_name), ft_export(ast), true);
+	//if (!ft_strcmp(cmd_name, "unset"))
+		//return (free(cmd_name),ft_unset(ast), true);
+	if (!ft_strcmp(cmd_name, "env"))
+		return (free(cmd_name), ft_env(ast), true);
+	return (false);
 }
