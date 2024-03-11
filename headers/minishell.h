@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 16:30:16 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 18:24:11 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ weird stuff to keep in mind about bash
 # include "eval.h"
 # include "signals.h"
 
-# define TESTER 1
+# define TESTER 0
 # define SHELL_NAME "minishell\0"
 # define SHELL_PROMPT "minishell: \0"
 
