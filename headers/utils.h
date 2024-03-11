@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:23:25 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 13:36:05 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 15:02:47 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ void			print_parser(t_parser *parser, int tree_level);
 
 char			*ft_read_line(char *header);
 int				line_counter(void);
+int				count_open_fds(void);
 
 // used in lexer and expanding env cars (repl?)
 int				name_len(char *str);

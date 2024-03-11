@@ -6,11 +6,33 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 13:36:59 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 15:11:39 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
+int	count_open_fds(void)
+{
+	int			fd_count = 0;
+	struct stat	stats;
+	int			fd;
+	int			err;
+
+	fd = 0;
+	err = errno;
+	while (fd < FD_SETSIZE)
+	{
+		if (fstat(fd, &stats) == 0)
+		{
+			fd_count++;
+		}
+		fd++;
+	}
+	errno = err;
+	return (FD_SETSIZE / 2 - fd_count);
+}
+
 
 void	add_token_back_node(t_token_list **list, t_token_list *new_node)
 {

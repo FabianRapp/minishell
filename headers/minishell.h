@@ -6,33 +6,18 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 14:37:43 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 16:25:31 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
-W FSAN:
-             TOTAL TEST COUNT: 935  TESTS PASSED: 624  LEAKING: 0
-                     STD_OUT: 129  STD_ERR: 180  EXIT_CODE: 208
+             TOTAL TEST COUNT: 935  TESTS PASSED: 640  LEAKING: 0
+                     STD_OUT: 115  STD_ERR: 175  EXIT_CODE: 206
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 517
-                                     ✅ 2288
-
-normal:
-             TOTAL TEST COUNT: 935  TESTS PASSED: 626  LEAKING: 0
-                     STD_OUT: 129  STD_ERR: 177  EXIT_CODE: 208
-                         TOTAL FAILED AND PASSED CASES:
-                                     ❌ 514
-                                     ✅ 2291
-
-
-            //  TOTAL TEST COUNT: 935  TESTS PASSED: 626  LEAKING: 0
-            //          STD_OUT: 129  STD_ERR: 176  EXIT_CODE: 218
-            //              TOTAL FAILED AND PASSED CASES:
-            //                          ❌ 523
-            //                          ✅ 2282
-
+                                     ❌ 496
+                                     ✅ 2309
 TODO:
+	- ft_atoi undef behaivior for huge number strs
 	- redir error msgs
 	- wildcards should not expand in signle quotes
 	- type_to_str() needs refactor to follow norm with same returns
@@ -90,6 +75,7 @@ weird stuff to keep in mind about bash
 
 
 // libs
+# include <sys/stat.h>
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -219,6 +205,8 @@ typedef struct s_ast
 	pid_t			pid;
 	char			**envs;
 	int				fd_to_close;
+	int				fd_to_close_read;
+	int				fd_to_close_write;
 }	t_ast;
 
 // lexer

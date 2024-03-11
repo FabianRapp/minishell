@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 00:06:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 13:58:27 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 14:49:13 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,23 +204,54 @@ t_result	redir_type(t_lexer *lexer, t_token *token, bool recursive_call)
 // 	return (SUCCESS);
 // }
 
-
-// has to run after all other typechecks
 t_result	literal_type2(t_lexer *lexer, t_token *token, bool skip_next_term)
 {
-	(void)skip_next_term;
-	if (is_termination_char(lexer->cur_char))
+	if (is_termination_char(lexer->cur_char) && !skip_next_term)
 		return (SUCCESS);
-	while (!is_termination_char((lexer->str)[lexer->read_position]))
-	{
-		
-		(lexer->read_position)++;
-	}
-	token->type = LITERAL;
-	token->str_data = ft_strndup(lexer->str
-			+ lexer->position, lexer->read_position - lexer->position);
+	token->str_data = ft_calloc(1, 1);
 	if (!token->str_data)
 		return (ERROR);
-	read_char(lexer);
+	while ((!is_termination_char(lexer->cur_char) || skip_next_term) && lexer->cur_char)
+	{
+		if (skip_next_term)
+			skip_next_term = false;
+		else if (lexer->cur_char == '\\')
+		{
+			skip_next_term = true;
+			read_char(lexer);
+			continue ;
+		}
+		if (!ft_strjoin_inplace_char(&(token->str_data), lexer->cur_char))
+			return (ERROR);
+		read_char(lexer);
+	}
+	if (skip_next_term)
+	{
+		if (!ft_strjoin_inplace_char(&(token->str_data), '\n'))
+			return (ERROR);
+	}
+	token->type = LITERAL;
 	return (SUCCESS);
 }
+
+// has to run after all other typechecks
+// t_result	literal_type2(t_lexer *lexer, t_token *token, bool skip_next_term)
+// {
+// 	if (is_termination_char(lexer->cur_char) && !skip_next_term)
+// 		return (SUCCESS);
+// 	while ((!is_termination_char((lexer->str)[lexer->read_position]) || skip_next_term) && lexer->str[lexer->read_position])
+// 	{
+// 		if (skip_next_term)
+// 		{
+// 			skip_next_term = false;
+// 		}
+// 		(lexer->read_position)++;
+// 	}
+// 	token->type = LITERAL;
+// 	token->str_data = ft_strndup(lexer->str
+// 			+ lexer->position, lexer->read_position - lexer->position);
+// 	if (!token->str_data)
+// 		return (ERROR);
+// 	read_char(lexer);
+// 	return (SUCCESS);
+// }
