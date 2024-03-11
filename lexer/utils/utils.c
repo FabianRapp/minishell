@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:46:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 13:52:29 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 16:37:00 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	init_token(t_token *token, t_lexer *lexer)
 	token->old_data = NULL;
 	token->left_redir_arg = NULL;
 	token->here_doc_arg_literal = false;
+	token->expand_wildcards = false;
 }
 
 void	lexer_error(t_token *token)

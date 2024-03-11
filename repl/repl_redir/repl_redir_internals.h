@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 04:21:19 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/07 04:29:23 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 17:11:45 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 // main interface
 t_result	resolve_redirs(t_ast *ast);
 int			extend_fd_array(t_fd_pair **fds);
-t_fd_pair	redir_read(char *file, int base_fd);
+t_fd_pair	redir_read(char *file, int base_fd, bool in_out);
 t_fd_pair	redir_fd_write(char *file, bool append, int base_fd);
 
 // utils

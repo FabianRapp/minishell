@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:34:43 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 03:31:00 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 17:17:58 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ bool	is_redir(t_type type)
 	if (type == REDIR_IN
 		|| type == REDIR_OUT
 		|| type == REDIR_APPEND
-		|| type == HERE_DOC)
+		|| type == HERE_DOC
+		|| type == REDIR_IN_OUT)
 	{
 		return (true);
 	}

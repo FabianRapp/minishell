@@ -12,8 +12,6 @@
 
 #include "expansion.h"
 
-
-
 // check errno for error after calling
 t_token_list	*expand_list(t_env *env, t_token_list *list)
 {
@@ -37,7 +35,7 @@ t_token_list	*expand_list(t_env *env, t_token_list *list)
 	list->next = expand_list(env, list->next);
 	if ((list->token->type == WORD && word_splitting(&list) == ERROR) || !list)
 		return (list);
-	merge_literals(list);
+	// merge_literals(list);
 	return (list);
 }
 
@@ -48,12 +46,20 @@ t_result	expand_name(t_ast *ast)
 	ast->name = expand_list(ast->env, ast->name);
 	if (errno)
 		return (set_errno_as_exit(ast, false));
+	merge_literals(ast->name);
+	if (errno)
+		return (set_errno_as_exit(ast, false));
 	if (ast->name)
 		ast->name = remove_non_literals(ast->name);
 	if (wildcards(ast->name) == ERROR)
 		return (ERROR);
-	if (errno)
-		return (ERROR);
+	// if (errno)
+	// 	return (ERROR);
+	// merge_literals(ast->name);
+	// if (errno)
+	// 	return (set_errno_as_exit(ast, false));
+	if (ast->name)
+		ast->name = remove_non_literals(ast->name);
 	if (!ast->name)
 	{
 		ast->name = ft_calloc(1, sizeof(t_token_list));
@@ -83,9 +89,20 @@ t_result	expand_args(t_ast *ast, t_arg **base_arg, bool here_doc)
 	{
 		if (!here_doc)
 			cur->name = expand_list(ast->env, cur->name);
+		merge_literals(cur->name);
+		if (errno)
+			return (set_errno_as_exit(ast, false));
 		cur->name = remove_non_literals(cur->name);
 		if (errno || (!here_doc && wildcards(cur->name) == ERROR))
 			return (set_errno_as_exit(ast, false));
+		// if (!here_doc && wildcards(cur->name) == ERROR)
+		// 	return (set_errno_as_exit(ast, false));
+		// merge_literals(cur->name);
+		// if (errno)
+		// 	return (set_errno_as_exit(ast, false));
+		// cur->name = remove_non_literals(cur->name);
+		// if (errno)
+		// 	return (set_errno_as_exit(ast, false));
 		flag = check_empty_arg(last, &cur, ast, base_arg);
 		if (flag == RETURN_NOW)
 			return (SUCCESS);

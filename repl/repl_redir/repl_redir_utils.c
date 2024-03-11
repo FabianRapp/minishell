@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:37:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/07 04:30:28 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 17:15:04 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ t_fd_pair	redir_fd_write(char *file, bool append, int base_fd)
 }
 
 // caller needs to handle open error
-t_fd_pair	redir_read(char *file, int base_fd)
+t_fd_pair	redir_read(char *file, int base_fd, bool in_out)
 {
 	int			flag;
 	t_fd_pair	fd_pair;
@@ -43,7 +43,10 @@ t_fd_pair	redir_read(char *file, int base_fd)
 	{
 		fd_pair.base_fd = base_fd;
 	}
-	flag = O_RDONLY;
+	if (in_out)
+		flag = O_RDWR;
+	else
+		flag = O_RDONLY;
 	fd_pair.overload_with_fd = open(file, flag);
 	return (fd_pair);
 }

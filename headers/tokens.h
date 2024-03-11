@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:16:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 13:58:25 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 17:04:55 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef enum e_type
 	REDIR_IN,
 	REDIR_OUT,
 	REDIR_APPEND,
+	REDIR_IN_OUT,
 	HERE_DOC,
 	SUBSHELL, // only for || and &&
 	WORD,
@@ -56,6 +57,7 @@ typedef struct s_token
 	char		*left_redir_arg;
 	bool		here_doc_arg_literal;
 	char		*old_data;
+	bool		expand_wildcards;
 }	t_token;
 
 void		init_token(t_token *token, t_lexer *lexer);

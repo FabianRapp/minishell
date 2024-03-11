@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 00:06:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 14:49:13 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 17:08:05 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,11 @@ t_result	redir_type(t_lexer *lexer, t_token *token, bool recursive_call)
 			read_char(lexer);
 			token->type = HERE_DOC;
 		}
+		else if (lexer->str[lexer->read_position] == '>')
+		{
+			read_char(lexer);
+			token->type = REDIR_IN_OUT;
+		}
 	}
 	else if (lexer->cur_char == '>')
 	{
@@ -230,6 +235,7 @@ t_result	literal_type2(t_lexer *lexer, t_token *token, bool skip_next_term)
 		if (!ft_strjoin_inplace_char(&(token->str_data), '\n'))
 			return (ERROR);
 	}
+	token->expand_wildcards = true;
 	token->type = LITERAL;
 	return (SUCCESS);
 }

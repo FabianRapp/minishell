@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 04:20:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 14:20:29 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 17:11:35 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,13 @@ t_result	handle_redir_out(t_ast *ast, t_fd_pair **fds, t_redir *redir, bool appe
 	return (SUCCESS);
 }
 
-t_result	handle_redir_in(t_ast *ast, t_fd_pair **fds, t_redir *redir)
+t_result	handle_redir_in(t_ast *ast, t_fd_pair **fds, t_redir *redir, bool in_out)
 {
 	t_fd_pair	new_fd_pair;
 	int			base_fd;
 
 	base_fd = redir->left_redir_arg;
-	new_fd_pair = redir_read(redir->arg->name->token->str_data, base_fd);
+	new_fd_pair = redir_read(redir->arg->name->token->str_data, base_fd, in_out);
 	if (errno)
 	{
 		print_error(true, NULL, NULL, strerror(errno));
@@ -126,9 +126,9 @@ t_result	resolve_redirs(t_ast *ast)
 			if (handle_redir_out(ast, &fds, redir, true) == ERROR)
 				return (ERROR);
 		}
-		else if (redir->type == REDIR_IN)
+		else if (redir->type == REDIR_IN || redir->type == REDIR_IN_OUT)
 		{
-			if (handle_redir_in(ast, &fds, redir) == ERROR)
+			if (handle_redir_in(ast, &fds, redir, (redir->type == REDIR_IN_OUT)) == ERROR)
 				return (ERROR);
 		}
 		// TODO

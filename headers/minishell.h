@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 16:25:31 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 16:30:16 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,10 @@
                                      ❌ 496
                                      ✅ 2309
 TODO:
+	- lexer: check for too many closing quotes
 	- ft_atoi undef behaivior for huge number strs
 	- redir error msgs
-	- wildcards should not expand in signle quotes
+	- wildcards should not expand in quotes
 	- type_to_str() needs refactor to follow norm with same returns
 	- make insert_token() return value and error handeling more clear
 	- cleanup_fds() return val checks
