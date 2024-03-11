@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 14:39:06 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 13:36:59 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,11 +119,16 @@ t_result	errno_to_result(void)
 	return (SUCCESS);
 }
 
-t_result	set_errno_as_exit(t_ast *ast)
+t_result	set_errno_as_exit(t_ast *ast, bool msg)
 {
 	ast->exit_status = errno;
+	set_last_exit(errno);
 	if (errno)
+	{
+		if (msg)
+			print_error(true, NULL, NULL, strerror(errno));
 		return (ERROR);
+	}
 	return (SUCCESS);
 }
 
@@ -174,15 +179,53 @@ int	line_counter(void)
 // 	exit(errno);
 // }
 
+// char	*ft_read_line(char *header)
+// {
+// 	char		*line;
+// 	char		*temp;
+// 	static char	**lines = NULL;
+// 	static int	i;
+// 	int			err;
+
+// 	err = errno;
+// 	line = NULL;
+// 	if (!isatty(0))
+// 	{
+// 		if (lines && !lines[i])
+// 		{
+// 			free_str_ar(lines);
+// 			lines = NULL;
+// 		}
+// 		if (!lines)
+// 		{
+// 			i = 0;
+// 			temp = get_next_line(0);
+// 			lines = ft_split(temp, '\n');
+// 			free(temp);
+// 			if (lines)
+// 				line = lines[i++];
+// 		}
+// 		else
+// 			line = lines[i++];
+// 		//line = ft_strtrim(temp, "\n");
+// 	}
+// 	else
+// 		line = readline(header);
+// 	line_counter();
+// 	errno = err;
+// 	return (line);
+// }
+
 char	*ft_read_line(char *header)
 {
 	char	*line;
 	char	*temp;
 
-	if (!isatty(fileno(stdin)))
+	if (!isatty(0))
 	{
-		temp = get_next_line(fileno(stdin));
+		temp = get_next_line(0);
 		line = ft_strtrim(temp, "\n");
+		//line = temp;
 		free(temp);
 	}
 	else

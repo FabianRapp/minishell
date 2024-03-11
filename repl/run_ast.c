@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 14:39:47 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 12:13:42 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,26 +25,64 @@ void	ft_pipe(t_ast *ast)
 	}
 	//check_fds();
 	base = dup(WRITE);
-	pipe(pipe_fd);
-	dup2(pipe_fd[WRITE], WRITE);
+	if (base == -1)
+	{
+		set_errno_as_exit(ast, true);
+		return ;
+	}
+	if (pipe(pipe_fd) == -1)
+	{
+		close (base);
+		set_errno_as_exit(ast, true);
+		return ;
+	}
+	if (dup2(pipe_fd[WRITE], WRITE) == -1)
+	{
+		close (base);
+		close (pipe_fd[WRITE]);
+		close (pipe_fd[READ]);
+		set_errno_as_exit(ast, true);
+		return ;
+	}
 	close(pipe_fd[WRITE]);
 	ast->left->fd_to_close = pipe_fd[READ];
 	run_node(ast->left);
-	dup2(base, WRITE);
+	if (dup2(base, WRITE) == -1)
+	{
+		close (base);
+		close (pipe_fd[READ]);
+		set_errno_as_exit(ast, true);
+		return ;
+	}
 	close(base);
 	ast->env->stop_execution = false;
 	base = dup(READ);
-	dup2(pipe_fd[READ], READ);
+	if (base == -1)
+	{
+		close(pipe_fd[READ]);
+		set_errno_as_exit(ast, true);
+		return ;
+	}
+	if (dup2(pipe_fd[READ], READ) == -1)
+	{
+		close(base);
+		close(pipe_fd[READ]);
+		set_errno_as_exit(ast, true);
+		return ;
+	}
 	close(pipe_fd[READ]);
 	run_node(ast->right);
-	dup2(base, READ);
+	if (dup2(base, READ) == -1)
+	{
+		close(base);
+		set_errno_as_exit(ast, true);
+		return ;
+	}
 	close(base);
 	if (ast->right->exit_status == DEFAULT_EXIT_STATUS)
 		ast->pid = ast->right->pid;
 	else
 		ast->exit_status = ast->right->exit_status;
-	if (errno)
-		printf("errno: %s\n", strerror(errno));
 	//check_fds();
 }
 

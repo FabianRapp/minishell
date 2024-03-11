@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 10:55:53 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 13:14:34 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,12 @@ bool	init_path(t_path *path_ob, char *env_var)
 
 char	*handle_absolute_path(char *path)
 {
-		if (!access(path, X_OK))
-			return (ft_strdup(path));
-		print_error(true, path, NULL, strerror(errno));
-		errno = 0;
-		return (NULL);
+	if (!access(path, X_OK))
+		return (ft_strdup(path));
+	ft_fprintf(2, "%s: %s\n", SHELL_NAME, strerror(errno));
+	set_last_exit(127);
+	errno = 0;
+	return (NULL);
 }
 
 // changes the global errno
@@ -80,6 +81,13 @@ char	*find_path(t_ast *ast, char *command_name, char *path_env)
 
 	if (!command_name)
 		return (NULL);
+	if (!*command_name)
+	{
+		print_error(true, "", NULL, "command not found");
+		ast->exit_status = 127;
+		set_last_exit(127);
+		return (NULL);
+	}
 	if (*command_name == '/' || *command_name == '.')
 		return (handle_absolute_path(command_name));
 	path_ob.ast = ast;

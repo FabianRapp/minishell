@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:16:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 08:27:37 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 13:58:25 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ typedef struct s_token
 	char		*input_str;
 	int			input_position;
 	char		*left_redir_arg;
+	bool		here_doc_arg_literal;
 	char		*old_data;
 }	t_token;
 

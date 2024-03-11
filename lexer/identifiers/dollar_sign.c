@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 21:33:17 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 09:15:36 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 10:37:26 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ static t_result	is_dollar_literal(t_lexer *lexer, t_token *token)
 	if (lexer->cur_char != '$')
 		return (ERROR);
 	if (ft_iswhitespace(lexer->str[lexer->position + 1])
-		|| !(lexer->str)[lexer->position + 1])
+		|| !(lexer->str)[lexer->position + 1]
+		|| lexer->str[lexer->position + 1] == '/')
 	{
 		token->type = LITERAL;
 		token->str_data = ft_strdup("$");

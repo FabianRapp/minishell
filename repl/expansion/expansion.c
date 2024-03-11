@@ -12,13 +12,15 @@
 
 #include "expansion.h"
 
+
+
 // check errno for error after calling
 t_token_list	*expand_list(t_env *env, t_token_list *list)
 {
 	if (!list)
 		return (NULL);
 	if (list->token->type == INTERPRETED
-		&& expand_interpreted(list->token, env) == ERROR)
+		&& expand_interpreted(list->token) == ERROR)
 		return (list);
 	if (list->token->type == ENV_VAR && env_to_word_token(list->token) == ERROR)
 		return (list);
@@ -45,7 +47,7 @@ t_result	expand_name(t_ast *ast)
 		return (SUCCESS);
 	ast->name = expand_list(ast->env, ast->name);
 	if (errno)
-		return (set_errno_as_exit(ast));
+		return (set_errno_as_exit(ast, false));
 	if (ast->name)
 		ast->name = remove_non_literals(ast->name);
 	if (wildcards(ast->name) == ERROR)
@@ -56,14 +58,14 @@ t_result	expand_name(t_ast *ast)
 	{
 		ast->name = ft_calloc(1, sizeof(t_token_list));
 		if (!ast->name)
-			return (set_errno_as_exit(ast));
+			return (set_errno_as_exit(ast, false));
 		ast->name->token = new_dummy_token();
 		if (!ast->name->token)
-			return (set_errno_as_exit(ast));
+			return (set_errno_as_exit(ast, false));
 		return (SUCCESS);
 	}
 	if (expansion_move_to_arg(&(ast->arg), ast->name) == ERROR)
-		return (set_errno_as_exit(ast));
+		return (set_errno_as_exit(ast, false));
 	return (SUCCESS);
 }
 
@@ -81,18 +83,16 @@ t_result	expand_args(t_ast *ast, t_arg **base_arg, bool here_doc)
 	{
 		if (!here_doc)
 			cur->name = expand_list(ast->env, cur->name);
-		if (!cur->name)
-			printf("no cur->name in expand_args\n");
 		cur->name = remove_non_literals(cur->name);
 		if (errno || (!here_doc && wildcards(cur->name) == ERROR))
-			return (set_errno_as_exit(ast));
+			return (set_errno_as_exit(ast, false));
 		flag = check_empty_arg(last, &cur, ast, base_arg);
 		if (flag == RETURN_NOW)
 			return (SUCCESS);
 		if (flag == CONTINUE)
 			continue ;
 		if (expansion_move_to_arg(&(cur->next), cur->name) == ERROR)
-			return (set_errno_as_exit(ast));
+			return (set_errno_as_exit(ast, false));
 		last = cur;
 		cur = cur->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:52 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 02:24:09 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 13:37:31 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ int				check_empty_arg(t_arg *last, t_arg **cur,
 					t_ast *ast, t_arg **base_arg);
 
 // utils2.c
-t_result		expand_interpreted(t_token *token, t_env *env);
-char			*expand_dollar(char *dollar_str, t_env *env, int *index);
+t_result		expand_interpreted(t_token *token);
+char			*expand_dollar(char *dollar_str, int *index);
 t_token_list	*remove_non_literals(t_token_list *list);
 t_result		expansion_move_to_arg(t_arg **next_arg, t_token_list *list);
 

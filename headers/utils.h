@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:23:25 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 13:16:59 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 13:36:05 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char			*type_to_str(t_type tokenType);
 
 bool			is_operator(t_type type);
 t_result		errno_to_result(void);
-t_result		set_errno_as_exit(t_ast *ast);
+t_result		set_errno_as_exit(t_ast *ast, bool msg);
 
 // debug
 char			*type_to_str_type(t_type tokenType);
@@ -80,6 +80,7 @@ void			free_token(t_token *token);
 void			print_ast(t_ast *ast);
 t_result		wait_all_children(t_ast *ast);
 
+char			*expand_dollar(char *dollar_str, int *index);
 
 void			print_token_list(t_token_list *token_node, int level);
 void			print_arg_list(t_arg *arg, int level, bool left);

@@ -1,10 +1,12 @@
 CC= cc
 FLAGS_NO_LEAK_CHECK =
-#-fsanitize=undefined -fsanitize=address
+#-fsanitize=undefined -fsanitize=address -g
 CFLAGS=-Wall -Wextra -Werror
-#-g
+#
 LDFLAGS =
 # -fsanitize=undefined -fsanitize=address
+
+
 #
 NAME=min
 #

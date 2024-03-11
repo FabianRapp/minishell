@@ -28,6 +28,7 @@ static int	catch_pid(int fd[2])
 		print_error(true, NULL, NULL, strerror(errno));
 		exit(errno);
 	}
+	ft_pid(pid);
 	return (pid);
 }
 
@@ -45,6 +46,16 @@ static void	send_pid(int fd[2], int pid)
 		exit(errno);
 	exit_status = WEXITSTATUS(exit_status);
 	exit(exit_status);
+}
+
+// returns the pid
+int	ft_pid(int set)
+{
+	static int pid = -1;
+
+	if (set)
+		pid = set;
+	return (pid);
 }
 
 // since getpid() is forbidden this will launch a child process

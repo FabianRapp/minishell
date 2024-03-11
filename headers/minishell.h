@@ -6,18 +6,32 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 10:09:07 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 14:37:43 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
-
-
-             TOTAL TEST COUNT: 935  TESTS PASSED: 559  LEAKING: 0
-                     STD_OUT: 184  STD_ERR: 183  EXIT_CODE: 263
+W FSAN:
+             TOTAL TEST COUNT: 935  TESTS PASSED: 624  LEAKING: 0
+                     STD_OUT: 129  STD_ERR: 180  EXIT_CODE: 208
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 630
-                                     ✅ 2175
+                                     ❌ 517
+                                     ✅ 2288
+
+normal:
+             TOTAL TEST COUNT: 935  TESTS PASSED: 626  LEAKING: 0
+                     STD_OUT: 129  STD_ERR: 177  EXIT_CODE: 208
+                         TOTAL FAILED AND PASSED CASES:
+                                     ❌ 514
+                                     ✅ 2291
+
+
+            //  TOTAL TEST COUNT: 935  TESTS PASSED: 626  LEAKING: 0
+            //          STD_OUT: 129  STD_ERR: 176  EXIT_CODE: 218
+            //              TOTAL FAILED AND PASSED CASES:
+            //                          ❌ 523
+            //                          ✅ 2282
+
 TODO:
 	- redir error msgs
 	- wildcards should not expand in signle quotes
@@ -172,6 +186,7 @@ typedef	struct s_redir
 	t_redir			*next;
 	int				left_redir_arg;
 	char			*token_str_data;
+	bool			here_doc_literal;
 }	t_redir;
 
 typedef struct s_child_data
@@ -229,6 +244,7 @@ bool	init_env(t_env *new_env, char **base_env);
 
 // repl/utils/repl_get_pid.c
 int		get_pid(void);
+int		ft_pid(int set);
 
 // utils
 bool	ft_free(void **ptr);

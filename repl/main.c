@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 10:05:06 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 13:15:21 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,11 @@ void	init_child_data(t_child_data *data, t_ast *ast)
 	data->command_name = ast->name->token->str_data;
 	data->path = find_path(ast, data->command_name, "PATH");
 	data->command_name = NULL;
+	if (!data->path)
+	{
+		ast->exit_status = get_last_exit();
+		return ;
+	}
 	if (!data->path || ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
 	data->argv[0] = extract_command_name(data->path); // TODO: mall error

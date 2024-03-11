@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 00:06:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 08:58:15 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 13:58:27 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,14 +116,24 @@ t_result	lexer_here_doc(t_lexer *lexer, t_token *token)
 	//printf("rest str: %s\n", lexer->str + lexer->position);
 	if (token->type != HERE_DOC)
 		return (SUCCESS);
+	while (ft_iswhitespace(lexer->cur_char))
+	{
+		read_char(lexer);
+	}
 	while (!is_redir_terminator_char(lexer->cur_char))
 	{
-		if (!ft_strjoin_inplace_char(&(token->str_data), lexer->cur_char))
+		if (lexer->cur_char == '\'')
+			token->here_doc_arg_literal = true;
+		else if (lexer->cur_char == '\"')
+			token->here_doc_arg_literal = false;
+		else if (!ft_strjoin_inplace_char(&(token->str_data), lexer->cur_char))
 		{//todo error
 		}
 		read_char(lexer);
 	}
-	read_char(lexer);
+	if (lexer->cur_char == '\'' || lexer->cur_char == '\"')
+		read_char(lexer);
+	//read_char(lexer);
 	return (SUCCESS);
 }
 
