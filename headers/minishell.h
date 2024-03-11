@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/02 22:39:32 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/11 01:45:34 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,17 +118,14 @@ weird stuff to keep in mind about bash
 # define LEAK_CHECK 0
 #endif
 
-# define ERR "\x1B[31mError: \x1B[0m"
+// mk additions:
+# define PR_ERR "\x1B[31mError: \x1B[0m"
 
 typedef enum e_result
 {
 	ERROR = false,
 	SUCCESS = true,
 }	t_result;
-
-// // for t_result
-// # define ERROR false
-// # define SUCCESS true
 
 typedef enum e_type		t_type;
 typedef struct s_lexer	t_lexer;
@@ -143,6 +140,7 @@ typedef struct s_cleanup_data
 	char	*input;
 }	t_cleanup_data;
 
+//! i think we should change this name. it's too confusing:
 typedef struct s_env
 {
 	bool		main_process;
@@ -207,11 +205,11 @@ t_token		*next_new_token(t_lexer *lexer);
 t_lexer		new_lexer(char *str);
 
 // main
-void	run_node(t_ast *ast);
-void	run_command_node(t_ast *ast);
+void		run_node(t_ast *ast);
+void		run_command_node(t_ast *ast);
 
-bool	check_edgecases(t_ast *ast);
-void	add_global_data(t_ast *ast, t_env *env, char **envs);
+bool		check_edgecases(t_ast *ast);
+void		add_global_data(t_ast *ast, t_env *env, char **envs);
 
 //redir
 t_result	resolve_redirs(t_ast *ast);
@@ -221,13 +219,13 @@ void		print_token(t_token *token, t_parser *parser, int depth);
 bool		test_lexer_manualy(char *str);
 
 //env
-bool	init_env(t_env *new_env, char **base_env);
-int		get_pid(void);
+bool		init_env(t_env *new_env, char **base_env);
+int			get_pid(void);
 
 // utils
-bool	my_free(void **ptr);
+bool		my_free(void **ptr);
 
-char			*get_last_exit_str(void);
+char		*get_last_exit_str(void);
 
 void	print_error(bool shell_name, char *command_name, char *arg, char *str);
 
@@ -262,6 +260,7 @@ t_result	reset_stdio(int flag);
 # ifndef FD_REQUEST_SKIP
 #  define FD_REQUEST_SKIP -1
 # endif
+
 struct fd_request
 {
 	int		set_read;
@@ -272,13 +271,22 @@ struct fd_request
 	int		get_error;
 };
 
+//? MK ADDITIONS:
 
-// delete later
+/* ------------------------------ BUILT-INS ------------------------------ */
+int		ft_pwd(void);
+void	ft_env(t_ast *ast);
+void	ft_export(t_ast *ast);
+
+
+/* ---------------------------- ENV FUNCTIONS ---------------------------- */
+
+
+
+//! delete later
 t_parser	*parser_testing(char *str);
 
 #endif
-
-
 
 
 /*

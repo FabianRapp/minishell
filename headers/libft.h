@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 22:22:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/24 21:23:22 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/10 23:03:32 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,9 @@ int		ft_fprintf(int fd, const char *format_str, ...);
 int		ft_strcmp(const char *s1, const char *s2);
 int		ft_expo(int base, int expo);
 bool	ft_iswhitespace(char c);
+
+void	ft_free_2darr(char **array);
+
 //bonus
 //struct	s_list;
 //typedef struct s_list	t_list;

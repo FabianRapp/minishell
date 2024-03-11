@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   eval.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:38:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/24 23:21:06 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/10 20:47:13 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ typedef struct s_path
 	int		position;
 	int		read_postion;
 	char	*command_name;
-	
 	t_ast	*ast;
 }	t_path;
 
