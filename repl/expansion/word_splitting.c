@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:33:33 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 02:40:29 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 10:02:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,14 @@ t_result	word_splitting(t_token_list **list)
 	t_token_list	*new;
 
 	if (!*list)
+	{
+	// 	printf("debug no list in word_splitting\n");
 		return (SUCCESS);
+	}
 	old = (*list)->token;
 	next = (*list)->next;
 	arr = ft_split_fn(old->str_data, ft_iswhitespace);
-	if (!ft_free((void **)list) || !arr || !*arr)
+	if (!ft_free((void **)list) || !arr)
 		return (word_split_baseclean(old, arr, next, NULL), errno_to_result());
 	i = 0;
 	while (arr[i])

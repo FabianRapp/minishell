@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 14:40:26 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 10:05:06 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,8 +118,8 @@ void	run_command_node(t_ast *ast)
 	if (ast->fd_to_close != INIT_VAL)
 		close(ast->fd_to_close);
 	//check_fds();
-	execve(data.path, data.argv, ast->envs);
-	print_error("true", NULL, NULL, "execve failed\n");
+	if (execve(data.path, data.argv, ast->envs) == -1)
+		print_error("true", NULL, NULL, "execve failed\n");
 	exit(errno);
 }
 
@@ -184,13 +184,11 @@ int	main(int ac, char **av, char **base_env)
 	{
 		if (ast)
 		{
-			//print_ast(ast);
+			// print_ast(ast);
 			add_global_data(ast, &env, base_env, &cleanup_data);
 			//print_ast(ast);
 			run_node(ast);
 			check_exit_and_cleanup(&cleanup_data);
-			//if (TESTER)
-				//exit(get_last_exit());
 			if (TESTER && !cleanup_data.input)
 			{
 				exit(get_last_exit());

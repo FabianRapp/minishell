@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 14:39:52 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 10:07:31 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,29 +103,14 @@ void	main_exit(t_cleanup_data *data, bool full_exit, bool ft_exit_call)
 	// 	printf("not sub mode: %d/%d(root/last)\n", data->root->exit_status, get_last_exit());
 	if (data->root && data->root->env)
 		data->root->env->stop_execution = false;
+	free(data->input);
+	if (data->root)
+		free_ast(data->root);
+	data->root = NULL;
+	cleanup_fds();
+	if (LEAK_CHECK)
+		system("leaks minishell");
+	check_fds();
 	if (full_exit)
-	{
-		free(data->input);
-		//ft_free((void **)&(data->input));
-		if (data->root)
-			free_ast(data->root);
-		cleanup_fds();
-		if (LEAK_CHECK)
-			system("leaks minishell");
-		//check_fds();
 		exit(get_last_exit());
-	}
-	else if (!full_exit)
-	{
-		//ft_free((void **)&(data->input));
-		free(data->input);
-		if (data->root)
-			free_ast(data->root);
-		data->root = NULL;
-		cleanup_fds();
-		if (LEAK_CHECK)
-			system("leaks minishell");
-		//check_fds();
-		errno = 0;
-	}
 }

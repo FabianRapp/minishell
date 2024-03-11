@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 21:34:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 00:14:23 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 08:36:23 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,5 +52,6 @@ t_result	subshell_type(t_lexer *lexer, t_token *token)
 			lexer->read_position - lexer->position - 2);
 	if (!token->str_data)
 		return (set_last_exit(errno), ERROR);
+	read_char(lexer);
 	return (SUCCESS);
 }

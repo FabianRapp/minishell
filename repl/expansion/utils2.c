@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 13:01:55 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 12:56:33 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 10:02:59 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,9 @@ t_result	expand_interpreted(t_token *token, t_env *env)
 	int		index;
 
 	data_str = token->str_data;
-	token->str_data = NULL;
+	token->str_data = ft_calloc(1, 1);
+	if (!token->str_data)
+		return (ERROR);
 	index = 0;
 	while (data_str[index])
 	{
@@ -118,12 +120,12 @@ t_token_list	*remove_non_literals(t_token_list *list)
 		{
 			if (list == head)
 			{
-			list = move_nodes_ahead(list, true);
-			list = move_nodes_ahead(list, true);
-			if (list == head)
 				list = move_nodes_ahead(list, true);
-			if (list == head)
-				head = list;
+				//list = move_nodes_ahead(list, true);
+				// if (list == head)
+				// 	list = move_nodes_ahead(list, true);
+				// if (list == head)
+				// 	head = list;
 			}
 			else
 			{

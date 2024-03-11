@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 00:06:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 10:59:26 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 08:58:15 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,13 +95,13 @@ bool	valid_redir_arg(t_lexer *lexer, t_type type)
 	}
 	set_last_exit(2);
 	pipe(temp_pipe);
+	close(temp_pipe[READ]);
 	base_std_err = dup(2);
 	dup2(temp_pipe[WRITE], 2);
+	close(temp_pipe[WRITE]);
 	error_token = next_new_token(lexer, true);
 	dup2(base_std_err, 2);
 	close(base_std_err);
-	close(temp_pipe[0]);
-	close(temp_pipe[1]);
 	if (error_token)
 	{
 		print_error(true, NULL, NULL, type_to_str(error_token->type));
@@ -123,6 +123,7 @@ t_result	lexer_here_doc(t_lexer *lexer, t_token *token)
 		}
 		read_char(lexer);
 	}
+	read_char(lexer);
 	return (SUCCESS);
 }
 
@@ -155,20 +156,54 @@ t_result	redir_type(t_lexer *lexer, t_token *token, bool recursive_call)
 			token->type = REDIR_APPEND;
 		}
 	}
-	if (!recursive_call && is_redir(token->type) && !valid_redir_arg(lexer, token->type))
+	else
+		return (SUCCESS);
+	if (!recursive_call && !valid_redir_arg(lexer, token->type))
 		return (ERROR);
 	if (token->type != HERE_DOC)
-		return (SUCCESS);
+		return (read_char(lexer), SUCCESS);
 	return (lexer_here_doc(lexer, token));
 }
 
+// // has to run after all other typechecks
+// t_result	literal_type2(t_lexer *lexer, t_token *token, bool skip_next_term)
+// {
+// 	if (is_termination_char(lexer->cur_char))
+// 	{
+// 		return (SUCCESS);
+// 	}
+// 	while (!is_termination_char(lexer->cur_char) || skip_next_term)
+// 	{
+// 		if (skip_next_term)
+// 			skip_next_term = false;
+// 		else if (lexer->cur_char == '\\')
+// 		{
+// 			read_char(lexer);
+// 			skip_next_term = true;
+// 			continue ;
+// 		}
+// 		if (!ft_strjoin_inplace_char(&(token->str_data), lexer->cur_char))
+// 			return (ERROR);
+// 		read_char(lexer);
+// 	}
+// 	token->type = LITERAL;
+// 	token->str_data = ft_strndup(lexer->str
+// 			+ lexer->position, lexer->read_position - lexer->position);
+// 	if (!token->str_data)
+// 		return (ERROR);
+// 	return (SUCCESS);
+// }
+
+
 // has to run after all other typechecks
-t_result	literal_type2(t_lexer *lexer, t_token *token)
+t_result	literal_type2(t_lexer *lexer, t_token *token, bool skip_next_term)
 {
+	(void)skip_next_term;
 	if (is_termination_char(lexer->cur_char))
 		return (SUCCESS);
 	while (!is_termination_char((lexer->str)[lexer->read_position]))
 	{
+		
 		(lexer->read_position)++;
 	}
 	token->type = LITERAL;
@@ -176,5 +211,6 @@ t_result	literal_type2(t_lexer *lexer, t_token *token)
 			+ lexer->position, lexer->read_position - lexer->position);
 	if (!token->str_data)
 		return (ERROR);
+	read_char(lexer);
 	return (SUCCESS);
 }

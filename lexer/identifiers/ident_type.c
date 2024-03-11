@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 13:06:29 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 08:39:15 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,9 @@ void	basic_sign_type(t_lexer *lexer, t_token *token)
 		token->type = EXIT_STATUS_REQUEST;
 		lexer->read_position = lexer->position + 2;
 	}
+	else
+		return ;
+	read_char(lexer);
 }
 
 t_result	literal_type(t_lexer *lexer, t_token *token)
@@ -90,6 +93,7 @@ t_result	literal_type(t_lexer *lexer, t_token *token)
 	lexer->read_position++;
 	//type_token_with_void_check(token, LITERAL);
 	//printf("len: %lu, str: %s\n", ft_strlen(token->str_data), token->str_data);
+	read_char(lexer);
 	return (SUCCESS);
 }
 
@@ -117,5 +121,6 @@ t_result	interpreted_type(t_lexer *lexer, t_token *token)
 	lexer->read_position++;
 	token->type = INTERPRETED;
 	//type_token_with_void_check(token, INTERPRETED);
+	read_char(lexer);
 	return (SUCCESS);
 }

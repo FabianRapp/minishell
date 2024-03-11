@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 21:33:17 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 12:31:28 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 09:15:36 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,11 @@ t_result	dollar_lexing(t_lexer *lexer, t_token *token)
 	if (lexer->cur_char != '$')
 		return (SUCCESS);
 	if (pid_req(lexer, token))
-		return (SUCCESS);
+		return (read_char(lexer), SUCCESS);
 	if (is_dollar_literal(lexer, token))
 	{
 		if (token->str_data)
-			return (SUCCESS);
+			return (read_char(lexer), SUCCESS);
 		return (ERROR);
 	}
 	if (lexer->str[lexer->position + 1] == '\'' || lexer->str[lexer->position + 1] == '\"')
@@ -83,7 +83,7 @@ t_result	dollar_lexing(t_lexer *lexer, t_token *token)
 		{
 		}
 		if (token->type)
-			return (SUCCESS);
+			return (read_char(lexer), SUCCESS);
 	}
 	len = name_len((lexer->str) + lexer->position + 1);
 	if (ft_isdigit(lexer->str[lexer->position + 1]))
@@ -94,5 +94,6 @@ t_result	dollar_lexing(t_lexer *lexer, t_token *token)
 	if (!token->str_data || !token->old_data)
 		return (ERROR);
 	lexer->read_position = lexer->position + 1 + len;
+	read_char(lexer);
 	return (SUCCESS);
 }

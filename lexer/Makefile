@@ -1,14 +1,10 @@
+CC=cc
 FLAGS_NO_LEAK_CHECK =
 #-fsanitize=undefined -fsanitize=address
-#
 CFLAGS=-Wall -Wextra -Werror
 #-g
-#
-# 
-# 
-#
 LDFLAGS =
-#
+# -fsanitize=undefined -fsanitize=address
 #
 LIB_LEXER=lexer
 LIB_LEXER_NAME = lexer.a

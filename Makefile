@@ -1,15 +1,11 @@
+CC=cc
 FLAGS_NO_LEAK_CHECK =
 #-fsanitize=undefined -fsanitize=address
-#
 CFLAGS=-Wall -Wextra -Werror
 #-g
-#
-# 
-# 
-#
 LDFLAGS =
-#
-#
+# -fsanitize=undefined -fsanitize=address
+
 NAME=minishell
 
 GENERAL_SOURCES=

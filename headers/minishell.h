@@ -6,11 +6,18 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 14:41:28 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 10:09:07 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
+
+
+             TOTAL TEST COUNT: 935  TESTS PASSED: 559  LEAKING: 0
+                     STD_OUT: 184  STD_ERR: 183  EXIT_CODE: 263
+                         TOTAL FAILED AND PASSED CASES:
+                                     ❌ 630
+                                     ✅ 2175
 TODO:
 	- redir error msgs
 	- wildcards should not expand in signle quotes

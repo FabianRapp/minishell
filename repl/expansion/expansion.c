@@ -81,6 +81,8 @@ t_result	expand_args(t_ast *ast, t_arg **base_arg, bool here_doc)
 	{
 		if (!here_doc)
 			cur->name = expand_list(ast->env, cur->name);
+		if (!cur->name)
+			printf("no cur->name in expand_args\n");
 		cur->name = remove_non_literals(cur->name);
 		if (errno || (!here_doc && wildcards(cur->name) == ERROR))
 			return (set_errno_as_exit(ast));

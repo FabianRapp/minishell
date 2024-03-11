@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 13:08:45 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 08:38:58 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ t_result	handle_exception_char(t_lexer *lexer, t_token *token)
 	if (lexer->cur_char != '\\')
 		return (SUCCESS);
 	read_char(lexer);
-	return (literal_type2(lexer, token));
+	return (literal_type2(lexer, token, true));
 }
 
 t_token	*classify_sub_str(t_token *token, t_lexer *lexer, bool recursive_call)
@@ -37,7 +37,8 @@ t_token	*classify_sub_str(t_token *token, t_lexer *lexer, bool recursive_call)
 	//printf("lexer str at start: %s\n", lexer-> str + lexer->position);
 	if (handle_exception_char(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);
-	basic_sign_type(lexer, token);
+	if (!token->type)
+		basic_sign_type(lexer, token);
 	if (!token->type && valid_first_char(lexer) == ERROR)
 		return (lexer_error(token), NULL);
 	else if (!token->type && literal_type(lexer, token) == ERROR)
@@ -50,7 +51,7 @@ t_token	*classify_sub_str(t_token *token, t_lexer *lexer, bool recursive_call)
 		return (lexer_error(token), NULL);
 	else if (!token->type && subshell_type(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);
-	else if (!token->type && literal_type2(lexer, token) == ERROR)
+	else if (!token->type && literal_type2(lexer, token, false) == ERROR)
 		return (lexer_error(token), NULL);
 	else if (!token->type)
 		token->unknown = lexer->cur_char;
@@ -73,7 +74,7 @@ t_token	*next_new_token(t_lexer *lexer, bool recursive_call)
 	if (token->type)
 	{
 		//if (!is_redir(token->type))
-		return (read_char(lexer), token);
+		return (token);
 		//return (token);
 	}
 	printf("DEBUG: no function IDed the type\n");
