@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/10 23:19:23 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/11 15:22:36 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,13 @@ env VARIABLE=value some_command
 			where the environmental variable VARIABLE is added
 			*/
 
+//! for some reason, this prints the following weird: 
+/*
+minishell-$: env | grep "HI"
+hereee
+minishell-$:
+*/
+
 #include "../../headers/minishell.h"
 #include "../../headers/eval.h"
 
@@ -28,7 +35,7 @@ void	ft_env(t_ast *ast)
 	int		i;
 	char	**tmp;
 
-	tmp = ast->envs;
+	tmp = *(ast->envs);
 	i = -1;
 	while (tmp[++i])
 		printf("%s\n", tmp[i]);

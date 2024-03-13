@@ -1,33 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/21 17:24:35 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/11 13:03:31 by mevangel         ###   ########.fr       */
+/*   Created: 2024/02/21 17:47:46 by mevangel          #+#    #+#             */
+/*   Updated: 2024/03/11 12:32:14 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/minishell.h"
-#include "../../headers/eval.h"
+/*
+exit [n]: is used to exit the current shell or script with a specified exit 
+			status (n). if no numver is provided the exit will use the status 
+			of the last executed command as its exit status (echo $?)
+			
+*/
 
-int	ft_pwd(t_ast *ast)
-{
-	char	cwd[PATH_MAX];
-
-	if (getcwd(cwd, PATH_MAX))
-	{
-		printf("%s\n", cwd);
-		ast->exit_status = 0;
-		set_last_exit(0);
-		return (SUCCESS);
-	}
-	else
-	{
-		ast->exit_status = 1;
-		set_last_exit(1);
-		return (ERROR);
-	}
-}

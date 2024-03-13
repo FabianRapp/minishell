@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:29:13 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/11 01:49:10 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/13 19:36:14 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,11 @@ export VARIABLE=value
 command1		->  with export (comparing to just env) the variable becomes 
 					available not only for the "command1" but also for any 
 					subsequent commands in the current shell session 
+
+the VARIABLE name can NOT start with a number:
+EXAMPLE: 	bash-3.2$ export 4abc=hello
+			bash: export: `4abc=hello': not a valid identifier
+but it can be a number somewhere else in the name
 
 the "export" alone, prints a list of all the environment variables along with 
 their values in the formatting: 
@@ -59,7 +64,7 @@ static void	ft_export_no_args(t_ast *ast)
 	int		i;
 	char	**sorted_env;
 
-	sorted_env = ast->envs;
+	sorted_env = *(ast->envs);
 	i = 0;
 	while (sorted_env[i])
 		i++;
@@ -68,21 +73,84 @@ static void	ft_export_no_args(t_ast *ast)
 	while (sorted_env[++i])
 	{
 		printf("declare -x ");
+		
 		printf("%s\n", sorted_env[i]);
 	}
+}
+
+/*
+*	In Bash, the rules for valid environment variable names are as follows:
+*	Variable names must begin with a letter (a-z or A-Z) or an underscore (_).
+*	Subsequent characters can be letters, numbers, or underscores.
+*	Variable names are case-sensitive.
+*/
+bool	arg_is_valid(char *arg)
+{
+	int		i;
+	char	*save;
+
+	i = 0;
+	save = arg;
+	if (!arg)
+		return (false);
+	// i check first character firstly:	
+	if (!(ft_isalpha((int) *arg) || *arg == '_'))
+		return (print_error_addsq(true, "export", save, "not a valid identifier"), false);
+	// then i continue with the rest chars of var_name, until the equal
+	while (++arg && *arg && *arg != '=')
+	{
+		if (!(ft_isalnum((int) *arg) || *arg == '_'))
+			return (print_error_addsq(true, "export", save, "not a valid identifier"), false);
+	}
+	//if there is not equal after the name, nothing is printed and nothing is added in env array
+	if (*arg != '=')
+		return (false);
+	return (true);
 }
 
 void	ft_export(t_ast *ast)
 {
 	char	**args;
+	t_arg	*cur_arg;
+	char	*str_value;
+	int		num;
 
-	// printf("the cmd_name i got here is: %s$\n", ast->name->token->input_str);
-	args = ft_split(ast->name->token->input_str, ' ');
-	if (args[1] == NULL) //which means that export has no arguments
+	//printf("the cmd_name i got here is: %s$\n", ast->name->token->input_str);
+	// printf("the cmd_name i got here is: %s$\n", ast->name->token->str_data);
+	// ast->arg->name->token->str_data;
+	num = 0;
+	cur_arg = ast->arg;
+	while (cur_arg && cur_arg->name->token->type != T_EOF)
+	{
+		//i never enter here if i write "export" with no arguments!
+		str_value = cur_arg->name->token->str_data;
+		// printf("current str_value is: %s\n", str_value);
+		if (arg_is_valid(str_value))
+			add_env_var(ast, str_value);
+		num++;
+		cur_arg = cur_arg->next;
+	}
+	
+	// args = ft_split(ast->name->token->input_str, ' ');
+	// if (args[1] == NULL) //which means that export has no arguments
+	if (num == 0) //which means that export has no arguments
 	{
 		ft_export_no_args(ast);
 		return ;
 	}
-	
-	ft_free_2darr(args);
+	// else
+	// {
+		
+	// }
+	// ft_free_2darr(args);
+	// ast->exit_status = 0;
+	// set_last_exit(0);
 }
+
+// ft_memmove() 
+
+// getenv is used in the expansion
+
+// // print_error(true, NULL, NULL, strerror(errno));
+// // print_error(true, "string1", "string2", strerror(errno));
+// // ft_fprintf(2, "%s %s\n", SHELL_NAME, );
