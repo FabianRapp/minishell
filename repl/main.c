@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 23:06:58 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/13 21:54:20 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,17 @@ void	run_command_node(t_ast *ast)
 		free_child_data(&data);
 		return ;
 	}
-	execve(data.path, data.argv, ast->envs);
+	
+	char **our_env = *(ast->envs);
+	int i = -1;
+	while(our_env[++i])
+		printf("%s$\n", our_env[i]);
+	
+	execve(data.path, data.argv, *(ast->envs));
 	exit(errno);
 }
 
-void	add_global_data(t_ast *ast, t_env *env, char **envs)
+void	add_global_data(t_ast *ast, t_env *env, char ***envs)
 {
 	if (!ast)
 		return ;
@@ -97,29 +103,13 @@ void	add_global_data(t_ast *ast, t_env *env, char **envs)
 	ast->envs = envs;
 }
 
-char	**ft_initialize_our_env(char **base_env)
-{
-	int		i;
-	char	**ret;
 
-	i = 0;
-	while (base_env[i])
-		i++;
-	ret = malloc((i + 1) * sizeof(char *));
-	if (ret == NULL)
-		return (NULL);
-	ret[i] = NULL;
-	i = -1;
-	while (base_env[++i])
-		ret[i] = ft_strdup(base_env[i]);
-	return (ret);
-}
 
-bool	init_env(t_env *new_env, char **base_env)
+bool	init_env(t_env *new_env, char **our_env)
 {
 	if (!new_env)
 		return (false);
-	if (!base_env)
+	if (!our_env)
 		return (false);
 	new_env->main_process = true;
 	new_env->stop_execution = false;
@@ -166,7 +156,7 @@ int	main(int ac, char **av, char **base_env)
 		{
 			errno = 0;
 			//print_ast(ast);
-			add_global_data(ast, &env, our_env);
+			add_global_data(ast, &env, &our_env);
 			ast->cleanup_data = &cleanup_data;
 			//print_ast(ast);
 			run_node(ast);

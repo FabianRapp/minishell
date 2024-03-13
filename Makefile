@@ -1,6 +1,6 @@
 CC=cc
 FLAGS_NO_LEAK_CHECK = -fsanitize=address
-CFLAGS=-Wall -Wextra -Werror  -g
+CFLAGS= #-Wall -Wextra -Werror  -g
 # 
 #-fsanitize=undefined 
 #
@@ -22,7 +22,8 @@ SOURCES = repl/main.c repl/utils/path.c repl/ft_buildin1.c repl/redir.c \
 			utils/utils3.c \
 			repl/signals/child_parent_coms.c \
 			utils/debugging.c \
-			mk_adds/builtins/pwd.c mk_adds/builtins/env.c mk_adds/builtins/export.c
+			mk_adds/builtins/pwd.c mk_adds/builtins/env.c mk_adds/builtins/export.c mk_adds/builtins/unset.c \
+			mk_adds/env_stuff/env_functions.c
 
 OBJECTS= $(SOURCES:.c=.o)
 

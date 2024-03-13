@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:29:13 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/13 19:36:14 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/13 22:06:03 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ their values in the formatting:
 		declare -x MallocNanoZone="0"
 		etc... 
 */
+
+//? if there is a lot of time, maybe check if i could handle the += for export
 
 #include "../../headers/minishell.h"
 #include "../../headers/eval.h"
@@ -63,6 +65,7 @@ static void	ft_export_no_args(t_ast *ast)
 {
 	int		i;
 	char	**sorted_env;
+	char	*var_name;
 
 	sorted_env = *(ast->envs);
 	i = 0;
@@ -73,8 +76,10 @@ static void	ft_export_no_args(t_ast *ast)
 	while (sorted_env[++i])
 	{
 		printf("declare -x ");
-		
-		printf("%s\n", sorted_env[i]);
+		var_name = get_env_var_name(sorted_env[i]);
+		printf("%s=\"%s\"\n", var_name, get_env_value(ast, var_name));
+		free(var_name);
+		// printf("%s\n", sorted_env[i]);
 	}
 }
 
@@ -126,25 +131,14 @@ void	ft_export(t_ast *ast)
 		str_value = cur_arg->name->token->str_data;
 		// printf("current str_value is: %s\n", str_value);
 		if (arg_is_valid(str_value))
-			add_env_var(ast, str_value);
+			*(ast->envs) = add_env_var(ast, str_value);
 		num++;
 		cur_arg = cur_arg->next;
 	}
-	
-	// args = ft_split(ast->name->token->input_str, ' ');
-	// if (args[1] == NULL) //which means that export has no arguments
 	if (num == 0) //which means that export has no arguments
-	{
 		ft_export_no_args(ast);
-		return ;
-	}
-	// else
-	// {
-		
-	// }
-	// ft_free_2darr(args);
-	// ast->exit_status = 0;
-	// set_last_exit(0);
+	ast->exit_status = 0;
+	set_last_exit(0);
 }
 
 // ft_memmove() 

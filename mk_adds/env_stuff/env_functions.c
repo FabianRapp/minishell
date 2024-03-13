@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/13 18:37:34 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/13 20:14:38 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,20 @@ char	*get_env_value(t_ast *ast, char *var_name)
 	return (value);
 }
 
+char	*get_env_var_name(char *line)
+{
+	int		len;
+	char	*var_name;
+	
+	len = 0;
+	while (line[len] != '=')
+		len++;
+	var_name = ft_substr(line, 0, len);
+	return (var_name);
+}
+
+// USER=mevangel
+
 char	**add_env_var(t_ast *ast, char *str_to_add)
 {
 	char	**env_before;
@@ -64,6 +78,7 @@ char	**add_env_var(t_ast *ast, char *str_to_add)
 	while (env_before[++i])
 		new[i] = ft_strdup(env_before[i]);
 	new[i] = ft_strdup(str_to_add);
+	ft_free_2darr(env_before);
 	// free(str_to_add);
 	return (new);	
 }

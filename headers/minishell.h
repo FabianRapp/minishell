@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 01:45:34 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/13 20:17:11 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,7 @@ typedef struct s_ast
 	t_env			*env;
 	pid_t			pid;
 	int				*all_pids;
-	char			**envs;
+	char			***envs;
 }	t_ast;
 
 // lexer
@@ -209,7 +209,7 @@ void		run_node(t_ast *ast);
 void		run_command_node(t_ast *ast);
 
 bool		check_edgecases(t_ast *ast);
-void		add_global_data(t_ast *ast, t_env *env, char **envs);
+void	add_global_data(t_ast *ast, t_env *env, char ***envs);
 
 //redir
 t_result	resolve_redirs(t_ast *ast);
@@ -271,16 +271,21 @@ struct fd_request
 	int		get_error;
 };
 
-//? MK ADDITIONS:
-
 /* ------------------------------ BUILT-INS ------------------------------ */
-int		ft_pwd(void);
+int		ft_pwd(t_ast *ast);
 void	ft_env(t_ast *ast);
 void	ft_export(t_ast *ast);
+void	ft_unset(t_ast *ast);
 
 
 /* ---------------------------- ENV FUNCTIONS ---------------------------- */
+char	**ft_initialize_our_env(char **base_env);
+char	*get_env_value(t_ast *ast, char *var_name);
+char	**add_env_var(t_ast *ast, char *str_to_add);
+char	*get_env_var_name(char *line);
 
+// ----------- additional utils -----------------
+void	print_error_addsq(bool shell_name, char *command_name, char *arg, char *str);
 
 
 //! delete later
