@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:47:46 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/14 05:54:28 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/14 23:54:37 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ exit [n]: is used to exit the current shell or script with a specified exit
 			of the last executed command as its exit status (echo $?)
 			
 */
-//TODO: i need to add the -n
+
 
 
 #include "../../headers/minishell.h"
