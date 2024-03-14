@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/14 01:56:14 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/14 05:51:34 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,34 +81,34 @@ void	run_command_node(t_ast *ast)
 		return ;
 	}
 	
-	// char **our_env = *(ast->envs);
+	// char **env_list = *(ast->envs);
 	// int i = -1;
-	// while(our_env[++i])
-	// 	printf("%s$\n", our_env[i]);
+	// while(env_list[++i])
+	// 	printf("%s$\n", env_list[i]);
 	
 	execve(data.path, data.argv, *(ast->envs));
 	exit(errno);
 }
 
-void	add_global_data(t_ast *ast, t_env *env, char ***envs, char ***env_exp)
+void	add_global_data(t_ast *ast, t_env *env, char ***envs, char ***exp_list)
 {
 	if (!ast)
 		return ;
-	add_global_data(ast->left, env, envs, env_exp);
-	add_global_data(ast->right, env, envs, env_exp);
+	add_global_data(ast->left, env, envs, exp_list);
+	add_global_data(ast->right, env, envs, exp_list);
 	ast->env = env;
 	ast->pipe[READ] = READ;
 	ast->pipe[WRITE] = WRITE;
 	ast->exit_status = DEFAULT_EXIT_STATUS;
 	ast->envs = envs;
-	ast->env_exp = env_exp;
+	ast->env_exp = exp_list;
 }
 
-bool	init_env(t_env *new_env, char **our_env)
+bool	init_env(t_env *new_env, char **env_list)
 {
 	if (!new_env)
 		return (false);
-	if (!our_env)
+	if (!env_list)
 		return (false);
 	new_env->main_process = true;
 	new_env->stop_execution = false;
@@ -121,8 +121,8 @@ int	main(int ac, char **av, char **base_env)
 	char			*input;
 	t_cleanup_data	cleanup_data;
 	t_env			env;
-	char			**our_env;
-	char			**env_exp;
+	char			**env_list;
+	char			**exp_list;
 
 	(void)av;
 	errno = 0;
@@ -135,17 +135,17 @@ int	main(int ac, char **av, char **base_env)
 	// if (!env.main_pid)
 	// 	return (1);
 	//? my stuff:
-	our_env = ft_initialize_our_env(base_env);
-	if (our_env == NULL)
+	env_list = ft_initialize_our_env(base_env);
+	if (env_list == NULL)
 		return (printf(PR_ERR "malloc failed\n"), 1);
 	
 	// int i = -1;
-	// while(our_env[++i])
-	// 	printf("%s$\n", our_env[i]);
+	// while(env_list[++i])
+	// 	printf("%s$\n", env_list[i]);
 	
-	env_exp = ft_initialize_our_env(base_env);
-	if (env_exp == NULL)
-		return (ft_free_2darr(our_env), printf(PR_ERR "malloc failed\n"), 1);
+	exp_list = ft_initialize_our_env(base_env);
+	if (exp_list == NULL)
+		return (ft_free_2darr(env_list), printf(PR_ERR "malloc failed\n"), 1);
 	// //to test whethere i saved the env correctly:
 	env.main_process = true;
 	env.stop_execution = false;
@@ -158,7 +158,7 @@ int	main(int ac, char **av, char **base_env)
 		{
 			errno = 0;
 			//print_ast(ast);
-			add_global_data(ast, &env, &our_env, &env_exp);
+			add_global_data(ast, &env, &env_list, &exp_list);
 			// printf("hello form ft_main\n");
 			ast->cleanup_data = &cleanup_data;
 			//print_ast(ast);

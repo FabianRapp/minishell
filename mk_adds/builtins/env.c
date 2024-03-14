@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/14 01:12:42 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/14 05:47:38 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,6 @@ but it can also be used like:
 env VARIABLE=value some_command
 		|-> in this case, it runs the command in the modified environment (tmporary)
 			where the environmental variable VARIABLE is added
-			*/
-
-//! for some reason, this prints the following weird: 
-/*
-minishell-$: env | grep "HI"
-hereee
-minishell-$:
 */
 
 #include "../../headers/minishell.h"
