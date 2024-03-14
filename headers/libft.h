@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 22:22:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 15:13:34 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/14 00:28:09 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ int		ft_expo(int base, int expo);
 bool	ft_iswhitespace(char c);
 
 void	ft_free_2darr(char **array);
+size_t	ft_strarr_size(char **ptr);
 
 //bonus
 //struct	s_list;

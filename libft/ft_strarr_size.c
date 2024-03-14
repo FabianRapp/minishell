@@ -1,29 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstsize_bonus.c                                 :+:      :+:    :+:   */
+/*   ft_strarr_size.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/09 15:01:35 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 15:15:11 by mevangel         ###   ########.fr       */
+/*   Created: 2024/03/14 00:25:37 by mevangel          #+#    #+#             */
+/*   Updated: 2024/03/14 02:48:36 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/libft.h"
-#include "../headers/minishell.h"
 
-int	ft_lstsize(t_list *lst)
+//returns the size of a NULL-terminated array of strings
+size_t	ft_strarr_size(char **ptr)
 {
-	size_t	size;
+	size_t	i;
 
-	if (!lst)
-		return (0);
-	size = 1;
-	while (lst->next)
-	{
-		size++;
-		lst = lst->next;
-	}
-	return (size);
+	i = 0;
+	while (ptr[i] != NULL)
+		i++;
+	return (i);
 }

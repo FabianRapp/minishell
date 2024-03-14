@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:29:13 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/13 22:06:03 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/14 02:23:19 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,14 +60,14 @@ static void	sort_env_array(char **env, int size)
 	}
 }
 
-//TODO i think i must print them as: declare -x USER="mevangel" -with the quotes i mean. not sure.
 static void	ft_export_no_args(t_ast *ast)
 {
 	int		i;
 	char	**sorted_env;
 	char	*var_name;
+	char	*var_value;
 
-	sorted_env = *(ast->envs);
+	sorted_env = *(ast->env_exp);
 	i = 0;
 	while (sorted_env[i])
 		i++;
@@ -76,10 +76,16 @@ static void	ft_export_no_args(t_ast *ast)
 	while (sorted_env[++i])
 	{
 		printf("declare -x ");
-		var_name = get_env_var_name(sorted_env[i]);
-		printf("%s=\"%s\"\n", var_name, get_env_value(ast, var_name));
-		free(var_name);
-		// printf("%s\n", sorted_env[i]);
+		if (ft_strchr(sorted_env[i], '='))
+		{
+			var_name = get_env_var_name(sorted_env[i]);
+			var_value = get_env_value(ast, var_name);
+			printf("%s=\"%s\"\n", var_name, var_value);
+			free(var_name);
+			free(var_value);
+		}
+		else
+			printf("%s\n", sorted_env[i]);
 	}
 }
 
@@ -89,7 +95,7 @@ static void	ft_export_no_args(t_ast *ast)
 *	Subsequent characters can be letters, numbers, or underscores.
 *	Variable names are case-sensitive.
 */
-bool	arg_is_valid(char *arg)
+int	arg_is_valid(char *arg)
 {
 	int		i;
 	char	*save;
@@ -97,41 +103,43 @@ bool	arg_is_valid(char *arg)
 	i = 0;
 	save = arg;
 	if (!arg)
-		return (false);
+		return (0);
 	// i check first character firstly:	
 	if (!(ft_isalpha((int) *arg) || *arg == '_'))
-		return (print_error_addsq(true, "export", save, "not a valid identifier"), false);
+		return (print_error_addsq(true, "export", save, "not a valid identifier"), 0);
 	// then i continue with the rest chars of var_name, until the equal
 	while (++arg && *arg && *arg != '=')
 	{
 		if (!(ft_isalnum((int) *arg) || *arg == '_'))
-			return (print_error_addsq(true, "export", save, "not a valid identifier"), false);
+			return (print_error_addsq(true, "export", save, "not a valid identifier"), 0);
 	}
 	//if there is not equal after the name, nothing is printed and nothing is added in env array
 	if (*arg != '=')
-		return (false);
-	return (true);
+		return (2);
+	return (1);
 }
 
+
+//TODO: i need to check if the variable to add exists already
 void	ft_export(t_ast *ast)
 {
-	char	**args;
 	t_arg	*cur_arg;
 	char	*str_value;
 	int		num;
+	int		res;
 
-	//printf("the cmd_name i got here is: %s$\n", ast->name->token->input_str);
-	// printf("the cmd_name i got here is: %s$\n", ast->name->token->str_data);
-	// ast->arg->name->token->str_data;
 	num = 0;
+	res = 0;
 	cur_arg = ast->arg;
 	while (cur_arg && cur_arg->name->token->type != T_EOF)
 	{
 		//i never enter here if i write "export" with no arguments!
 		str_value = cur_arg->name->token->str_data;
-		// printf("current str_value is: %s\n", str_value);
-		if (arg_is_valid(str_value))
-			*(ast->envs) = add_env_var(ast, str_value);
+		res = arg_is_valid(str_value);
+		if (res > 0)
+			*(ast->env_exp) = add_env_var(str_value, ast->env_exp);
+		if (res == 1)
+			*(ast->envs) = add_env_var(str_value, ast->envs);
 		num++;
 		cur_arg = cur_arg->next;
 	}

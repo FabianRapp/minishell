@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 05:35:44 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/13 19:30:53 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,21 @@ void	print_error(bool shell_name, char *command_name, char *arg, char *str)
 		ft_fprintf(2, "%s: ", command_name);
 	if (arg)
 		ft_fprintf(1, "%s: ", arg);
+	if (str)
+		ft_fprintf(2, "%s", str);
+	ft_fprintf(2, "\n");
+}
+
+//bash prints: bash: export: `4add=hi': not a valid identifier
+// and with the above function i was missing the quotes
+void	print_error_addsq(bool shell_name, char *command_name, char *arg, char *str)
+{
+	if (shell_name)
+		ft_fprintf(2, "%s: ", SHELL_NAME);
+	if (command_name)
+		ft_fprintf(2, "%s: ", command_name);
+	if (arg)
+		ft_fprintf(1, "`%s': ", arg);
 	if (str)
 		ft_fprintf(2, "%s", str);
 	ft_fprintf(2, "\n");

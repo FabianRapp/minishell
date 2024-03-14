@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/13 20:17:11 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/14 00:48:42 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,6 +198,7 @@ typedef struct s_ast
 	pid_t			pid;
 	int				*all_pids;
 	char			***envs;
+	char			***env_exp;
 }	t_ast;
 
 // lexer
@@ -209,7 +210,7 @@ void		run_node(t_ast *ast);
 void		run_command_node(t_ast *ast);
 
 bool		check_edgecases(t_ast *ast);
-void	add_global_data(t_ast *ast, t_env *env, char ***envs);
+void		add_global_data(t_ast *ast, t_env *env, char ***envs, char ***env_exp);
 
 //redir
 t_result	resolve_redirs(t_ast *ast);
@@ -276,13 +277,15 @@ int		ft_pwd(t_ast *ast);
 void	ft_env(t_ast *ast);
 void	ft_export(t_ast *ast);
 void	ft_unset(t_ast *ast);
+int		arg_is_valid(char *arg);
 
 
 /* ---------------------------- ENV FUNCTIONS ---------------------------- */
 char	**ft_initialize_our_env(char **base_env);
 char	*get_env_value(t_ast *ast, char *var_name);
-char	**add_env_var(t_ast *ast, char *str_to_add);
+char	**add_env_var(char *str_to_add, char ***arr_ptr);
 char	*get_env_var_name(char *line);
+char	**delete_env_var(char *var_to_rm, char ***arr_ptr);
 
 // ----------- additional utils -----------------
 void	print_error_addsq(bool shell_name, char *command_name, char *arg, char *str);

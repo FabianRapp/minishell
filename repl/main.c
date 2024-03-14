@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/13 21:54:20 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/14 01:56:14 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,29 +81,28 @@ void	run_command_node(t_ast *ast)
 		return ;
 	}
 	
-	char **our_env = *(ast->envs);
-	int i = -1;
-	while(our_env[++i])
-		printf("%s$\n", our_env[i]);
+	// char **our_env = *(ast->envs);
+	// int i = -1;
+	// while(our_env[++i])
+	// 	printf("%s$\n", our_env[i]);
 	
 	execve(data.path, data.argv, *(ast->envs));
 	exit(errno);
 }
 
-void	add_global_data(t_ast *ast, t_env *env, char ***envs)
+void	add_global_data(t_ast *ast, t_env *env, char ***envs, char ***env_exp)
 {
 	if (!ast)
 		return ;
-	add_global_data(ast->left, env, envs);
-	add_global_data(ast->right, env, envs);
+	add_global_data(ast->left, env, envs, env_exp);
+	add_global_data(ast->right, env, envs, env_exp);
 	ast->env = env;
 	ast->pipe[READ] = READ;
 	ast->pipe[WRITE] = WRITE;
 	ast->exit_status = DEFAULT_EXIT_STATUS;
 	ast->envs = envs;
+	ast->env_exp = env_exp;
 }
-
-
 
 bool	init_env(t_env *new_env, char **our_env)
 {
@@ -123,6 +122,7 @@ int	main(int ac, char **av, char **base_env)
 	t_cleanup_data	cleanup_data;
 	t_env			env;
 	char			**our_env;
+	char			**env_exp;
 
 	(void)av;
 	errno = 0;
@@ -138,16 +138,18 @@ int	main(int ac, char **av, char **base_env)
 	our_env = ft_initialize_our_env(base_env);
 	if (our_env == NULL)
 		return (printf(PR_ERR "malloc failed\n"), 1);
-
-	// //to test whethere i saved the env correctly:
+	
 	// int i = -1;
 	// while(our_env[++i])
 	// 	printf("%s$\n", our_env[i]);
-	// // return (0);
-	//? my stuff:end
-	if (!init_env(&env, our_env))
-		return (ft_free_2darr(our_env), 1);
-	ast = get_input(&cleanup_data); 
+	
+	env_exp = ft_initialize_our_env(base_env);
+	if (env_exp == NULL)
+		return (ft_free_2darr(our_env), printf(PR_ERR "malloc failed\n"), 1);
+	// //to test whethere i saved the env correctly:
+	env.main_process = true;
+	env.stop_execution = false;
+	ast = get_input(&cleanup_data);
 	//? shouldn't we protect the return of the get_input. in some cases you're returning NULL
 	input = cleanup_data.input;
 	while (1)
@@ -156,7 +158,8 @@ int	main(int ac, char **av, char **base_env)
 		{
 			errno = 0;
 			//print_ast(ast);
-			add_global_data(ast, &env, &our_env);
+			add_global_data(ast, &env, &our_env, &env_exp);
+			// printf("hello form ft_main\n");
 			ast->cleanup_data = &cleanup_data;
 			//print_ast(ast);
 			run_node(ast);

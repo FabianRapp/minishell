@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 15:42:52 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/14 01:50:52 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	create_sub_shell(t_env sub_env, char *input, t_ast *ast)
 	// TODO: differ between syntax and malloc parser error
 	if (!sub_ast)
 		exit(1);
-	add_global_data(sub_ast, &sub_env, ast->envs); // TODO envs
+	add_global_data(sub_ast, &sub_env, ast->envs, ast->env_exp); // TODO envs
 	sub_ast->exit_status = ast->exit_status;
 	sub_ast->env = &sub_env;
 	run_node(sub_ast);

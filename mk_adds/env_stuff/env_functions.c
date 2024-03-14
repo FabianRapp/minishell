@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/13 20:14:38 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/14 03:13:15 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,6 @@ env VARIABLE=value some_command
 
 #include "../../headers/minishell.h"
 #include "../../headers/eval.h"
-
-// 1. function to return only the env var name.
-// 3. function to change the value of an environmental variable
-// 4. 
 
 char	*get_env_value(t_ast *ast, char *var_name)
 {
@@ -53,21 +49,20 @@ char	*get_env_var_name(char *line)
 	char	*var_name;
 	
 	len = 0;
-	while (line[len] != '=')
+	while (line[len] != '=' && line[len] != '\0')
 		len++;
 	var_name = ft_substr(line, 0, len);
 	return (var_name);
 }
 
-// USER=mevangel
-
-char	**add_env_var(t_ast *ast, char *str_to_add)
+char	**add_env_var(char *str_to_add, char ***arr_ptr)
 {
 	char	**env_before;
 	int		i;
 	char	**new;
 
-	env_before = *(ast->envs);
+	i = 0;
+	env_before = *(arr_ptr);
 	while (env_before[i])
 		i++;
 	new = (char **)malloc((i + 2) * sizeof(char *));
@@ -79,8 +74,39 @@ char	**add_env_var(t_ast *ast, char *str_to_add)
 		new[i] = ft_strdup(env_before[i]);
 	new[i] = ft_strdup(str_to_add);
 	ft_free_2darr(env_before);
-	// free(str_to_add);
 	return (new);	
+}
+
+char	**delete_env_var(char *var_to_rm, char ***arr_ptr)
+{
+	char	**env_before;
+	int		i;
+	char	**new;
+	int		del_index;
+
+	env_before = *(arr_ptr);
+	i = 0;
+	// while (env_before[i] && !ft_strnstr(env_before[i], var_to_rm, ft_strlen(env_before[i])))
+	// 	i++;
+	while (env_before[i] && ft_strncmp(var_to_rm, get_env_var_name(env_before[i]), ft_strlen(var_to_rm)))
+		i++;
+	if (env_before[i] == NULL)
+		return (env_before);
+	//so now the i is the index of the line of the 2darray that i want to delete:
+	new = (char **)malloc(ft_strarr_size(env_before) * sizeof(char *));
+	if (new == NULL)
+		return (NULL);
+	// new[ft_strarr_size(env_before) - 2] = NULL;
+	del_index = i;
+	i = -1;
+	while (++i < del_index)
+		new[i] = ft_strdup(env_before[i]);
+	// i++; //to pass the del_index of the deleted line
+	while (env_before[++i])
+		new[i - 1] = ft_strdup(env_before[i]);
+	new[i - 1] = NULL;
+	ft_free_2darr(env_before);
+	return (new);
 }
 
 char	**ft_initialize_our_env(char **base_env)
@@ -101,6 +127,4 @@ char	**ft_initialize_our_env(char **base_env)
 	return (ret);
 }
 
-// ft_substr()
-
-// TEST=hello
+//TODO: should i modify the SHLVL environmental variable? It is always printed as 1, although it should start as 

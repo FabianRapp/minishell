@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_type_commands.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 19:47:45 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 08:59:05 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/14 01:58:57 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ t_result	type_commands(t_parser *parser)
 			if (temp == NULL)
 				return (ERROR);
 			parser = temp;
-				printf("hereee\n");
 		}
 		type_command(parser, &found_command);
 		parser = parser->next;

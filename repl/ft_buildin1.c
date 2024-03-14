@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 15:11:28 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/14 01:13:11 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ bool	ft_buildin(t_ast *ast)
 	if (!ft_strcmp(cmd_name, "export"))
 		return (free(cmd_name), ft_export(ast), true);
 	if (!ft_strcmp(cmd_name, "unset"))
-		return (free(cmd_name),ft_unset(ast), true);
+		return (free(cmd_name), ft_unset(ast), true);
 	if (!ft_strcmp(cmd_name, "env"))
 		return (free(cmd_name), ft_env(ast), true);
 	return (false);
