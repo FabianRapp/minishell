@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:29:13 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/14 02:23:19 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/14 05:41:26 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,6 @@ int	arg_is_valid(char *arg)
 	return (1);
 }
 
-
-//TODO: i need to check if the variable to add exists already
 void	ft_export(t_ast *ast)
 {
 	t_arg	*cur_arg;
@@ -133,7 +131,6 @@ void	ft_export(t_ast *ast)
 	cur_arg = ast->arg;
 	while (cur_arg && cur_arg->name->token->type != T_EOF)
 	{
-		//i never enter here if i write "export" with no arguments!
 		str_value = cur_arg->name->token->str_data;
 		res = arg_is_valid(str_value);
 		if (res > 0)
