@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:26:07 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/15 05:53:01 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/15 06:34:17 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,18 +51,17 @@ static void	ft_update_env_var(char *var_name, char *new_value, char **env)
 	free(half);
 }
 
+
+//TODO i need to handle also cases like ../../ or ../something or ~/../
 t_result	ft_cd(t_ast *ast)
 {
 	char	*to_go;
 	char	*before;
 	char	*after;
-	bool	print_new;
 
-	print_new = false;
 	to_go = ft_strdup(ast->arg->name->token->str_data);
 	if (!to_go || !ft_strcmp(to_go, "~") || !ft_strcmp(to_go, "~/")) //if there are no arguments, meaning cd alone
 		to_go = get_env_value(ast, "HOME");
-	
 	else if (!ft_strcmp(to_go, "-"))
 	{
 		to_go = get_env_value(ast, "OLDPWD");
@@ -80,11 +79,21 @@ t_result	ft_cd(t_ast *ast)
 	ft_update_env_var("OLDPWD", before, *(ast->env_exp));
 	ft_update_env_var("PWD", after, *(ast->envs));
 	ft_update_env_var("PWD", after, *(ast->env_exp));
-
-
 	free(before);
 	free(after);
 	ast->exit_status = 0;
 	set_last_exit(0);
 	return (SUCCESS);
 }
+
+//!		if i type: 
+//!		cd somethingrandom
+//!		i get my message: minishell: cd: oldgn: No such file or directory
+//!		but for some reason i also get these: 
+//!		minishell: No such file or directory
+//!		rest_fds error
+//!		
+//!
+//!
+//!
+
