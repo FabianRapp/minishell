@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:47:46 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/14 23:54:37 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/15 01:10:48 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,17 @@ exit [n]: is used to exit the current shell or script with a specified exit
 
 #include "../../headers/minishell.h"
 #include "../../headers/eval.h"
+
+static bool	includes_non_num(char *str)
+{
+	while (*str)
+	{
+		if (!ft_isdigit(*str))
+			return (true);
+		str++;
+	}
+	return (false);
+}
 
 void	ft_exit(t_ast *ast)
 {

@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/14 00:48:42 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/15 01:48:05 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,6 +277,8 @@ int		ft_pwd(t_ast *ast);
 void	ft_env(t_ast *ast);
 void	ft_export(t_ast *ast);
 void	ft_unset(t_ast *ast);
+void	ft_exit(t_ast *ast);
+void	ft_echo(t_ast *ast);
 int		arg_is_valid(char *arg);
 
 

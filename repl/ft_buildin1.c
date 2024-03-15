@@ -6,23 +6,12 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/14 05:54:53 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/15 01:23:20 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 #include "../headers/eval.h"
-
-static bool	includes_non_num(char *str)
-{
-	while (*str)
-	{
-		if (!ft_isdigit(*str))
-			return (true);
-		str++;
-	}
-	return (false);
-}
 
 bool	ft_buildin(t_ast *ast)
 {
@@ -37,8 +26,8 @@ bool	ft_buildin(t_ast *ast)
 	ft_strtolower(cmd_name);
 	if (!ft_strcmp(cmd_name, "exit"))
 		return (free(cmd_name), ft_exit(ast), true);
-	//if (!ft_strcmp(cmd_name, "echo"))
-		//return (free(cmd_name), ft_echo(ast), true);
+	if (!ft_strcmp(cmd_name, "echo"))
+		return (free(cmd_name), ft_echo(ast), true);
 	// if (!ft_strcmp(cmd_name, "cd"))
 	// 	return (free(cmd_name), ft_cd(ast), true);
 	if (!ft_strcmp(cmd_name, "pwd"))

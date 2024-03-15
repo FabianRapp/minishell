@@ -23,6 +23,7 @@ SOURCES = repl/main.c repl/utils/path.c repl/ft_buildin1.c repl/redir.c \
 			repl/signals/child_parent_coms.c \
 			utils/debugging.c \
 			mk_adds/builtins/pwd.c mk_adds/builtins/env.c mk_adds/builtins/export.c mk_adds/builtins/unset.c \
+			mk_adds/builtins/exit.c mk_adds/builtins/echo.c mk_adds/builtins/cd.c \
 			mk_adds/env_stuff/env_functions.c
 
 OBJECTS= $(SOURCES:.c=.o)
