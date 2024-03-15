@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/14 05:47:50 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/15 05:35:45 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ char	**delete_env_var(char *var_to_rm, char ***arr_ptr)
 	i = 0;
 	// while (env_before[i] && !ft_strnstr(env_before[i], var_to_rm, ft_strlen(env_before[i])))
 	// 	i++;
-	while (env_before[i] && ft_strncmp(var_to_rm, get_env_var_name(env_before[i]), ft_strlen(var_to_rm)))
+	while (env_before[i] && ft_strncmp(var_to_rm, get_env_var_name(env_before[i]), ft_strlen(var_to_rm))) //! i think could be a leak. maybe i can change the second argument to just env_before[i]
 		i++;
 	if (env_before[i] == NULL)
 		return (env_before);

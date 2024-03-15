@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/15 01:48:05 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/15 05:42:50 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,6 @@ weird stuff to keep in mind about bash
 # define LEAK_CHECK 0
 #endif
 
-// mk additions:
 # define PR_ERR "\x1B[31mError: \x1B[0m"
 
 typedef enum e_result
@@ -273,13 +272,14 @@ struct fd_request
 };
 
 /* ------------------------------ BUILT-INS ------------------------------ */
-int		ft_pwd(t_ast *ast);
-void	ft_env(t_ast *ast);
-void	ft_export(t_ast *ast);
-void	ft_unset(t_ast *ast);
-void	ft_exit(t_ast *ast);
-void	ft_echo(t_ast *ast);
-int		arg_is_valid(char *arg);
+int			ft_pwd(t_ast *ast);
+void		ft_env(t_ast *ast);
+void		ft_export(t_ast *ast);
+void		ft_unset(t_ast *ast);
+void		ft_exit(t_ast *ast);
+void		ft_echo(t_ast *ast);
+t_result	ft_cd(t_ast *ast);
+int			arg_is_valid(char *arg);
 
 
 /* ---------------------------- ENV FUNCTIONS ---------------------------- */

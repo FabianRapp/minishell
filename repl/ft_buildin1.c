@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/15 01:23:20 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/15 03:12:07 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ bool	ft_buildin(t_ast *ast)
 		return (free(cmd_name), ft_exit(ast), true);
 	if (!ft_strcmp(cmd_name, "echo"))
 		return (free(cmd_name), ft_echo(ast), true);
-	// if (!ft_strcmp(cmd_name, "cd"))
-	// 	return (free(cmd_name), ft_cd(ast), true);
+	if (!ft_strcmp(cmd_name, "cd"))
+		return (free(cmd_name), ft_cd(ast), true);
 	if (!ft_strcmp(cmd_name, "pwd"))
 		return (free(cmd_name), ft_pwd(ast), true);
 	if (!ft_strcmp(cmd_name, "export"))

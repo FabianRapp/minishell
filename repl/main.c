@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/14 05:51:34 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/15 04:33:45 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,16 +104,16 @@ void	add_global_data(t_ast *ast, t_env *env, char ***envs, char ***exp_list)
 	ast->env_exp = exp_list;
 }
 
-bool	init_env(t_env *new_env, char **env_list)
-{
-	if (!new_env)
-		return (false);
-	if (!env_list)
-		return (false);
-	new_env->main_process = true;
-	new_env->stop_execution = false;
-	return (true);
-}
+// bool	init_env(t_env *new_env, char **env_list)
+// {
+// 	if (!new_env)
+// 		return (false);
+// 	if (!env_list)
+// 		return (false);
+// 	new_env->main_process = true;
+// 	new_env->stop_execution = false;
+// 	return (true);
+// }
 
 int	main(int ac, char **av, char **base_env)
 {
@@ -138,11 +138,9 @@ int	main(int ac, char **av, char **base_env)
 	env_list = ft_initialize_our_env(base_env);
 	if (env_list == NULL)
 		return (printf(PR_ERR "malloc failed\n"), 1);
-	
 	// int i = -1;
 	// while(env_list[++i])
 	// 	printf("%s$\n", env_list[i]);
-	
 	exp_list = ft_initialize_our_env(base_env);
 	if (exp_list == NULL)
 		return (ft_free_2darr(env_list), printf(PR_ERR "malloc failed\n"), 1);
