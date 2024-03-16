@@ -89,7 +89,6 @@ LIBS = $(LIBFT) $(LIB_LEXER) $(LIB_PARSER)
 LIBS_NAME = $(LIBFT_NAME) $(LIB_LEXER_NAME) $(LIB_PARSER_NAME)
 
 
-SHELL := /Users/$(USER)/.brew/bin/bash
 
 .PHONY: all clean fclean re clean2 libs $(LIBFT) $(LIB_LEXER) $(LIB_PARSER)
 
@@ -99,15 +98,15 @@ normal: CFLAGS += $(FLAGS_NO_LEAK_CHECK)
 normal: LDFLAGS += $(FLAGS_NO_LEAK_CHECK)
 normal: $(OBJECTS) libs
 	$(CC) $(LIBS_NAME) $(OBJECTS)  -lreadline -o $(NAME) $(CFLAGS) $(LDFLAGS)
-# if [ $(USER) = "frapp" ]; then
-		cp $(NAME) ../../../bash_testing
-# fi
+
+#cp $(NAME) ../../../bash_testing
+
 
 $(NAME): $(OBJECTS)
 	$(CC) $(LIBS_NAME) $(OBJECTS)  -lreadline -o $(NAME) $(CFLAGS) $(LDFLAGS)
-# if [ $(USER) = "frapp" ]; then
-		cp $(NAME) ../../../bash_testing
-# fi
+
+#cp $(NAME) ../../../bash_testing
+
 
 leaks: CFLAGS += -DLEAK_CHECK=1
 leaks: libs_leaks
