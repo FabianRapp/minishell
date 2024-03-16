@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 21:37:54 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/28 04:13:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/06 08:31:24 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*ft_strdup(const char *s1)
 	char	*cpy;
 	size_t	i;
 
+	if (!s1)
+		return (NULL);
 	len = ft_strlen(s1);
 	cpy = ft_calloc(len + 1, sizeof(char));
 	if (!cpy)

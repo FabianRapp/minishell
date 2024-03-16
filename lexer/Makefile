@@ -1,16 +1,19 @@
 CC=cc
-FLAGS_NO_LEAK_CHECK = -fsanitize=address
-CFLAGS=-Wall -Wextra -Werror  -g
+FLAGS_NO_LEAK_CHECK = -fsanitize=undefined -fsanitize=address -g
+#
+CFLAGS=-Wall -Wextra -Werror
+#
+LDFLAGS = -fsanitize=undefined -fsanitize=address  -g
 # 
-#-fsanitize=undefined 
-#
-LDFLAGS =
-#
+
+
 #
 LIB_LEXER=lexer
 LIB_LEXER_NAME = lexer.a
 SOURCES= ../utils/utils1.c ../utils/debugging.c lexer_main.c utils/utils.c  \
- identifiers/ident_type.c identifiers/dollar_sign.c identifiers/subshell.c
+ identifiers/ident_type.c identifiers/dollar_sign.c identifiers/subshell.c \
+ identifiers/ident_redir.c\
+  ../utils/utils1.c
 OBJECTS= $(SOURCES:.c=.o)
 
 NAME_TESTER=test

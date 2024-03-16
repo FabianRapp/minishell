@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/14 05:47:38 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/16 22:14:20 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,10 @@ void	ft_env(t_ast *ast)
 	int		i;
 	char	**tmp;
 
-	tmp = *(ast->envs);
+	if (ast && ast->envs)
+		tmp = *(ast->envs);
+	else
+		tmp = *(get_env(NULL));
 	i = -1;
 	while (tmp[++i])
 		printf("%s\n", tmp[i]);

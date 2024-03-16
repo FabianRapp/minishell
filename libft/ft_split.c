@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/08 01:18:40 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 02:19:13 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/16 21:30:35 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,19 +62,6 @@ static int	append_next_sub(char **sub_str, const char *s, char c)
 	return (count);
 }
 
-char	**free_str_ar(char **str_arr)
-{
-	int	i;
-
-	if (!str_arr)
-		return (NULL);
-	i = 0;
-	while (str_arr[i] != 0)
-		free(str_arr[i++]);
-	free(str_arr);
-	return (NULL);
-}
-
 char	**ft_split(char const *s, char c)
 {
 	size_t		str_count;
@@ -93,7 +80,7 @@ char	**ft_split(char const *s, char c)
 			s++;
 		s_increase = append_next_sub(str_ar + i, s, c);
 		if (s_increase == -1)
-			return (free_str_ar(str_ar));
+			return (ft_free_2darr(str_ar), NULL);
 		if (s_increase)
 			i++;
 		s += s_increase;
@@ -169,7 +156,7 @@ char	**ft_split_fn(char const *s, bool is_sep(char))
 			s++;
 		s_increase = append_next_sub_fn(str_ar + i, s, is_sep);
 		if (s_increase == -1)
-			return (free_str_ar(str_ar));
+			return (ft_free_2darr(str_ar), NULL);
 		if (s_increase)
 			i++;
 		s += s_increase;

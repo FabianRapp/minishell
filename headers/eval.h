@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   eval.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:38:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 12:30:05 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/16 20:23:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ bool		ft_buildin(t_ast *ast);
 
 // input_exit.c
 t_ast		*get_input(t_cleanup_data *cleanup_data);
-void		main_exit(t_cleanup_data *data, bool full_exit, t_env *env, int exit_status);
+void		main_exit(t_cleanup_data *data, bool full_exit, bool ft_exit_call);
+t_ast		*handle_manunal_input(char **av, t_cleanup_data *cleanup_data);
 
 // data_utils.c
 int			count_args(t_arg *args);

@@ -3,94 +3,118 @@
 /*                                                        :::      ::::::::   */
 /*   input_exit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/07 00:41:03 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/16 19:32:02 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 
+// if a line is passed via av
+t_ast	*handle_manunal_input(char **av, t_cleanup_data *cleanup_data)
+{
+	char	*input;
+	t_ast	*ast;
+
+	cleanup_data->root = NULL;
+	cleanup_data->input = NULL;
+	input = ft_strdup(av[1]);
+	if (!input)
+		return (NULL);
+	if (!contains_non_white_spcace(input))
+	{
+		return (free(input), NULL);
+	}
+	add_history(input);
+	ast = parser(input);
+	if (ast)
+	{
+		cleanup_data->input = input;
+		cleanup_data->root = ast;
+		return (ast);
+	}
+	return (NULL);
+}
+
 t_ast	*get_input(t_cleanup_data *cleanup_data)
 {
 	char	*input;
 	t_ast	*ast;
-	int		i;
-	//int		std_out;
 
-	// todo: error handeling
-	//std_out = dup(WRITE);
-	//dup2(2, WRITE);
-	input = readline("minishell-$: ");
-	//dup2(std_out, WRITE);
+	cleanup_data->root = NULL;
+	cleanup_data->input = NULL;
+	input = ft_read_line("minishell-$: ");
+	//input = readline("minishell-$: ");
 	if (!input)
-		return (NULL);
-	i = 0;
-	while (input[i])
 	{
-		if (!ft_iswhitespace(input[i]))
-		{
-			add_history(input);
-			ast = parser(input);
-			if (ast)
-			{
-				cleanup_data->input = input;
-				cleanup_data->root = ast;
-			}
-			else
-				break ;
-			return (ast);
-		}
-		i++;
+		//exit(get_last_exit());
+		//if (TESTER)
+			//exit(get_last_exit());
+		return (NULL);
 	}
-	free(input);
+	if (!contains_non_white_spcace(input))
+	{
+		//if (TESTER)
+			//exit(get_last_exit());
+		return (free(input), NULL);
+	}
+	add_history(input);
+	ast = parser(input);
+	if (ast)
+	{
+		cleanup_data->input = input;
+		cleanup_data->input = input;
+		cleanup_data->root = ast;
+		return (ast);
+	}
+	else
+		free(input);
+	//exit(get_last_exit());
 	return (NULL);
 }
 
-void	main_exit(t_cleanup_data *data, bool full_exit, t_env *env, int exit_status)
+void	main_exit(t_cleanup_data *data, bool full_exit, bool ft_exit_call)
 {
-	bool	main_process;
-
-	data->root->env->stop_execution = false;
-	// if (!data || !data->root)
-	// 	exit(exit_status);
-	main_process = env->main_process;
+	// if (!data)
+	// 	printf("no cleanup data\n");
+	// else if (!data->root)
+	// 	printf("no data root\n");
+	// if (sub_shell_mode(GET_SUB_SHELL_MODE) == true)
+	// 	printf("in sub mode: %d/%d\n", data->root->exit_status, get_last_exit());
+	// else
+	// 	printf("not sub mode: %d/%d(root/last)\n", data->root->exit_status, get_last_exit());
+	if (data && data->root && !ft_exit_call && data->root->exit_status == DEFAULT_EXIT_STATUS)
+	{
+		if (data->root && data->root->pid > 0)
+			waitpid(data->root->pid, &(data->root->exit_status), 0);
+		data->root->exit_status = WEXITSTATUS(data->root->exit_status);
+		set_last_exit(data->root->exit_status);
+	}
+	wait_all_children(data->root);
+	// if (!data)
+	// 	printf("no cleanup data\n");
+	// else if (!data->root)
+	// 	printf("no data root\n");
+	// if (sub_shell_mode(GET_SUB_SHELL_MODE) == true)
+	// 	printf("in sub mode: %d/%d\n", data->root->exit_status, get_last_exit());
+	// else
+	// 	printf("not sub mode: %d/%d(root/last)\n", data->root->exit_status, get_last_exit());
+	if (data->root && data->root->env)
+		data->root->env->stop_execution = false;
+	free(data->input);
+	if (data->root)
+		free_ast(data->root);
+	data->root = NULL;
+	cleanup_fds();
+	if (LEAK_CHECK)
+		system("leaks minishell");
+	//check_fds();
 	if (full_exit)
 	{
-		my_free((void **)&(data->input));
-		if (data->root)
-			free_ast(data->root);
-		cleanup_fds();
-		reset_stdio(RESET_STDIO_CLEAN);
-		if (LEAK_CHECK)
-			system("leaks minishell");
-		check_fds(true);
-		exit(exit_status);
+		exit(get_last_exit());
+		exit(1);
 	}
-	else if (!full_exit)
-	{
-		my_free((void **)&(data->input));
-		if (data->root)
-			free_ast(data->root);
-		cleanup_fds();
-		if (LEAK_CHECK)
-			system("leaks minishell"); //! we can not turn that at the end - forbidden function
-		check_fds(false);
-	}
-	// else if (!main_process && full_exit)
-	// {
-	// 	exit(exit_status);
-	// }
-	// else if (!main_process)
-	// {
-	// 	exit(exit_status);
-	// }
-	else
-	{
-		my_free((void **)&(data->input));
-		if (data->root)
-			free_ast(data->root);
-	}
-	//system("leaks minishell");
+	errno = 0;
 }

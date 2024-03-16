@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:29:13 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/14 05:41:26 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/16 21:56:33 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int	arg_is_valid(char *arg)
 	save = arg;
 	if (!arg)
 		return (0);
-	// i check first character firstly:	
+	// i check first character firstly:
 	if (!(ft_isalpha((int) *arg) || *arg == '_'))
 		return (print_error_addsq(true, "export", save, "not a valid identifier"), 0);
 	// then i continue with the rest chars of var_name, until the equal

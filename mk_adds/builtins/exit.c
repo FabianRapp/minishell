@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:47:46 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/15 01:10:48 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/16 21:26:36 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,38 +24,57 @@ exit [n]: is used to exit the current shell or script with a specified exit
 
 static bool	includes_non_num(char *str)
 {
+	bool	had_digit;
+
+	had_digit = false;
 	while (*str)
 	{
 		if (!ft_isdigit(*str))
 			return (true);
+		had_digit = true;
 		str++;
 	}
-	return (false);
+	return (!had_digit);
 }
+
 
 void	ft_exit(t_ast *ast)
 {
-	if (ast->env->main_process)
+
+	if (sub_shell_mode(GET_SUB_SHELL_MODE) == false && !TESTER)
 		print_error(false, NULL, NULL, "exit");
 	if (ast->arg && includes_non_num(ast->arg->name->token->str_data))
 	{
-		if (ast->arg && ast->arg->name)
-			print_error(1, "exit", ast->arg->name->token->str_data, "numeric argument required");
-		main_exit(ast->cleanup_data, true, ast->env, 255);
+		if (ast->arg && ast->arg->name && !TESTER)
+			print_error(true, "exit", ast->arg->name->token->str_data, "numeric argument required");
+		else if(ast->arg && ast->arg->name)
+			ft_fprintf(2, "%s: %s: %s: %s\n", SHELL_NAME, "exit", ast->arg->name->token->str_data, "numeric argument required");
+		set_last_exit(2);
+		main_exit(ast->cleanup_data, true, true);
 	}
 	else if (ast->arg && count_args(ast->arg) > 1)
 	{
-		print_error(1, "exit", ast->arg->name->token->str_data, "too many arguments");
+		if (!TESTER)
+			print_error(true, "exit", NULL, "too many arguments");
+		else
+			ft_fprintf(2, "%s: %s: %s\n", SHELL_NAME, "exit", "too many arguments");
 		ast->exit_status = 1;
-		if (ast->env->main_process)
-		{
-			ast->env->stop_execution = true;
-			return ;
-		}
-		main_exit(ast->cleanup_data, true, ast->env, 1);
+		set_last_exit(1);
+		ast->env->stop_execution = true;
+		return ;
 	}
 	else if (!ast->arg || count_args(ast->arg) == 0)
-		main_exit(ast->cleanup_data, true, ast->env, 0);
+	{
+		main_exit(ast->cleanup_data, true, true);
+	}
 	else
-		main_exit(ast->cleanup_data, true, ast->env, ft_atoi(ast->arg->name->token->str_data));
+	{
+		set_last_exit(ft_atoi(ast->arg->name->token->str_data));
+		ast->exit_status = ft_atoi(ast->arg->name->token->str_data);
+		// if (sub_shell_mode(GET_SUB_SHELL_MODE) == true)
+		// 	printf("exit in sub mode: %d/%d\n", ast->exit_status, get_last_exit());
+		// else
+		// 	printf("exit not sub mode: %d/%d\n", ast->exit_status, get_last_exit());
+		main_exit(ast->cleanup_data, true, true);
+	}
 }

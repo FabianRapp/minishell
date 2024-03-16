@@ -6,16 +6,15 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 19:22:05 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 05:57:54 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/03 22:37:15 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../expansion.h"
 
-
 t_result	fill_prefix(char **str, t_wildcard_parameters *w_para)
 {
-	int				i;
+	int		i;
 
 	i = 0;
 	while ((*str)[i] && (*str)[i] != '*')
@@ -33,15 +32,16 @@ t_result	fill_prefix(char **str, t_wildcard_parameters *w_para)
 }
 
 // check errno for malloc or open/read error
-void	fill_wildcard_data(char *wildcard_str, t_wildcard_parameters *w_para)
+t_result	fill_wildcard_data(char *wildcard_str,
+	t_wildcard_parameters *w_para)
 {
 	int	i;
 
 	if (fill_prefix(&wildcard_str, w_para) == ERROR)
-		return ;
+		return (ERROR);
 	w_para->sub_str = ft_split(wildcard_str, '*');
-	if (errno)
-		return ;
+	if (!(w_para->sub_str))
+		return (ERROR);
 	if (wildcard_str[ft_strlen(wildcard_str) - 1] == '*')
 		w_para->suffix = NULL;
 	else
@@ -55,6 +55,7 @@ void	fill_wildcard_data(char *wildcard_str, t_wildcard_parameters *w_para)
 			(w_para->sub_str)[i - 1] = NULL;
 		}
 	}
+	return (SUCCESS);
 }
 
 bool	matches_wildcard(char *str, t_wildcard_parameters *w_para)
@@ -66,8 +67,8 @@ bool	matches_wildcard(char *str, t_wildcard_parameters *w_para)
 		return (false);
 	while (w_para->sub_str && (w_para->sub_str)[sub_i])
 	{
-		while (*str && ft_strncmp
-			(str, (w_para->sub_str)[sub_i], ft_strlen((w_para->sub_str)[sub_i])))
+		while (*str && ft_strncmp(str, (w_para->sub_str)[sub_i],
+			ft_strlen((w_para->sub_str)[sub_i])))
 		{
 			str++;
 		}

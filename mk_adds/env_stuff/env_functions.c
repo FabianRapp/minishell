@@ -3,23 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   env_functions.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/15 05:35:45 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/16 22:19:25 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 #include "../../headers/eval.h"
 
+char	***get_env(char ***set_new_env)
+{
+	static char	***env = NULL;
+
+	if (set_new_env)
+		env = set_new_env;
+	return (env);
+}
+
+// allocates and returns a copy
 char	*get_env_value(t_ast *ast, char *var_name)
 {
 	char	**env;
 	int		i;
 	char	*value;
 
-	env = *(ast->envs);
+	if (ast && ast->envs)
+		env = *(ast->envs);
+	else
+		env = *(get_env(NULL));
 	i = 0;
 	while(env[i] && ft_strncmp(env[i], var_name, ft_strlen(var_name)) != 0)
 		i++;

@@ -3,112 +3,180 @@
 /*                                                        :::      ::::::::   */
 /*   run_ast.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/14 01:50:52 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/16 19:11:40 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-// TODO errors
+// void	ft_pipe(t_ast *ast)
+// {
+// 	int			pipe_fd[2];
+// 	int			base_write;
+// 	int			base_read;
+
+// 	if (ast->env->stop_execution)
+// 	{
+// 		ast->exit_status = 1;
+// 		return ;
+// 	}
+// 	//check_fds();
+// 	// while (count_open_fds() < 20)
+// 	// {
+// 	// }
+// 	base_write = dup(WRITE);
+// 	ast->left->fd_to_close_write = base_write;
+// 	if (base_write == -1)
+// 	{
+// 		set_errno_as_exit(ast, true);
+// 		return ;
+// 	}
+// 	if (pipe(pipe_fd) == -1)
+// 	{
+// 		close (base_write);
+// 		set_errno_as_exit(ast, true);
+// 		return ;
+// 	}
+// 	if (dup2(pipe_fd[WRITE], WRITE) == -1)
+// 	{
+// 		close (base_write);
+// 		close (pipe_fd[WRITE]);
+// 		close (pipe_fd[READ]);
+// 		set_errno_as_exit(ast, true);
+// 		return ;
+// 	}
+// 	close(pipe_fd[WRITE]);
+// 	ast->left->fd_to_close = pipe_fd[READ];
+// 	run_node(ast->left);
+// 	if (dup2(base_write, WRITE) == -1)
+// 	{
+// 		close (base_write);
+// 		close (pipe_fd[READ]);
+// 		set_errno_as_exit(ast, true);
+// 		return ;
+// 	}
+// 	close(base_write);
+// 	// if (ast->fd_to_close_read != INIT_VAL)
+// 	// 	base_read = ast->fd_to_close_read;
+// 	// else
+// 		base_read = dup(READ);
+// 	if (base_read == -1)
+// 	{
+// 		close(pipe_fd[READ]);
+// 		set_errno_as_exit(ast, true);
+// 		return ;
+// 	}
+// 	ast->left->fd_to_close_read = base_read;
+// 	ast->env->stop_execution = false;
+// 	if (dup2(pipe_fd[READ], READ) == -1)
+// 	{
+// 		close(pipe_fd[READ]);
+// 		set_errno_as_exit(ast, true);
+// 		return ;
+// 	}
+// 	close(pipe_fd[READ]);
+
+// 	run_node(ast->right);
+// 	//if (ast->fd_to_close_read != INIT_VAL && dup2(base_read, READ) == -1)
+// 	if (dup2(base_read, READ) == -1)
+// 	{
+// 		close(base_read);
+// 		set_errno_as_exit(ast, true);
+// 		return ;
+// 	}
+// 	//if (ast->fd_to_close_read == INIT_VAL)
+// 		close(base_read);
+// 	if (ast->right->exit_status == DEFAULT_EXIT_STATUS)
+// 		ast->pid = ast->right->pid;
+// 	else
+// 		ast->exit_status = ast->right->exit_status;
+// 	//check_fds();
+// }
+
 void	ft_pipe(t_ast *ast)
 {
 	int			pipe_fd[2];
-	int			base_fd[2];
+	int			base;
 
 	if (ast->env->stop_execution)
 	{
 		ast->exit_status = 1;
 		return ;
 	}
-	base_fd[READ] = dup(READ);
-	base_fd[WRITE] = dup(WRITE);
-	pipe(pipe_fd);
-	dup2(pipe_fd[WRITE], WRITE);
-	run_node(ast->left);
-	dup2(base_fd[WRITE], WRITE);
-	close(base_fd[WRITE]);
+	//check_fds();
+	base = dup(WRITE);
+	ast->left->fd_to_close_write = base;
+	if (base == -1)
+	{
+		set_errno_as_exit(ast, true);
+		return ;
+	}
+	if (pipe(pipe_fd) == -1)
+	{
+		close (base);
+		set_errno_as_exit(ast, true);
+		return ;
+	}
+	if (dup2(pipe_fd[WRITE], WRITE) == -1)
+	{
+		close (base);
+		close (pipe_fd[WRITE]);
+		close (pipe_fd[READ]);
+		set_errno_as_exit(ast, true);
+		return ;
+	}
 	close(pipe_fd[WRITE]);
+	ast->left->fd_to_close = pipe_fd[READ];
+	run_node(ast->left);
+	if (dup2(base, WRITE) == -1)
+	{
+		close (base);
+		close (pipe_fd[READ]);
+		set_errno_as_exit(ast, true);
+		return ;
+	}
+	close(base);
 	ast->env->stop_execution = false;
-	dup2(pipe_fd[READ], READ);
-	run_node(ast->right);
-	dup2(base_fd[READ], READ);
+	if (ast->fd_to_close_read != INIT_VAL)
+		base = ast->fd_to_close_read;
+	else
+		base = dup(READ);
+	if (base == -1)
+	{
+		close(pipe_fd[READ]);
+		set_errno_as_exit(ast, true);
+		return ;
+	}
+	if (dup2(pipe_fd[READ], READ) == -1)
+	{
+		if (ast->fd_to_close_read == INIT_VAL)
+			close(base);
+		close(pipe_fd[READ]);
+		set_errno_as_exit(ast, true);
+		return ;
+	}
 	close(pipe_fd[READ]);
-	close(base_fd[READ]);
+	ast->right->fd_to_close_read = base;
+	run_node(ast->right);
+	if (dup2(base, READ) == -1)
+	{
+		if (ast->fd_to_close_read == INIT_VAL)
+			close(base);
+		set_errno_as_exit(ast, true);
+		return ;
+	}
+	if (ast->fd_to_close_read == INIT_VAL)
+		close(base);
 	if (ast->right->exit_status == DEFAULT_EXIT_STATUS)
 		ast->pid = ast->right->pid;
 	else
 		ast->exit_status = ast->right->exit_status;
+	//check_fds();
 }
 
-// TODO: does every sub process command update the last exit?
-void	create_sub_shell(t_env sub_env, char *input, t_ast *ast)
-{
-	t_ast	*sub_ast;
-	int		sub_stdio[2];
-
-	ast->pid = fork();
-	if (ast->pid)
-		return ;
-	errno = 0;
-	sub_ast = parser(input);
-	if (!input)//TODO syntax error should be found before i think?
-	{
-		exit(1);
-	}
-	// dup2(ast->pipe[WRITE], WRITE);
-	sub_stdio[READ] = dup(READ);
-	sub_stdio[WRITE] = dup(WRITE);
-	reset_stdio(RESET_STDIO_CLEAN);
-	dup2(sub_stdio[READ], READ);
-	dup2(sub_stdio[WRITE], WRITE);
-	reset_stdio(RESET_STDIO_INIT);
-	if (errno)
-	{
-		print_error(true, NULL, NULL, strerror(errno));
-		exit(errno);
-	}
-	// TODO: differ between syntax and malloc parser error
-	if (!sub_ast)
-		exit(1);
-	add_global_data(sub_ast, &sub_env, ast->envs, ast->env_exp); // TODO envs
-	sub_ast->exit_status = ast->exit_status;
-	sub_ast->env = &sub_env;
-	run_node(sub_ast);
-	if (sub_ast->exit_status == DEFAULT_EXIT_STATUS)
-	{
-		waitpid(sub_ast->pid, &(sub_ast->exit_status), 0);
-		sub_ast->exit_status = WEXITSTATUS(sub_ast->exit_status);
-	}
-	wait_all_children();
-	ast->exit_status = sub_ast->exit_status;
-	free_ast(sub_ast);
-	exit(ast->exit_status);
-	return ;
-}
-
-// potential issue?: fds from subshell node copied to subshell fds, if they get overwritten might be bad idk
-void	run_subshell(t_ast *ast)
-{
-	t_env	sub_env;
-
-	if (ast->env->stop_execution && ast->exit_status == DEFAULT_EXIT_STATUS)
-		ast->exit_status = 1;
-	if (ast->exit_status != DEFAULT_EXIT_STATUS)
-		return ;
-	ft_memcpy(&sub_env, ast->env, sizeof(t_env));
-	sub_env.main_process = false;
-	create_sub_shell(sub_env, ast->name->token->str_data, ast);
-	if (ast->pid == -1)
-	{
-		ast->exit_status = errno;
-		print_error(true, "Subshell", NULL, strerror(errno));
-	}
-}
-
-// kinda workarround for wrong build ast for multiple condtions without subshell
 void	ft_or(t_ast *ast)
 {
 	bool	success_left;
@@ -120,15 +188,13 @@ void	ft_or(t_ast *ast)
 		run_node(ast->left);
 		if (ast->left->exit_status == DEFAULT_EXIT_STATUS)
 		{
-			//printf("or waiting pid\n");
 			waitpid(ast->left->pid, &(ast->left->exit_status), 0);
 			ast->left->exit_status = WEXITSTATUS(ast->left->exit_status);
 		}
 	}
 	set_last_exit(ast->left->exit_status);//TODO mb out this behind a condtion so it only updates for process nodes not operators
-	//printf("OR: left exit: %d (cur type: %s)\n", ast->left->exit_status, type_to_str_type(ast->type));
 	success_left = !((bool)ast->left->exit_status);
-	if (success_left)//if left had no error
+	if (success_left)
 		ast->right->exit_status = 0;
 	run_node(ast->right);
 	if (ast->right->exit_status == DEFAULT_EXIT_STATUS)
@@ -138,8 +204,6 @@ void	ft_or(t_ast *ast)
 	}
 	set_last_exit(ast->right->exit_status);//TODO mb out this behind a condtion so it only updates for process nodes not operators
 	ast->exit_status = ast->right->exit_status;
-	//printf("OR: logical right exit: %d (cur type: %s)\n", ast->right->exit_status, type_to_str_type(ast->type));
-	//printf("OR: RESULT: %d\n", ast->exit_status);
 }
 
 // kinda workarround for wrong build ast for multiple condtions without subshell
@@ -159,9 +223,8 @@ void	ft_and(t_ast *ast)
 		}
 	}
 	set_last_exit(ast->left->exit_status);//TODO mb out this behind a condtion so it only updates for process nodes not operators
-	//printf("AND: logical left exit: %d (cur type: %s)\n", ast->left->exit_status, type_to_str_type(ast->type));
 	success_left = !((bool)ast->left->exit_status);
-	if (!success_left)//if left had an error
+	if (!success_left)
 		ast->right->exit_status = ast->left->exit_status;
 	run_node(ast->right);
 	if (ast->right->exit_status == DEFAULT_EXIT_STATUS)
@@ -171,8 +234,6 @@ void	ft_and(t_ast *ast)
 	}
 	set_last_exit(ast->right->exit_status);//TODO mb out this behind a condtion so it only updates for process nodes not operators
 	ast->exit_status = ast->right->exit_status;
-	//printf("AND: logical right exit: %d (cur type: %s)\n", ast->right->exit_status, type_to_str_type(ast->type));
-	//printf("AND: RESULT : %d\n", ast->exit_status);
 }
 
 void	init_command(t_ast *ast)
@@ -184,12 +245,15 @@ void	init_command(t_ast *ast)
 	}
 	if (!expansion(ast))
 	{
-		printf("DEBUG create_sub\n");
+		//printf("DEBUG create_sub\n");
 		exit(1);
 		return ;
 	}
 	if (resolve_redirs(ast) == ERROR)
+	{
+		cleanup_fds();
 		return ;
+	}
 	if (ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
 	redir_fds();
@@ -200,6 +264,7 @@ void	init_command(t_ast *ast)
 
 void	run_node(t_ast *ast)
 {
+	errno = 0;
 	if (!ast)
 		return ;
 	if (ast->type == AND)
@@ -211,8 +276,10 @@ void	run_node(t_ast *ast)
 		if (ast->type == PIPE)
 			ft_pipe(ast);
 		if (ast->name && ast->name->token->type == SUBSHELL)
-			run_subshell(ast);
+			create_sub_shell(ast);
 		else if (ast->type == COMMAND)
+		{
 			init_command(ast);
+		}
 	}
 }

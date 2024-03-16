@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:38:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 16:16:19 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/07 08:53:06 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,8 @@
 #include "../../headers/lexer.h"
 #include "../internals_parser.h"
 
-// returns the parser node after the removed whitespace
-t_parser	*remove_next_whitespaces(t_parser *parser)
-{
-	if (!parser)
-		return (NULL);
-	while (parser->p_type == WHITE_SPACE)
-	{
-		remove_parser_node(&parser, true);
-		parser = parser->next;
-	}
-	return (parser);
-}
-
-void	move_to_arg(t_parser *parser, bool is_terminator(t_type), t_type new_type, bool as_must_as_possible)
+void	move_to_arg(t_parser *parser, bool is_terminator(t_type),
+	t_type new_type, bool as_must_as_possible)
 {
 	t_parser	*command;
 	t_parser	**next_arg;
@@ -46,7 +34,7 @@ void	move_to_arg(t_parser *parser, bool is_terminator(t_type), t_type new_type, 
 		*next_arg = parser;
 		next_arg = &(parser->next);
 		parser = parser->next;
-		if (!as_must_as_possible)
+		if (as_must_as_possible == false)
 			break ;
 	}
 	command->next = parser;
@@ -92,7 +80,7 @@ t_parser	*fix_command_block(t_parser *parser)
 }
 
 // incase of leading redirs infront of command moves the comant infront of them
-// otherwise this situation is bugged duo to parsing order (change needs huge refactor)
+// otherwise this situation is bugged duo to parsing order
 void	move_commands_infront(t_parser *parser)
 {
 	while (parser->p_type != T_EOF)

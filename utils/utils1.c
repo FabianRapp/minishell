@@ -3,14 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   utils1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/13 19:30:53 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/16 21:28:44 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
+int	count_open_fds(void)
+{
+	int			fd_count = 0;
+	struct stat	stats;
+	int			fd;
+	int			err;
+
+	fd = 0;
+	err = errno;
+	while (fd < FD_SETSIZE)
+	{
+		if (fstat(fd, &stats) == 0)
+		{
+			fd_count++;
+		}
+		fd++;
+	}
+	errno = err;
+	return (FD_SETSIZE / 2 - fd_count);
+}
 
 void	add_token_back_node(t_token_list **list, t_token_list *new_node)
 {
@@ -61,6 +82,19 @@ void	free_token_list(t_token_list *list)
 	}
 }
 
+void	free_arg_list(t_arg *list)
+{
+	t_arg	*last;
+
+	while (list)
+	{
+		last = list;
+		list = list->next;
+		free_token_list(last->name);
+		free(last);
+	}
+}
+
 t_result	insert_whitespace_end(t_token_list **list)
 {
 	t_token	*new;
@@ -105,26 +139,63 @@ t_result	errno_to_result(void)
 	return (SUCCESS);
 }
 
-t_result	set_errno_as_exit(t_ast *ast)
+t_result	set_errno_as_exit(t_ast *ast, bool msg)
 {
 	ast->exit_status = errno;
+	set_last_exit(errno);
 	if (errno)
+	{
+		if (msg)
+			print_error(true, NULL, NULL, strerror(errno));
 		return (ERROR);
+	}
 	return (SUCCESS);
 }
 
+int	line_counter(void)
+{
+	static int	line_count = -1;
+
+	line_count++;
+	return (line_count);
+}
+
+char	*ft_read_line(char *header)
+{
+	char	*line;
+	char	*temp;
+
+	if (!isatty(0))
+	{
+		temp = get_next_line(0);
+		line = ft_strtrim(temp, "\n");
+		//line = temp;
+		free(temp);
+	}
+	else
+		line = readline(header);
+	line_counter();
+	return (line);
+}
+
 // TODO make set_last_exit only run if the children did not exit yet when this function was called
-t_result	wait_all_children(void)
+t_result	wait_all_children(t_ast *ast)
 {
 	int		status;
 
 	errno = 0;
+	if (ast && ast->pid != INIT_VAL && ast->exit_status == INIT_VAL)
+		waitpid(ast->pid, &status, 0);
+	// if (ast->type == PIPE && ast->left->exit_status == DEFAULT_EXIT_STATUS && ast->left->pid != INIT_VAL)
+	// 	waitpid(ast->left->pid, &(ast->left->exit_status), WNOHANG);
+	// if (ast->type == PIPE && ast->left->exit_status == DEFAULT_EXIT_STATUS && ast->left->pid != INIT_VAL)
+	// 	kill(ast->left->pid, SIGINT);
 	while (errno != ECHILD)
 	{
 		waitpid(-1, &status, 0);
 		if (errno != ECHILD)
 		{
-			set_last_exit(WEXITSTATUS(status));
+			//set_last_exit(WEXITSTATUS(status));
 		}
 	}
 	errno = 0;
@@ -144,15 +215,18 @@ t_token	*new_dummy_token(void)
 
 void	print_error(bool shell_name, char *command_name, char *arg, char *str)
 {
-	if (shell_name)
-		ft_fprintf(2, "%s: ", SHELL_NAME);
-	if (command_name)
-		ft_fprintf(2, "%s: ", command_name);
-	if (arg)
-		ft_fprintf(1, "%s: ", arg);
-	if (str)
-		ft_fprintf(2, "%s", str);
-	ft_fprintf(2, "\n");
+	//if (!TESTER)
+	{
+		if (shell_name)
+			ft_fprintf(2, "%s: ", SHELL_NAME);
+		if (command_name)
+			ft_fprintf(2, "%s: ", command_name);
+		if (arg)
+			ft_fprintf(1, "%s: ", arg);
+		if (str)
+			ft_fprintf(2, "%s", str);
+		ft_fprintf(2, "\n");
+	}
 }
 
 //bash prints: bash: export: `4add=hi': not a valid identifier
@@ -170,7 +244,7 @@ void	print_error_addsq(bool shell_name, char *command_name, char *arg, char *str
 	ft_fprintf(2, "\n");
 }
 
-bool	my_free(void **ptr)
+bool	ft_free(void **ptr)
 {
 	if (!ptr)
 		return (false);
@@ -259,11 +333,18 @@ void	print_redir_list(t_redir *redir, int level, bool left)
 		print_indent_arg(level);
 		print_colored(type_to_str_type(redir->type), level);
 		print_colored(": ", level);
-		arg = redir->arg;
-		while (arg)
+		if (redir->type == HERE_DOC)
 		{
-			print_token_list(arg->name, level);
-			arg = arg->next;
+			print_colored(redir->token_str_data, level);
+		}
+		else
+		{
+			arg = redir->arg;
+			while (arg)
+			{
+				print_token_list(arg->name, level);
+				arg = arg->next;
+			}
 		}
 		redir = redir->next;
 	}
@@ -338,9 +419,35 @@ void	free_token(t_token *token)
 {
 	if (!token)
 		return ;
-	my_free((void **)&(token->str_data));
-	my_free((void **)&(token->old_data));
+	ft_free((void **)&(token->old_data));
+	ft_free((void **)&(token->str_data));
+	ft_free((void **)&(token->left_redir_arg));
 	free(token);
+}
+
+// check errno when calling this
+char	*extract_command_name(char *path)
+{
+	char	*name;
+	int		i;
+	char	**arr;
+
+	if (ft_strncmp("/", path, 1) && ft_strncmp(".", path, 1) && ft_strncmp("..", path, 2))
+		return (ft_strdup(path));
+	arr = ft_split(path, '/');
+	if (!arr)
+		return (NULL);
+	i = 0;
+	while (arr[i])
+	{
+		i++;
+	}
+	if (!i)
+		return (ft_free_2darr(arr), NULL);
+	name = arr[i - 1];
+	arr[i - 1] = NULL;
+	ft_free_2darr(arr);
+	return (name);
 }
 
 void	cleanup(char *location)

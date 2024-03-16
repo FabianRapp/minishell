@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:51:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/24 22:13:26 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/16 21:28:44 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 
 char	*next_file_name(DIR *dir)
 {
-	struct 	dirent	*file;
+	struct dirent	*file;
 
 	file = readdir(dir);
-	while (file && (!ft_strcmp(file->d_name, ".") || !ft_strcmp(file->d_name, "..")))
+	while (file && (!ft_strcmp(file->d_name, ".")
+			|| !ft_strcmp(file->d_name, "..")))
 		file = readdir(dir);
 	if (!file)
 		return (NULL);
@@ -26,10 +27,10 @@ char	*next_file_name(DIR *dir)
 
 void	clean_wildcard_data(t_wildcard_parameters *w_para)
 {
-	my_free((void **)&(w_para->prefix));
-	my_free((void **)&(w_para->suffix));
+	ft_free((void **)&(w_para->prefix));
+	ft_free((void **)&(w_para->suffix));
 	if (w_para->sub_str)
 	{
-		free_str_ar(w_para->sub_str);
+		ft_free_2darr(w_para->sub_str);
 	}
 }

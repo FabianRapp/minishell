@@ -1,30 +1,69 @@
 CC=cc
-FLAGS_NO_LEAK_CHECK = -fsanitize=address
-CFLAGS= -Wall -Wextra -Werror  -g
+
+
+FLAGS_NO_LEAK_CHECK = -fsanitize=undefined -fsanitize=address -g
+#
+CFLAGS=-Wall -Wextra -Werror
+#
+LDFLAGS = -fsanitize=undefined -fsanitize=address  -g
 # 
-#-fsanitize=undefined 
-#
-LDFLAGS =
-#
-#
+
+
 NAME=minishell
 
 GENERAL_SOURCES=
 GENERAL_OBJECTS=
 
-SOURCES = repl/main.c repl/utils/path.c repl/ft_buildin1.c repl/redir.c \
-			repl/utils/input_exit.c repl/utils/data_utils.c repl/run_ast.c \
-			utils/fd1.c \
-			repl/expansion/expansion.c repl/expansion/utils1.c repl/expansion/word_splitting.c \
-			repl/expansion/utils2.c \
-			repl/expansion/wildcards/repl_wildcards_main.c repl/expansion/wildcards/repl_wildcards_utils1.c \
-			repl/expansion/wildcards/repl_fill_wildcard_data.c \
-			utils/utils3.c \
-			repl/signals/child_parent_coms.c \
-			utils/debugging.c \
-			mk_adds/builtins/pwd.c mk_adds/builtins/env.c mk_adds/builtins/export.c mk_adds/builtins/unset.c \
-			mk_adds/builtins/exit.c mk_adds/builtins/echo.c mk_adds/builtins/cd.c \
-			mk_adds/env_stuff/env_functions.c
+# SOURCES = repl/main.c repl/utils/path.c repl/ft_buildin1.c repl/redir.c \
+# 			repl/utils/input_exit.c repl/utils/data_utils.c repl/run_ast.c \
+# 			utils/fd1.c \
+# 			repl/expansion/expansion.c repl/expansion/utils1.c repl/expansion/word_splitting.c \
+# 			repl/expansion/utils2.c \
+# 			repl/expansion/wildcards/repl_wildcards_main.c repl/expansion/wildcards/repl_wildcards_utils1.c \
+# 			repl/expansion/wildcards/repl_fill_wildcard_data.c \
+# 			utils/utils3.c \
+# 			repl/signals/child_parent_coms.c \
+# 			utils/debugging.c \
+# 			mk_adds/builtins/pwd.c mk_adds/builtins/env.c mk_adds/builtins/export.c mk_adds/builtins/unset.c \
+# 			mk_adds/builtins/exit.c mk_adds/builtins/echo.c mk_adds/builtins/cd.c \
+# 			mk_adds/env_stuff/env_functions.c
+
+SOURCES = repl/main.c \
+		  repl/utils/path.c \
+		  repl/ft_buildin1.c \
+		  repl/utils/input_exit.c \
+		  repl/utils/data_utils.c \
+		  repl/run_ast.c \
+		  repl/env.c \
+		  utils/fd1.c \
+		  repl/repl_sub_shell.c \
+		  repl/expansion/expansion.c \
+		  repl/expansion/utils1.c \
+		  repl/expansion/word_splitting.c \
+		  repl/expansion/utils2.c \
+		  repl/expansion/utils3.c \
+		  repl/expansion/wildcards/repl_wildcards_main.c \
+		  repl/expansion/wildcards/repl_wildcards_utils1.c \
+		  repl/expansion/wildcards/repl_fill_wildcard_data.c \
+		  utils/utils3.c \
+		  repl/utils/repl_get_pid.c \
+		  cleanup/cleanup1.c \
+		  repl/signals/child_parent_coms.c \
+		  utils/debugging.c \
+		  utils/utils1.c \
+		  utils/groups1.c \
+		  mk_adds/builtins/pwd.c \
+		  mk_adds/builtins/env.c \
+		  mk_adds/builtins/export.c \
+		  mk_adds/builtins/unset.c \
+		  mk_adds/builtins/exit.c \
+		  mk_adds/builtins/echo.c \
+		  mk_adds/builtins/cd.c \
+		  mk_adds/env_stuff/env_functions.c \
+		  repl/repl_redir/repl_redir_main.c \
+		  repl/repl_redir/repl_redir_utils.c \
+		  repl/repl_redir/repl_redir_error_handler.c
+
 
 OBJECTS= $(SOURCES:.c=.o)
 
@@ -49,18 +88,26 @@ PARSER_PATH = $(PARSER_DIR)/$(LIB_PARSER_NAME)
 LIBS = $(LIBFT) $(LIB_LEXER) $(LIB_PARSER)
 LIBS_NAME = $(LIBFT_NAME) $(LIB_LEXER_NAME) $(LIB_PARSER_NAME)
 
+
+SHELL := /Users/$(USER)/.brew/bin/bash
+
 .PHONY: all clean fclean re clean2 libs $(LIBFT) $(LIB_LEXER) $(LIB_PARSER)
 
-all: build
+all: normal
 
-build: CFLAGS += $(FLAGS_NO_LEAK_CHECK)
-build: LDFLAGS += $(FLAGS_NO_LEAK_CHECK)
-build: libs
-build: $(OBJECTS)
-build: $(NAME)
+normal: CFLAGS += $(FLAGS_NO_LEAK_CHECK)
+normal: LDFLAGS += $(FLAGS_NO_LEAK_CHECK)
+normal: $(OBJECTS) libs
+	$(CC) $(LIBS_NAME) $(OBJECTS)  -lreadline -o $(NAME) $(CFLAGS) $(LDFLAGS)
+# if [ $(USER) = "frapp" ]; then
+		cp $(NAME) ../../../bash_testing
+# fi
+
 $(NAME): $(OBJECTS)
 	$(CC) $(LIBS_NAME) $(OBJECTS)  -lreadline -o $(NAME) $(CFLAGS) $(LDFLAGS)
-	cp $(NAME) ../../../bash_testing
+# if [ $(USER) = "frapp" ]; then
+		cp $(NAME) ../../../bash_testing
+# fi
 
 leaks: CFLAGS += -DLEAK_CHECK=1
 leaks: libs_leaks

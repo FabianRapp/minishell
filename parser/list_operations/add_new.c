@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:13:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/14 05:33:16 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/09 03:38:45 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ t_parser	*init_parser(char *str)
 		return (NULL);
 	while (!token || token->type != T_EOF)
 	{
-		token = next_new_token(&lexer);
+		token = next_new_token(&lexer, false);
 		if (!token)
 			return (free_parser_main(parser, true), NULL);
 		if (token->type == VOID)

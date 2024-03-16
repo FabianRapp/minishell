@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/23 22:35:55 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/16 22:20:16 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,13 @@ bool	next_path(t_path *path_ob)
 {
 	if (!path_ob)
 		return (false);
-	my_free((void **)&(path_ob->cur_path));
+	ft_free((void **)&(path_ob->cur_path));
 	path_ob->cur_path = NULL;
 	if (!(path_ob->all_paths) || !(path_ob->all_paths)[path_ob->read_postion])
 	{
 		path_ob->cur_path = NULL;
 		path_ob->ast->exit_status = 127;
+		set_last_exit(127);
 		return (print_error(SHELL_NAME, path_ob->command_name, NULL, "command not found"), false);
 	}
 	path_ob->position = path_ob->read_postion;
@@ -55,12 +56,22 @@ bool	next_path(t_path *path_ob)
 
 bool	init_path(t_path *path_ob, char *env_var)
 {
-	path_ob->all_paths = getenv(env_var);
+	//path_ob->all_paths = getenv(env_var);
+	path_ob->all_paths = get_env_value(NULL, env_var); // TODO this has to be cleaned
 	path_ob->cur_path = NULL;
 	path_ob->read_postion = 0;
 	path_ob->position = 0;
-	
 	return (next_path(path_ob));
+}
+
+char	*handle_absolute_path(char *path)
+{
+	if (!access(path, X_OK))
+		return (ft_strdup(path));
+	ft_fprintf(2, "%s: %s\n", SHELL_NAME, strerror(errno));
+	set_last_exit(127);
+	errno = 0;
+	return (NULL);
 }
 
 // changes the global errno
@@ -69,12 +80,21 @@ char	*find_path(t_ast *ast, char *command_name, char *path_env)
 	t_path	path_ob;
 	char	*command_path;
 
+	if (!command_name)
+		return (NULL);
+	if (!*command_name)
+	{
+		print_error(true, "", NULL, "command not found");
+		ast->exit_status = 127;
+		set_last_exit(127);
+		return (NULL);
+	}
+	if (*command_name == '/' || *command_name == '.')
+		return (handle_absolute_path(command_name));
 	path_ob.ast = ast;
 	path_ob.command_name = command_name;
 	if (!init_path(&path_ob, path_env))
-	{
 		return (NULL);
-	}
 	if (!path_ob.cur_path || !*(path_ob.cur_path))
 		return (NULL);
 	while (path_ob.cur_path && *(path_ob.cur_path))
@@ -85,16 +105,17 @@ char	*find_path(t_ast *ast, char *command_name, char *path_env)
 			ast->exit_status = errno;
 			return (NULL);
 		}
-		my_free((void **)&(path_ob.cur_path));
+		ft_free((void **)&(path_ob.cur_path));
 		if (!access(command_path, X_OK))
 		{
 			errno = 0;
 			return (command_path);
 		}
-		my_free((void **)&(command_path));
+		ft_free((void **)&(command_path));
 		if (errno != ENOENT && errno != 20)
 		{
 			ast->exit_status = errno;
+			set_last_exit(errno);
 			return (print_error(true, "DEBUG find_path", NULL, strerror(errno)), NULL);
 		}
 		errno = 0;

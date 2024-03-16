@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 22:22:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/14 00:28:09 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/16 21:29:42 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@
 void	set_last_exit(int exit_status);
 //minishell end
 
-
+bool	contains_non_white_spcace(char *str);
+void	*ft_realloc_copy_until_zeroed(void *ptr, size_t new_count, size_t size);
+bool	is_buffer_all_zeros(void *buffer, size_t size);
 
 //part 1
 int		ft_isalpha(int c);
@@ -68,7 +70,6 @@ char
 *ft_strtrim(char const *s1, char const *set);
 char	**ft_split(char const *s, char c);
 char	**ft_split_fn(char const *s, bool is_sep(char));
-char	**free_str_ar(char **str_arr);
 char	*ft_itoa(int n);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
@@ -108,7 +109,7 @@ void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 10000
+#  define BUFFER_SIZE 1
 # endif
 
 typedef struct s_file	t_file;

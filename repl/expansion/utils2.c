@@ -6,65 +6,53 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 13:01:55 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 06:11:02 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/16 22:19:03 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansion.h"
 
-char	*expand_dollar(char *dollar_str, t_env *env, int *index)
+char			*expand_dollar(char *dollar_str, int *index)
 {
 	char	*env_var;
-	char	*str;
+	char	*return_str;
 
 	if (!*(dollar_str + 1))
-	{
-		*index += 1;
-		return (ft_strdup("$"));
-	}
+		return ((*index)++, ft_strdup("$"));
 	else if (*(dollar_str + 1) == '?')
-	{
-		*index += 2;
-		return (get_last_exit_str());
-	}
+		return_str = get_last_exit_str();
 	else if (*(dollar_str + 1) == '$')
-	{
-		*index += 2;
-		return (ft_itoa(env->main_pid));
-	}
+		return_str = ft_itoa(ft_pid(0));
 	else if (ft_isdigit(*(dollar_str + 1)))
-	{
-		*index += 2;
-		return (ft_strdup(""));
-	}
+		return ((*index)++, ft_strdup("$"));
+	else if (name_len(dollar_str + 1) == 0)
+		return ((*index)++, ft_strdup("$"));
 	else if (ft_isalpha(*(dollar_str + 1)) || *(dollar_str + 1) == '_')
 	{
 		*index += name_len(dollar_str + 1) + 1;
-		env_var = ft_strndup(dollar_str + 1 , name_len(dollar_str + 1));
+		env_var = ft_strndup(dollar_str + 1, name_len(dollar_str + 1));
 		if (!env_var)
 			return (NULL);
-		str = ft_strdup(getenv(env_var));
-		free(env_var);
-		return (str);
+		//return_str = ft_strdup(getenv(env_var));
+		return_str = get_env_value(NULL, env_var);
+		return (free(env_var), return_str);
 	}
-	else //
-	{
-		printf("bug in expand_dollar(): what is this char: %c\n", *dollar_str);
-		printf("and what is this: %c\n", dollar_str[1]);
-		exit(0);// debug
-		*index += 1;
-		return (ft_strdup(""));
-	}
+	else
+		return ((*index)++, ft_strdup(""));
+	*index += 2;
+	return (return_str);
 }
 
-t_result	expand_interpreted(t_token *token, t_env *env)
+t_result	expand_interpreted(t_token *token)
 {
 	char	*data_str;
 	char	*temp;
 	int		index;
 
 	data_str = token->str_data;
-	token->str_data = NULL;
+	token->str_data = ft_calloc(1, 1);
+	if (!token->str_data)
+		return (ERROR);
 	index = 0;
 	while (data_str[index])
 	{
@@ -72,10 +60,11 @@ t_result	expand_interpreted(t_token *token, t_env *env)
 			ft_strjoin_inplace_char(&token->str_data, data_str[index++]);
 		else
 		{
-			temp = expand_dollar(data_str + index, env, &index);
+			temp = expand_dollar(data_str + index, &index);
 			if (errno)
 				return (ERROR);
-			ft_strjoin_inplace(&token->str_data, temp);
+			if (temp)
+				ft_strjoin_inplace(&token->str_data, temp);
 			free(temp);
 		}
 		if (!token->str_data)
@@ -92,21 +81,29 @@ t_result	expand_interpreted(t_token *token, t_env *env)
 // does not needed to be error checked
 t_token_list	*move_nodes_ahead(t_token_list *list, bool set_this_true)
 {
-	if (list && set_this_true)
-		free_token(list->token);
-	if (!list || !list->next)
+	if (!list)
+		return (NULL);
+	if (set_this_true)
 	{
-		if (list)
-			free(list);
+		free_token(list->token);
+		list->token = NULL;
+	}
+	if (list->next)
+	{
+		list->token = list->next->token;
+		list->next->token = NULL;
+	}
+	else
+	{
+		free(list);
 		return (NULL);
 	}
-	list->token = list->next->token;
-	if (!list->next->next)
-	{
-		free(list->next);
-		list->next = NULL;
-		return (list);
-	}
+	// if (!list->next->next)
+	// {
+	// 	free(list->next);
+	// 	list->next = NULL;
+	// 	return (list);
+	// }
 	list->next = move_nodes_ahead(list->next, false);
 	return (list);
 }
@@ -121,26 +118,56 @@ t_token_list	*remove_non_literals(t_token_list *list)
 	t_token_list	*head;
 	t_token_list	*last;
 
+	if (!list || errno)
+		return (NULL);
 	head = list;
 	last = NULL;
 	while (list)
 	{
-		if (list->token->type != LITERAL && list->token->type != DUMMY_COMMAND)
+		merge_literals(list);
+		if (list->token->type != LITERAL && list->token->type
+			!= DUMMY_COMMAND && list->token->type != WILDCARD)
 		{
 			if (list == head)
 			{
 				list = move_nodes_ahead(list, true);
 				head = list;
+				//list = move_nodes_ahead(list, true);
+				// if (list == head)
+				// 	list = move_nodes_ahead(list, true);
+				// if (list == head)
+				// 	head = list;
 			}
 			else
 			{
-				list = move_nodes_ahead(list, true);
 				last->next = list;
 			}
 		}
 		last = list;
 		if (list)
+		{
+			// if (list->token && ft_strchr(list->token->str_data, '*'))
+			// 	list->token->type = WILDCARD;
 			list = list->next;
+		}
 	}
 	return (head);
+}
+
+t_result	expansion_move_to_arg(t_arg **next_arg, t_token_list *list)
+{
+	t_arg	*new;
+
+	while (list && list->next)
+	{
+		new = ft_calloc(1, sizeof(t_arg));
+		if (!new)
+			return (ERROR);
+		new->name = list->next;
+		list->next = list->next->next;
+		new->name->next = NULL;
+		add_arg_front(next_arg, new);
+		next_arg = &((*next_arg)->next);
+	}
+	return (SUCCESS);
 }
