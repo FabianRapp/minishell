@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 07:42:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 14:04:25 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 00:54:34 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ t_result	reset_fds(void)
 
 	fds = get_fds();
 	i = 0;
-	//while (fds && fds[i].base_fd != INIT_VAL)
+	errno = 0;
 	while(fds + i && !is_buffer_all_zeros(fds + i, sizeof(t_fd_pair)))
 	{
 		//close(fds[i].overload_with_fd);

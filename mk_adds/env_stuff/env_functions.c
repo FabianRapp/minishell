@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/16 22:19:25 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 01:27:58 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,20 @@ char	*get_env_value(t_ast *ast, char *var_name)
 	char	**env;
 	int		i;
 	char	*value;
+	bool	correct_sign;
 
 	if (ast && ast->envs)
 		env = *(ast->envs);
 	else
 		env = *(get_env(NULL));
 	i = 0;
-	while(env[i] && ft_strncmp(env[i], var_name, ft_strlen(var_name)) != 0)
+	correct_sign = (env[i] && (ft_strlen(var_name) < ft_strlen(env[i]) && env[i][ft_strlen(var_name)] != '='));
+	while (correct_sign && (ft_strncmp(env[i], var_name, ft_strlen(var_name) != 0)))
+	{
 		i++;
-	if (env[i] == NULL) //means the var_name doesn't exist in env
+		correct_sign = (env[i] && (ft_strlen(var_name) < ft_strlen(env[i]) && env[i][ft_strlen(var_name)] != '='));
+	}
+	if (env[i] == NULL || env[i][ft_strlen(var_name)] != '=') //means the var_name doesn't exist in env
 		return (NULL);
 	value = ft_substr(env[i], ft_strlen(var_name) + 1, ft_strlen(env[i])
 		- ft_strlen(var_name) - 1);

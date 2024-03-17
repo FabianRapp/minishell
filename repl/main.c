@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/16 22:11:47 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 01:09:00 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,7 @@ int	main(int ac, char **av, char **base_env)
 	if (env_list == NULL)
 		return (get_last_exit());
 	exp_list = ft_initialize_our_env(base_env);
-	get_env(&exp_list);
+	get_env(&env_list);
 	if (exp_list == NULL)
 		return (ft_free_2darr(env_list), get_last_exit());
 	//if (ac >= 2)

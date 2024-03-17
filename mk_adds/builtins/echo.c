@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 08:00:49 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/16 21:55:53 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 00:56:00 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ void	ft_echo(t_ast *ast)
 
 	no_new_line = false;
 	cur_arg = ast->arg;
+	if (!cur_arg)
+		printf("\n");
 	while (cur_arg && cur_arg->next && cur_arg->name->token->type != T_EOF)
 	{
 		str_value = cur_arg->name->token->str_data;

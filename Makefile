@@ -1,11 +1,12 @@
 CC=cc
 
 
-FLAGS_NO_LEAK_CHECK = -fsanitize=undefined -fsanitize=address -g
-#
+FLAGS_NO_LEAK_CHECK = 
+#-fsanitize=undefined -fsanitize=address -g
 CFLAGS=-Wall -Wextra -Werror
-#
-LDFLAGS = -fsanitize=undefined -fsanitize=address  -g
+
+LDFLAGS = 
+#-fsanitize=undefined -fsanitize=address  -g
 # 
 
 
@@ -98,14 +99,12 @@ normal: CFLAGS += $(FLAGS_NO_LEAK_CHECK)
 normal: LDFLAGS += $(FLAGS_NO_LEAK_CHECK)
 normal: $(OBJECTS) libs
 	$(CC) $(LIBS_NAME) $(OBJECTS)  -lreadline -o $(NAME) $(CFLAGS) $(LDFLAGS)
-
-#cp $(NAME) ../../../bash_testing
+	cp $(NAME) ../../../bash_testing
 
 
 $(NAME): $(OBJECTS)
 	$(CC) $(LIBS_NAME) $(OBJECTS)  -lreadline -o $(NAME) $(CFLAGS) $(LDFLAGS)
-
-#cp $(NAME) ../../../bash_testing
+	cp $(NAME) ../../../bash_testing
 
 
 leaks: CFLAGS += -DLEAK_CHECK=1
