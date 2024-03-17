@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:29:13 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/17 19:58:43 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 21:39:09 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static void	ft_export_no_args(t_ast *ast)
 		printf("declare -x ");
 		if (ft_strchr(sorted_env[i], '='))
 		{
-			var_name = get_shared_data_var_name(sorted_env[i]);
+			var_name = get_env_var_name(sorted_env[i]);
 			var_value = get_env_value(ast, var_name);
 			printf("%s=\"%s\"\n", var_name, var_value);
 			free(var_name);

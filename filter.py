@@ -2,7 +2,7 @@
 source_file = "failed_tests_details.txt"
 target_file = "filtered_failed_tests.txt"
 
-filter_strs = ["-n"]
+filter_strs = []
 
 def	save_block(source):
 	with open(target_file, "a") as target:
@@ -13,13 +13,12 @@ def	save_block(source):
 				return
 			line = source.readline()
 
-def	insert_count(count):
+def	insert_count(count_after, count_before):
 	with open (target_file, 'r') as file:
 		content = file.readlines()
 	with open (target_file, 'w') as file:
-		file.write(f"Total errors after filtering: {count}\n------\n")
+		file.write(f"Total errors: {count_after}/{count_before}(new/old), remove: {count_before - count_after}\n------\n")
 		file.writelines(content)
-
 
 if	__name__ == '__main__':
 	try:
@@ -27,7 +26,8 @@ if	__name__ == '__main__':
 		tmp.close()
 	except:
 		pass
-	count = 0
+	count_after = 0
+	count_before = 0
 	with open(source_file, 'r') as file:
 		found_filter = False
 		last_block = 0
@@ -43,8 +43,10 @@ if	__name__ == '__main__':
 				if not found_filter:
 					file.seek(last_block)
 					save_block(file)
-					count += 1
+					count_after += 1
 				found_filter = False
 				last_block = 0
+				count_before += 1
 			line = file.readline()
-	insert_count(count)
+	insert_count(count_after, count_before)
+	print

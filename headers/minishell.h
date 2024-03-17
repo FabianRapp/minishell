@@ -6,16 +6,16 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/17 19:58:43 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 22:03:27 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
-             TOTAL TEST COUNT: 994  TESTS PASSED: 810  LEAKING: 0
-                     STD_OUT: 90  STD_ERR: 49  EXIT_CODE: 100
+             TOTAL TEST COUNT: 994  TESTS PASSED: 813  LEAKING: 0
+                     STD_OUT: 87  STD_ERR: 48  EXIT_CODE: 99
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 239
-                                     ✅ 2743
+                                     ❌ 234
+                                     ✅ 2748
 TODO:
 	- lexer: check for too many closing quotes
 	- ft_atoi undef behaivior for huge number strs
@@ -315,7 +315,7 @@ int			arg_is_valid(char *arg);
 char	**ft_initialize_our_env(char **base_env);
 char	*get_env_value(t_ast *ast, char *var_name);
 char	**add_env_var(char *str_to_add, char ***arr_ptr);
-char	*get_shared_data_var_name(char *line);
+char	*get_env_var_name(char *line);
 char	**delete_env_var(char *var_to_rm, char ***arr_ptr);
 
 char	***get_env_list(char ***set_new_env);//added
