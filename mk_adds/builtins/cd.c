@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:26:07 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/15 06:34:17 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/17 19:58:43 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,10 @@ t_result	ft_cd(t_ast *ast)
 		return (print_error(true, "cd", to_go, "No such file or directory"), free(to_go), ERROR);
 	before = get_env_value(ast, "PWD");
 	after = getcwd(NULL, PATH_MAX);
-	ft_update_env_var("OLDPWD", before, *(ast->envs));
-	ft_update_env_var("OLDPWD", before, *(ast->env_exp));
-	ft_update_env_var("PWD", after, *(ast->envs));
-	ft_update_env_var("PWD", after, *(ast->env_exp));
+	ft_update_env_var("OLDPWD", before, *(ast->shared_data->envs));
+	ft_update_env_var("OLDPWD", before, *(ast->shared_data->env_exp));
+	ft_update_env_var("PWD", after, *(ast->shared_data->envs));
+	ft_update_env_var("PWD", after, *(ast->shared_data->env_exp));
 	free(before);
 	free(after);
 	ast->exit_status = 0;

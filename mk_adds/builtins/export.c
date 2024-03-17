@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:29:13 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/16 21:56:33 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 19:58:43 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ their values in the formatting:
 #include "../../headers/minishell.h"
 #include "../../headers/eval.h"
 
-static void	sort_env_array(char **env, int size)
+static void	sort_shared_data_array(char **env, int size)
 {
 	int		i;
 	char	*tmp;
@@ -67,18 +67,18 @@ static void	ft_export_no_args(t_ast *ast)
 	char	*var_name;
 	char	*var_value;
 
-	sorted_env = *(ast->env_exp);
+	sorted_env = *(ast->shared_data->env_exp);
 	i = 0;
 	while (sorted_env[i])
 		i++;
-	sort_env_array(sorted_env, i);
+	sort_shared_data_array(sorted_env, i);
 	i = -1;
 	while (sorted_env[++i])
 	{
 		printf("declare -x ");
 		if (ft_strchr(sorted_env[i], '='))
 		{
-			var_name = get_env_var_name(sorted_env[i]);
+			var_name = get_shared_data_var_name(sorted_env[i]);
 			var_value = get_env_value(ast, var_name);
 			printf("%s=\"%s\"\n", var_name, var_value);
 			free(var_name);
@@ -134,9 +134,9 @@ void	ft_export(t_ast *ast)
 		str_value = cur_arg->name->token->str_data;
 		res = arg_is_valid(str_value);
 		if (res > 0)
-			*(ast->env_exp) = add_env_var(str_value, ast->env_exp);
+			*(ast->shared_data->env_exp) = add_env_var(str_value, ast->shared_data->env_exp);
 		if (res == 1)
-			*(ast->envs) = add_env_var(str_value, ast->envs);
+			*(ast->shared_data->envs) = add_env_var(str_value, ast->shared_data->envs);
 		num++;
 		cur_arg = cur_arg->next;
 	}

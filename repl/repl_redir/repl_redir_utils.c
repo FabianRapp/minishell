@@ -6,17 +6,17 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:37:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 17:15:04 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 19:25:37 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "repl_redir_internals.h"
 
 // caller needs to handle open error
-t_fd_pair	redir_fd_write(char *file, bool append, int base_fd)
+t_fd_set	redir_fd_write(char *file, bool append, int base_fd)
 {
 	int			flag;
-	t_fd_pair	fd_pair;
+	t_fd_set	fd_pair;
 
 	fd_pair.base_fd = WRITE;
 	if (base_fd != INIT_VAL)
@@ -33,10 +33,10 @@ t_fd_pair	redir_fd_write(char *file, bool append, int base_fd)
 }
 
 // caller needs to handle open error
-t_fd_pair	redir_read(char *file, int base_fd, bool in_out)
+t_fd_set	redir_read(char *file, int base_fd, bool in_out)
 {
 	int			flag;
-	t_fd_pair	fd_pair;
+	t_fd_set	fd_pair;
 
 	fd_pair.base_fd = READ;
 	if (base_fd != INIT_VAL)
@@ -51,13 +51,13 @@ t_fd_pair	redir_read(char *file, int base_fd, bool in_out)
 	return (fd_pair);
 }
 
-static t_result	find_and_replace_existing(t_fd_pair *fds,
+static t_result	find_and_replace_existing(t_fd_set *fds,
 	int base_fd, int overload_with_fd)
 {
 	int	i;
 
 	i = 0;
-	while (fds + i && !is_buffer_all_zeros(fds + i, sizeof(t_fd_pair)))
+	while (fds + i && !is_buffer_all_zeros(fds + i, sizeof(t_fd_set)))
 	{
 		if (fds[i].base_fd == base_fd)
 		{
@@ -72,27 +72,27 @@ static t_result	find_and_replace_existing(t_fd_pair *fds,
 }
 
 // returns new len, -1 on error
-int	extend_fd_array(t_fd_pair **fds)
+int	extend_fd_array(t_fd_set **fds)
 {
 	int			len;
-	t_fd_pair	*new;
+	t_fd_set	*new;
 
 	len = 0;
 	while ((*fds) + len && !is_buffer_all_zeros((*fds)
-			+ len, sizeof(t_fd_pair)))
+			+ len, sizeof(t_fd_set)))
 	{
 		len++;
 	}
-	new = ft_calloc(len + 2, sizeof(t_fd_pair));
+	new = ft_calloc(len + 2, sizeof(t_fd_set));
 	if (!new)
 		return (free(*fds), -1);
-	ft_memcpy(new, *fds, sizeof(t_fd_pair) * len);
+	ft_memcpy(new, *fds, sizeof(t_fd_set) * len);
 	free(*fds);
 	*fds = new;
 	return (len);
 }
 
-t_fd_pair	*add_fd_pair(t_fd_pair *fds, t_fd_pair new_fd_pair)
+t_fd_set	*add_fd_pair(t_fd_set *fds, t_fd_set new_fd_pair)
 {
 	int	old_len;
 

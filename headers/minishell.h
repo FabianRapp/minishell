@@ -6,16 +6,16 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/17 01:33:38 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 19:58:43 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
-             TOTAL TEST COUNT: 935  TESTS PASSED: 640  LEAKING: 0
-                     STD_OUT: 115  STD_ERR: 175  EXIT_CODE: 206
+             TOTAL TEST COUNT: 994  TESTS PASSED: 810  LEAKING: 0
+                     STD_OUT: 90  STD_ERR: 49  EXIT_CODE: 100
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 496
-                                     ✅ 2309
+                                     ❌ 239
+                                     ✅ 2743
 TODO:
 	- lexer: check for too many closing quotes
 	- ft_atoi undef behaivior for huge number strs
@@ -148,13 +148,6 @@ typedef struct s_cleanup_data
 	char	*input;
 }	t_cleanup_data;
 
-//! i think we should change this name. it's too confusing:
-typedef struct s_env
-{
-	int			main_pid;
-	bool		stop_execution;
-}	t_env;
-
 typedef	struct s_arg	t_arg;
 typedef	struct s_arg
 {
@@ -183,12 +176,21 @@ typedef struct s_child_data
 }	t_child_data;
 
 
-typedef struct s_fd_pair
+typedef struct s_fd_set
 {
 	int	base_fd;
 	int	overload_with_fd;
 	int	base_fd_backup;
-}	t_fd_pair;
+}	t_fd_set;
+
+typedef struct s_shared_data
+{
+	int				main_pid;
+	bool			stop_execution;
+	char			***envs;
+	char			***env_exp;
+	t_cleanup_data	*cleanup_data;
+}	t_shared_data;
 
 typedef struct s_ast
 {
@@ -198,16 +200,12 @@ typedef struct s_ast
 	t_redir			*redir;
 	t_ast			*left;
 	t_ast			*right;
-	t_fd_pair		*fds;
 	int				exit_status;
-	t_cleanup_data	*cleanup_data;
-	t_env			*env;
+	t_shared_data	*shared_data;
 	pid_t			pid;
 	int				fd_to_close;
 	int				fd_to_close_read;
 	int				fd_to_close_write;
-	char			***envs;
-	char			***env_exp;
 }	t_ast;
 
 // lexer
@@ -219,7 +217,7 @@ void		run_node(t_ast *ast);
 void		run_command_node(t_ast *ast);
 
 bool		check_edgecases(t_ast *ast);
-void		add_global_data(t_ast *ast, t_env *env, char ***envs, t_cleanup_data *cleanup_data, char ***exp_list);
+void		add_global_data(t_ast *ast, t_shared_data *env);
 
 //redir
 t_result	resolve_redirs(t_ast *ast);
@@ -229,7 +227,7 @@ void		print_token(t_token *token, t_parser *parser, int depth);
 bool		test_lexer_manualy(char *str);
 
 //env
-bool		init_env(t_env *new_env);
+bool		init_shared_data(t_shared_data *new_env);
 
 // repl/utils/repl_get_pid.c
 int			get_pid(void);
@@ -277,10 +275,10 @@ t_ast	*parser(char *str);
 #  define CLEANUP_FDS 5
 
 // utils/fd1.c
-t_fd_pair	*io_data(int flag, void *data);
+t_fd_set	*io_data(int flag, void *data);
 t_result	redir_fds(void);
 t_result	reset_fds(void);
-t_fd_pair	*get_fds(void);
+t_fd_set	*get_fds(void);
 t_result	cleanup_fds(void);
 
 
@@ -303,7 +301,7 @@ struct fd_request
 
 /* ------------------------------ BUILT-INS ------------------------------ */
 int			ft_pwd(t_ast *ast);
-void		ft_env(t_ast *ast);
+void		ft_shared_data(t_ast *ast);
 void		ft_export(t_ast *ast);
 void		ft_unset(t_ast *ast);
 void		ft_exit(t_ast *ast);
@@ -317,10 +315,10 @@ int			arg_is_valid(char *arg);
 char	**ft_initialize_our_env(char **base_env);
 char	*get_env_value(t_ast *ast, char *var_name);
 char	**add_env_var(char *str_to_add, char ***arr_ptr);
-char	*get_env_var_name(char *line);
+char	*get_shared_data_var_name(char *line);
 char	**delete_env_var(char *var_to_rm, char ***arr_ptr);
 
-char	***get_env(char ***set_new_env);//added
+char	***get_env_list(char ***set_new_env);//added
 // ----------- additional utils -----------------
 void	print_error_addsq(bool shell_name, char *command_name, char *arg, char *str);
 

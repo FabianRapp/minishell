@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/17 02:12:31 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 19:11:38 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,6 @@ bool	ft_buildin(t_ast *ast)
 	if (!ft_strcmp(cmd_name, "pwd"))
 		return (free(cmd_name), ft_pwd(ast), true);
 	if (!ft_strcmp(cmd_name, "env"))
-		return (free(cmd_name), ft_env(ast), true);
+		return (free(cmd_name), ft_shared_data(ast), true);
 	return (false);
 }

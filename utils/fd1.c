@@ -6,21 +6,21 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 07:42:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/17 00:54:34 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 19:25:37 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-t_fd_pair	*io_data(int flag, void *data)
+t_fd_set	*io_data(int flag, void *data)
 {
-	static t_fd_pair	*fds = NULL;
+	static t_fd_set	*fds = NULL;
 
 	if (flag == SET_NEW_FDS)
 	{
 		if (fds)
 			cleanup_fds();
-		fds = (t_fd_pair *)data;
+		fds = (t_fd_set *)data;
 	}
 	else if (flag == CLEANUP_FDS)
 		fds = NULL;
@@ -32,7 +32,7 @@ t_fd_pair	*io_data(int flag, void *data)
 // Ensures commands use the correct inputs and outputs, including here-doc content.
 t_result	redir_fds(void)
 {
-	t_fd_pair	*fds;
+	t_fd_set	*fds;
 	int			i;
 
 	// printf("BEFORE redir_fds():\n");
@@ -40,7 +40,7 @@ t_result	redir_fds(void)
 	// print_fds();
 	fds = get_fds();
 	i = 0;
-	while(fds + i && !is_buffer_all_zeros(fds + i, sizeof(t_fd_pair)))
+	while(fds + i && !is_buffer_all_zeros(fds + i, sizeof(t_fd_set)))
 	{
 		dup2(fds[i].overload_with_fd, fds[i].base_fd);
 		if (errno)
@@ -61,13 +61,13 @@ t_result	redir_fds(void)
 // Ensures the shell's file descriptor environment is clean for subsequent commands.
 t_result	reset_fds(void)
 {
-	t_fd_pair	*fds;
+	t_fd_set	*fds;
 	int			i;
 
 	fds = get_fds();
 	i = 0;
 	errno = 0;
-	while(fds + i && !is_buffer_all_zeros(fds + i, sizeof(t_fd_pair)))
+	while(fds + i && !is_buffer_all_zeros(fds + i, sizeof(t_fd_set)))
 	{
 		//close(fds[i].overload_with_fd);
 		dup2(fds[i].base_fd_backup, fds[i].base_fd);
@@ -87,7 +87,7 @@ t_result	reset_fds(void)
 // Calls `reset_fds` to ensure a clean state before performing cleanup actions.
 t_result	cleanup_fds(void)
 {
-	t_fd_pair	*fds;
+	t_fd_set	*fds;
 	int			i;
 	t_result	return_val;
 
@@ -95,7 +95,7 @@ t_result	cleanup_fds(void)
 	fds = get_fds();
 	i = 0;
 	//while (fds && fds[i].base_fd != INIT_VAL)
-	while(fds + i && !is_buffer_all_zeros(fds + i, sizeof(t_fd_pair)))
+	while(fds + i && !is_buffer_all_zeros(fds + i, sizeof(t_fd_set)))
 	{
 		close(fds[i].base_fd_backup);
 		close(fds[i++].overload_with_fd);
@@ -105,7 +105,7 @@ t_result	cleanup_fds(void)
 	return (return_val);
 }
 
-t_fd_pair	*get_fds(void)
+t_fd_set	*get_fds(void)
 {
 	return (io_data(GET_FDS, NULL));
 }
@@ -136,7 +136,7 @@ char	*get_file_name(int fd)
 }
 void	print_fds(void)
 {
-	t_fd_pair	*fds;
+	t_fd_set	*fds;
 	char		*base_fd_str;
 	char		*over_load_fd_str;
 	char		*backup_fd_str;
@@ -145,7 +145,7 @@ void	print_fds(void)
 	fds = io_data(-1, NULL);
 	printf("| base_fd | overload_with_fd | backup_fd |\n");
 	//while (fds && fds->overload_with_fd != INIT_VAL)
-	while(fds && !is_buffer_all_zeros(fds, sizeof(t_fd_pair)))
+	while(fds && !is_buffer_all_zeros(fds, sizeof(t_fd_set)))
 	{
 		base_fd_str = get_file_name(fds->base_fd);
 		over_load_fd_str = get_file_name(fds->overload_with_fd);

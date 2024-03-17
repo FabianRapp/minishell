@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/16 19:32:02 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 19:22:48 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,8 +101,8 @@ void	main_exit(t_cleanup_data *data, bool full_exit, bool ft_exit_call)
 	// 	printf("in sub mode: %d/%d\n", data->root->exit_status, get_last_exit());
 	// else
 	// 	printf("not sub mode: %d/%d(root/last)\n", data->root->exit_status, get_last_exit());
-	if (data->root && data->root->env)
-		data->root->env->stop_execution = false;
+	if (data->root && data->root->shared_data)
+		data->root->shared_data->stop_execution = false;
 	free(data->input);
 	if (data->root)
 		free_ast(data->root);

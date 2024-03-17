@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:52 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 13:37:31 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 19:11:38 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ t_result		insert_whitespace_before(t_token_list **head);
 
 // utils1.c
 t_result		env_to_word_token(t_token *token);
-t_result		pidreq_to_literal_token(t_env *env, t_token *token);
+t_result		pidreq_to_literal_token(t_shared_data *env, t_token *token);
 //t_result		add_dollar(t_token *token);
 int				check_empty_arg(t_arg *last, t_arg **cur,
 					t_ast *ast, t_arg **base_arg);
@@ -50,7 +50,7 @@ t_result		expansion_move_to_arg(t_arg **next_arg, t_token_list *list);
 
 // utils3.c
 t_result		merge_literals(t_token_list *node);
-//t_token_list	*expand_list_here_doc(t_env *env, t_token_list *list);
+//t_token_list	*expand_list_here_doc(t_shared_data *env, t_token_list *list);
 
 // wildcards:
 typedef struct s_wildcard_parameters

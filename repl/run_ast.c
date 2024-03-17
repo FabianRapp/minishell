@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/16 19:11:40 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 19:23:26 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 // 	int			base_write;
 // 	int			base_read;
 
-// 	if (ast->env->stop_execution)
+// 	if (ast->shared_data->stop_execution)
 // 	{
 // 		ast->exit_status = 1;
 // 		return ;
@@ -70,7 +70,7 @@
 // 		return ;
 // 	}
 // 	ast->left->fd_to_close_read = base_read;
-// 	ast->env->stop_execution = false;
+// 	ast->shared_data->stop_execution = false;
 // 	if (dup2(pipe_fd[READ], READ) == -1)
 // 	{
 // 		close(pipe_fd[READ]);
@@ -101,7 +101,7 @@ void	ft_pipe(t_ast *ast)
 	int			pipe_fd[2];
 	int			base;
 
-	if (ast->env->stop_execution)
+	if (ast->shared_data->stop_execution)
 	{
 		ast->exit_status = 1;
 		return ;
@@ -139,7 +139,7 @@ void	ft_pipe(t_ast *ast)
 		return ;
 	}
 	close(base);
-	ast->env->stop_execution = false;
+	ast->shared_data->stop_execution = false;
 	if (ast->fd_to_close_read != INIT_VAL)
 		base = ast->fd_to_close_read;
 	else
@@ -238,7 +238,7 @@ void	ft_and(t_ast *ast)
 
 void	init_command(t_ast *ast)
 {
-	if (ast->env->stop_execution)
+	if (ast->shared_data->stop_execution)
 	{
 		ast->exit_status = 1;
 		return ;

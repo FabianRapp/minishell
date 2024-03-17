@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/17 02:23:46 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 20:29:15 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,7 @@ t_result	set_errno_as_exit(t_ast *ast, bool msg)
 	{
 		if (msg)
 			print_error(true, NULL, NULL, strerror(errno));
+		errno = 0;
 		return (ERROR);
 	}
 	return (SUCCESS);

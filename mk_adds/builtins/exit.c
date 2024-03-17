@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:47:46 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/16 21:26:36 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 19:27:57 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	ft_exit(t_ast *ast)
 		else if(ast->arg && ast->arg->name)
 			ft_fprintf(2, "%s: %s: %s: %s\n", SHELL_NAME, "exit", ast->arg->name->token->str_data, "numeric argument required");
 		set_last_exit(2);
-		main_exit(ast->cleanup_data, true, true);
+		main_exit(ast->shared_data->cleanup_data, true, true);
 	}
 	else if (ast->arg && count_args(ast->arg) > 1)
 	{
@@ -60,12 +60,12 @@ void	ft_exit(t_ast *ast)
 			ft_fprintf(2, "%s: %s: %s\n", SHELL_NAME, "exit", "too many arguments");
 		ast->exit_status = 1;
 		set_last_exit(1);
-		ast->env->stop_execution = true;
+		ast->shared_data->stop_execution = true;
 		return ;
 	}
 	else if (!ast->arg || count_args(ast->arg) == 0)
 	{
-		main_exit(ast->cleanup_data, true, true);
+		main_exit(ast->shared_data->cleanup_data, true, true);
 	}
 	else
 	{
@@ -75,6 +75,6 @@ void	ft_exit(t_ast *ast)
 		// 	printf("exit in sub mode: %d/%d\n", ast->exit_status, get_last_exit());
 		// else
 		// 	printf("exit not sub mode: %d/%d\n", ast->exit_status, get_last_exit());
-		main_exit(ast->cleanup_data, true, true);
+		main_exit(ast->shared_data->cleanup_data, true, true);
 	}
 }

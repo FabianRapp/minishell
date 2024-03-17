@@ -6,14 +6,14 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/17 02:01:00 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 19:58:43 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 #include "../../headers/eval.h"
 
-char	***get_env(char ***set_new_env)
+char	***get_env_list(char ***set_new_env)
 {
 	static char	***env = NULL;
 
@@ -22,7 +22,7 @@ char	***get_env(char ***set_new_env)
 	return (env);
 }
 
-char	*get_env_var_name(char *line)
+char	*get_shared_data_var_name(char *line)
 {
 	int		len;
 	char	*var_name;
@@ -43,13 +43,13 @@ char	*get_env_value(t_ast *ast, char *var_name)
 	char	*line_name;
 
 	if (ast)
-		env = *(ast->envs);
+		env = *(ast->shared_data->envs);
 	else
-		env = *(get_env(NULL));
+		env = *(get_env_list(NULL));
 	i = -1;
 	while(env[++i])
 	{
-		line_name = get_env_var_name(env[i]);
+		line_name = get_shared_data_var_name(env[i]);
 		if (ft_strcmp(line_name, var_name) == 0)
 			break ;
 	}
@@ -69,9 +69,9 @@ static char	**if_already_in_env(char **env, char *str_to_add, int *add)
 	char	**ret;
 
 	i = 0;
-	var_name = get_env_var_name(str_to_add);
+	var_name = get_shared_data_var_name(str_to_add);
 	ret = env;
-	while (env[i] && ft_strncmp(var_name, get_env_var_name(env[i]), ft_strlen(var_name)))
+	while (env[i] && ft_strncmp(var_name, get_shared_data_var_name(env[i]), ft_strlen(var_name)))
 		i++;
 	if (env[i]) //which means that the var exists already
 	{
@@ -121,7 +121,7 @@ char	**delete_env_var(char *var_to_rm, char ***arr_ptr)
 	i = 0;
 	// while (env_before[i] && !ft_strnstr(env_before[i], var_to_rm, ft_strlen(env_before[i])))
 	// 	i++;
-	while (env_before[i] && ft_strncmp(var_to_rm, get_env_var_name(env_before[i]), ft_strlen(var_to_rm))) //! i think could be a leak. maybe i can change the second argument to just env_before[i]
+	while (env_before[i] && ft_strncmp(var_to_rm, get_shared_data_var_name(env_before[i]), ft_strlen(var_to_rm))) //! i think could be a leak. maybe i can change the second argument to just env_before[i]
 		i++;
 	if (env_before[i] == NULL)
 		return (env_before);
