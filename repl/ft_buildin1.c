@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/17 01:20:03 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 01:32:40 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ bool	ft_buildin(t_ast *ast)
 {
 	char	*cmd_name;
 
-	print_ast(ast);
+	//print_ast(ast);
 	cmd_name = ft_strdup(ast->name->token->str_data);
 	if (!cmd_name)
 	{
