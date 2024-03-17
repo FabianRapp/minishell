@@ -6,16 +6,16 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/17 22:03:27 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 22:07:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
-             TOTAL TEST COUNT: 994  TESTS PASSED: 813  LEAKING: 0
-                     STD_OUT: 87  STD_ERR: 48  EXIT_CODE: 99
+             TOTAL TEST COUNT: 994  TESTS PASSED: 818  LEAKING: 0
+                     STD_OUT: 80  STD_ERR: 46  EXIT_CODE: 93
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 234
-                                     ✅ 2748
+                                     ❌ 219
+                                     ✅ 2763
 TODO:
 	- lexer: check for too many closing quotes
 	- ft_atoi undef behaivior for huge number strs
