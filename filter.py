@@ -49,4 +49,4 @@ if	__name__ == '__main__':
 				count_before += 1
 			line = file.readline()
 	insert_count(count_after, count_before)
-	print
+	
