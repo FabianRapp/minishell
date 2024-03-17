@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/16 21:28:44 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 02:23:46 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,7 +222,7 @@ void	print_error(bool shell_name, char *command_name, char *arg, char *str)
 		if (command_name)
 			ft_fprintf(2, "%s: ", command_name);
 		if (arg)
-			ft_fprintf(1, "%s: ", arg);
+			ft_fprintf(2, "%s: ", arg);
 		if (str)
 			ft_fprintf(2, "%s", str);
 		ft_fprintf(2, "\n");
@@ -238,7 +238,7 @@ void	print_error_addsq(bool shell_name, char *command_name, char *arg, char *str
 	if (command_name)
 		ft_fprintf(2, "%s: ", command_name);
 	if (arg)
-		ft_fprintf(1, "`%s': ", arg);
+		ft_fprintf(2, "`%s': ", arg);
 	if (str)
 		ft_fprintf(2, "%s", str);
 	ft_fprintf(2, "\n");

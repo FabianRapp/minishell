@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/17 01:27:58 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 02:01:00 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,34 +22,6 @@ char	***get_env(char ***set_new_env)
 	return (env);
 }
 
-// allocates and returns a copy
-char	*get_env_value(t_ast *ast, char *var_name)
-{
-	char	**env;
-	int		i;
-	char	*value;
-	bool	correct_sign;
-
-	if (ast && ast->envs)
-		env = *(ast->envs);
-	else
-		env = *(get_env(NULL));
-	i = 0;
-	correct_sign = (env[i] && (ft_strlen(var_name) < ft_strlen(env[i]) && env[i][ft_strlen(var_name)] != '='));
-	while (correct_sign && (ft_strncmp(env[i], var_name, ft_strlen(var_name) != 0)))
-	{
-		i++;
-		correct_sign = (env[i] && (ft_strlen(var_name) < ft_strlen(env[i]) && env[i][ft_strlen(var_name)] != '='));
-	}
-	if (env[i] == NULL || env[i][ft_strlen(var_name)] != '=') //means the var_name doesn't exist in env
-		return (NULL);
-	value = ft_substr(env[i], ft_strlen(var_name) + 1, ft_strlen(env[i])
-		- ft_strlen(var_name) - 1);
-	if (value == NULL)
-		return (NULL);
-	return (value);
-}
-
 char	*get_env_var_name(char *line)
 {
 	int		len;
@@ -60,6 +32,34 @@ char	*get_env_var_name(char *line)
 		len++;
 	var_name = ft_substr(line, 0, len);
 	return (var_name);
+}
+
+// allocates
+char	*get_env_value(t_ast *ast, char *var_name)
+{
+	char	**env;
+	int		i;
+	char	*value;
+	char	*line_name;
+
+	if (ast)
+		env = *(ast->envs);
+	else
+		env = *(get_env(NULL));
+	i = -1;
+	while(env[++i])
+	{
+		line_name = get_env_var_name(env[i]);
+		if (ft_strcmp(line_name, var_name) == 0)
+			break ;
+	}
+	if (env[i] == NULL) //means the var_name doesn't exist in env
+		return (NULL);
+	value = ft_substr(env[i], ft_strlen(var_name) + 1, ft_strlen(env[i])
+		- ft_strlen(var_name) - 1);
+	if (value == NULL)
+		return (NULL);
+	return (value);
 }
 
 static char	**if_already_in_env(char **env, char *str_to_add, int *add)
