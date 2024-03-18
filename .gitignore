@@ -12,3 +12,6 @@ repl/tempCodeRunnerFile.c
 
 *.a
 
+failed_tests_details.txt
+filtered_failed_tests.txt
+la

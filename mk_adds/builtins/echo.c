@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 08:00:49 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/17 01:58:54 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/18 05:05:11 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,39 +45,36 @@ static bool	is_the_n_option(char *arg)
 		return (false);
 }
 
-void	ft_echo(t_ast *ast)
+int	ft_echo(t_ast *ast)
 {
 	t_arg	*cur_arg;
 	char	*str_value;
 	bool	no_new_line;
+	bool	stop_check;
 
-	no_new_line = false;
+	// print_ast(ast);
+	ft_cur_exit(ast, 0);
 	cur_arg = ast->arg;
 	if (!cur_arg)
-		printf("\n");
-	while (cur_arg && cur_arg->next && cur_arg->name->token->type != T_EOF)
+		return (printf("\n"), 0);
+	no_new_line = false;
+	stop_check = false;
+	while (cur_arg && cur_arg->name->token->type != T_EOF)
 	{
 		str_value = cur_arg->name->token->str_data;
-		if (is_the_n_option(str_value))
+		if (!stop_check && is_the_n_option(str_value))
 			no_new_line = true;
-		else
+		else if (str_value)
 		{
-			if (str_value)
+			if (cur_arg->next)
 				printf("%s ", str_value);
+			else
+				printf("%s", str_value);
+			stop_check = true;
 		}
 		cur_arg = cur_arg->next;
 	}
-	if (!cur_arg)
-		str_value = NULL;
-	else
-		str_value = cur_arg->name->token->str_data;
-	if (no_new_line == true)
-	{
-		if (str_value)
-			printf("%s", str_value);
-	}
-	else if (str_value)
-		printf("%s\n", str_value);
-	ast->exit_status = 0;
-	set_last_exit(0);
+	if (no_new_line == false)
+		printf("\n");
+	return (0);
 }

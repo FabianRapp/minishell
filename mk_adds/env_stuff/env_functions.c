@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_functions.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/17 22:02:33 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/18 03:31:52 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,16 +37,13 @@ char	*get_env_var_name(char *line)
 }
 
 // allocates
-char	*get_env_value(t_ast *ast, char *var_name)
+char	*get_env_value(char **env, char *var_name)
 {
-	char	**env;
 	int		i;
 	char	*value;
 	char	*line_name;
 
-	if (ast)
-		env = *(ast->shared_data->envs);
-	else
+	if (!env)
 		env = *(get_env_list(NULL));
 	i = -1;
 	while(env[++i])
@@ -90,7 +87,7 @@ static char	**if_already_in_env(char **env, char *str_to_add, int *add)
 	return (free(var_to_add_name), ret);
 }
 
-char	**add_env_var(char *str_to_add, char ***arr_ptr)
+char	**add_env_var(char *str_to_add, char **env)
 {
 	char	**env_before;
 	int		i;
@@ -99,7 +96,7 @@ char	**add_env_var(char *str_to_add, char ***arr_ptr)
 
 	i = 0;
 	add = 1;
-	env_before = *(arr_ptr);
+	env_before = env;
 	env_before = if_already_in_env(env_before, str_to_add, &add);
 	if (add == 0)
 		return (env_before);
@@ -149,12 +146,65 @@ char	**delete_env_var(char *var_to_rm, char ***arr_ptr)
 	return (new);
 }
 
+void	ft_update_env_var(char *var_name, char *new_value, char **env)
+{
+	int		i;
+	char	*half;
+	
+	i = 0;
+	while (env[i] && ft_strncmp(var_name, env[i], ft_strlen(var_name)))
+		i++;
+	free(env[i]);
+	half = ft_strjoin(var_name, "=");
+	env[i] = ft_strjoin(half, new_value);
+	free(half);
+}
+
+/*
+if shlvl is unset or non-numeric -> new subterminal has SHLVL=1.
+*/
+bool	is_not_numeric(char *str)
+{
+	if (*str == '+' || *str == '-')
+		str++;
+	while (*str)
+	{
+		if (*str < '0' || *str > '9')
+			return (true);
+		str++;
+	}
+	return (false);
+}
+
+void	ft_update_shlvl(int shlvl_index, char ***env)
+{
+	char	*before;
+	int		num;
+	char	*after;
+
+	num = -1;
+	before = get_env_value(*(env), "SHLVL");
+	if (shlvl_index == 0 || is_not_numeric(before))//for the case that the SHLVL was unset in env
+	{
+		*env = add_env_var("SHLVL=1", *env);
+		free(before);
+		return ;
+	}
+	if (*before != '-')
+		num = ft_atoi(before);
+	free(before);
+	after = ft_itoa(num + 1);
+	ft_update_env_var("SHLVL", after, *env);
+}
+
 char	**ft_initialize_our_env(char **base_env)
 {
 	int		i;
 	char	**ret;
+	int		shlvl_index;
 
 	i = 0;
+	shlvl_index = 0;
 	while (base_env[i])
 		i++;
 	ret = malloc((i + 1) * sizeof(char *));
@@ -163,9 +213,11 @@ char	**ft_initialize_our_env(char **base_env)
 	ret[i] = NULL;
 	i = -1;
 	while (base_env[++i])
+	{
 		ret[i] = ft_strdup(base_env[i]);
+		if (ft_strncmp(ret[i], "SHLVL=", 6) == 0)
+			shlvl_index = i;
+	}
+	ft_update_shlvl(shlvl_index, &ret);
 	return (ret);
 }
-
-//TODO: should i modify the SHLVL environmental variable? It is always printed as 1, although it should start as 2
-//todo:       and it increases everytime we enter a subshell inside minishell. 
