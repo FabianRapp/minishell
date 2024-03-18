@@ -6,28 +6,36 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 19:22:05 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/03 22:37:15 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/18 02:49:40 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../expansion.h"
+
+// debugging
+void	print_wildcard_data(t_wildcard_parameters *data)
+{
+	int	i = 0;
+	printf("pre: %s\n", data->prefix);
+	printf("mid:\n");
+	while (data->sub_str[i])
+		printf("%s\n", data->sub_str[i++]);
+	printf("su: %s\n", data->suffix);
+}
 
 t_result	fill_prefix(char **str, t_wildcard_parameters *w_para)
 {
 	int		i;
 
 	i = 0;
-	while ((*str)[i] && (*str)[i] != '*')
-		i++;
-	if (i == 0 || !(*str)[i])
-		w_para->prefix = NULL;
-	else
-	{
-		w_para->prefix = ft_strndup((*str), i);
-		if (!w_para->prefix)
-			return (ERROR);
-	}
-	(*str) += i;
+	w_para->prefix = NULL;
+	if (ft_strnstr(*str, "}{*", ft_strlen(*str)) == *str || !ft_strnstr(*str, "}{*", ft_strlen(*str)))
+		return (SUCCESS);
+	
+	w_para->prefix = ft_strndup((*str), ft_strnstr(*str, "}{*", ft_strlen(*str)) - *str);
+	if (!w_para->prefix)
+		return (ERROR);
+	(*str) = ft_strnstr(*str, "}{*", ft_strlen(*str));
 	return (SUCCESS);
 }
 
@@ -39,12 +47,13 @@ t_result	fill_wildcard_data(char *wildcard_str,
 
 	if (fill_prefix(&wildcard_str, w_para) == ERROR)
 		return (ERROR);
-	w_para->sub_str = ft_split(wildcard_str, '*');
+	w_para->sub_str = ft_split_wildcards(wildcard_str);
 	if (!(w_para->sub_str))
 		return (ERROR);
-	if (wildcard_str[ft_strlen(wildcard_str) - 1] == '*')
-		w_para->suffix = NULL;
-	else
+	w_para->suffix = NULL;
+	if (!(ft_strnstr(wildcard_str, "}{*", ft_strlen(wildcard_str)) == wildcard_str + ft_strlen(wildcard_str) - 3))
+	// if (wildcard_str[ft_strlen(wildcard_str) - 1] == '*')
+	// 	w_para->suffix = NULL;
 	{
 		i = 0;
 		while (w_para->sub_str && (w_para->sub_str)[i])
@@ -55,6 +64,7 @@ t_result	fill_wildcard_data(char *wildcard_str,
 			(w_para->sub_str)[i - 1] = NULL;
 		}
 	}
+	//print_wildcard_data(w_para);
 	return (SUCCESS);
 }
 

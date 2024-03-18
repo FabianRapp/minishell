@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 00:06:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 17:08:05 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/18 01:05:44 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,6 +218,11 @@ t_result	literal_type2(t_lexer *lexer, t_token *token, bool skip_next_term)
 		return (ERROR);
 	while ((!is_termination_char(lexer->cur_char) || skip_next_term) && lexer->cur_char)
 	{
+		if (!skip_next_term && lexer->cur_char == '*')
+		{
+			if (!ft_strjoin_inplace(&(token->str_data), "}{"))
+				return (ERROR);
+		}
 		if (skip_next_term)
 			skip_next_term = false;
 		else if (lexer->cur_char == '\\')

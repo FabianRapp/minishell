@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/18 03:42:17 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/18 23:28:17 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,18 @@ void	ft_env(t_ast *ast)
 {
 	int		i;
 	char	**tmp;
+	char	*path;
 
+	path = get_env_value(*(ast->shared_data->envs), "PATH");
+	if (!path)
+	{
+		ft_fprintf(2, "%s: env: No such file or directory\n", SHELL_NAME);
+		set_last_exit(127);
+		ast->exit_status = 127;
+		free(path);
+		return ;
+	}
+	free(path);
 	if (ast && ast->shared_data->envs)
 		tmp = *(ast->shared_data->envs);
 	else

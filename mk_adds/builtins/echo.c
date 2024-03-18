@@ -6,26 +6,9 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 08:00:49 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/18 07:45:41 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/18 23:36:18 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-/*
-behavior from bash:
-
-bash-3.2$ echo -n -n -n hello
-hellobash-3.2$ echo -n hello
-hellobash-3.2$ echo -nnnnn hello
-hellobash-3.2$ echo -n nnn hello
-nnn hellobash-3.2$ echo -n -n  hello
-hellobash-3.2$ echo -n -n  hello
-
-bash-3.2$ echo he$llo
-he
-bash-3.2$
-*/
-
-//TODO: i need to add the -n
 
 #include "../../headers/minishell.h"
 #include "../../headers/eval.h"
@@ -43,6 +26,15 @@ static bool	is_the_n_option(char *arg)
 		return (true);
 	else
 		return (false);
+}
+
+static bool	print_with_or_without_space(t_arg *cur_arg, char *str_value)
+{
+	if (cur_arg->next)
+		printf("%s ", str_value);
+	else
+		printf("%s", str_value);
+	return (true);
 }
 
 int	ft_echo(t_ast *ast)
@@ -64,13 +56,7 @@ int	ft_echo(t_ast *ast)
 		if (!stop_check && is_the_n_option(str_value))
 			no_new_line = true;
 		else if (str_value)
-		{
-			if (cur_arg->next)
-				printf("%s ", str_value);
-			else
-				printf("%s", str_value);
-			stop_check = true;
-		}
+			stop_check = print_with_or_without_space(cur_arg, str_value);
 		cur_arg = cur_arg->next;
 	}
 	if (no_new_line == false)

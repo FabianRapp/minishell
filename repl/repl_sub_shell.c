@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 07:36:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/17 19:29:11 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/18 03:14:48 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ static t_result	mange_sub_shell_fds(t_ast *ast)
 static t_ast	*init_sub_shell(t_ast *ast, char *input, t_shared_data *shared_sub_vars, t_cleanup_data *sub_cleanup_data, char ***env_list, char ***exp_list)
 {
 	t_ast		*sub_ast;
+
 	ast->pid = fork();
 	errno = 0;
 	if (ast->pid)
@@ -113,6 +114,7 @@ static void	run_sub_shell(t_shared_data shared_sub_vars, char *input, t_ast *ast
 // lets make sure thers no segault just in case =)
 static t_result	check_missing_input(char *input)
 {
+
 	if (!input)
 	{
 		print_error(true, NULL, NULL, "Error");
@@ -122,10 +124,26 @@ static t_result	check_missing_input(char *input)
 	if (!*input)
 	{
 		print_error(true, NULL, NULL,
-			"syntax 111 error near unexpected token `)'");
+			"syntax error near unexpected token `)'");
 		set_last_exit(2);
 		return (ERROR);
 	}
+	// char	*tmp;
+	// char	*tmp2;
+	// if (*input == '(' && input[ft_strlen(input) - 1] == ')')
+	// {
+	// 	set_last_exit(1);
+	// 	tmp = ft_strndup(input + 1, ft_strlen(input) - 1);
+	// 	if (ft_strchr(tmp, ')') == tmp + ft_strlen(tmp) - 1)
+	// 	{
+	// 		tmp2 = ft_strjoin("syntax error in expression (error token is \"", tmp);
+	// 		ft_strjoin_inplace(&tmp2, "\")");
+	// 		print_error(true, "((", tmp, tmp2);
+	// 		free(tmp2);
+	// 	}
+	// 	free(tmp);
+	// 	return (ERROR);
+	// }
 	return (SUCCESS);
 }
 
@@ -137,7 +155,8 @@ void	create_sub_shell(t_ast *ast)
 		return ;
 	if (check_missing_input(ast->name->token->str_data) == ERROR)
 	{
-		ast->exit_status = 2;
+		//ast->exit_status = 2;
+		ast->exit_status = get_last_exit();
 		return ;
 	}
 	sub_shell_mode(SET_SUB_SHELL);
