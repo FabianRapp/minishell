@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:49:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 16:53:37 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/18 02:49:13 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,13 +82,39 @@ t_result	expand_wildcard_node(t_token_list *node)
 
 t_result	wildcards(t_token_list *name)
 {
+	char		*tmp;
+	char		*data_str;
+
 	while (name)
 	{
 		// if (name->token->type == WILDCARD && ft_strchr(name->token->str_data, '*'))
-		if (name->token && ft_strchr(name->token->str_data, '*') && name->token->expand_wildcards)
+		data_str = name->token->str_data;
+		// /if (name->token && data_str && ft_strchr(data_str, '*'))
+		while (name->token && data_str && ft_strchr(data_str, '*'))
 		{
-			name->token->type = LITERAL;
-			expand_wildcard_node(name);
+			//printf("dat str: %s\n", data_str);
+			if (ft_strchr(data_str, '*') - data_str >= 2 && *(ft_strchr(data_str, '*') - 1) == '{'
+				&& *(ft_strchr(data_str, '*') - 2) == '}')
+			{
+				// tmp = ft_strstrtrim(name->token->str_data, "}{");
+				// printf("before: %s\n after: %s\n", name->token->str_data, tmp);
+				// free(name->token->str_data);
+				// name->token->str_data = tmp;
+				// if (!name->token->str_data)
+				// {// todo error
+				// }
+				name->token->type = LITERAL;
+				expand_wildcard_node(name);
+				tmp = ft_strstrtrim(name->token->str_data, "}{");
+				//printf("before: %s\n after: %s\n", name->token->str_data, tmp);
+				free(name->token->str_data);
+				name->token->str_data = tmp;
+				if (!name->token->str_data)
+				{// todo error
+				}
+			}
+			else
+				data_str = ft_strchr(data_str, '*') + 1;
 		}
 		name = name->next;
 	}

@@ -3,8 +3,8 @@ FLAGS_NO_LEAK_CHECK =
 # -fsanitize=undefined -fsanitize=address -g
 CFLAGS=-Wall -Wextra -Werror
 
-LDFLAGS = 
-#-fsanitize=undefined -fsanitize=address  -g
+LDFLAGS =
+# -fsanitize=undefined -fsanitize=address  -g
 # 
 
 

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/08 01:18:40 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/16 21:30:35 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/18 02:43:59 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,54 @@ char	**ft_split(char const *s, char c)
 		if (s_increase)
 			i++;
 		s += s_increase;
+	}
+	return (str_ar);
+}
+
+static int	append_next_sub_wildcards(char **sub_str, const char *s)
+{
+	int		count;
+	char	*found;
+
+	found = ft_strnstr(s, "}{*", ft_strlen(s));
+	*sub_str = (char *)ft_calloc(ft_strlen(s)+ 1, sizeof(char));
+	if (!(*sub_str))
+		return (-1);
+	count = 0;
+	while (s[count] && s + count != found)
+	{
+		(*sub_str)[count] = s[count];
+		count++;
+	}
+	return (count);
+}
+
+char	**ft_split_wildcards(char const *s)
+{
+	char		**str_ar;
+	int			i;
+	int			s_increase;
+	int			i2;
+
+	str_ar = (char **)ft_calloc(ft_strlen(s) + 1, sizeof(char *));
+	if (!str_ar)
+		return (NULL);
+	i = 0;
+	i2 = 0;
+	while (s[i])
+	{
+		while (s[i] && s[i] == '}' && s[i + 1] == '{' && s[i + 2] == '*')
+			i += 3;
+		s_increase = append_next_sub_wildcards(str_ar + i2, s + i);
+		if (s_increase == -1)
+			return (ft_free_2darr(str_ar), NULL);
+		if (s_increase)
+		{
+			ft_strstrtrim(str_ar[i2], "}{");
+			i2++;
+			i += s_increase;
+		}
+		
 	}
 	return (str_ar);
 }
