@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:47:46 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/17 19:27:57 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/18 08:11:52 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	ft_exit(t_ast *ast)
 			print_error(true, "exit", ast->arg->name->token->str_data, "numeric argument required");
 		else if(ast->arg && ast->arg->name)
 			ft_fprintf(2, "%s: %s: %s: %s\n", SHELL_NAME, "exit", ast->arg->name->token->str_data, "numeric argument required");
-		set_last_exit(2);
+		set_last_exit(255); //! i was 0 i made it 255 and 30 more tests passed comparing to before
 		main_exit(ast->shared_data->cleanup_data, true, true);
 	}
 	else if (ast->arg && count_args(ast->arg) > 1)

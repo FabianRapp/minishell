@@ -2,7 +2,7 @@
 source_file = "failed_tests_details.txt"
 target_file = "filtered_failed_tests.txt"
 
-filter_strs = []
+filter_strs = ["EXIT_CODE", "-n"]
 
 def	save_block(source):
 	with open(target_file, "a") as target:

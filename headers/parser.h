@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:52:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 08:00:27 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/18 06:35:41 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ t_ast	*parser(char *str);
 // AST
 
 t_parser				*find_highest_operator(t_parser *parser);
-t_parser				*remove_back(t_parser *cut_location);
+t_parser				*remove_back(t_parser *cut_location); //!something is red for me here!
 t_left_right_parsers	split_parser(t_parser *split_location);
 t_ast 					*build_ast(t_parser *parser);
 void					free_ast(t_ast *ast);

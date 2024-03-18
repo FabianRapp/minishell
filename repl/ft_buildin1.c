@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_buildin1.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/17 19:11:38 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/18 07:31:37 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,14 @@ bool	ft_buildin(t_ast *ast)
 	if (!ft_strcmp(cmd_name, "pwd"))
 		return (free(cmd_name), ft_pwd(ast), true);
 	if (!ft_strcmp(cmd_name, "env"))
-		return (free(cmd_name), ft_shared_data(ast), true);
+		return (free(cmd_name), ft_env(ast), true);
 	return (false);
 }
+
+void	ft_cur_exit(t_ast *ast, int exit_value)
+{
+	ast->exit_status = exit_value;
+	set_last_exit(exit_value);
+}
+
+//88, 24, 84 -> 196

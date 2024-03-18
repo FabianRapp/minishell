@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:29:13 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/17 21:39:09 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/18 07:41:13 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static void	ft_export_no_args(t_ast *ast)
 		if (ft_strchr(sorted_env[i], '='))
 		{
 			var_name = get_env_var_name(sorted_env[i]);
-			var_value = get_env_value(ast, var_name);
+			var_value = get_env_value(*(ast->shared_data->envs), var_name);
 			printf("%s=\"%s\"\n", var_name, var_value);
 			free(var_name);
 			free(var_value);
@@ -95,7 +95,7 @@ static void	ft_export_no_args(t_ast *ast)
 *	Subsequent characters can be letters, numbers, or underscores.
 *	Variable names are case-sensitive.
 */
-int	arg_is_valid(char *arg)
+int	arg_is_valid(char *arg, t_ast *ast, char *cmd_name)
 {
 	int		i;
 	char	*save;
@@ -104,14 +104,19 @@ int	arg_is_valid(char *arg)
 	save = arg;
 	if (!arg)
 		return (0);
+	// if (*arg == '\0')
+	// 	return (ft_cur_exit(ast, 1), print_error_addsq(true, cmd_name,
+	// 		save, "not a valid identifier"), 0);//these three last lines i don't think they made any difference
 	// i check first character firstly:
 	if (!(ft_isalpha((int) *arg) || *arg == '_'))
-		return (print_error_addsq(true, "export", save, "not a valid identifier"), 0);
+		return (ft_cur_exit(ast, 1), print_error_addsq(true, cmd_name,
+			save, "not a valid identifier"), 0);
 	// then i continue with the rest chars of var_name, until the equal
 	while (++arg && *arg && *arg != '=')
 	{
 		if (!(ft_isalnum((int) *arg) || *arg == '_'))
-			return (print_error_addsq(true, "export", save, "not a valid identifier"), 0);
+			return (ft_cur_exit(ast, 1), print_error_addsq(true, cmd_name,
+				save, "not a valid identifier"), 0);
 	}
 	//if there is not equal after the name, nothing is printed and nothing is added in env array
 	if (*arg != '=')
@@ -129,27 +134,24 @@ void	ft_export(t_ast *ast)
 	num = 0;
 	res = 0;
 	cur_arg = ast->arg;
+	ft_cur_exit(ast, 0);
 	while (cur_arg && cur_arg->name->token->type != T_EOF)
 	{
 		str_value = cur_arg->name->token->str_data;
-		res = arg_is_valid(str_value);
+		res = arg_is_valid(str_value, ast, "export");
 		if (res > 0)
-			*(ast->shared_data->env_exp) = add_env_var(str_value, ast->shared_data->env_exp);
+			*(ast->shared_data->env_exp) = add_env_var(str_value,
+				*(ast->shared_data->env_exp));
 		if (res == 1)
-			*(ast->shared_data->envs) = add_env_var(str_value, ast->shared_data->envs);
+			*(ast->shared_data->envs) = add_env_var(str_value,
+				*(ast->shared_data->envs));
 		num++;
 		cur_arg = cur_arg->next;
 	}
 	if (num == 0) //which means that export has no arguments
 		ft_export_no_args(ast);
-	ast->exit_status = 0;
-	set_last_exit(0);
 }
 
-// ft_memmove() 
-
-// getenv is used in the expansion
-
-// // print_error(true, NULL, NULL, strerror(errno));
-// // print_error(true, "string1", "string2", strerror(errno));
-// // ft_fprintf(2, "%s %s\n", SHELL_NAME, );
+// print_error(true, NULL, NULL, strerror(errno));
+// print_error(true, "string1", "string2", strerror(errno));
+// ft_fprintf(2, "%s %s\n", SHELL_NAME, );

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/18 04:54:25 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/18 20:42:09 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -301,27 +301,28 @@ struct fd_request
 
 /* ------------------------------ BUILT-INS ------------------------------ */
 int			ft_pwd(t_ast *ast);
-void		ft_shared_data(t_ast *ast);
+void		ft_env(t_ast *ast);
 void		ft_export(t_ast *ast);
 void		ft_unset(t_ast *ast);
 void		ft_exit(t_ast *ast);
-void		ft_echo(t_ast *ast);
+int			ft_echo(t_ast *ast);
 t_result	ft_cd(t_ast *ast);
-int			arg_is_valid(char *arg);
+int			arg_is_valid(char *arg, t_ast *ast, char *cmd_name);
 
 
 /* ---------------------------- ENV FUNCTIONS ---------------------------- */
 
 char	**ft_initialize_our_env(char **base_env);
-char	*get_env_value(t_ast *ast, char *var_name);
-char	**add_env_var(char *str_to_add, char ***arr_ptr);
+char	*get_env_value(char **env, char *var_name);
+char	**add_env_var(char *str_to_add, char **env);
 char	*get_env_var_name(char *line);
 char	**delete_env_var(char *var_to_rm, char ***arr_ptr);
-
+void	ft_update_env_var(char *var_name, char *new_value, char **env);
 char	***get_env_list(char ***set_new_env);//added
+
 // ----------- additional utils -----------------
 void	print_error_addsq(bool shell_name, char *command_name, char *arg, char *str);
-
+void	ft_cur_exit(t_ast *ast, int exit_value);
 
 //! delete later
 t_parser	*parser_testing(char *str);

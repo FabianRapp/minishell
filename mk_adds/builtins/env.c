@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/17 19:26:40 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/18 03:42:17 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ env VARIABLE=value some_command
 #include "../../headers/minishell.h"
 #include "../../headers/eval.h"
 
-void	ft_shared_data(t_ast *ast)
+void	ft_env(t_ast *ast)
 {
 	int		i;
 	char	**tmp;
@@ -35,4 +35,5 @@ void	ft_shared_data(t_ast *ast)
 	i = -1;
 	while (tmp[++i])
 		printf("%s\n", tmp[i]);
+	ft_cur_exit(ast, 0);
 }
