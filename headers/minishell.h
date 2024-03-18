@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/18 21:47:24 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/19 00:33:04 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -320,9 +320,9 @@ int			arg_is_valid(char *arg, t_ast *ast, char *cmd_name);
 
 char	**ft_initialize_our_env(char **base_env);
 char	*get_env_value(char **env, char *var_name);
-char	**add_env_var(char *str_to_add, char **env);
+char	**new_env_list_after_add(char *str_to_add, char **env);
 char	*get_env_var_name(char *line);
-char	**delete_env_var(char *var_to_rm, char ***arr_ptr);
+char	**new_env_list_after_delete(char *var_to_rm, char **env_before);
 void	ft_update_env_var(char *var_name, char *new_value, char **env);
 char	***get_env_list(char ***set_new_env);//added
 
