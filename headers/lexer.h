@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:19:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 06:01:16 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/18 06:34:48 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "minishell.h"
 # include "tokens.h"
 
-typedef enum e_type				t_type;
+typedef enum e_type	t_type;
 
 typedef struct s_lexer
 {

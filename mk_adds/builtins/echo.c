@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 08:00:49 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/18 05:05:11 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/18 07:45:41 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ int	ft_echo(t_ast *ast)
 	bool	no_new_line;
 	bool	stop_check;
 
-	// print_ast(ast);
 	ft_cur_exit(ast, 0);
 	cur_arg = ast->arg;
 	if (!cur_arg)

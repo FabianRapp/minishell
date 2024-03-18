@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:26:07 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/18 04:03:14 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/18 07:52:48 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ static char	*get_parent_dir_path(t_ast *ast)
 	return (parent);
 }
 
+//! there is somewhere a 14 returned as exit_code. for example cd ..
+//! the first time minishell or bash opens there is no OLDPWD. (only in the export list, without a value)
 //! cd no arguments segfaults currently
 //TODO i need to handle also cases like ../../ or ../something or ~/../
 t_result	ft_cd(t_ast *ast)
