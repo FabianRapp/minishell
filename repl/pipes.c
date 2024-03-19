@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 03:48:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/19 05:04:30 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/19 06:32:22 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,6 @@ void	ft_pipe(t_ast *ast)
 		return ;
 	}
 	close(pipe_fd[WRITE]);
-	//ast->left->fd_to_close = pipe_fd[READ];
 	if (fork_left(ast, base, pipe_fd) == ERROR)
 		return ;
 	if (dup2(base, WRITE) == -1)
@@ -115,9 +114,9 @@ void	ft_pipe(t_ast *ast)
 	}
 	close(base);
 	ast->shared_data->stop_execution = false;
-	//if (ast->fd_to_close_read != INIT_VAL)
-		//base = ast->fd_to_close_read;
-	//else
+	if (ast->fd_to_close_read != INIT_VAL)
+		base = ast->fd_to_close_read;
+	else
 		base = dup(READ);
 	if (base == -1)
 	{
@@ -134,7 +133,7 @@ void	ft_pipe(t_ast *ast)
 		return ;
 	}
 	close(pipe_fd[READ]);
-	ast->right->fd_to_close_read = base;
+	//ast->right->fd_to_close_read = base;
 	if (fork_right(ast, base) == ERROR)
 		return ;
 	if (dup2(base, READ) == -1)
@@ -146,5 +145,5 @@ void	ft_pipe(t_ast *ast)
 	}
 	//if (ast->fd_to_close_read == INIT_VAL)
 		close(base);
-	check_fds();
+	//check_fds();
 }
