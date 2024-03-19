@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/19 02:42:08 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/19 04:33:56 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,11 @@ bool	ft_buildin(t_ast *ast)
 	}
 	ft_strtolower(cmd_name);
 	if (!ft_strcmp(cmd_name, "echo"))
-		return (free(cmd_name), ft_echo(ast), true);
+	{
+		if (!ft_strcmp(ast->name->token->str_data, "echo"))
+			return (free(cmd_name), ft_echo(ast), true);
+		return (free(cmd_name), ft_cap_echo(ast), true);
+	}
 	if (!ft_strcmp(cmd_name, "pwd"))
 		return (free(cmd_name), ft_pwd(ast), true);
 	if (!ft_strcmp(cmd_name, "env"))

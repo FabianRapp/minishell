@@ -63,8 +63,8 @@ SOURCES = repl/main.c \
 		  mk_adds/env_stuff/env_functions.c \
 		  repl/repl_redir/repl_redir_main.c \
 		  repl/repl_redir/repl_redir_utils.c \
-		  repl/repl_redir/repl_redir_error_handler.c
-
+		  repl/repl_redir/repl_redir_error_handler.c\
+		  repl/pipes.c
 
 OBJECTS= $(SOURCES:.c=.o)
 

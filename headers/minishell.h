@@ -6,34 +6,21 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/19 03:44:12 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/19 05:01:55 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
-echo xxx*xxx
 
-             TOTAL TEST COUNT: 994  TESTS PASSED: 820  LEAKING: 0
-                     STD_OUT: 81  STD_ERR: 45  EXIT_CODE: 91
+echo 1 | echo 2 | echo 3
+
+
+             TOTAL TEST COUNT: 994  TESTS PASSED: 855  LEAKING: 0
+                     STD_OUT: 42  STD_ERR: 69  EXIT_CODE: 106
                          TOTAL FAILED AND PASSED CASES:
                                      ❌ 217
                                      ✅ 2765
-									 
-           TOTAL TEST COUNT: 935  TESTS PASSED: 793  LEAKING: 0
-                     STD_OUT: 66  STD_ERR: 45  EXIT_CODE: 95
-                         TOTAL FAILED AND PASSED CASES:
-                                     ❌ 206
-                                     ✅ 2599
 
-
-             TOTAL TEST COUNT: 935  TESTS PASSED: 781  LEAKING: 0
-                     STD_OUT: 76  STD_ERR: 48  EXIT_CODE: 93
-                         TOTAL FAILED AND PASSED CASES:
-                                     ❌ 217
-                                     ✅ 2588
-
-
-echo *"."*
 
 
 									 
@@ -303,6 +290,8 @@ t_fd_set	*get_fds(void);
 t_result	cleanup_fds(void);
 
 
+void	ft_pipe(t_ast *ast);
+
 char	*get_file_name(int fd);
 void	print_fds(void);
 
@@ -327,6 +316,7 @@ void		ft_export(t_ast *ast);
 void		ft_unset(t_ast *ast);
 void		ft_exit(t_ast *ast);
 int			ft_echo(t_ast *ast);
+int			ft_cap_echo(t_ast *ast);
 t_result	ft_cd(t_ast *ast);
 int			arg_is_valid(char *arg, t_ast *ast, char *cmd_name);
 
