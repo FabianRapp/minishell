@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:47:46 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/19 03:56:13 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/19 08:15:34 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ static bool	includes_non_num(char *str)
 	}
 	return (!had_digit);
 }
-
 
 void	ft_exit(t_ast *ast)
 {

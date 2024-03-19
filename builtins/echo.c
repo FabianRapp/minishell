@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 08:00:49 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/19 07:09:10 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/19 07:28:41 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,35 @@ int	ft_echo(t_ast *ast)
 			no_new_line = true;
 		else if (str_value)
 			stop_check = print_with_or_without_space(cur_arg, str_value);
+		cur_arg = cur_arg->next;
+	}
+	if (no_new_line == false)
+		printf("\n");
+	return (0);
+}
+
+int	ft_cap_echo(t_ast *ast)
+{
+	t_arg	*cur_arg;
+	char	*str_value;
+	bool	no_new_line;
+
+	ft_cur_exit(ast, 0);
+	cur_arg = ast->arg;
+	if (!cur_arg)
+		return (printf("\n"), 0);
+	no_new_line = false;
+	str_value = cur_arg->name->token->str_data;
+	if (*str_value && *str_value == '-' && *(str_value + 1) == 'n' && !*(str_value + 2))
+	{
+		no_new_line = true;
+		cur_arg = cur_arg->next;
+	}
+	while (cur_arg && cur_arg->name->token->type != T_EOF)
+	{
+		str_value = cur_arg->name->token->str_data;
+		if (str_value)
+			print_with_or_without_space(cur_arg, str_value);
 		cur_arg = cur_arg->next;
 	}
 	if (no_new_line == false)
