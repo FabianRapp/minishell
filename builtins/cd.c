@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:26:07 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/19 03:56:00 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/19 05:13:34 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ static char	*get_parent_dir_path(t_ast *ast)
 	return (parent);
 }
 
+//! now that i deleted entirely the OLDPWD in the initialization, i must not do update. 
 //! there is somewhere a 14 returned as exit_code. for example cd ..
 //! the first time minishell or bash opens there is no OLDPWD. (only in the export list, without a value)
 //! cd no arguments segfaults currently
@@ -81,12 +82,11 @@ t_result	ft_cd(t_ast *ast)
 	return (SUCCESS);
 }
 
-//!		if i type: 
-//!		cd somethingrandom
-//!		i get my message: minishell: cd: oldgn: No such file or directory
-//!		but for some reason i also get these: 
-//!		minishell: No such file or directory
-//!		rest_fds error
+//!		if i unset PATH, and then do:
+//!		cd -
+//!		i get the message: 
+//!		bash: cd: OLDPWD not set
+//!		
 //!		
 //!
 //!

@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:34:24 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/19 03:56:29 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/19 05:53:04 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,11 @@ void	ft_unset(t_ast *ast)
 		cur_arg = cur_arg->next;
 	}
 }
+
  /* 
- TOTAL TEST COUNT: 935  TESTS PASSED: 847  LEAKING: 0 
+             TOTAL TEST COUNT: 935  TESTS PASSED: 847  LEAKING: 0 
                      STD_OUT: 63  STD_ERR: 19  EXIT_CODE: 46  
                          TOTAL FAILED AND PASSED CASES:
                                      ❌ 128   
-                                     ✅ 2677   */
+                                     ✅ 2677   
+*/

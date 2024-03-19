@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/19 03:55:08 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/19 04:20:41 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*get_env_var_name(char *line)
 {
 	int		len;
 	char	*var_name;
-	
+
 	len = 0;
 	if (!line)
 		return (NULL);
@@ -46,6 +46,8 @@ char	*get_env_value(char **env, char *var_name)
 
 	if (!env)
 		env = *(get_env_list(NULL));
+	if (env == NULL)
+		return (NULL);
 	i = -1;
 	while (env[++i])
 	{
@@ -56,10 +58,10 @@ char	*get_env_value(char **env, char *var_name)
 			break ;
 		}
 	}
-	if (env[i] == NULL) //when the var_name doesn't exist in env
+	if (env[i] == NULL)
 		return (NULL);
 	value = ft_substr(env[i], ft_strlen(var_name) + 1, ft_strlen(env[i])
-		- ft_strlen(var_name) - 1);
+			- ft_strlen(var_name) - 1);
 	if (value == NULL)
 		return (NULL);
 	return (value);

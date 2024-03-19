@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/19 03:55:28 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/19 04:32:53 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	ft_update_shlvl(int shlvl_index, char ***env)
 
 	num = -1;
 	before = get_env_value(*(env), "SHLVL");
-	if (shlvl_index == 0 || is_not_numeric(before))//for the case that the SHLVL was unset in env
+	if (shlvl_index == 0 || is_not_numeric(before))
 	{
 		*env = new_env_list_after_add("SHLVL=1", *env);
 		free(before);
@@ -54,7 +54,7 @@ static void	ft_update_shlvl(int shlvl_index, char ***env)
 static void	ft_clear_oldpwd(char ***env, bool keep)
 {
 	*env = new_env_list_after_delete("OLDPWD", *env);
-	if (keep == true) //for the export list
+	if (keep == true)
 		*env = new_env_list_after_add("OLDPWD", *env);
 }
 

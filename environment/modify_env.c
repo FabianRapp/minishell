@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/19 03:55:17 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/19 05:41:34 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static char	**if_already_in_env(char **env, char *str_to_add, int *add)
 		line_name = get_env_var_name(env[++i]);
 	}
 	free(line_name);
-	if (env[i]) //which means that the var exists already
+	if (env[i])
 	{
 		if (ft_strchr(str_to_add, '='))
 			ret = new_env_list_after_delete(var_to_add, env);
@@ -57,7 +57,7 @@ char	**new_env_list_after_add(char *str_to_add, char **env)
 	new = (char **)ft_calloc((i + 2), sizeof(char *));
 	if (new == NULL)
 		return (NULL);
-	new[i + 1] = NULL; //? maybe we don't need it now that i switched to calloc
+	new[i + 1] = NULL;
 	i = -1;
 	while (env_before[++i])
 		new[i] = ft_strdup(env_before[i]);
@@ -81,7 +81,7 @@ char	**new_env_list_after_delete(char *var_to_rm, char **env_before)
 		line_name = get_env_var_name(env_before[++i]);
 	}
 	if (env_before[i] == NULL)
-		return (env_before);
+		return (free(line_name), env_before);
 	new = (char **)ft_calloc(ft_strarr_size(env_before), sizeof(char *));
 	if (new == NULL)
 		return (NULL);
@@ -108,3 +108,40 @@ void	ft_update_env_var(char *var_name, char *new_value, char **env)
 	env[i] = ft_strjoin(half, new_value);
 	free(half);
 }
+
+// // static bool	is_not_in_env(char *var_name, char **env)
+// // {
+// // 	while (*env)
+// // 	{
+// // 		if (ft_strncmp(var_name, *env, ft_strlen(var_name)) == 0)
+// // 			return (false);
+// // 		env++;
+// // 	}
+// // 	return (true);
+// // }
+
+// void	ft_update_env_var(char *var_name, char *new_value, char **env)
+// {
+// 	int		i;
+// 	char	*half;
+// 	char	*var_str;
+
+// 	i = 0;
+// 	if (!env)
+// 		return ;
+		
+// 	half = ft_strjoin(var_name, "=");
+// 	var_str = ft_strjoin(half, new_value);
+// 	free(half);
+	
+// 	env = new_env_list_after_add(var_str, env);
+		
+// 	// while (env[i] && ft_strncmp(var_name, env[i], ft_strlen(var_name)))
+// 	// 	i++;
+// 	// // if (env[i] == NULL)//which means that the var doesn't exist in the list
+		
+// 	// free(env[i]);
+// 	// half = ft_strjoin(var_name, "=");
+// 	// env[i] = ft_strjoin(half, new_value);
+// 	// free(half);
+// }
