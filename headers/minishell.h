@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/19 02:42:47 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/19 06:54:25 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -318,7 +318,8 @@ int			arg_is_valid(char *arg, t_ast *ast, char *cmd_name);
 
 /* ---------------------------- ENV FUNCTIONS ---------------------------- */
 
-char	**ft_initialize_our_env(char **base_env, bool oldpwd);
+// char	**ft_initialize_our_env(char **base_env, bool oldpwd);
+char	**ft_initialize_our_env(char **base_env);//!initial version
 char	*get_env_value(char **env, char *var_name);
 char	**new_env_list_after_add(char *str_to_add, char **env);
 char	*get_env_var_name(char *line);

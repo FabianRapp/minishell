@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/19 03:55:28 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/19 06:53:55 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,7 @@ static void	ft_update_shlvl(int shlvl_index, char ***env)
 	ft_update_env_var("SHLVL", after, *env);
 }
 
-static void	ft_clear_oldpwd(char ***env, bool keep)
-{
-	*env = new_env_list_after_delete("OLDPWD", *env);
-	if (keep == true) //for the export list
-		*env = new_env_list_after_add("OLDPWD", *env);
-}
-
-char	**ft_initialize_our_env(char **base_env, bool keep_oldpwd)
+char	**ft_initialize_our_env(char **base_env)
 {
 	int		i;
 	char	**ret;
@@ -68,7 +61,7 @@ char	**ft_initialize_our_env(char **base_env, bool keep_oldpwd)
 	shlvl_index = 0;
 	while (base_env[i])
 		i++;
-	ret = ft_calloc((i + 1), sizeof(char *));
+	ret = malloc((i + 1) * sizeof(char *));
 	if (ret == NULL)
 		return (NULL);
 	ret[i] = NULL;
@@ -80,6 +73,39 @@ char	**ft_initialize_our_env(char **base_env, bool keep_oldpwd)
 			shlvl_index = i;
 	}
 	ft_update_shlvl(shlvl_index, &ret);
-	ft_clear_oldpwd(&ret, keep_oldpwd);
 	return (ret);
 }
+
+//in bash, when it starts, there is no OLDPWD in env_list but there is in the exp_list
+// static void	ft_clear_oldpwd(char ***env, bool keep)
+// {
+// 	*env = new_env_list_after_delete("OLDPWD", *env);
+// 	if (keep == true) //for the export list
+// 		*env = new_env_list_after_add("OLDPWD", *env);
+// }
+
+// char	**ft_initialize_our_env(char **base_env, bool keep_oldpwd)
+// {
+// 	int		i;
+// 	char	**ret;
+// 	int		shlvl_index;
+
+// 	i = 0;
+// 	shlvl_index = 0;
+// 	while (base_env[i])
+// 		i++;
+// 	ret = ft_calloc((i + 1), sizeof(char *));
+// 	if (ret == NULL)
+// 		return (NULL);
+// 	ret[i] = NULL;
+// 	i = -1;
+// 	while (base_env[++i])
+// 	{
+// 		ret[i] = ft_strdup(base_env[i]);
+// 		if (ft_strncmp(ret[i], "SHLVL=", 6) == 0)
+// 			shlvl_index = i;
+// 	}
+// 	ft_update_shlvl(shlvl_index, &ret);
+// 	ft_clear_oldpwd(&ret, keep_oldpwd);
+// 	return (ret);
+// }

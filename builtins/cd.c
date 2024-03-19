@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:26:07 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/19 03:56:00 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/19 06:30:37 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,11 @@ static char	*get_parent_dir_path(t_ast *ast)
 	free(cwd);
 	return (parent);
 }
+
+// char	*expand_path_to_go()
+// {
+	
+// }
 
 //! there is somewhere a 14 returned as exit_code. for example cd ..
 //! the first time minishell or bash opens there is no OLDPWD. (only in the export list, without a value)
