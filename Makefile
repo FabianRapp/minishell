@@ -1,13 +1,7 @@
 CC=cc
 
 
-FLAGS_NO_LEAK_CHECK =
-# -fsanitize=undefined -fsanitize=address -g
-CFLAGS=-Wall -Wextra -Werror
 
-LDFLAGS =
-# -fsanitize=undefined -fsanitize=address  -g
-# 
 
 
 NAME=minishell
@@ -65,8 +59,8 @@ SOURCES = repl/main.c \
 		  environment/get_env_parts.c \
 		  repl/repl_redir/repl_redir_main.c \
 		  repl/repl_redir/repl_redir_utils.c \
-		  repl/repl_redir/repl_redir_error_handler.c
-
+		  repl/repl_redir/repl_redir_error_handler.c\
+		  repl/pipes.c
 
 OBJECTS= $(SOURCES:.c=.o)
 

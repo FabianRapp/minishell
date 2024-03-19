@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/08 00:57:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/18 01:19:40 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/18 23:49:09 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,10 @@ char	*ft_strstrtrim(char const *s1, char const *sub)
 	trim = NULL;
 	while(*s1)
 	{
-		while (*s1 && !ft_strncmp(s1, sub, ft_strlen(sub)))
+		if (*s1 && !ft_strncmp(s1, sub, ft_strlen(sub)))
 		{
 			s1 += ft_strlen(sub);
+			continue ;
 		}
 		if (*s1)
 			if (!ft_strjoin_inplace_char(&trim, *s1))

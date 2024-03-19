@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 21:34:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/18 03:05:40 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/19 02:11:32 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,7 @@ static t_result	verify_subshell_chars(t_lexer *lexer)
 	{
 		print_error(true, NULL,
 			"syntax error", " unexpected end of file\nexit\n");
-		if (!TESTER)
-			full_exit_status(true);
+		(!((bool) TESTER) && full_exit_status(true));
 		return (set_last_exit(2), ERROR);
 	}
 	return (SUCCESS);

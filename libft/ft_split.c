@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/08 01:18:40 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/18 02:43:59 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/19 00:20:08 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ static int	append_next_sub_wildcards(char **sub_str, const char *s)
 	int		count;
 	char	*found;
 
-	found = ft_strnstr(s, "}{*", ft_strlen(s));
+	found = ft_strnstr(s, "2}{*", ft_strlen(s));
 	*sub_str = (char *)ft_calloc(ft_strlen(s)+ 1, sizeof(char));
 	if (!(*sub_str))
 		return (-1);
@@ -113,6 +113,8 @@ char	**ft_split_wildcards(char const *s)
 	int			s_increase;
 	int			i2;
 
+	if (!s || !*s)
+		return (NULL);
 	str_ar = (char **)ft_calloc(ft_strlen(s) + 1, sizeof(char *));
 	if (!str_ar)
 		return (NULL);
@@ -120,8 +122,8 @@ char	**ft_split_wildcards(char const *s)
 	i2 = 0;
 	while (s[i])
 	{
-		while (s[i] && s[i] == '}' && s[i + 1] == '{' && s[i + 2] == '*')
-			i += 3;
+		while (s[i] == '2' && s[i + 1] == '}' && s[i + 2] == '{' && s[i + 3] == '*')
+			i += 4;
 		s_increase = append_next_sub_wildcards(str_ar + i2, s + i);
 		if (s_increase == -1)
 			return (ft_free_2darr(str_ar), NULL);

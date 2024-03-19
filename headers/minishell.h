@@ -3,25 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/19 02:42:47 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/19 06:33:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
-             TOTAL TEST COUNT: 994  TESTS PASSED: 820  LEAKING: 0
-                     STD_OUT: 81  STD_ERR: 45  EXIT_CODE: 91
+
+echo 1 | echo 2 | echo 3
+ls | cat << stop | ls -la | cat << stop1
+
+             TOTAL TEST COUNT: 935  TESTS PASSED: 853  LEAKING: 0
+                     STD_OUT: 38  STD_ERR: 42  EXIT_CODE: 54
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 217
-                                     ✅ 2765
-									 
-           TOTAL TEST COUNT: 935  TESTS PASSED: 793  LEAKING: 0
-                     STD_OUT: 66  STD_ERR: 45  EXIT_CODE: 95
+                                     ❌ 134
+                                     ✅ 2671
+             TOTAL TEST COUNT: 935  TESTS PASSED: 852  LEAKING: 0
+                     STD_OUT: 39  STD_ERR: 43  EXIT_CODE: 55
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 206
-                                     ✅ 2599
+                                     ❌ 137
+                                     ✅ 2668
 TODO:
 	- lexer: check for too many closing quotes
 	- ft_atoi undef behaivior for huge number strs
@@ -288,6 +291,8 @@ t_fd_set	*get_fds(void);
 t_result	cleanup_fds(void);
 
 
+void	ft_pipe(t_ast *ast);
+
 char	*get_file_name(int fd);
 void	print_fds(void);
 
@@ -312,6 +317,7 @@ void		ft_export(t_ast *ast);
 void		ft_unset(t_ast *ast);
 void		ft_exit(t_ast *ast);
 int			ft_echo(t_ast *ast);
+int			ft_cap_echo(t_ast *ast);
 t_result	ft_cd(t_ast *ast);
 int			arg_is_valid(char *arg, t_ast *ast, char *cmd_name);
 

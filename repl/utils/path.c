@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/19 01:24:27 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/19 06:01:03 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,16 @@ t_result	init_path_object(t_ast *ast, char *command_name, t_path *path_ob,
 char	*init_path(t_ast *ast, char *command_name, t_path *path_ob,
 	char *path_var)
 {
-	if (command_name && (*command_name == '/' || *command_name == '.'))
+	if (command_name && (*command_name == '/' || (*command_name == '.' && ft_strlen(command_name) != 1)))
 		return (handle_absolute_path(command_name));
+	if (command_name && (*command_name == '/' || (*command_name == '.' && ft_strlen(command_name) == 1)))
+	{
+		ft_fprintf(2, "%s: %c: filename argument required\n", SHELL_NAME, *command_name);
+		ft_fprintf(2, "%c: usage: %c filename [arguments]\n", *command_name, *command_name);
+		set_last_exit(2);
+		ast->exit_status = 2;
+		return (NULL);
+	}
 	if (!init_path_object(ast, command_name, path_ob, path_var))
 		return (free(path_ob->all_paths), free(path_ob->cur_path), NULL);
 	if (!path_ob->cur_path || !*(path_ob->cur_path))

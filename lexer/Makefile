@@ -14,6 +14,7 @@ LIB_LEXER_NAME = lexer.a
 SOURCES= ../utils/utils1.c ../utils/debugging.c lexer_main.c utils/utils.c  \
  identifiers/ident_type.c identifiers/dollar_sign.c identifiers/subshell.c \
  identifiers/ident_redir.c\
+ identifiers/lexer_ident_literal_wildcards.c\
   ../utils/utils1.c
 OBJECTS= $(SOURCES:.c=.o)
 
