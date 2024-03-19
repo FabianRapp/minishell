@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:26:07 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/18 07:52:48 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/19 03:56:00 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ cd with 1 or 3 or more slashes go to /    pwd: /
 cd // -->pwd: //
 */
 
-#include "../../headers/minishell.h"
-#include "../../headers/eval.h"
+#include "../headers/minishell.h"
+#include "../headers/eval.h"
 
 static char	*get_parent_dir_path(t_ast *ast)
 {

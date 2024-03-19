@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:47:46 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/18 08:11:52 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/19 03:56:13 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,8 @@ exit [n]: is used to exit the current shell or script with a specified exit
 			
 */
 
-
-
-#include "../../headers/minishell.h"
-#include "../../headers/eval.h"
+#include "../headers/minishell.h"
+#include "../headers/eval.h"
 
 static bool	includes_non_num(char *str)
 {

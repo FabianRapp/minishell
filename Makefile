@@ -53,14 +53,16 @@ SOURCES = repl/main.c \
 		  utils/debugging.c \
 		  utils/utils1.c \
 		  utils/groups1.c \
-		  mk_adds/builtins/pwd.c \
-		  mk_adds/builtins/env.c \
-		  mk_adds/builtins/export.c \
-		  mk_adds/builtins/unset.c \
-		  mk_adds/builtins/exit.c \
-		  mk_adds/builtins/echo.c \
-		  mk_adds/builtins/cd.c \
-		  mk_adds/env_stuff/env_functions.c \
+		  builtins/pwd.c \
+		  builtins/env.c \
+		  builtins/export.c \
+		  builtins/unset.c \
+		  builtins/exit.c \
+		  builtins/echo.c \
+		  builtins/cd.c \
+		  environment/initialize_env.c \
+		  environment/modify_env.c \
+		  environment/get_env_parts.c \
 		  repl/repl_redir/repl_redir_main.c \
 		  repl/repl_redir/repl_redir_utils.c \
 		  repl/repl_redir/repl_redir_error_handler.c

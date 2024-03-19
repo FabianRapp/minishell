@@ -6,12 +6,12 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:34:24 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/19 00:36:57 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/19 03:56:29 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/minishell.h"
-#include "../../headers/eval.h"
+#include "../headers/minishell.h"
+#include "../headers/eval.h"
 
 //!unset PATH gives segfault
 void	ft_unset(t_ast *ast)

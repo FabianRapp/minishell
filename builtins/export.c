@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:29:13 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/19 00:21:52 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/19 03:56:20 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ their values in the formatting:
 
 //? if there is a lot of time, maybe check if i could handle the += for export
 
-#include "../../headers/minishell.h"
-#include "../../headers/eval.h"
+#include "../headers/minishell.h"
+#include "../headers/eval.h"
 
 static void	sort_shared_data_array(char **env, int size)
 {
