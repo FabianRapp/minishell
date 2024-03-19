@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/18 23:54:39 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/19 03:44:31 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,16 +214,16 @@ int	main(int ac, char **av, char **base_env)
 	if (init_main(ac, &shared_data) == ERROR)
 		return (1);
 	(void)av;
-	env_list = ft_initialize_our_env(base_env);
+	env_list = ft_initialize_our_env(base_env, false);
 	if (env_list == NULL)
 		return (get_last_exit());
-	exp_list = ft_initialize_our_env(base_env);
+	exp_list = ft_initialize_our_env(base_env, true);
+	if (exp_list == NULL)
+		return (ft_free_2darr(env_list), get_last_exit());
 	get_env_list(&env_list);
 	shared_data.envs = &env_list;
 	shared_data.env_exp = &exp_list;
 	shared_data.cleanup_data = &cleanup_data;
-	if (exp_list == NULL)
-		return (ft_free_2darr(env_list), get_last_exit());
 	ast = get_input(&cleanup_data);
 	if (!ast)
 		check_exit_and_cleanup(&cleanup_data);

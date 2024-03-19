@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   repl_sub_shell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 07:36:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/18 03:14:48 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/19 02:47:01 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,10 @@ static t_ast	*init_sub_shell(t_ast *ast, char *input, t_shared_data *shared_sub_
 		// printf("val: %d\n", ast->exit_status);
 		return (NULL);
 	}
-	*env_list = ft_initialize_our_env(*(ast->shared_data->envs));
+	*env_list = ft_initialize_our_env(*(ast->shared_data->envs), false);
 	if (*env_list == NULL)
 		return (NULL);
-	*exp_list = ft_initialize_our_env(*(ast->shared_data->envs));
+	*exp_list = ft_initialize_our_env(*(ast->shared_data->envs), true);
 	get_env_list(exp_list);
 	if (*exp_list == NULL)
 		return (ft_free_2darr(*env_list), NULL);

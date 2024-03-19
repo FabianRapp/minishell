@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/17 20:32:57 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/19 01:24:27 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ bool	next_path(t_path *path_ob)
 	{
 		path_ob->ast->exit_status = 127;
 		return (set_last_exit(127), print_error(SHELL_NAME,
-				path_ob->command_name, NULL, "command not found"), false);
+				path_ob->command_name, NULL, "No such file or directory"), false);
 	}
 	path_ob->position = path_ob->read_postion;
 	while ((path_ob->all_paths)[path_ob->read_postion] != ':'

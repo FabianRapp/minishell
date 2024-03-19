@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:29:13 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/18 07:41:13 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/19 00:21:52 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,10 +140,10 @@ void	ft_export(t_ast *ast)
 		str_value = cur_arg->name->token->str_data;
 		res = arg_is_valid(str_value, ast, "export");
 		if (res > 0)
-			*(ast->shared_data->env_exp) = add_env_var(str_value,
+			*(ast->shared_data->env_exp) = new_env_list_after_add(str_value,
 				*(ast->shared_data->env_exp));
 		if (res == 1)
-			*(ast->shared_data->envs) = add_env_var(str_value,
+			*(ast->shared_data->envs) = new_env_list_after_add(str_value,
 				*(ast->shared_data->envs));
 		num++;
 		cur_arg = cur_arg->next;
