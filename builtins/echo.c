@@ -6,12 +6,12 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 08:00:49 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/19 07:02:16 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/19 07:09:10 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/minishell.h"
-#include "../../headers/eval.h"
+#include "../headers/minishell.h"
+#include "../headers/eval.h"
 
 static bool	is_the_n_option(char *arg)
 {
