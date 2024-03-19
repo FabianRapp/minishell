@@ -6,13 +6,13 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 04:24:43 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 07:56:07 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 19:25:37 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "repl_redir_internals.h"
 
-t_result	handle_open_error(t_ast *ast, t_fd_pair *fd_pair)
+t_result	handle_open_error(t_ast *ast, t_fd_set *fd_pair)
 {
 	if (fd_pair->overload_with_fd != -1)
 		return (SUCCESS);
@@ -29,7 +29,7 @@ t_result	handle_open_error(t_ast *ast, t_fd_pair *fd_pair)
 // later on the same
 // by doing this it is ensured that the execution is not disrupted as well as
 // the cleanup cleans up correctly
-t_result	handle_closed_fd_arg(t_fd_pair *fds, t_fd_pair *new_fd_pair)
+t_result	handle_closed_fd_arg(t_fd_set *fds, t_fd_set *new_fd_pair)
 {
 	errno = 0;
 	new_fd_pair->base_fd = new_fd_pair->overload_with_fd;
@@ -39,7 +39,7 @@ t_result	handle_closed_fd_arg(t_fd_pair *fds, t_fd_pair *new_fd_pair)
 	return (SUCCESS);
 }
 
-void	*add_fd_pair_error(t_fd_pair *fds, t_fd_pair new_fd_pair)
+void	*add_fd_pair_error(t_fd_set *fds, t_fd_set new_fd_pair)
 {
 	set_last_exit(errno);
 	print_error(true, NULL, NULL, strerror(errno));

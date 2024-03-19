@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 00:06:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 17:08:05 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/19 02:24:33 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,24 +30,6 @@ char	*get_potential_fd(t_lexer *lexer)
 	return (left_redir_arg);
 }
 
-// TODO idk if here to check for larger fd than MAX_FD or let open handle that
-char	*check_limis_potential_fd(char *left_redir_arg,
-	t_lexer *lexer, t_lexer lexer_backup)
-{
-	if (lexer->cur_char != '<' && lexer->cur_char != '>')
-		ft_free((void **)&left_redir_arg);
-	else if (ft_strlen(left_redir_arg) > ft_strlen("2147483647"))
-		ft_free((void **)&left_redir_arg);
-	else if (ft_strlen(left_redir_arg) == ft_strlen("2147483647"))
-	{
-		if (ft_strcmp(left_redir_arg, "2147483647") > 0)
-			ft_free((void **)&left_redir_arg);
-	}
-	if (!left_redir_arg)
-		*lexer = lexer_backup;
-	return (left_redir_arg);
-}
-
 t_result	handle_redir_fd(t_lexer *lexer, t_token *token)
 {
 	t_lexer	lexer_backup;
@@ -64,16 +46,6 @@ t_result	handle_redir_fd(t_lexer *lexer, t_token *token)
 	return (SUCCESS);
 }
 
-bool	is_redir_terminator_char(char c)
-{
-	if (ft_iswhitespace(c) || c == '|' || c == '&' || c == '('
-		|| c == ')' || c == '\0' || c == '<' || c == '>')
-	{
-		return (true);
-	}
-	return (false);
-}
-
 bool	valid_redir_arg(t_lexer *lexer, t_type type)
 {
 	t_token	*error_token;
@@ -85,35 +57,26 @@ bool	valid_redir_arg(t_lexer *lexer, t_type type)
 	if (type != HERE_DOC)
 		read_char(lexer);
 	while (ft_iswhitespace(lexer->cur_char))
-	{
 		read_char(lexer);
-	}
 	if (!is_redir_terminator_char(lexer->cur_char))
 	{
 		*lexer = temp;
 		return (true);
 	}
 	set_last_exit(2);
-	pipe(temp_pipe);
-	close(temp_pipe[READ]);
 	base_std_err = dup(2);
-	dup2(temp_pipe[WRITE], 2);
-	close(temp_pipe[WRITE]);
+	(pipe(temp_pipe) * 0 || close(temp_pipe[READ]) * 0
+		|| dup2(temp_pipe[WRITE], 2) * 0 || close(temp_pipe[WRITE]));
 	error_token = next_new_token(lexer, true);
 	dup2(base_std_err, 2);
-	close(base_std_err);
 	if (error_token)
-	{
 		print_error(true, NULL, NULL, type_to_str(error_token->type));
-	}
-	free_token(error_token);
 	*lexer = temp;
-	return (false);
+	return (close(base_std_err), free_token(error_token), false);
 }
 
 t_result	lexer_here_doc(t_lexer *lexer, t_token *token)
 {
-	//printf("rest str: %s\n", lexer->str + lexer->position);
 	if (token->type != HERE_DOC)
 		return (SUCCESS);
 	while (ft_iswhitespace(lexer->cur_char))
@@ -127,13 +90,11 @@ t_result	lexer_here_doc(t_lexer *lexer, t_token *token)
 		else if (lexer->cur_char == '\"')
 			token->here_doc_arg_literal = false;
 		else if (!ft_strjoin_inplace_char(&(token->str_data), lexer->cur_char))
-		{//todo error
-		}
+			return (ERROR);
 		read_char(lexer);
 	}
 	if (lexer->cur_char == '\'' || lexer->cur_char == '\"')
 		read_char(lexer);
-	//read_char(lexer);
 	return (SUCCESS);
 }
 
@@ -141,123 +102,25 @@ t_result	redir_type(t_lexer *lexer, t_token *token, bool recursive_call)
 {
 	if (handle_redir_fd(lexer, token) == ERROR)
 		return (ERROR);
+	if (lexer->cur_char != '<' && lexer->cur_char != '>')
+		return (SUCCESS);
 	if (lexer->cur_char == '<')
 	{
 		token->type = REDIR_IN;
-		//printf("read pos(%d) char: %c\ncur char: %c\n", lexer->read_position, lexer->str[lexer->read_position], lexer->cur_char);
-		//read_char(lexer);
-		//if (lexer->cur_char == '<')
 		if (lexer->str[lexer->read_position] == '<')
-		{
-			read_char(lexer);
-			read_char(lexer);
-			token->type = HERE_DOC;
-		}
+			(read_char(lexer), read_char(lexer), token->type = HERE_DOC);
 		else if (lexer->str[lexer->read_position] == '>')
-		{
-			read_char(lexer);
-			token->type = REDIR_IN_OUT;
-		}
+			(read_char(lexer), token->type = REDIR_IN_OUT);
 	}
 	else if (lexer->cur_char == '>')
 	{
 		token->type = REDIR_OUT;
-		// read_char(lexer);
-		// if (lexer->cur_char == '>')
 		if (lexer->str[lexer->read_position] == '>')
-		{
-			read_char(lexer);
-			//read_char(lexer);
-			token->type = REDIR_APPEND;
-		}
+			(read_char(lexer), token->type = REDIR_APPEND);
 	}
-	else
-		return (SUCCESS);
 	if (!recursive_call && !valid_redir_arg(lexer, token->type))
 		return (ERROR);
 	if (token->type != HERE_DOC)
 		return (read_char(lexer), SUCCESS);
 	return (lexer_here_doc(lexer, token));
 }
-
-// // has to run after all other typechecks
-// t_result	literal_type2(t_lexer *lexer, t_token *token, bool skip_next_term)
-// {
-// 	if (is_termination_char(lexer->cur_char))
-// 	{
-// 		return (SUCCESS);
-// 	}
-// 	while (!is_termination_char(lexer->cur_char) || skip_next_term)
-// 	{
-// 		if (skip_next_term)
-// 			skip_next_term = false;
-// 		else if (lexer->cur_char == '\\')
-// 		{
-// 			read_char(lexer);
-// 			skip_next_term = true;
-// 			continue ;
-// 		}
-// 		if (!ft_strjoin_inplace_char(&(token->str_data), lexer->cur_char))
-// 			return (ERROR);
-// 		read_char(lexer);
-// 	}
-// 	token->type = LITERAL;
-// 	token->str_data = ft_strndup(lexer->str
-// 			+ lexer->position, lexer->read_position - lexer->position);
-// 	if (!token->str_data)
-// 		return (ERROR);
-// 	return (SUCCESS);
-// }
-
-t_result	literal_type2(t_lexer *lexer, t_token *token, bool skip_next_term)
-{
-	if (is_termination_char(lexer->cur_char) && !skip_next_term)
-		return (SUCCESS);
-	token->str_data = ft_calloc(1, 1);
-	if (!token->str_data)
-		return (ERROR);
-	while ((!is_termination_char(lexer->cur_char) || skip_next_term) && lexer->cur_char)
-	{
-		if (skip_next_term)
-			skip_next_term = false;
-		else if (lexer->cur_char == '\\')
-		{
-			skip_next_term = true;
-			read_char(lexer);
-			continue ;
-		}
-		if (!ft_strjoin_inplace_char(&(token->str_data), lexer->cur_char))
-			return (ERROR);
-		read_char(lexer);
-	}
-	if (skip_next_term)
-	{
-		if (!ft_strjoin_inplace_char(&(token->str_data), '\n'))
-			return (ERROR);
-	}
-	token->expand_wildcards = true;
-	token->type = LITERAL;
-	return (SUCCESS);
-}
-
-// has to run after all other typechecks
-// t_result	literal_type2(t_lexer *lexer, t_token *token, bool skip_next_term)
-// {
-// 	if (is_termination_char(lexer->cur_char) && !skip_next_term)
-// 		return (SUCCESS);
-// 	while ((!is_termination_char((lexer->str)[lexer->read_position]) || skip_next_term) && lexer->str[lexer->read_position])
-// 	{
-// 		if (skip_next_term)
-// 		{
-// 			skip_next_term = false;
-// 		}
-// 		(lexer->read_position)++;
-// 	}
-// 	token->type = LITERAL;
-// 	token->str_data = ft_strndup(lexer->str
-// 			+ lexer->position, lexer->read_position - lexer->position);
-// 	if (!token->str_data)
-// 		return (ERROR);
-// 	read_char(lexer);
-// 	return (SUCCESS);
-// }

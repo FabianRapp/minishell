@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:23:25 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 15:02:47 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/19 01:07:45 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ typedef enum e_result			t_result;
 
 void			cleanup(char *location);
 bool			is_termination_char(char c);
+bool			is_wildcard_block_termination(char c);
 
 #define RESET_COLOR "\x1b[0m"
 #define RED "\x1b[31m"
@@ -89,7 +90,7 @@ void			print_parser(t_parser *parser, int tree_level);
 char			*ft_read_line(char *header);
 int				line_counter(void);
 int				count_open_fds(void);
-
+char			*extract_command_name(char *path);
 // used in lexer and expanding env cars (repl?)
 int				name_len(char *str);
 

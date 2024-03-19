@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstsize_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 15:01:35 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/18 07:24:41 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/11 15:15:11 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/libft.h"
+#include "../headers/minishell.h"
 
 int	ft_lstsize(t_list *lst)
 {

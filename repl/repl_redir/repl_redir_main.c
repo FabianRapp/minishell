@@ -6,15 +6,15 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 04:20:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 17:11:35 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 19:25:37 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "repl_redir_internals.h"
 
-t_result	handle_redir_out(t_ast *ast, t_fd_pair **fds, t_redir *redir, bool append)
+t_result	handle_redir_out(t_ast *ast, t_fd_set **fds, t_redir *redir, bool append)
 {
-	t_fd_pair	new_fd_pair;
+	t_fd_set	new_fd_pair;
 	int			base_fd;
 
 	base_fd = redir->left_redir_arg;
@@ -41,9 +41,9 @@ t_result	handle_redir_out(t_ast *ast, t_fd_pair **fds, t_redir *redir, bool appe
 	return (SUCCESS);
 }
 
-t_result	handle_redir_in(t_ast *ast, t_fd_pair **fds, t_redir *redir, bool in_out)
+t_result	handle_redir_in(t_ast *ast, t_fd_set **fds, t_redir *redir, bool in_out)
 {
-	t_fd_pair	new_fd_pair;
+	t_fd_set	new_fd_pair;
 	int			base_fd;
 
 	base_fd = redir->left_redir_arg;
@@ -73,9 +73,9 @@ t_result	handle_redir_in(t_ast *ast, t_fd_pair **fds, t_redir *redir, bool in_ou
 // Handles the redirection for here documents during command execution.
 // Creates a new file descriptor pair for the base and the here-doc's pipe read end.
 // Adds the file descriptor pair to the array of fds for redirection management.
-t_result	repl_handle_here_doc(t_ast *ast, t_redir *redir, t_fd_pair **fds)
+t_result	repl_handle_here_doc(t_ast *ast, t_redir *redir, t_fd_set **fds)
 {
-	t_fd_pair	new_fd_pair;
+	t_fd_set	new_fd_pair;
 
 	new_fd_pair.base_fd = redir->left_redir_arg;
 	if (new_fd_pair.base_fd == INIT_VAL)
@@ -96,8 +96,8 @@ t_result	resolve_redirs(t_ast *ast)
 {
 	t_redir		*redir;
 	int			base_fd;
-	//t_fd_pair	new_fd_pair;
-	t_fd_pair	*fds;
+	//t_fd_set	new_fd_pair;
+	t_fd_set	*fds;
 
 	redir = ast->redir;
 	fds = NULL;

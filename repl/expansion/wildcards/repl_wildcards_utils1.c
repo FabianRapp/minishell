@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:51:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 02:40:29 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/16 21:28:44 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,6 @@ void	clean_wildcard_data(t_wildcard_parameters *w_para)
 	ft_free((void **)&(w_para->suffix));
 	if (w_para->sub_str)
 	{
-		free_str_ar(w_para->sub_str);
+		ft_free_2darr(w_para->sub_str);
 	}
 }

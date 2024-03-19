@@ -1,34 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.h                                            :+:      :+:    :+:   */
+/*   ft_strarr_size.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/16 04:19:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/18 06:34:48 by mevangel         ###   ########.fr       */
+/*   Created: 2024/03/14 00:25:37 by mevangel          #+#    #+#             */
+/*   Updated: 2024/03/14 02:48:36 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LEXER_H
-# define LEXER_H
+#include "../headers/libft.h"
 
-# include "minishell.h"
-# include "tokens.h"
-
-typedef enum e_type	t_type;
-
-typedef struct s_lexer
+//returns the size of a NULL-terminated array of strings
+size_t	ft_strarr_size(char **ptr)
 {
-	char	*str;
-	int		position;
-	int		read_position;
-	char	cur_char;
-	char	last_char;
-}	t_lexer;
+	size_t	i;
 
-t_lexer			new_lexer(char *str);
-void			read_char(t_lexer *lexer);
-t_token			*next_new_token(t_lexer *lexer, bool recursive_call);
-
-#endif
+	i = 0;
+	while (ptr[i] != NULL)
+		i++;
+	return (i);
+}

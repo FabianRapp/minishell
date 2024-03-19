@@ -1,34 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.h                                            :+:      :+:    :+:   */
+/*   ft_free_2darr.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/16 04:19:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/18 06:34:48 by mevangel         ###   ########.fr       */
+/*   Created: 2023/11/18 16:54:29 by mevangel          #+#    #+#             */
+/*   Updated: 2024/03/10 23:02:37 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LEXER_H
-# define LEXER_H
+#include "../headers/libft.h"
 
-# include "minishell.h"
-# include "tokens.h"
-
-typedef enum e_type	t_type;
-
-typedef struct s_lexer
+void	ft_free_2darr(char **array)
 {
-	char	*str;
-	int		position;
-	int		read_position;
-	char	cur_char;
-	char	last_char;
-}	t_lexer;
+	int	i;
 
-t_lexer			new_lexer(char *str);
-void			read_char(t_lexer *lexer);
-t_token			*next_new_token(t_lexer *lexer, bool recursive_call);
-
-#endif
+	i = 0;
+	while (array[i] != NULL)
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
+}

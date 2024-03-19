@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 05:35:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 14:01:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/17 19:58:43 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ char	*parser_expand_dollar(char *dollar_str, int *index)
 		env_var = ft_strndup(dollar_str + 1, name_len(dollar_str + 1));
 		if (!env_var)
 			return (NULL);
-		return_str = ft_strdup(getenv(env_var));
+		//return_str = ft_strdup(getenv(env_var));
+		return_str = get_env_value(NULL, env_var);
 		if (!return_str)
 			return_str = ft_calloc(1, 1);
 		return (free(env_var), return_str);

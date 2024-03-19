@@ -13,7 +13,7 @@
 #include "expansion.h"
 
 // check errno for error after calling
-t_token_list	*expand_list(t_env *env, t_token_list *list)
+t_token_list	*expand_list(t_shared_data *env, t_token_list *list)
 {
 	if (!list)
 		return (NULL);
@@ -43,7 +43,7 @@ t_result	expand_name(t_ast *ast)
 {
 	if (!ast->name)
 		return (SUCCESS);
-	ast->name = expand_list(ast->env, ast->name);
+	ast->name = expand_list(ast->shared_data, ast->name);
 	if (errno)
 		return (set_errno_as_exit(ast, false));
 	merge_literals(ast->name);
@@ -75,6 +75,9 @@ t_result	expand_name(t_ast *ast)
 	return (SUCCESS);
 }
 
+
+
+
 t_result	expand_args(t_ast *ast, t_arg **base_arg, bool here_doc)
 {
 	t_arg	*cur;
@@ -88,7 +91,7 @@ t_result	expand_args(t_ast *ast, t_arg **base_arg, bool here_doc)
 	while (cur)
 	{
 		if (!here_doc)
-			cur->name = expand_list(ast->env, cur->name);
+			cur->name = expand_list(ast->shared_data, cur->name);
 		merge_literals(cur->name);
 		if (errno)
 			return (set_errno_as_exit(ast, false));
