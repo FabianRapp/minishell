@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_buildin1.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/18 07:31:37 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/19 00:38:44 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ bool	ft_buildin(t_ast *ast)
 {
 	char	*cmd_name;
 
+	//print_ast(ast);
 	if (!ft_strcmp(ast->name->token->str_data, "exit"))
 		return (ft_exit(ast), true);
 	if (!ft_strcmp(ast->name->token->str_data, "cd"))
