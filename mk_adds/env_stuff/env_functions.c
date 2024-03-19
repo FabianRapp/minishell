@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/19 00:36:49 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/19 02:59:11 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,8 +163,9 @@ void	ft_update_env_var(char *var_name, char *new_value, char **env)
 
 /*
 if shlvl is unset or non-numeric -> new subterminal has SHLVL=1.
+if shlvl is negative -> new subshell has SHLVL=0.
 */
-bool	is_not_numeric(char *str)
+static bool	is_not_numeric(char *str)
 {
 	if (*str == '+' || *str == '-')
 		str++;
@@ -177,7 +178,7 @@ bool	is_not_numeric(char *str)
 	return (false);
 }
 
-void	ft_update_shlvl(int shlvl_index, char ***env)
+static void	ft_update_shlvl(int shlvl_index, char ***env)
 {
 	char	*before;
 	int		num;
@@ -198,7 +199,14 @@ void	ft_update_shlvl(int shlvl_index, char ***env)
 	ft_update_env_var("SHLVL", after, *env);
 }
 
-char	**ft_initialize_our_env(char **base_env)
+static void	ft_clear_oldpwd(char ***env, bool keep)
+{
+	*env = new_env_list_after_delete("OLDPWD", *env);
+	if (keep == true) //for the export list
+		*env = new_env_list_after_add("OLDPWD", *env);
+}
+
+char	**ft_initialize_our_env(char **base_env, bool keep_oldpwd)
 {
 	int		i;
 	char	**ret;
@@ -208,7 +216,7 @@ char	**ft_initialize_our_env(char **base_env)
 	shlvl_index = 0;
 	while (base_env[i])
 		i++;
-	ret = malloc((i + 1) * sizeof(char *));
+	ret = ft_calloc((i + 1), sizeof(char *));
 	if (ret == NULL)
 		return (NULL);
 	ret[i] = NULL;
@@ -220,5 +228,6 @@ char	**ft_initialize_our_env(char **base_env)
 			shlvl_index = i;
 	}
 	ft_update_shlvl(shlvl_index, &ret);
+	ft_clear_oldpwd(&ret, keep_oldpwd);
 	return (ret);
 }
