@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 01:13:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/19 01:46:14 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/19 02:41:53 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,8 @@ t_result	ident_wildcard_literals(t_lexer *lexer,
 		is_start = false;
 	if (copy_str(lexer, token, skip_next_term, is_start) == ERROR)
 		return (ERROR);
-	if (skip_next_term && !ft_strjoin_inplace_char(&(token->str_data), '\n'))
-		return (ERROR);
+	// if (skip_next_term && !ft_strjoin_inplace_char(&(token->str_data), '\n'))
+	// 	return (ERROR);
 	token->type = LITERAL;
 	return (SUCCESS);
 }
