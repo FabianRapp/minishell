@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/20 05:33:21 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/20 07:00:34 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,19 @@ char	**new_env_list_after_delete(char *var_to_rm, char **env_before)
 	return (free(line_name), ft_free_2darr(env_before), new);
 }
 
-
+void	ft_update_env_var(char *var_name, char *new_value, char **env)
+{
+	int		i;
+	char	*half;
+	
+	i = 0;
+	while (env[i] && ft_strncmp(var_name, env[i], ft_strlen(var_name)))
+		i++;
+	free(env[i]);
+	half = ft_strjoin(var_name, "=");
+	env[i] = ft_strjoin(half, new_value);
+	free(half);
+}
 
 
 

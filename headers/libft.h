@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 22:22:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/18 02:18:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/20 08:05:18 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ bool	ft_iswhitespace(char c);
 
 void	ft_free_2darr(char **array);
 size_t	ft_strarr_size(char **ptr);
+char	*ft_strjoin_free_s1(char *s1, char *s2);
+char	*ft_strjoin_free_both(char *s1, char *s2);
 
 //bonus
 //struct	s_list;
