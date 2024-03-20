@@ -6,38 +6,13 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:34:24 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/20 12:37:43 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/20 12:57:36 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 #include "../headers/eval.h"
 
-
-static bool	arg_is_valid_unset(char *arg, t_ast *ast, char *cmd_name)
-{
-	int		i;
-	char	*save;
-
-	i = 0;
-	save = arg;
-	if (!arg)
-		return (false);
-	if (*arg == '-')
-	{
-		print_error(true, "unset", save, "invalid option");
-		ft_fprintf(2, "no options supported\n");
-		return (false);
-	}
-	while (*arg && *arg != '=')
-	{
-		if (!(ft_isprint((int) *arg)))
-			return (ft_cur_exit(ast, 1), print_error_addsq(true, cmd_name,
-				save, "not a valid identifier"), false);
-		arg++;
-	}
-	return (true);
-}
 
 static bool	arg_is_valid_unset(char *arg, t_ast *ast, char *cmd_name)
 {
