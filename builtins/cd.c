@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:26:07 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/20 12:28:58 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/20 13:35:19 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,8 @@ int	ft_cd(t_ast *ast)
 	args = ast->arg;
 	if (!args) //if there is no argument cd changes to HOME
 		return (ft_cd_to_var(ast, false, NULL, "HOME"), 0);
+	if (count_args(ast->arg) > 1)
+		return(ft_cur_exit(ast, 1), print_error(true, "cd", NULL, "too many arguments"), 0);
 	cd_arg = ast->arg->name->token->str_data;
 	if (*cd_arg == '\0') //cd doesn't do anything with empty argument
 		return 0;
