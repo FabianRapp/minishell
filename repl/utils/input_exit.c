@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/17 22:20:34 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/20 02:39:13 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 
 void	main_exit(t_cleanup_data *data, bool full_exit, bool ft_exit_call)
 {
+	t_shared_data	*shared_data;
 	// if (!data)
 	// 	printf("no cleanup data\n");
 	// else if (!data->root)
@@ -85,6 +86,8 @@ void	main_exit(t_cleanup_data *data, bool full_exit, bool ft_exit_call)
 	// 	printf("in sub mode: %d/%d\n", data->root->exit_status, get_last_exit());
 	// else
 	// 	printf("not sub mode: %d/%d(root/last)\n", data->root->exit_status, get_last_exit());
+	if (data && data->root)
+		shared_data = data->root->shared_data;
 	if (data && data->root && !ft_exit_call && data->root->exit_status == DEFAULT_EXIT_STATUS)
 	{
 		if (data->root && data->root->pid > 0)
@@ -112,6 +115,8 @@ void	main_exit(t_cleanup_data *data, bool full_exit, bool ft_exit_call)
 	//check_fds();
 	if (full_exit)
 	{
+		ft_free_2darr(*(shared_data->env_exp));
+		ft_free_2darr(*(shared_data->envs));
 		if (LEAK_CHECK)
 			system("leaks minishell");
 		exit(get_last_exit());

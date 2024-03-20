@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:29:13 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/19 03:56:20 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/20 12:10:53 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,14 @@ int	arg_is_valid(char *arg, t_ast *ast, char *cmd_name)
 	// 	return (ft_cur_exit(ast, 1), print_error_addsq(true, cmd_name,
 	// 		save, "not a valid identifier"), 0);//these three last lines i don't think they made any difference
 	// i check first character firstly:
+	if (*arg == '-')
+	{
+		print_error(true, "unset", save, "invalid option");
+		ft_fprintf(2, "no options supported\n");
+		ast->exit_status = 2;
+		set_last_exit(2);
+		return (3);
+	}
 	if (!(ft_isalpha((int) *arg) || *arg == '_'))
 		return (ft_cur_exit(ast, 1), print_error_addsq(true, cmd_name,
 			save, "not a valid identifier"), 0);
@@ -139,6 +147,8 @@ void	ft_export(t_ast *ast)
 	{
 		str_value = cur_arg->name->token->str_data;
 		res = arg_is_valid(str_value, ast, "export");
+		if (res == 3)
+			return ;
 		if (res > 0)
 			*(ast->shared_data->env_exp) = new_env_list_after_add(str_value,
 				*(ast->shared_data->env_exp));

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:47:46 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/19 08:15:34 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/20 11:52:39 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,19 +37,27 @@ static bool	includes_non_num(char *str)
 
 void	ft_exit(t_ast *ast)
 {
+	char	*tmp;
 
 	if (sub_shell_mode(GET_SUB_SHELL_MODE) == false && !TESTER)
 		print_error(false, NULL, NULL, "exit");
-	if (ast->arg && includes_non_num(ast->arg->name->token->str_data))
+	if (!ast->arg || count_args(ast->arg) == 0)
+		main_exit(ast->shared_data->cleanup_data, true, true);
+	tmp = NULL;
+	if (ast->arg->name)
+		tmp = ast->arg->name->token->str_data;
+	if (tmp && ((*tmp == '+' && *(tmp + 1)) || (*tmp == '-' && *(tmp + 1))))
+		tmp++;
+	if (tmp && includes_non_num(tmp))
 	{
-		if (ast->arg && ast->arg->name && !TESTER)
+		if ( ast->arg->name && !TESTER)
 			print_error(true, "exit", ast->arg->name->token->str_data, "numeric argument required");
-		else if(ast->arg && ast->arg->name)
+		else if(ast->arg->name)
 			ft_fprintf(2, "%s: %s: %s: %s\n", SHELL_NAME, "exit", ast->arg->name->token->str_data, "numeric argument required");
-		set_last_exit(255); //! i was 0 i made it 255 and 30 more tests passed comparing to before
+		set_last_exit(2); //! i was 0 i made it 255 and 30 more tests passed comparing to before
 		main_exit(ast->shared_data->cleanup_data, true, true);
 	}
-	else if (ast->arg && count_args(ast->arg) > 1)
+	else if (count_args(ast->arg) > 1)
 	{
 		if (!TESTER)
 			print_error(true, "exit", NULL, "too many arguments");
@@ -60,18 +68,10 @@ void	ft_exit(t_ast *ast)
 		ast->shared_data->stop_execution = true;
 		return ;
 	}
-	else if (!ast->arg || count_args(ast->arg) == 0)
-	{
-		main_exit(ast->shared_data->cleanup_data, true, true);
-	}
 	else
 	{
 		set_last_exit(ft_atoi(ast->arg->name->token->str_data));
 		ast->exit_status = ft_atoi(ast->arg->name->token->str_data);
-		// if (sub_shell_mode(GET_SUB_SHELL_MODE) == true)
-		// 	printf("exit in sub mode: %d/%d\n", ast->exit_status, get_last_exit());
-		// else
-		// 	printf("exit not sub mode: %d/%d\n", ast->exit_status, get_last_exit());
 		main_exit(ast->shared_data->cleanup_data, true, true);
 	}
 }

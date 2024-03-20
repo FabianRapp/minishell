@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/20 02:33:47 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/20 12:34:40 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	init_child_data(t_child_data *data, t_ast *ast)
 		ast->exit_status = get_last_exit();
 		return ;
 	}
-	if (!data->path || ast->exit_status != DEFAULT_EXIT_STATUS)
+	if (ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
 	data->argv[0] = extract_command_name(data->path); // TODO: mall error
 	data->command_name = extract_command_name(data->path); // TODO: mall error
