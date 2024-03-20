@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/20 11:16:58 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/20 12:06:12 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static char	*handle_shell_fn(char *name)
 	const char	*all_fns[] = {
 		"cat",	"chmod",	"cp",	"df",	"grep",
 		"history",	"ls",	"mkdir",	"mv",	"ps",
-		"rm",	"sudo",	"touch",	NULL
+		"rm",	"sudo",	"touch",	"sleep",	NULL
 	};
 	int			i;
 	char		*pwd;
@@ -101,31 +101,26 @@ t_result	init_path_object(t_ast *ast, char *command_name, t_path *path_ob,
 			ast->exit_status = 127, set_last_exit(127), ERROR);
 	path_ob->all_paths = get_env_value(NULL, path_var);
 	if (errno)
-	{
-		ast->exit_status = errno;
-		errno = 0;
-		return (ERROR);
-	}
+		return (set_errno_as_exit(ast, false), ERROR);
 	tmp = handle_shell_fn(command_name);
 	if (errno)
-	
 		return (ft_free((void **)&(path_ob->all_paths)),
 			set_errno_as_exit(ast, false), ERROR);
 	if (!ft_strjoin_inplace(&(path_ob->all_paths), tmp))
-	{
-		set_errno_as_exit(ast, false);
-		ast->exit_status = errno;
-		free(tmp);
-		errno = 0;
-		return (ERROR);
-	}
-	free(tmp);
-	return (next_path(path_ob));
+		return (set_errno_as_exit(ast, false), free(tmp), ERROR);
+	return (free(tmp), next_path(path_ob));
 }
 
 char	*init_path(t_ast *ast, char *command_name, t_path *path_ob,
 	char *path_var)
 {
+	if (!ft_strcmp(command_name, ".."))
+	{
+		ast->exit_status = 127;
+		set_last_exit(127);
+		print_error(true, "..", NULL, "command not found");
+		return (NULL);
+	}
 	if (command_name && (*command_name == '/' || (*command_name == '.' && ft_strlen(command_name) != 1)))
 	{
 		return (handle_absolute_path(command_name));
