@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/20 02:21:45 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/20 11:34:27 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,11 @@
 echo 1 | echo 2 | echo 3
 ls | cat << stop | ls -la | cat << stop1
 
-             TOTAL TEST COUNT: 935  TESTS PASSED: 853  LEAKING: 0
-                     STD_OUT: 38  STD_ERR: 42  EXIT_CODE: 54
+             TOTAL TEST COUNT: 994  TESTS PASSED: 909  LEAKING: 0
+                     STD_OUT: 32  STD_ERR: 23  EXIT_CODE: 55
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 134
-                                     ✅ 2671
-             TOTAL TEST COUNT: 935  TESTS PASSED: 852  LEAKING: 0
-                     STD_OUT: 39  STD_ERR: 43  EXIT_CODE: 55
-                         TOTAL FAILED AND PASSED CASES:
-                                     ❌ 137
-                                     ✅ 2668
+                                     ❌ 110
+                                     ✅ 2872
 TODO:
 	- lexer: check for too many closing quotes
 	- ft_atoi undef behaivior for huge number strs

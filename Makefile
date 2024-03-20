@@ -6,7 +6,7 @@ FLAGS_NO_LEAK_CHECK =
 CFLAGS=-Wall -Wextra -Werror
 
 LDFLAGS = 
-#
+# -fsanitize=undefined -fsanitize=address -g
 # 
 # 
 
