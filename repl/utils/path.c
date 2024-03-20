@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/20 13:16:16 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/20 13:28:05 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,10 @@ static char	*handle_shell_fn(char *name)
 	char		*pwd;
 	char		*tmp;
 
-	i = 0;
-	while (all_fns[i])
+	i = -1;
+	while (all_fns[++i])
 	{
-		if (!ft_strcmp(all_fns[i++], name))
+		if (!ft_strcmp(all_fns[i], name))
 			break ;
 	}
 	if (!all_fns[i])
