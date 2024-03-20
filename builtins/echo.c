@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 08:00:49 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/19 07:28:41 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/20 11:02:03 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	ft_echo(t_ast *ast)
 	bool	no_new_line;
 	bool	stop_check;
 
+	
 	ft_cur_exit(ast, 0);
 	cur_arg = ast->arg;
 	if (!cur_arg)

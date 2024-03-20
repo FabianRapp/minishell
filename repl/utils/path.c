@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/19 06:01:03 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/20 11:16:58 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 char	*handle_absolute_path(char *path)
 {
 	if (!access(path, X_OK))
+	{
 		return (ft_strdup(path));
+	}
 	ft_fprintf(2, "%s: %s\n", SHELL_NAME, strerror(errno));
 	set_last_exit(127);
 	errno = 0;
@@ -32,7 +34,8 @@ bool	next_path(t_path *path_ob)
 	{
 		path_ob->ast->exit_status = 127;
 		return (set_last_exit(127), print_error(SHELL_NAME,
-				path_ob->command_name, NULL, "No such file or directory"), false);
+				path_ob->command_name, NULL,
+				"No such file or directory"), false);
 	}
 	path_ob->position = path_ob->read_postion;
 	while ((path_ob->all_paths)[path_ob->read_postion] != ':'
@@ -51,9 +54,40 @@ bool	next_path(t_path *path_ob)
 	return (true);
 }
 
+static char	*handle_shell_fn(char *name)
+{
+	const char	*all_fns[] = {
+		"cat",	"chmod",	"cp",	"df",	"grep",
+		"history",	"ls",	"mkdir",	"mv",	"ps",
+		"rm",	"sudo",	"touch",	NULL
+	};
+	int			i;
+	char		*pwd;
+	char		*tmp;
+
+	i = 0;
+	while (all_fns[i])
+	{
+		if (!ft_strcmp(all_fns[i++], name))
+			break ;
+	}
+	if (!all_fns[i])
+		return (NULL);
+	tmp = get_env_value(NULL, "PWD");
+	if (errno)
+		return (set_last_exit(errno), free(tmp), NULL);
+	pwd = ft_strjoin(":", tmp);
+	free(tmp);
+	if (errno)
+		set_last_exit(errno);
+	return (pwd);
+}
+
 t_result	init_path_object(t_ast *ast, char *command_name, t_path *path_ob,
 	char *path_var)
 {
+	char	*tmp;
+
 	path_ob->ast = ast;
 	path_ob->command_name = command_name;
 	path_ob->cur_path = NULL;
@@ -63,19 +97,29 @@ t_result	init_path_object(t_ast *ast, char *command_name, t_path *path_ob,
 	if (!command_name)
 		return (ERROR);
 	if (!*command_name)
-	{
-		print_error(true, "", NULL, "command not found");
-		ast->exit_status = 127;
-		set_last_exit(127);
-		return (ERROR);
-	}
+		return (print_error(true, "", NULL, "command not found"),
+			ast->exit_status = 127, set_last_exit(127), ERROR);
 	path_ob->all_paths = get_env_value(NULL, path_var);
-	if (!path_ob->all_paths && errno)
+	if (errno)
 	{
-		path_ob->ast->exit_status = errno;
+		ast->exit_status = errno;
 		errno = 0;
 		return (ERROR);
 	}
+	tmp = handle_shell_fn(command_name);
+	if (errno)
+	
+		return (ft_free((void **)&(path_ob->all_paths)),
+			set_errno_as_exit(ast, false), ERROR);
+	if (!ft_strjoin_inplace(&(path_ob->all_paths), tmp))
+	{
+		set_errno_as_exit(ast, false);
+		ast->exit_status = errno;
+		free(tmp);
+		errno = 0;
+		return (ERROR);
+	}
+	free(tmp);
 	return (next_path(path_ob));
 }
 
@@ -83,7 +127,9 @@ char	*init_path(t_ast *ast, char *command_name, t_path *path_ob,
 	char *path_var)
 {
 	if (command_name && (*command_name == '/' || (*command_name == '.' && ft_strlen(command_name) != 1)))
+	{
 		return (handle_absolute_path(command_name));
+	}
 	if (command_name && (*command_name == '/' || (*command_name == '.' && ft_strlen(command_name) == 1)))
 	{
 		ft_fprintf(2, "%s: %c: filename argument required\n", SHELL_NAME, *command_name);
@@ -125,5 +171,9 @@ char	*find_path(t_ast *ast, char *command_name, char *path_var)
 		if (!next_path(&path_ob))
 			return (free(path_ob.all_paths), free(path_ob.cur_path), NULL);
 	}
+	if (ast->exit_status == DEFAULT_EXIT_STATUS)
+		(ast->exit_status = 127, set_last_exit(127),
+			print_error(SHELL_NAME, command_name, NULL, "No such file or directory"));
+
 	return (free(path_ob.all_paths), free(path_ob.cur_path), NULL);
 }

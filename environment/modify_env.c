@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   modify_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/19 05:41:34 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/20 10:37:08 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ char	**new_env_list_after_delete(char *var_to_rm, char **env_before)
 	}
 	if (env_before[i] == NULL)
 		return (free(line_name), env_before);
-	new = (char **)ft_calloc(ft_strarr_size(env_before), sizeof(char *));
+	new = (char **)ft_calloc(ft_strarr_size(env_before) + 1, sizeof(char *));
 	if (new == NULL)
 		return (NULL);
 	del_index = i;
