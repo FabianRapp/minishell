@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:52 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/17 19:11:38 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/20 02:26:26 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ typedef struct s_wildcard_node_expansion
 t_result		wildcards(t_token_list *name);
 
 // repl_wildcards_utils1.c
-char			*next_file_name(DIR *dir);
+char			*next_file_name(DIR *dir, bool hidden);
 void			clean_wildcard_data(t_wildcard_parameters *data);
 
 // repl_fill_wildcard_data.c
