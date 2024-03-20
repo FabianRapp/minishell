@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 07:01:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 14:00:08 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/20 14:20:47 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,6 +243,7 @@ bool	test_lexer_manualy(char *str)
 		printf("\n");
 		token = next_new_token(&lexer, false);
 	}
+	free(lexer.str);
 	printf("\t");
 	print_token(token, NULL, 0);
 	return (true);

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 19:22:05 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/19 01:11:27 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/20 14:32:46 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,10 @@ t_result	fill_wildcard_data(char *wildcard_str,
 	w_para->suffix = NULL;
 	if (fill_prefix(&wildcard_str, w_para) == ERROR)
 		return (ERROR);
-	if (ft_strnstr(wildcard_str, "3}{*", ft_strlen(wildcard_str)))
+	if (ft_strnstr(wildcard_str, "3}{*", ft_strlen(wildcard_str)) || ft_strnstr(wildcard_str, "3}{!", ft_strlen(wildcard_str)))
 	{
+		if (!ft_strnstr(wildcard_str, "3}{*", ft_strlen(wildcard_str)))
+			(ft_strnstr(wildcard_str, "3}{!", ft_strlen(wildcard_str)))[3] = '*';
 		w_para->suffix = ft_strndup(ft_strnstr(wildcard_str, "3}{*", ft_strlen(wildcard_str)) + 4, ft_strlen(wildcard_str));
 		if (!w_para->suffix)
 		{

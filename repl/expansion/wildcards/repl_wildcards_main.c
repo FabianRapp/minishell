@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:49:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/20 02:30:42 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/20 14:47:23 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,12 @@ void	expand_wildcard_node_exit(t_wildcard_node_expasion this_data,
 t_result	expand_wildcard_node(t_token_list *node)
 {
 	t_wildcard_node_expasion	this_data;
+	char	*tmp;
 
 	this_data.w_str = ft_strdup(node->token->str_data);
+	tmp = ft_strnstr(node->token->str_data, "3}{!", ft_strlen(node->token->str_data));
+	if (tmp)
+		ft_memmove(tmp, tmp + 4, ft_strlen(tmp + 4) + 1);
 	this_data.base_next = node->next;
 	if (fill_wildcard_data(this_data.w_str, &(this_data.w_para)) == ERROR)
 		return (ERROR);

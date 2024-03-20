@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 01:13:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/19 02:41:53 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/20 14:41:48 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,18 +48,35 @@ bool	contained_a_wildcard(t_lexer lexer)
 
 t_result	handle_wildcard(t_lexer *lexer, bool is_start, t_token *token)
 {
+	char	*tmp;
+
 	if (!is_start && !contained_a_wildcard(*lexer))
 	{
+		//printf("prefix: %s\n", token->str_data);
 		if (!ft_strjoin_inplace(&(token->str_data), "1}{"))
 			return (ERROR);
+		if (!contains_more_wildcards(lexer->str + lexer->position))
+		{
+			tmp = ft_strndup(lexer->str, lexer->position + 1);
+			if (!ft_strjoin_inplace(&tmp, "3}{!"))
+				return (ERROR);
+			if (!ft_strjoin_inplace(&tmp, lexer->str + lexer->position + 1))
+				return (ERROR);
+			free(lexer->str);
+			//printf("tmp: %s\n", tmp);
+			lexer->str = tmp;
+			//printf("lexer rest str: %s\n", lexer->str + lexer->position);
+		}
 	}
 	else if (contains_more_wildcards(lexer->str + lexer->position))
 	{
+		//printf("substr: %s\n", token->str_data);
 		if (!ft_strjoin_inplace(&(token->str_data), "2}{"))
 			return (ERROR);
 	}
 	else
 	{
+		//printf("sufix: %s\n", token->str_data);
 		if (!ft_strjoin_inplace(&(token->str_data), "3}{"))
 			return (ERROR);
 	}

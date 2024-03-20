@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/19 01:44:53 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/20 14:22:18 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,10 @@ t_lexer	new_lexer(char *str)
 	lexer.last_char = 0;
 	lexer.position = 0;
 	lexer.read_position = 0;
-	lexer.str = str;
+	lexer.str = NULL;
+	lexer.str = ft_strdup(str);
+	if (!lexer.str)
+		return (lexer);
 	skip_leading_void_whitespace(&lexer);
 	return (lexer);
 }
