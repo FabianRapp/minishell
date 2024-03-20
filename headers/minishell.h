@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/19 06:33:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/20 05:04:21 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -318,13 +318,13 @@ void		ft_unset(t_ast *ast);
 void		ft_exit(t_ast *ast);
 int			ft_echo(t_ast *ast);
 int			ft_cap_echo(t_ast *ast);
-t_result	ft_cd(t_ast *ast);
+void		ft_cd(t_ast *ast);
 int			arg_is_valid(char *arg, t_ast *ast, char *cmd_name);
 
 
 /* ---------------------------- ENV FUNCTIONS ---------------------------- */
 
-char	**ft_initialize_our_env(char **base_env, bool oldpwd);
+char	**ft_initialize_our_env(char **base_env);
 char	*get_env_value(char **env, char *var_name);
 char	**new_env_list_after_add(char *str_to_add, char **env);
 char	*get_env_var_name(char *line);
