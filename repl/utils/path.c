@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/20 12:28:14 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/20 13:16:16 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,8 @@ t_result	init_path_object(t_ast *ast, char *command_name, t_path *path_ob,
 char	*init_path(t_ast *ast, char *command_name, t_path *path_ob,
 	char *path_var)
 {
+	char	*tmp;
+
 	if (!ft_strcmp(command_name, ".."))
 	{
 		ast->exit_status = 127;
@@ -121,11 +123,18 @@ char	*init_path(t_ast *ast, char *command_name, t_path *path_ob,
 		print_error(true, "..", NULL, "command not found");
 		return (NULL);
 	}
-	if (!ft_strcmp(command_name, "/"))
+	if (!ft_strcmp(command_name, "/") || !ft_strcmp(command_name, "~"))
 	{
 		ast->exit_status = 126;
 		set_last_exit(126);
-		print_error(true, "/", NULL, "Is a directory");
+		if (*command_name == '/')
+			print_error(true, "/", NULL, "Is a directory");
+		else
+		{
+			tmp = get_env_value(*(ast->shared_data->envs), "HOME");
+			print_error(true, tmp, NULL, "Is a directory");
+			free(tmp);
+		}
 		return (NULL);
 	}
 	if (command_name && (*command_name == '/' || (*command_name == '.' && ft_strlen(command_name) != 1)))

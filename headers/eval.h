@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/26 19:38:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/17 19:59:41 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/20 13:07:56 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 typedef enum e_result			t_result;
 typedef struct s_cleanup_data	t_cleanup_data;
 typedef struct s_child_data		t_child_data;
-typedef struct s_shared_data			t_shared_data;
+typedef struct s_shared_data	t_shared_data;
 typedef	struct s_arg			t_arg;
 
 typedef struct s_path
