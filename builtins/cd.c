@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:26:07 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/20 13:35:19 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/20 15:11:25 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ static void	ft_cd_to_var(t_ast *ast, bool not_alone, char *path, char *var)
 }
 
 
-static int	ft_cd_step(t_ast *ast, char *step, int index, char *cd_arg)
+static int	ft_cd_step(t_ast *ast, char *step, int index, char *cd_arg, bool last_iter)
 {
 	char	*to_go;
 	char	*before;
@@ -106,14 +106,20 @@ static int	ft_cd_step(t_ast *ast, char *step, int index, char *cd_arg)
 	else if (!ft_strcmp(to_go, ".."))
 		to_go = get_parent_dir_path();
 	before = getcwd(NULL, PATH_MAX);
+	if (to_go && ft_strlen(to_go) == 0)
+	{
+		free(to_go);
+		to_go = ft_strdup("/");
+		if (!to_go)
+			return (set_errno_as_exit(ast, false), 0);
+	}
 	if (chdir(to_go) < 0)
 		return (ft_cur_exit(ast, 1), free(to_go), free(before), 
 			print_error(true, "cd", cd_arg, "No such file or directory"), 0);
 	after = getcwd(NULL, PATH_MAX);
-	ft_update_dir_vars(ast, before, after);
-	free(before);
-	free(after);
-	return (1);
+	if (last_iter)
+		ft_update_dir_vars(ast, before, after);
+	return (free(before), free(after), 1);
 }
 
 // cd in bash cares only about the first argument. if there are more it ignores them.
@@ -124,29 +130,38 @@ int	ft_cd(t_ast *ast)
 	char	*cd_arg;
 	int		i;
 
-	ft_cur_exit(ast, 0);
-	args = ast->arg;
+	(ft_cur_exit(ast, 0), args = ast->arg);
 	if (!args) //if there is no argument cd changes to HOME
 		return (ft_cd_to_var(ast, false, NULL, "HOME"), 0);
 	if (count_args(ast->arg) > 1)
 		return(ft_cur_exit(ast, 1), print_error(true, "cd", NULL, "too many arguments"), 0);
 	cd_arg = ast->arg->name->token->str_data;
 	if (*cd_arg == '\0') //cd doesn't do anything with empty argument
-		return 0;
+		return (0);
 	if (ft_strcmp(cd_arg, "-") == 0)
 		return (ft_cd_to_var(ast, false, NULL, "OLDPWD"), 0);
 	if (ft_strcmp(cd_arg, "--") == 0)
 		return (ft_cd_to_var(ast, false, NULL, "HOME"), 0);
-	if (*cd_arg == '/')
-		ft_cd_step(ast, "/", 0, cd_arg);
+	if (*cd_arg == '/' && !ft_cd_step(ast, "/", 0, cd_arg, true))
+		return (0);
 	steps = ft_split(cd_arg, '/');
 	if (!steps)
 		return (0);
 	i = -1;
 	while (steps[++i])
-		ft_cd_step(ast, steps[i], i, cd_arg);
-	ft_free_2darr(steps);
-	return (0);
+	{
+		if (steps[i + 1])
+		{
+			if (!ft_cd_step(ast, steps[i], i, cd_arg, false))
+				return (0);
+		}
+		else
+		{
+			if (!ft_cd_step(ast, steps[i], i, cd_arg, true))
+				return (0);
+		}
+	}
+	return (ft_free_2darr(steps), 0);
 }
 
 
