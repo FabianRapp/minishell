@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/20 12:35:02 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/20 17:57:18 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 echo 1 | echo 2 | echo 3
 ls | cat << stop | ls -la | cat << stop1
 
-             TOTAL TEST COUNT: 935  TESTS PASSED: 893  LEAKING: 0
-                     STD_OUT: 31  STD_ERR: 16  EXIT_CODE: 14
+             TOTAL TEST COUNT: 994  TESTS PASSED: 965  LEAKING: 0 
+                     STD_OUT: 21  STD_ERR: 7  EXIT_CODE: 9  
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 61
-                                     ✅ 2744
+                                     ❌ 37   
+                                     ✅ 2945
 TODO:
 	- lexer: check for too many closing quotes
 	- ft_atoi undef behaivior for huge number strs
@@ -324,7 +324,7 @@ char	*get_env_value(char **env, char *var_name);
 char	**new_env_list_after_add(char *str_to_add, char **env);
 char	*get_env_var_name(char *line);
 char	**new_env_list_after_delete(char *var_to_rm, char **env_before);
-void	ft_update_env_var(char *var_name, char *new_value, char **env);
+void	ft_update_env(char *var_name, char *new_value, char **env);
 char	***get_env_list(char ***set_new_env);//added
 
 // ----------- additional utils -----------------

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   modify_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/20 12:35:39 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/20 17:57:18 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ char	**new_env_list_after_delete(char *var_to_rm, char **env_before)
 	return (free(line_name), ft_free_2darr(env_before), new);
 }
 
-void	ft_update_env_var(char *var_name, char *new_value, char **env)
+void	ft_update_env(char *var_name, char *new_value, char **env)
 {
 	int		i;
 	char	*half;
@@ -122,7 +122,7 @@ void	ft_update_env_var(char *var_name, char *new_value, char **env)
 // // 	return (true);
 // // }
 
-// void	ft_update_env_var(char *var_name, char *new_value, char **env)
+// void	ft_update_env(char *var_name, char *new_value, char **env)
 // {
 // 	int		i;
 // 	char	*half;

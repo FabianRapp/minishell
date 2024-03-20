@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 08:00:49 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/20 11:02:03 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/20 15:26:04 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,7 @@ int	ft_echo(t_ast *ast)
 	bool	no_new_line;
 	bool	stop_check;
 
-	
-	ft_cur_exit(ast, 0);
-	cur_arg = ast->arg;
+	(ft_cur_exit(ast, 0), cur_arg = ast->arg);
 	if (!cur_arg)
 		return (printf("\n"), 0);
 	no_new_line = false;
@@ -54,6 +52,9 @@ int	ft_echo(t_ast *ast)
 	while (cur_arg && cur_arg->name->token->type != T_EOF)
 	{
 		str_value = cur_arg->name->token->str_data;
+		if (str_value && *str_value == '~' && !*(str_value + 1))
+			(free(str_value), str_value = get_env_value(NULL, "HOME"));
+		cur_arg->name->token->str_data = str_value;
 		if (!stop_check && is_the_n_option(str_value))
 			no_new_line = true;
 		else if (str_value)
