@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:34:24 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/20 11:35:58 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/20 12:11:34 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,17 @@ static bool	arg_is_valid_unset(char *arg, t_ast *ast, char *cmd_name)
 	save = arg;
 	if (!arg)
 		return (false);
+	if (*arg == '-')
+	{
+		print_error(true, "unset", save, "invalid option");
+		ft_fprintf(2, "no options supported\n");
+		return (false);
+	}
 	while (*arg && *arg != '=')
 	{
 		if (!(ft_isprint((int) *arg)))
 			return (ft_cur_exit(ast, 1), print_error_addsq(true, cmd_name,
 				save, "not a valid identifier"), false);
-		if (*arg == '-')
-		{
-			print_error(true, "unset", save, "invalid option");
-			ft_fprintf(2, "no options supported\n");
-			return (false);
-		}
 		arg++;
 	}
 	return (true);
