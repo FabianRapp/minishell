@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/20 12:06:12 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/20 12:28:14 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,13 @@ char	*init_path(t_ast *ast, char *command_name, t_path *path_ob,
 		ast->exit_status = 127;
 		set_last_exit(127);
 		print_error(true, "..", NULL, "command not found");
+		return (NULL);
+	}
+	if (!ft_strcmp(command_name, "/"))
+	{
+		ast->exit_status = 126;
+		set_last_exit(126);
+		print_error(true, "/", NULL, "Is a directory");
 		return (NULL);
 	}
 	if (command_name && (*command_name == '/' || (*command_name == '.' && ft_strlen(command_name) != 1)))
