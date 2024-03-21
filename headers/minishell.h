@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/20 17:57:18 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/21 16:03:17 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 echo 1 | echo 2 | echo 3
 ls | cat << stop | ls -la | cat << stop1
 
-             TOTAL TEST COUNT: 994  TESTS PASSED: 965  LEAKING: 0 
-                     STD_OUT: 21  STD_ERR: 7  EXIT_CODE: 9  
+             TOTAL TEST COUNT: 994  TESTS PASSED: 966  LEAKING: 0 
+                     STD_OUT: 20  STD_ERR: 6  EXIT_CODE: 8  
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 37   
-                                     ✅ 2945
+                                     ❌ 34   
+                                     ✅ 2948 
 TODO:
 	- lexer: check for too many closing quotes
 	- ft_atoi undef behaivior for huge number strs
@@ -212,6 +212,15 @@ typedef struct s_ast
 	int				fd_to_close_write;
 }	t_ast;
 
+typedef struct s_pipe_data
+{
+	int			pipe_fd[2];
+	int			base_write;
+	int			base_read;
+	int			left_pid;
+	t_ast		*ast;
+}	t_pipe_data;
+
 // lexer
 t_token		*next_new_token(t_lexer *lexer, bool recursuve_call);
 t_lexer		new_lexer(char *str);
@@ -278,6 +287,10 @@ t_ast	*parser(char *str);
 #  define REDIR_FDS 4
 #  define CLEANUP_FDS 5
 
+
+// repl/utils/pipe_utils.c
+t_result	pipe_error_handler(t_pipe_data *vars);
+
 // utils/fd1.c
 t_fd_set	*io_data(int flag, void *data);
 t_result	redir_fds(void);
@@ -286,7 +299,7 @@ t_fd_set	*get_fds(void);
 t_result	cleanup_fds(void);
 
 
-void	ft_pipe(t_ast *ast);
+t_result	ft_pipe(t_ast *ast);
 
 char	*get_file_name(int fd);
 void	print_fds(void);

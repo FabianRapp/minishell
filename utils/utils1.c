@@ -6,11 +6,22 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/19 05:48:53 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/21 15:01:52 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
+int	ft_close(int *fd)
+{
+	int	ret;
+
+	ret = 0;
+	if (*fd != INIT_VAL)
+		ret = close(*fd);
+	*fd = INIT_VAL;
+	return (ret);
+}
 
 int	count_open_fds(void)
 {

@@ -53,7 +53,8 @@ SOURCES = repl/main.c \
 		  repl/repl_redir/repl_redir_main.c \
 		  repl/repl_redir/repl_redir_utils.c \
 		  repl/repl_redir/repl_redir_error_handler.c\
-		  repl/pipes.c
+		  repl/pipes.c\
+		  repl/utils/pipe_utils.c
 
 OBJECTS= $(SOURCES:.c=.o)
 

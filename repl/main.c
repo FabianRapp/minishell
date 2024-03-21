@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/20 12:34:40 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/21 15:02:56 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,14 +94,9 @@ void	run_command_node(t_ast *ast)
 		free_child_data(&data);
 		return ;
 	}
-	if (ast->fd_to_close != INIT_VAL)
-		close(ast->fd_to_close);
-	if (ast->fd_to_close_write != INIT_VAL)
-		close(ast->fd_to_close_write);
-	if (ast->fd_to_close_read != INIT_VAL)
-	{
-		close(ast->fd_to_close_read);
-	}
+	ft_close(&(ast->fd_to_close));
+	ft_close(&(ast->fd_to_close_write));
+	ft_close(&(ast->fd_to_close_read));
 	//check_fds();
 	if (execve(data.path, data.argv, *(ast->shared_data->envs)) == -1)
 		print_error("true", data.command_name, NULL, strerror(errno));
