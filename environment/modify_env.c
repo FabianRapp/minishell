@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   modify_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/20 17:57:18 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/21 16:35:24 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void	ft_update_env(char *var_name, char *new_value, char **env)
 {
 	int		i;
 	char	*half;
-	
+
 	i = 0;
 	while (env[i] && ft_strncmp(var_name, env[i], ft_strlen(var_name)))
 		i++;
@@ -108,42 +108,3 @@ void	ft_update_env(char *var_name, char *new_value, char **env)
 	env[i] = ft_strjoin(half, new_value);
 	free(half);
 }
-
-
-
-// // static bool	is_not_in_env(char *var_name, char **env)
-// // {
-// // 	while (*env)
-// // 	{
-// // 		if (ft_strncmp(var_name, *env, ft_strlen(var_name)) == 0)
-// // 			return (false);
-// // 		env++;
-// // 	}
-// // 	return (true);
-// // }
-
-// void	ft_update_env(char *var_name, char *new_value, char **env)
-// {
-// 	int		i;
-// 	char	*half;
-// 	char	*var_str;
-
-// 	i = 0;
-// 	if (!env)
-// 		return ;
-		
-// 	half = ft_strjoin(var_name, "=");
-// 	var_str = ft_strjoin(half, new_value);
-// 	free(half);
-	
-// 	env = new_env_list_after_add(var_str, env);
-		
-// 	// while (env[i] && ft_strncmp(var_name, env[i], ft_strlen(var_name)))
-// 	// 	i++;
-// 	// // if (env[i] == NULL)//which means that the var doesn't exist in the list
-		
-// 	// free(env[i]);
-// 	// half = ft_strjoin(var_name, "=");
-// 	// env[i] = ft_strjoin(half, new_value);
-// 	// free(half);
-// }

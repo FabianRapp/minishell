@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initialize_env.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/20 17:57:18 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/21 16:35:38 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,6 @@ static void	ft_update_shlvl(int shlvl_index, char ***env)
 		num = ft_atoi(before);
 	free(before);
 	after = ft_itoa(num + 1);
-	// free((*env)[shlvl_index]);
-	// (*env)[shlvl_index] = ft_strjoin("SHLVL=", after);
 	ft_update_env("SHLVL", after, *env);
 }
 
@@ -77,7 +75,6 @@ char	**ft_initialize_our_env(char **base_env)
 	ft_update_shlvl(shlvl_index, &ret);
 	return (ret);
 }
-
 
 // // THE PREVIOUS VERSION THAT I DELETE THE OLDPWD IN ENV LIST LIKE BASH
 
