@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/21 15:01:52 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/21 19:12:52 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,7 +181,6 @@ char	*ft_read_line(char *header)
 	{
 		temp = get_next_line(0);
 		line = ft_strtrim(temp, "\n");
-		//line = temp;
 		free(temp);
 	}
 	else
@@ -460,11 +459,6 @@ char	*extract_command_name(char *path)
 	arr[i - 1] = NULL;
 	ft_free_2darr(arr);
 	return (name);
-}
-
-void	cleanup(char *location)
-{
-	printf("clean up placeholder: %s\n", location);
 }
 
 bool	is_termination_char(char c)

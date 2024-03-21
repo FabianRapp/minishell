@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:23:25 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/21 15:02:15 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/21 16:09:41 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 typedef enum e_type				t_type;
 typedef enum e_result			t_result;
 
-void			cleanup(char *location);
 bool			is_termination_char(char c);
 bool			is_wildcard_block_termination(char c);
 

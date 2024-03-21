@@ -12,6 +12,24 @@
 
 #include "expansion.h"
 
+void	expandlist_convert_white_space(t_token *token)
+{
+	int	i;
+
+	if (token->type != WORD)
+		return ;
+	if (!token->str_data)
+		return ;
+	i = 0;
+	while (token->str_data[i])
+	{
+		if (!ft_iswhitespace(token->str_data[i]))
+			return ;
+	}
+	ft_free((void **)&(token->str_data));
+	token->type = WHITE_SPACE;
+}
+
 // check errno for error after calling
 t_token_list	*expand_list(t_shared_data *env, t_token_list *list)
 {
@@ -33,6 +51,7 @@ t_token_list	*expand_list(t_shared_data *env, t_token_list *list)
 		list->token->type = LITERAL;
 	}
 	list->next = expand_list(env, list->next);
+
 	if ((list->token->type == WORD && word_splitting(&list) == ERROR) || !list)
 		return (list);
 	// merge_literals(list);

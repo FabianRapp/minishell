@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/20 13:12:40 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/21 20:25:13 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,22 +49,16 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 	//input = readline("minishell-$: ");
 	if (!input)
 	{
-		//exit(get_last_exit());
-		//if (TESTER)
-			//exit(get_last_exit());
-		return (NULL);
+		if (!TESTER)
+			ft_fprintf(2, "exit\n");
+		main_exit(cleanup_data, true, true);
 	}
 	if (!contains_non_white_spcace(input))
-	{
-		//if (TESTER)
-			//exit(get_last_exit());
 		return (free(input), NULL);
-	}
 	add_history(input);
 	ast = parser(input);
 	if (ast)
 	{
-		cleanup_data->input = input;
 		cleanup_data->input = input;
 		cleanup_data->root = ast;
 		return (ast);
@@ -86,8 +80,7 @@ void	main_exit(t_cleanup_data *data, bool full_exit, bool ft_exit_call)
 	// 	printf("in sub mode: %d/%d\n", data->root->exit_status, get_last_exit());
 	// else
 	// 	printf("not sub mode: %d/%d(root/last)\n", data->root->exit_status, get_last_exit());
-	if (data && data->root)
-		shared_data = data->root->shared_data;
+	shared_data = data->shared_data;
 	if (data && data->root && !ft_exit_call && data->root->exit_status == DEFAULT_EXIT_STATUS)
 	{
 		if (data->root && data->root->pid > 0)
@@ -115,20 +108,13 @@ void	main_exit(t_cleanup_data *data, bool full_exit, bool ft_exit_call)
 	//check_fds();
 	if (full_exit)
 	{
-		if (shared_data)
-		{
+		if (shared_data->env_exp)
 			ft_free_2darr(*(shared_data->env_exp));
+		if (shared_data->envs)
 			ft_free_2darr(*(shared_data->envs));
-		}
-		else
-		{
-			//TODO ft_free_2darr(*(get_env_exp_list(NULL)));
-			ft_free_2darr(*(get_env_list(NULL)));
-		}
 		if (LEAK_CHECK)
 			system("leaks minishell");
 		exit(get_last_exit());
-		exit(1);
 	}
 	if (LEAK_CHECK)
 		system("leaks minishell");

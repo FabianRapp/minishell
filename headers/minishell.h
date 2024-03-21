@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/21 16:03:17 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/21 19:34:16 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ weird stuff to keep in mind about bash
 
 # define TESTER 1
 # define SHELL_NAME "minishell\0"
-# define SHELL_PROMPT "minishell: \0"
+# define SHELL_PROMPT "minishell-$: \0"
 
 # define DEBUG 0
 
@@ -148,8 +148,9 @@ typedef struct s_ast	t_ast;
 // is reachable for cleanup
 typedef struct s_cleanup_data
 {
-	t_ast	*root;
-	char	*input;
+	t_ast			*root;
+	char			*input;
+	t_shared_data	*shared_data;
 }	t_cleanup_data;
 
 typedef	struct s_arg	t_arg;
@@ -189,11 +190,12 @@ typedef struct s_fd_set
 
 typedef struct s_shared_data
 {
-	int				main_pid;
-	bool			stop_execution;
-	char			***envs;
-	char			***env_exp;
-	t_cleanup_data	*cleanup_data;
+	int					main_pid;
+	bool				stop_execution;
+	char				***envs;
+	char				***env_exp;
+	t_cleanup_data		*cleanup_data;
+	struct sigaction	sig_set;
 }	t_shared_data;
 
 typedef struct s_ast
@@ -339,6 +341,10 @@ char	*get_env_var_name(char *line);
 char	**new_env_list_after_delete(char *var_to_rm, char **env_before);
 void	ft_update_env(char *var_name, char *new_value, char **env);
 char	***get_env_list(char ***set_new_env);//added
+
+/* ---------------------------- SIGNALS ----------------------------------- */
+
+t_result	set_ctrl_c(struct sigaction *sig_set);
 
 // ----------- additional utils -----------------
 void	print_error_addsq(bool shell_name, char *command_name, char *arg, char *str);

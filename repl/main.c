@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/21 15:02:56 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/21 20:26:29 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,62 +152,18 @@ void	check_exit_and_cleanup(t_cleanup_data *cleanup_data)
 		main_exit(cleanup_data, false, false);
 }
 
-
-void what_sig(int signal_number) {
-	// Print the received signal number
-	printf("Received signal: %d\n", signal_number);
-	// Re-register the signal handler for next time
-	//signal(signal_number, signal_handler);
-}
-
-void display_dynamic_prompt(void)
-{
-	// Move cursor up one line if this is not the first time
-	printf("\033[A\033[2K");
-	// Display the dynamic prompt
-	// printf("\r%s\n", dynamic_text);
-	printf("\r\n%s", SHELL_PROMPT);
-}
-
-void	signal_handler(int signal)
-{
-	// if (signal == 3)
-	// 	return ;
-	if (signal == 2)
-	{
-		//write(1, "\n\0", 2);
-		//free(readline(NULL));
-		// write(1, "\n\0", 2);
-		display_dynamic_prompt();
-		rl_replace_line(SHELL_PROMPT, 0);
-		
-		rl_redisplay();
-		
-		// free(readline(NULL));
-		
-	}
-}
 int	main(int ac, char **av, char **base_env)
 {
-	//signal(SIGINT, signal_handler);
-	//signal(SIGQUIT, signal_handler);
-	// signal(SIGINT, signal_handler);
-	// for (int i = 0; i <= 255; i++)
-	// {
-	// 	if (i != 3 && i != 2)
-	// 		signal(i, what_sig);
-	// }
-	// Infinite loop to keep the program running to catch the signal
-	// while (1) {
-	// 	//sleep(1); // Sleep for 1 second
-	// }
-	
 	t_ast			*ast;
 	t_cleanup_data	cleanup_data;
 	t_shared_data	shared_data;
 	char			**env_list;
 	char			**exp_list;
 
+	cleanup_data.shared_data = &shared_data;
+	shared_data.env_exp = NULL;
+	shared_data.envs = NULL;
+	set_ctrl_c(&(shared_data.sig_set));
 	if (init_main(ac, &shared_data) == ERROR)
 		return (1);
 	(void)av;
@@ -225,9 +181,7 @@ int	main(int ac, char **av, char **base_env)
 	if (!ast)
 		check_exit_and_cleanup(&cleanup_data);
 	if (TESTER && !cleanup_data.input)
-	{
 		exit(get_last_exit());
-	}
 	while (1)
 	{
 		if (ast)
@@ -240,18 +194,10 @@ int	main(int ac, char **av, char **base_env)
 			//print_ast(ast);
 			run_node(ast);
 			check_exit_and_cleanup(&cleanup_data);
-			if (TESTER && !cleanup_data.input)
-			{
-				exit(get_last_exit());
-			}
 		}
 		ast = get_input(&cleanup_data);
 		if (!ast)
 			check_exit_and_cleanup(&cleanup_data);
-		if (TESTER && !ast && !cleanup_data.input)
-		{
-			exit(get_last_exit());
-		}
 	}
 	return (0);
 }

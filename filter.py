@@ -3,7 +3,7 @@ source_file = "failed_tests_details.txt"
 target_file = "filtered_failed_tests.txt"
 target_file_filter = "filter.txt"
 
-filter_strs = [" | "]
+filter_strs = ["STD_OUT"]
 
 def	save_block(source):
 	with open(target_file, "a") as target:
