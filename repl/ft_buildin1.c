@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/19 07:14:36 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/21 14:05:37 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,3 @@ void	ft_cur_exit(t_ast *ast, int exit_value)
 	ast->exit_status = exit_value;
 	set_last_exit(exit_value);
 }
-
-/*
-🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-🏁                                    RESULT                                    🏁
-🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁🏁
-             TOTAL TEST COUNT: 935  TESTS PASSED: 847  LEAKING: 0 
-                     STD_OUT: 63  STD_ERR: 19  EXIT_CODE: 46  
-                         TOTAL FAILED AND PASSED CASES:
-                                     ❌ 128   
-                                     ✅ 2677
-*/

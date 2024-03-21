@@ -6,11 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 18:35:25 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/21 13:33:12 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/21 15:16:57 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../headers/libft.h"
+#include "../headers/libft.h"
 
 static char	less_zero(int *n)
 {

@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 22:22:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/21 13:34:01 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/21 16:01:57 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@
 # include <stdbool.h>
 # include <stdarg.h>
 # include <stdio.h>
-
-# include "minishell.h"
 
 /**************************   BASIC C FUNCTIONS   ***************************/
 int		ft_isalpha(int c);
@@ -92,21 +90,19 @@ void	ft_lstclear(t_list **lst, void (*del)(void*));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
-
 /**********************   FT_PRINTF AND FT_FPRINTF   ************************/
-int	ft_printf(const char *format_str, ...);
-int	ft_fprintf(int fd, const char *format_str, ...);
-int	logic_part(va_list *arg, const char **format_str,
-		int *written_bytes, int fd);
-int	ft_printf_handle_c(va_list *arg, int *written_bytes, int fd);
-int	ft_printf_handle_di(va_list *arg, int *written_bytes, int fd);
-int	ft_printf_handle_p(va_list *arg, int *written_bytes, int fd);
-int	ft_printf_handle_percent(int *written_bytes, int fd);
-int	ft_printf_handle_s(va_list *arg, int *written_bytes, int fd);
-int	ft_printf_handle_u(va_list *arg, int *written_bytes, int fd);
-int	ft_printf_handle_x(va_list *arg, int *written_bytes, int fd);
-int	ft_printf_handle_xx(va_list *arg, int *written_bytes, int fd);
-
+int		ft_printf(const char *format_str, ...);
+int		ft_fprintf(int fd, const char *format_str, ...);
+int		logic_part(va_list *arg, const char **format_str,
+			int *written_bytes, int fd);
+int		ft_printf_handle_c(va_list *arg, int *written_bytes, int fd);
+int		ft_printf_handle_di(va_list *arg, int *written_bytes, int fd);
+int		ft_printf_handle_p(va_list *arg, int *written_bytes, int fd);
+int		ft_printf_handle_percent(int *written_bytes, int fd);
+int		ft_printf_handle_s(va_list *arg, int *written_bytes, int fd);
+int		ft_printf_handle_u(va_list *arg, int *written_bytes, int fd);
+int		ft_printf_handle_x(va_list *arg, int *written_bytes, int fd);
+int		ft_printf_handle_xx(va_list *arg, int *written_bytes, int fd);
 
 /***************************   GET_NEXT_LINE   ******************************/
 
@@ -139,12 +135,11 @@ char	*append_buffer(t_file *current_file);
 char	*reading(t_file	*current_file);
 char	*shrink_out(int fd, t_file *first_file);
 
-
 /**************************   MINISHELL ADDITIONS   **************************/
 void	set_last_exit(int exit_status);
 bool	contains_non_white_spcace(char *str);
 void	*ft_realloc_copy_until_zeroed(void *ptr,
-		size_t new_count, size_t size);
+			size_t new_count, size_t size);
 bool	is_buffer_all_zeros(void *buffer, size_t size);
 char	*ft_strstrtrim(char const *s1, char const *sub);
 char	**ft_split_wildcards(char const *s);

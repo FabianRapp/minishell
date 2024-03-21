@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/20 17:57:18 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/21 15:11:24 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,13 +152,13 @@ typedef struct s_cleanup_data
 	char	*input;
 }	t_cleanup_data;
 
-typedef	struct s_arg	t_arg;
+// typedef	struct s_arg	t_arg;
 typedef	struct s_arg
 {
 	
 	t_type			type;
 	t_token_list	*name;
-	t_arg			*next;
+	struct s_arg	*next;
 }	t_arg;
 
 typedef	struct s_redir	t_redir;

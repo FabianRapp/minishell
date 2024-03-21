@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split.c                                         :+:      :+:    :+:   */
+/*   ft_split_fn.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/08 01:18:40 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/21 15:59:03 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/21 15:37:10 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/libft.h"
 
-static size_t	get_str_count(const char *s, char c)
+static size_t	get_str_count_fn(const char *s, bool is_sep(char))
 {
 	size_t	count;
 	int		was_c;
@@ -21,12 +21,12 @@ static size_t	get_str_count(const char *s, char c)
 	was_c = 1;
 	while (*s)
 	{
-		if (!was_c && *s == c)
+		if (!was_c && is_sep(*s))
 		{
 			count++;
 			was_c = 1;
 		}
-		else if (*s == c)
+		else if (is_sep(*s))
 			was_c = 1;
 		else
 			was_c = 0;
@@ -37,13 +37,13 @@ static size_t	get_str_count(const char *s, char c)
 	return (count);
 }
 
-static int	append_next_sub(char **sub_str, const char *s, char c)
+static int	append_next_sub_fn(char **sub_str, const char *s, bool is_sep(char))
 {
 	int		count;
 	int		len;
 	char	*found;
 
-	found = ft_strchr(s, c);
+	found = ft_strchr_fn(s, is_sep);
 	if (!found)
 		len = ft_strlen(s);
 	else
@@ -54,7 +54,7 @@ static int	append_next_sub(char **sub_str, const char *s, char c)
 	if (!(*sub_str))
 		return (-1);
 	count = 0;
-	while (s[count] && s[count] != c)
+	while (s[count] && !is_sep(s[count]))
 	{
 		(*sub_str)[count] = s[count];
 		count++;
@@ -62,23 +62,23 @@ static int	append_next_sub(char **sub_str, const char *s, char c)
 	return (count);
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_split_fn(char const *s, bool is_sep(char))
 {
 	size_t		str_count;
 	char		**str_ar;
 	int			i;
 	int			s_increase;
 
-	str_count = get_str_count(s, c);
+	str_count = get_str_count_fn(s, is_sep);
 	str_ar = (char **)ft_calloc(str_count + 1, sizeof(char *));
 	if (!str_ar)
 		return (NULL);
 	i = 0;
 	while (*s)
 	{
-		while (*s && *s == c)
+		while (*s && is_sep(*s))
 			s++;
-		s_increase = append_next_sub(str_ar + i, s, c);
+		s_increase = append_next_sub_fn(str_ar + i, s, is_sep);
 		if (s_increase == -1)
 			return (ft_free_2darr(str_ar), NULL);
 		if (s_increase)

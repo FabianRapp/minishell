@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/08 00:57:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/18 23:49:09 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/21 15:24:24 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char	*ft_strstrtrim(char const *s1, char const *sub)
 	if (!s1)
 		return (NULL);
 	trim = NULL;
-	while(*s1)
+	while (*s1)
 	{
 		if (*s1 && !ft_strncmp(s1, sub, ft_strlen(sub)))
 		{
