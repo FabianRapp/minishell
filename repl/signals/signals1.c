@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 18:05:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/21 18:24:51 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/21 22:31:59 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	signal_handler_ctrl_c(int signal, siginfo_t *info, void *data)
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
-	// printf("%s", SHELL_PROMPT);
 }
 
 t_result	set_ctrl_c(struct sigaction *sig)
@@ -38,10 +37,10 @@ t_result	set_ctrl_c(struct sigaction *sig)
 	return (SUCCESS);
 }
 
-void	reset_terminal()
-{
-}
+// void	reset_terminal()
+// {
+// }
 
-void	set_terminal()
-{
-}
+// void	set_terminal()
+// {
+// }

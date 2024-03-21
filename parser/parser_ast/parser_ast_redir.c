@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 05:35:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/21 20:28:04 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/21 22:25:09 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,18 +104,12 @@ t_result	parser_resolve_here_doc(char *termination,
 			line = readline(">");
 		count = line_counter();
 		if (!line && errno)
-		{
-			set_last_exit(errno);
-			errno = 0;
-			return (ERROR);
-		}
+			return (set_last_exit(errno), ERROR);
 		if (!line)
 		{
-			printf("errno: %d / %s\n", errno, strerror(errno));
 			temp = ft_strtrim(termination, "\n");
 			ft_fprintf(2, "%s: warning: here-document at line %d delimited by end-of-file (wanted `%s')\n", SHELL_NAME, count, temp);
-			free(temp);
-			return (SUCCESS);
+			return (free(temp), SUCCESS);
 		}
 		ft_strjoin_inplace(&line, "\n");
 		if (ft_strcmp(line, termination) == 0)
@@ -125,12 +119,9 @@ t_result	parser_resolve_here_doc(char *termination,
 		if (ft_fprintf(pipe_fd[WRITE], "%s", line) == -1)
 			return (set_last_exit(errno), ERROR);
 	}
-	free(line);
 	if (errno)
-		set_last_exit(errno);
-	else
-		set_last_exit(1);
-	return (ERROR);
+		return (free(line), set_last_exit(errno), ERROR);
+	return (free(line), set_last_exit(1), ERROR);
 }
 
 
@@ -188,7 +179,6 @@ t_result	append_redir(t_ast *ast_node, t_parser *args, t_redir **cur_redir)
 	(*cur_redir)->token_str_data = ft_strdup(args->token->str_data);
 	if (args->token->str_data && !(*cur_redir)->token_str_data)
 		return (ERROR);
-	
 	(*cur_redir)->arg = append_arg(args->arg, (*cur_redir)->arg);
 	if (!((*cur_redir)->arg) && (*cur_redir)->type != HERE_DOC)
 		return (ERROR);
