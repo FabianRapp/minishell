@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/21 20:26:29 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 00:48:41 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ bool	check_edgecases(t_ast *ast)
 {
 	if (no_command(ast) == true)
 		return (true);
-	if (ft_buildin(ast) == true)
+	if (!ast->dont_run_buildins && ft_buildin(ast) == true)
 		return (true);
 	return (false);
 }
@@ -98,8 +98,16 @@ void	run_command_node(t_ast *ast)
 	ft_close(&(ast->fd_to_close_write));
 	ft_close(&(ast->fd_to_close_read));
 	//check_fds();
-	if (execve(data.path, data.argv, *(ast->shared_data->envs)) == -1)
-		print_error("true", data.command_name, NULL, strerror(errno));
+	if (ast->shared_data->envs)
+	{
+		if (execve(data.path, data.argv, *(ast->shared_data->envs)) == -1)
+			print_error("true", data.command_name, NULL, strerror(errno));
+	}
+	else
+	{
+		if (execve(data.path, data.argv, NULL) == -1)
+			print_error("true", data.command_name, NULL, strerror(errno));
+	}
 	exit(errno);
 }
 

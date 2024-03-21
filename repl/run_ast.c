@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/19 03:49:24 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 00:51:00 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	init_command(t_ast *ast)
 		ast->exit_status = 1;
 		return ;
 	}
-	if (!expansion(ast))
+	if (!ast->dont_run_buildins && !expansion(ast))
 	{
 		//printf("DEBUG create_sub\n");
 		exit(1);
@@ -97,6 +97,27 @@ void	init_command(t_ast *ast)
 	set_last_exit(ast->exit_status);
 }
 
+void	ft_semicol(t_ast *ast)
+{
+	if (ast->left)
+		run_node(ast->left);
+	if (ast->right)
+	{
+		run_node(ast->right);
+		if (ast->right->exit_status != DEFAULT_EXIT_STATUS)
+			ast->exit_status = ast->right->exit_status;
+		else
+			ast->pid = ast->right->pid;
+	}
+	else
+	{
+		if (ast->left->exit_status != DEFAULT_EXIT_STATUS)
+			ast->exit_status = ast->left->exit_status;
+		else
+			ast->pid = ast->left->pid;
+	}
+}
+
 void	run_node(t_ast *ast)
 {
 	errno = 0;
@@ -106,6 +127,8 @@ void	run_node(t_ast *ast)
 		ft_and(ast);
 	else if (ast->type == OR)
 		ft_or(ast);
+	else if (ast->type == SEMICOL)
+		ft_semicol(ast);
 	if (ast->exit_status == DEFAULT_EXIT_STATUS)
 	{
 		if (ast->type == PIPE)

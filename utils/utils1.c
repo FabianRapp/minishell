@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/21 19:12:52 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 00:31:56 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -364,7 +364,7 @@ void	print_redir_list(t_redir *redir, int level, bool left)
 
 bool	is_operator(t_type type)
 {
-	if (type == PIPE || type == OR || type == AND)
+	if (type == PIPE || type == OR || type == AND || type == SEMICOL)
 	{
 		return (true);
 	}
@@ -466,7 +466,8 @@ bool	is_termination_char(char c)
 	if (c == 0 || c == '(' || c == ')' || c == '|' || c == '\'' || c == '\"' 
 		|| c == '>' || c == '<' 
 		|| c == '$' || c == '&'
-		|| ft_iswhitespace(c))
+		|| ft_iswhitespace(c)
+		|| c == ';')
 	{
 		return (true);
 	}
@@ -478,7 +479,8 @@ bool	is_wildcard_block_termination(char c)
 	if (c == 0 || c == '(' || c == ')' || c == '|'
 		|| c == '>' || c == '<'
 		|| c == '$' || c == '&'
-		|| ft_iswhitespace(c))
+		|| ft_iswhitespace(c)
+		|| c == ';')
 	{
 		return (true);
 	}

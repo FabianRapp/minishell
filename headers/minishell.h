@@ -6,20 +6,18 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/21 19:34:16 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 00:49:08 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 
-echo 1 | echo 2 | echo 3
-ls | cat << stop | ls -la | cat << stop1
-
-             TOTAL TEST COUNT: 994  TESTS PASSED: 966  LEAKING: 0 
-                     STD_OUT: 20  STD_ERR: 6  EXIT_CODE: 8  
+             TOTAL TEST COUNT: 994  TESTS PASSED: 970  LEAKING: 0 
+                     STD_OUT: 16  STD_ERR: 3  EXIT_CODE: 7  
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 34   
-                                     ✅ 2948 
+                                     ❌ 26   
+                                     ✅ 2956 
+
 TODO:
 	- lexer: check for too many closing quotes
 	- ft_atoi undef behaivior for huge number strs
@@ -212,6 +210,7 @@ typedef struct s_ast
 	int				fd_to_close;
 	int				fd_to_close_read;
 	int				fd_to_close_write;
+	bool			dont_run_buildins;
 }	t_ast;
 
 typedef struct s_pipe_data
@@ -322,7 +321,7 @@ struct fd_request
 
 /* ------------------------------ BUILT-INS ------------------------------ */
 int			ft_pwd(t_ast *ast);
-void		ft_env(t_ast *ast);
+int			ft_env(t_ast *ast);
 void		ft_export(t_ast *ast);
 void		ft_unset(t_ast *ast);
 void		ft_exit(t_ast *ast);

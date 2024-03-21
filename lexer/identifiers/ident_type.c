@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/19 01:47:33 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 00:28:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ void	basic_sign_type(t_lexer *lexer, t_token *token)
 		token->type = EXIT_STATUS_REQUEST;
 		lexer->read_position = lexer->position + 2;
 	}
+	else if (lexer->cur_char == ';' && lexer->last_char != '\\')
+		token->type = SEMICOL;
 	else
 		return ;
 	read_char(lexer);

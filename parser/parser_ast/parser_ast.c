@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 06:15:18 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 10:24:43 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/21 23:09:27 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,8 @@ t_ast	*append_redirs_args(t_parser *args, t_ast *ast_node, t_parser *parser)
 		{
 			ast_node->arg = append_arg(args, ast_node->arg);
 			if (!ast_node->arg)
-			{
 				return (free_parser_main(parser, true),
 					free_ast(ast_node), NULL);
-			}
 		}
 		args = args->next;
 	}
