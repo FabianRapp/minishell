@@ -51,7 +51,6 @@ t_token_list	*expand_list(t_shared_data *env, t_token_list *list)
 		list->token->type = LITERAL;
 	}
 	list->next = expand_list(env, list->next);
-
 	if ((list->token->type == WORD && word_splitting(&list) == ERROR) || !list)
 		return (list);
 	// merge_literals(list);
