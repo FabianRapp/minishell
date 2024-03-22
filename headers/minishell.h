@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 19:34:09 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/22 19:41:30 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -320,7 +320,7 @@ struct fd_request
 
 /* ------------------------------ BUILT-INS ------------------------------ */
 int			ft_pwd(t_ast *ast);
-void		ft_env(t_ast *ast);
+int			ft_env(t_ast *ast);
 void		ft_export(t_ast *ast, t_arg *cur_arg);
 void		ft_unset(t_ast *ast);
 void		ft_exit(t_ast *ast);
