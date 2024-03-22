@@ -3,63 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:26:07 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/20 18:03:01 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 19:23:09 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/*
-cd = change directory [either realtive or absolute path]
-
-examples:
-----------
-- cd (alone) or cd ~ or cd -- : 	change to the home fdirectory
-- cd .. : 							change to the parent/above directory
-- cd - : 							change to the last/previous working directory
-									AND prints the new directory. (cd and pwd directly)
-						
-cd with 1 or 3 or more slashes go to /    pwd: /
-cd // -->pwd: //
-*/
-
 #include "../headers/minishell.h"
 #include "../headers/eval.h"
-
-typedef struct	s_cd_vars
-{
-	char	**steps;
-	char	*cd_arg;
-	int		i;
-	char	*tmp;
-	char	*old_pwd;
-}	t_cd_vars;
-
-
-static char	*get_parent_dir_path(void)
-{
-	char	*cwd;
-	char	*parent;
-	char	*cut;
-
-	cwd = getcwd(NULL, PATH_MAX);
-	cut = ft_strrchr(cwd, 47);
-	parent = ft_substr(cwd, 0, cut - cwd);
-	free(cwd);
-	return (parent);
-}
-
-static int	ft_update_dir_vars(t_ast *ast, char *before, char *after)
-{
-	ft_update_env("OLDPWD", before, *(ast->shared_data->envs));
-	ft_update_env("PWD", after, *(ast->shared_data->envs));
-	ft_update_env("OLDPWD", before, *(ast->shared_data->env_exp));
-	ft_update_env("PWD", after, *(ast->shared_data->env_exp));
-	free(after);
-	free(before);
-	return (0);
-}
 
 static void	ft_cd_to_var(t_ast *ast, bool not_alone, char *path, char *var)
 {
@@ -90,36 +42,6 @@ static void	ft_cd_to_var(t_ast *ast, bool not_alone, char *path, char *var)
 		(ft_strcmp(var, "OLDPWD") || ft_pwd(ast)), free(to_go));
 }
 
-static char	*init_ft_cd_step(t_ast *ast, char *step, int index)
-{
-	char	*to_go;
-
-	to_go = ft_strdup(step);
-	if (index == 0 && !ft_strcmp(to_go, "~"))
-		(free(to_go), to_go = get_env_value(*(ast->shared_data->envs), "HOME"));
-	else if (!ft_strcmp(to_go, "."))
-		(free(to_go), to_go = get_env_value(*(ast->shared_data->envs), "PWD"));
-	else if (!ft_strcmp(to_go, ".."))
-		(free(to_go), to_go = get_parent_dir_path());
-	if (!to_go)
-		return (set_errno_as_exit(ast, false), NULL);
-	return (to_go);
-}
-
-typedef	struct s_cd_step_data
-{
-	t_ast 	*ast;
-	char	*step;
-	int		index;
-	char	*cd_arg;
-	bool	first;
-	char	*to_go;
-	char	*before;
-	char	*after;
-	char	*old_pwd;
-
-}	t_cd_step_data;
-
 static int	ft_cd_step(t_cd_step_data data)
 {
 	data.to_go = init_ft_cd_step(data.ast, data.step, data.index);
@@ -128,7 +50,8 @@ static int	ft_cd_step(t_cd_step_data data)
 	data.before = getcwd(NULL, PATH_MAX);
 	if (data.to_go && ft_strlen(data.to_go) == 0)
 	{
-		(free(data.to_go), data.to_go = ft_strdup("/"));
+		free(data.to_go);
+		data.to_go = ft_strdup("/");
 		if (!data.to_go)
 			return (set_errno_as_exit(data.ast, false), 0);
 	}
@@ -141,9 +64,10 @@ static int	ft_cd_step(t_cd_step_data data)
 			ft_cur_exit(data.ast, 1), free(data.to_go), free(data.before),
 			print_error(true, "cd", data.cd_arg,
 				"No such file or directory"), 0);
-	(free(data.old_pwd), data.after = getcwd(NULL, PATH_MAX));
+	free(data.old_pwd);
+	data.after = getcwd(NULL, PATH_MAX);
 	return ((data.first && ft_update_dir_vars(data.ast,
-			data.before, data.after)), 1);
+				data.before, data.after)), 1);
 }
 
 static t_arg	*cd_edge_cases(t_ast *ast)
@@ -205,22 +129,12 @@ int	ft_cd(t_ast *ast)
 	step_data.cd_arg = vars.cd_arg;
 	step_data.first = true;
 	if (*(vars.cd_arg) == '/' && !ft_cd_step(step_data))
-		return (chdir(vars.tmp), free(vars.tmp),
-			ft_update_env("OLDPWD", vars.old_pwd,
-				*(ast->shared_data->envs)), free(vars.old_pwd), 0);
+		return (chdir(vars.tmp), free(vars.tmp), ft_update_env("OLDPWD",
+				vars.old_pwd, *(ast->shared_data->envs)),
+			free(vars.old_pwd), 0);
 	if (*(vars.cd_arg) == '*')
-		(free(vars.cd_arg), vars.cd_arg
-			= get_env_value(*(ast->shared_data->envs), "HOME"));
+		(free(vars.cd_arg),
+			vars.cd_arg = get_env_value(*(ast->shared_data->envs), "HOME"));
 	vars.steps = ft_split(vars.cd_arg, '/');
 	return (cd_loop(vars, step_data));
 }
-
-//!		if i unset PATH, and then do:
-//!		cd -
-//!		i get the message: 
-//!		bash: cd: OLDPWD not set
-//!		
-//!		also, if I unset HOME and i do:
-//!		cd $HOME
-//!		i take the message:
-//!		bash: cd: HOME not set

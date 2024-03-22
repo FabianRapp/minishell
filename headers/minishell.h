@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/21 15:11:24 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/22 19:24:35 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,6 @@ weird stuff to keep in mind about bash
 # include "tokens.h"
 # include "parser.h"
 # include "eval.h"
-# include "signals.h"
 
 # define TESTER 1
 # define SHELL_NAME "minishell\0"
@@ -308,14 +307,38 @@ struct fd_request
 /* ------------------------------ BUILT-INS ------------------------------ */
 int			ft_pwd(t_ast *ast);
 void		ft_env(t_ast *ast);
-void		ft_export(t_ast *ast);
+void		ft_export(t_ast *ast, t_arg *cur_arg);
 void		ft_unset(t_ast *ast);
 void		ft_exit(t_ast *ast);
-int			ft_echo(t_ast *ast);
-int			ft_cap_echo(t_ast *ast);
+int			ft_echo(t_ast *ast, t_arg *cur_arg);
+int			ft_cap_echo(t_ast *ast, t_arg *cur_arg);
 int			ft_cd(t_ast *ast);
-int			arg_is_valid(char *arg, t_ast *ast, char *cmd_name);
 
+typedef struct	s_cd_vars
+{
+	char	**steps;
+	char	*cd_arg;
+	int		i;
+	char	*tmp;
+	char	*old_pwd;
+}	t_cd_vars;
+
+typedef	struct s_cd_step_data
+{
+	t_ast 	*ast;
+	char	*step;
+	int		index;
+	char	*cd_arg;
+	bool	first;
+	char	*to_go;
+	char	*before;
+	char	*after;
+	char	*old_pwd;
+}	t_cd_step_data;
+
+char	*get_parent_dir_path(void);
+int		ft_update_dir_vars(t_ast *ast, char *before, char *after);
+char	*init_ft_cd_step(t_ast *ast, char *step, int index);
 
 /* ---------------------------- ENV FUNCTIONS ---------------------------- */
 

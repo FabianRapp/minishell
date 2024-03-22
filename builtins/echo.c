@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 08:00:49 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/20 15:26:04 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 18:23:01 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,13 @@ static bool	print_with_or_without_space(t_arg *cur_arg, char *str_value)
 	return (true);
 }
 
-int	ft_echo(t_ast *ast)
+int	ft_echo(t_ast *ast, t_arg *cur_arg)
 {
-	t_arg	*cur_arg;
 	char	*str_value;
 	bool	no_new_line;
 	bool	stop_check;
 
-	(ft_cur_exit(ast, 0), cur_arg = ast->arg);
+	ft_cur_exit(ast, 0);
 	if (!cur_arg)
 		return (printf("\n"), 0);
 	no_new_line = false;
@@ -66,28 +65,26 @@ int	ft_echo(t_ast *ast)
 	return (0);
 }
 
-int	ft_cap_echo(t_ast *ast)
+int	ft_cap_echo(t_ast *ast, t_arg *cur_arg)
 {
-	t_arg	*cur_arg;
-	char	*str_value;
+	char	*str;
 	bool	no_new_line;
 
 	ft_cur_exit(ast, 0);
-	cur_arg = ast->arg;
 	if (!cur_arg)
 		return (printf("\n"), 0);
 	no_new_line = false;
-	str_value = cur_arg->name->token->str_data;
-	if (*str_value && *str_value == '-' && *(str_value + 1) == 'n' && !*(str_value + 2))
+	str = cur_arg->name->token->str_data;
+	if (*str && *str == '-' && *(str + 1) == 'n' && !*(str + 2))
 	{
 		no_new_line = true;
 		cur_arg = cur_arg->next;
 	}
 	while (cur_arg && cur_arg->name->token->type != T_EOF)
 	{
-		str_value = cur_arg->name->token->str_data;
-		if (str_value)
-			print_with_or_without_space(cur_arg, str_value);
+		str = cur_arg->name->token->str_data;
+		if (str)
+			print_with_or_without_space(cur_arg, str);
 		cur_arg = cur_arg->next;
 	}
 	if (no_new_line == false)

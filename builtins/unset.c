@@ -6,13 +6,12 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:34:24 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/20 12:57:36 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/22 18:09:53 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 #include "../headers/eval.h"
-
 
 static bool	arg_is_valid_unset(char *arg, t_ast *ast, char *cmd_name)
 {
@@ -33,7 +32,7 @@ static bool	arg_is_valid_unset(char *arg, t_ast *ast, char *cmd_name)
 	{
 		if (!(ft_isprint((int) *arg)))
 			return (ft_cur_exit(ast, 1), print_error_addsq(true, cmd_name,
-				save, "not a valid identifier"), false);
+					save, "not a valid identifier"), false);
 		arg++;
 	}
 	return (true);
@@ -54,9 +53,9 @@ void	ft_unset(t_ast *ast)
 		if (arg_is_valid_unset(str_value, ast, "unset"))
 		{
 			*(ast->shared_data->envs) = new_env_list_after_delete(str_value,
-				*(ast->shared_data->envs));
+					*(ast->shared_data->envs));
 			*(ast->shared_data->env_exp) = new_env_list_after_delete(str_value,
-				*(ast->shared_data->env_exp));
+					*(ast->shared_data->env_exp));
 		}
 		else
 		{

@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/21 14:05:37 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/22 18:22:21 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ bool	ft_buildin(t_ast *ast)
 	if (!ft_strcmp(ast->name->token->str_data, "cd"))
 		return (ft_cd(ast), true);
 	if (!ft_strcmp(ast->name->token->str_data, "export"))
-		return (ft_export(ast), true);
+		return (ft_export(ast, ast->arg), true);
 	if (!ft_strcmp(ast->name->token->str_data, "unset"))
 		return (ft_unset(ast), true);
 	cmd_name = ft_strdup(ast->name->token->str_data);
@@ -36,8 +36,8 @@ bool	ft_buildin(t_ast *ast)
 	if (!ft_strcmp(cmd_name, "echo"))
 	{
 		if (!ft_strcmp(ast->name->token->str_data, "echo"))
-			return (free(cmd_name), ft_echo(ast), true);
-		return (free(cmd_name), ft_cap_echo(ast), true);
+			return (free(cmd_name), ft_echo(ast, ast->arg), true);
+		return (free(cmd_name), ft_cap_echo(ast, ast->arg), true);
 	}
 	if (!ft_strcmp(cmd_name, "pwd"))
 		return (free(cmd_name), ft_pwd(ast), true);

@@ -36,7 +36,6 @@ SOURCES = repl/main.c \
 		  utils/utils3.c \
 		  repl/utils/repl_get_pid.c \
 		  cleanup/cleanup1.c \
-		  repl/signals/child_parent_coms.c \
 		  utils/debugging.c \
 		  utils/utils1.c \
 		  utils/groups1.c \
@@ -47,12 +46,13 @@ SOURCES = repl/main.c \
 		  builtins/exit.c \
 		  builtins/echo.c \
 		  builtins/cd.c \
+		  builtins/cd_utils.c \
 		  environment/initialize_env.c \
 		  environment/modify_env.c \
 		  environment/get_env_parts.c \
 		  repl/repl_redir/repl_redir_main.c \
 		  repl/repl_redir/repl_redir_utils.c \
-		  repl/repl_redir/repl_redir_error_handler.c\
+		  repl/repl_redir/repl_redir_error_handler.c \
 		  repl/pipes.c
 
 OBJECTS= $(SOURCES:.c=.o)
