@@ -1,18 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals.h                                          :+:      :+:    :+:   */
+/*   ft_free_2darr.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/03 16:00:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 06:40:06 by frapp            ###   ########.fr       */
+/*   Created: 2023/11/18 16:54:29 by mevangel          #+#    #+#             */
+/*   Updated: 2024/03/21 18:52:03 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../headers/libft.h"
 
-#ifndef SIGNALS_H
-# define SIGNALS_H
+void	ft_free_2darr(char **array)
+{
+	int	i;
 
-#endif
+	i = 0;
+	if (!array)
+		return ;
+	while (array[i] != NULL)
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
+}

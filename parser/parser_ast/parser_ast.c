@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 06:15:18 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 10:24:43 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 01:14:12 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,16 @@ t_ast	*append_redirs_args(t_parser *args, t_ast *ast_node, t_parser *parser)
 			if (cur_redir->type == HERE_DOC && (parser_resovle_here_doc(cur_redir) == ERROR))
 				return (free_parser_main(parser, true),
 					free_ast(ast_node), NULL);
+			else if (cur_redir->type == HERE_STR && (parser_resovle_here_str(cur_redir) == ERROR))
+				return (free_parser_main(parser, true),
+					free_ast(ast_node), NULL);
 		}
 		else if (args->p_type == ARGUMENT)
 		{
 			ast_node->arg = append_arg(args, ast_node->arg);
 			if (!ast_node->arg)
-			{
 				return (free_parser_main(parser, true),
 					free_ast(ast_node), NULL);
-			}
 		}
 		args = args->next;
 	}

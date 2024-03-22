@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 10:15:17 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 01:59:15 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,26 +45,23 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 
 	cleanup_data->root = NULL;
 	cleanup_data->input = NULL;
+	//set_ctrl_c(&(cleanup_data->shared_data->sig_set));
 	input = ft_read_line("minishell-$: ");
+	//signal(SIGINT, SIG_DFL);
 	//input = readline("minishell-$: ");
+	
 	if (!input)
 	{
-		//exit(get_last_exit());
-		//if (TESTER)
-			//exit(get_last_exit());
-		return (NULL);
+		if (!TESTER)
+			ft_fprintf(2, "exit\n");
+		main_exit(cleanup_data, true, true);
 	}
 	if (!contains_non_white_spcace(input))
-	{
-		//if (TESTER)
-			//exit(get_last_exit());
 		return (free(input), NULL);
-	}
 	add_history(input);
 	ast = parser(input);
 	if (ast)
 	{
-		cleanup_data->input = input;
 		cleanup_data->input = input;
 		cleanup_data->root = ast;
 		return (ast);
@@ -77,6 +74,7 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 
 void	main_exit(t_cleanup_data *data, bool full_exit, bool ft_exit_call)
 {
+	t_shared_data	*shared_data;
 	// if (!data)
 	// 	printf("no cleanup data\n");
 	// else if (!data->root)
@@ -85,6 +83,7 @@ void	main_exit(t_cleanup_data *data, bool full_exit, bool ft_exit_call)
 	// 	printf("in sub mode: %d/%d\n", data->root->exit_status, get_last_exit());
 	// else
 	// 	printf("not sub mode: %d/%d(root/last)\n", data->root->exit_status, get_last_exit());
+	shared_data = data->shared_data;
 	if (data && data->root && !ft_exit_call && data->root->exit_status == DEFAULT_EXIT_STATUS)
 	{
 		if (data->root && data->root->pid > 0)
@@ -101,20 +100,26 @@ void	main_exit(t_cleanup_data *data, bool full_exit, bool ft_exit_call)
 	// 	printf("in sub mode: %d/%d\n", data->root->exit_status, get_last_exit());
 	// else
 	// 	printf("not sub mode: %d/%d(root/last)\n", data->root->exit_status, get_last_exit());
-	if (data->root && data->root->env)
-		data->root->env->stop_execution = false;
+	if (data->root && data->root->shared_data)
+		data->root->shared_data->stop_execution = false;
 	free(data->input);
 	if (data->root)
 		free_ast(data->root);
 	data->root = NULL;
 	cleanup_fds();
-	if (LEAK_CHECK)
-		system("leaks minishell");
+
 	//check_fds();
 	if (full_exit)
 	{
+		if (shared_data->env_exp)
+			ft_free_2darr(*(shared_data->env_exp));
+		if (shared_data->envs)
+			ft_free_2darr(*(shared_data->envs));
+		if (LEAK_CHECK)
+			system("leaks minishell");
 		exit(get_last_exit());
-		exit(1);
 	}
+	if (LEAK_CHECK)
+		system("leaks minishell");
 	errno = 0;
 }

@@ -3,19 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup1.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 06:07:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 06:07:57 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 18:01:47 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/parser.h"
 #include "../headers/lexer.h"
 
-// Iterates through and frees all associated redirection and argument structures.
-// If the here-doc arg starts with "<<<<" that means the following integer string
-// corresponds to an open fd
+/*
+	Iterates through and frees all associated redirection and argument structures.
+	If the here-doc arg starts with "<<<<" that means the following integer string
+	corresponds to an open fd
+*/
 void	free_redir(t_redir *redir)
 {
 	t_redir	*last;
@@ -49,4 +51,3 @@ void	free_ast(t_ast *ast)
 	free_redir(ast->redir);
 	free(ast);
 }
-

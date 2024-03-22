@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:49:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 16:53:37 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/20 14:47:23 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,14 @@ t_token_list	*next_wildcard_token(DIR *cur_dir,
 		return (free(new_token), NULL);
 	new_token->type = LITERAL;
 	new_node->token = new_token;
-	new_token->str_data = next_file_name(cur_dir);
+	new_token->str_data = next_file_name(cur_dir, w_para->prefix);
 	while (new_token->str_data && !errno
 		&& !matches_wildcard(new_token->str_data, w_para))
 	{
 		free(new_token->str_data);
-		new_token->str_data = next_file_name(cur_dir);
+		new_token->str_data = next_file_name(cur_dir, w_para->prefix);
 	}
-	if (!new_token->str_data)
+	if (!new_token->str_data || ft_strlen(new_token->str_data) == 0)
 	{
 		free_token(new_token);
 		return (ft_free((void **) &(new_node)), NULL);
@@ -44,7 +44,8 @@ t_token_list	*next_wildcard_token(DIR *cur_dir,
 void	expand_wildcard_node_exit(t_wildcard_node_expasion this_data,
 	t_token_list *node)
 {
-	free_token(node->token);
+	if (node)
+		free_token(node->token);
 	*node = *(this_data.w_head);
 	closedir(this_data.cur_dir);
 	clean_wildcard_data(&(this_data.w_para));
@@ -54,8 +55,12 @@ void	expand_wildcard_node_exit(t_wildcard_node_expasion this_data,
 t_result	expand_wildcard_node(t_token_list *node)
 {
 	t_wildcard_node_expasion	this_data;
+	char	*tmp;
 
-	this_data.w_str = node->token->str_data;
+	this_data.w_str = ft_strdup(node->token->str_data);
+	tmp = ft_strnstr(node->token->str_data, "3}{!", ft_strlen(node->token->str_data));
+	if (tmp)
+		ft_memmove(tmp, tmp + 4, ft_strlen(tmp + 4) + 1);
 	this_data.base_next = node->next;
 	if (fill_wildcard_data(this_data.w_str, &(this_data.w_para)) == ERROR)
 		return (ERROR);
@@ -82,13 +87,56 @@ t_result	expand_wildcard_node(t_token_list *node)
 
 t_result	wildcards(t_token_list *name)
 {
+	
+	char		*data_str;
+	char		*tmp;
+
+	data_str = NULL;
 	while (name)
 	{
 		// if (name->token->type == WILDCARD && ft_strchr(name->token->str_data, '*'))
-		if (name->token && ft_strchr(name->token->str_data, '*') && name->token->expand_wildcards)
+		
+		free(data_str);
+		data_str = NULL;
+		if (name && name->token)
+			data_str = ft_strdup(name->token->str_data);
+		// /if (name->token && data_str && ft_strchr(data_str, '*'))
+		while (data_str && ft_strchr(data_str, '*'))
 		{
-			name->token->type = LITERAL;
-			expand_wildcard_node(name);
+			//printf("dat str: %s\n", data_str);
+			if (ft_strchr(data_str, '*') - data_str >= 3 && *(ft_strchr(data_str, '*') - 1) == '{'
+				&& *(ft_strchr(data_str, '*') - 2) == '}')
+			{
+				// tmp = ft_strstrtrim(name->token->str_data, "}{");
+				// printf("before: %s\n after: %s\n", name->token->str_data, tmp);
+				// free(name->token->str_data);
+				// name->token->str_data = tmp;
+				// if (!name->token->str_data)
+				// {// todo error
+				// }
+				name->token->type = LITERAL;
+				// printf("before: %s\n", name->token->str_data);
+				expand_wildcard_node(name);
+				
+				//printf("before: %s\n", name->token->str_data);
+				tmp = ft_strstrtrim(name->token->str_data, "1}{");
+				free(name->token->str_data);
+				name->token->str_data = tmp;
+				tmp = ft_strstrtrim(tmp, "2}{");
+				free(name->token->str_data);
+				name->token->str_data = tmp;
+				tmp = ft_strstrtrim(tmp, "3}{");
+				free(name->token->str_data);
+				name->token->str_data = tmp;
+				//printf("after: %s\n", tmp);
+				if (!name->token->str_data)
+				{// todo error
+				}
+				break ;
+			}
+			tmp = ft_strdup(ft_strchr(data_str, '*') + 1);
+			free(data_str);
+			data_str = tmp;
 		}
 		name = name->next;
 	}

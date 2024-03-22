@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 21:18:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 00:33:20 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/21 15:13:57 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 #include "../headers/minishell.h"
 
 // minishell
-static void	print_error_calloc(bool shell_name, char *command_name, char *arg, char *str)
+static void	print_error_calloc(bool shell_name, char *cmd, char *arg, char *str)
 {
 	if (shell_name)
 		ft_fprintf(2, "%s: ", SHELL_NAME);
-	if (command_name)
-		ft_fprintf(2, "%s: ", command_name);
+	if (cmd)
+		ft_fprintf(2, "%s: ", cmd);
 	if (arg)
 		ft_fprintf(2, "%s: ", arg);
 	if (str)
@@ -37,7 +37,7 @@ void	*ft_calloc(size_t count, size_t size)
 	arr = (char *)malloc(bytes);
 	if (!arr)
 	{
-		print_error_calloc(true, NULL,"Error", "Memory allocation failed");
+		print_error_calloc(true, NULL, "Error", "Memory allocation failed");
 		set_last_exit(errno);
 		return (NULL);
 	}

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 08:38:58 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/20 14:22:18 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,14 @@ t_result	valid_first_char(t_lexer *lexer)
 	{
 		print_error(true, "debug valid_first_char",
 			NULL, "syntax error near unexpected token `)\'");
+		set_last_exit(2);
 		return (ERROR);
+	}
+	if (lexer->cur_char == '$'
+		&& (lexer->str[lexer->position + 1] == '\''
+			|| lexer->str[lexer->position + 1] == '\"'))
+	{
+		read_char(lexer);
 	}
 	return (SUCCESS);
 }
@@ -29,7 +36,7 @@ t_result	handle_exception_char(t_lexer *lexer, t_token *token)
 	if (lexer->cur_char != '\\')
 		return (SUCCESS);
 	read_char(lexer);
-	return (literal_type2(lexer, token, true));
+	return (ident_wildcard_literals(lexer, token, true));
 }
 
 t_token	*classify_sub_str(t_token *token, t_lexer *lexer, bool recursive_call)
@@ -51,7 +58,7 @@ t_token	*classify_sub_str(t_token *token, t_lexer *lexer, bool recursive_call)
 		return (lexer_error(token), NULL);
 	else if (!token->type && subshell_type(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);
-	else if (!token->type && literal_type2(lexer, token, false) == ERROR)
+	else if (!token->type && ident_wildcard_literals(lexer, token, false) == ERROR)
 		return (lexer_error(token), NULL);
 	else if (!token->type)
 		token->unknown = lexer->cur_char;
@@ -113,7 +120,10 @@ t_lexer	new_lexer(char *str)
 	lexer.last_char = 0;
 	lexer.position = 0;
 	lexer.read_position = 0;
-	lexer.str = str;
+	lexer.str = NULL;
+	lexer.str = ft_strdup(str);
+	if (!lexer.str)
+		return (lexer);
 	skip_leading_void_whitespace(&lexer);
 	return (lexer);
 }

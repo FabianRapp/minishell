@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 10:10:02 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/21 23:17:45 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,11 @@ t_result	redirs_have_arg(t_parser *parser)
 {
 	while (parser->p_type != T_EOF)
 	{
-		// if (is_redir(parser->p_type) && parser->arg == NULL)// && parser->p_type != HERE_DOC)
 		if (is_redir(parser->p_type) && parser->arg == NULL && parser->p_type != HERE_DOC)
 		{
 			while (parser->next->p_type == WHITE_SPACE)
 				parser = parser->next;
-			print_error(true, "debug redirs_have_arg", NULL, type_to_str(parser->next->token->type));
+			print_error(true, NULL, NULL, type_to_str(parser->next->token->type));
 			return (ERROR);
 		}
 		parser = parser->next;
@@ -37,14 +36,13 @@ t_result	parse_redir_paths(t_parser *parser)
 {
 	while (parser->p_type != T_EOF)
 	{
-		// if (is_redir(parser->p_type))// && parser->p_type != HERE_DOC)
 		if (is_redir(parser->p_type) && parser->p_type != HERE_DOC)
 		{
 			move_to_arg(parser, is_redir_arg_terminator, REDIR_ARG, false);
 		}
 		parser = parser->next;
 	}
-	parser = parser->next; // reset to head of circular list
+	parser = parser->next;
 	return (redirs_have_arg(parser));
 }
 
@@ -55,7 +53,7 @@ void	type_args(t_parser *parser)
 	last_command_start = parser;
 	while (parser->p_type != T_EOF)
 	{
-		if (parser->p_type == COMMAND)// && parser->token->type != SUBSHELL)
+		if (parser->p_type == COMMAND)
 		{
 			move_to_arg(parser, command_terminator, ARGUMENT, true);
 		}
@@ -134,8 +132,12 @@ bool	has_redir_arg(t_parser *parser)
 	cur_arg = parser->arg;
 	while (cur_arg)
 	{
-		if ((is_redir(cur_arg->p_type) || is_redir(cur_arg->token->type)) && cur_arg->token->type != HERE_DOC)
+		if ((is_redir(cur_arg->p_type)
+				|| is_redir(cur_arg->token->type))
+			&& cur_arg->token->type != HERE_DOC)
+		{
 			return (true);
+		}
 		cur_arg = cur_arg->next;
 	}
 	return (false);
@@ -156,41 +158,44 @@ t_parser	*has_none_redir_arg(t_parser *parser)
 	return (NULL);
 }
 
-// TODO: dosnt work: would print error for echo (echo)
+t_result	check_error_valid_order(t_parser *parser, bool in_command_block)
+{
+	char	*temp;
+
+	if (parser->token && parser->token->type == SUBSHELL && has_none_redir_arg(parser))
+	{
+		temp = ft_strjoin("syntax error near unexpected token ", has_none_redir_arg(parser)->token->str_data);
+		return (print_error(true, NULL, NULL, temp), free(temp), set_last_exit(2), ERROR);
+	}
+	if ((parser->p_type == COMMAND || parser->p_type == SUBSHELL || parser->p_type == DUMMY_COMMAND) && in_command_block)
+	{
+		if (parser->p_type == COMMAND)
+		{
+			temp = ft_strjoin("syntax error near unexpected token ", parser->token->str_data);
+			print_error(true, NULL, NULL, temp);
+			free(temp);
+		}
+		else if (parser->p_type == SUBSHELL)
+			print_error(true, NULL, NULL, "syntax error near unexpected token `('");
+		else
+			print_error(true, NULL, NULL, "Error");
+		return (set_last_exit(2), ERROR);
+	}
+	return (SUCCESS);
+}
+
 t_result	validate_command_oder(t_parser *parser)
 {
 	bool	in_command_block;
-	char	*temp;
+	
 
 	if (!parser)
 		return (ERROR);
 	in_command_block = false;
 	while (parser && parser->p_type != T_EOF)
 	{
-		if (parser->token && parser->token->type == SUBSHELL && has_none_redir_arg(parser))
-		{
-			temp = ft_strjoin("syntax error near unexpected token ", has_none_redir_arg(parser)->token->str_data);
-			print_error(true, NULL, NULL, temp);
-			set_last_exit(2);
+		if (check_error_valid_order(parser, in_command_block) == ERROR)
 			return (ERROR);
-		}
-		if ((parser->p_type == COMMAND || parser->p_type == SUBSHELL || parser->p_type == DUMMY_COMMAND) && in_command_block)
-		{
-			if (parser->p_type == COMMAND)
-			{
-				temp = ft_strjoin("syntax error near unexpected token ", parser->token->str_data);
-				print_error(true, NULL, NULL, temp);
-				free(temp);
-			}
-			else if (parser->p_type == SUBSHELL)
-			{
-				print_error(true, NULL, NULL, "syntax error near unexpected token `('");
-			}
-			else
-				print_error(true, NULL, NULL, "Error");
-			set_last_exit(2);
-			return (ERROR);
-		}
 		if (parser->p_type == COMMAND || parser->p_type == SUBSHELL || parser->p_type == DUMMY_COMMAND)
 			in_command_block = true;
 		if (is_operator(parser->p_type) && !in_command_block)
@@ -217,7 +222,6 @@ t_ast	*parser(char *str)
 	if (merge_literals_parser(parser) == ERROR)
 		return (free_parser_main(parser, true), NULL);
 	merge_names(parser);
-	
 	remove_whitespace(parser);
 	if (parse_redir_paths(parser) == ERROR)
 		return (free_parser_main(parser, true), NULL);
@@ -229,31 +233,3 @@ t_ast	*parser(char *str)
 		return (free_parser_main(parser, true), NULL);
 	return (build_ast(parser));
 }
-
-t_parser	*parser_testing(char *str)
-{
-	t_parser	*parser;
-
-	if (!str)
-		return (NULL);
-	parser = init_parser(str);
-	if (has_content(parser) == ERROR)
-		return (NULL);
-	trim_whitespace(parser);
-	if (merge_literals_parser(parser) == ERROR)
-		return (free_parser_main(parser, true), NULL);
-	merge_names(parser);
-	remove_whitespace(parser);
-	if (parse_redir_paths(parser) == ERROR)
-		return (free_parser_main(parser, true), NULL);
-	if (type_commands(parser) == ERROR)
-		return (free_parser_main(parser, true), NULL);
-	//return (parser);
-	move_commands_infront(parser);
-	return (parser);
-	type_args(parser);
-	
-	//system("leaks minishell");
-}
-
-// echo 'hello_word' | cat && (ls >> file > fil2 || echo 'ls failed') && cat < file && cat < file2

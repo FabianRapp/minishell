@@ -6,11 +6,22 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 15:11:39 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 01:55:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
+int	ft_close(int *fd)
+{
+	int	ret;
+
+	ret = 0;
+	if (*fd != INIT_VAL)
+		ret = close(*fd);
+	*fd = INIT_VAL;
+	return (ret);
+}
 
 int	count_open_fds(void)
 {
@@ -32,7 +43,6 @@ int	count_open_fds(void)
 	errno = err;
 	return (FD_SETSIZE / 2 - fd_count);
 }
-
 
 void	add_token_back_node(t_token_list **list, t_token_list *new_node)
 {
@@ -82,7 +92,6 @@ void	free_token_list(t_token_list *list)
 		free(last);
 	}
 }
-
 
 void	free_arg_list(t_arg *list)
 {
@@ -149,6 +158,7 @@ t_result	set_errno_as_exit(t_ast *ast, bool msg)
 	{
 		if (msg)
 			print_error(true, NULL, NULL, strerror(errno));
+		errno = 0;
 		return (ERROR);
 	}
 	return (SUCCESS);
@@ -162,82 +172,6 @@ int	line_counter(void)
 	return (line_count);
 }
 
-// char	*ft_read_line(char *header)
-// {
-// 	char	*line;
-// 	char	*temp;
-// 	int		pid;
-// 	int		pipe_fd[2];
-// 	int		ret;
-
-// 	pipe(pipe_fd);
-// 	pid = fork();
-// 	errno = 0;
-// 	if (pid)
-// 	{
-// 		line_counter();
-// 		close(pipe_fd[WRITE]);
-// 		if (pid < 0)
-// 		{
-// 			set_last_exit(errno);
-// 			errno = 0;
-// 			close(pipe_fd[READ]);
-// 			return (NULL);
-// 		}
-// 		line = get_next_line(pipe_fd[READ]);
-// 		if (waitpid(pid, &ret, 0) == - 1 || WEXITSTATUS(ret))
-// 			return (free(line), set_last_exit(WEXITSTATUS(ret)), NULL);
-// 		return (line);
-// 	}
-// 	if (!isatty(fileno(stdin)))
-// 	{
-// 		temp = get_next_line(fileno(stdin));
-// 		line = ft_strtrim(temp, "\n");
-// 		free(temp);
-// 	}
-// 	else
-// 		line = readline(header);
-// 	write(pipe_fd[WRITE], line, ft_strlen(line));
-// 	exit(errno);
-// }
-
-// char	*ft_read_line(char *header)
-// {
-// 	char		*line;
-// 	char		*temp;
-// 	static char	**lines = NULL;
-// 	static int	i;
-// 	int			err;
-
-// 	err = errno;
-// 	line = NULL;
-// 	if (!isatty(0))
-// 	{
-// 		if (lines && !lines[i])
-// 		{
-// 			free_str_ar(lines);
-// 			lines = NULL;
-// 		}
-// 		if (!lines)
-// 		{
-// 			i = 0;
-// 			temp = get_next_line(0);
-// 			lines = ft_split(temp, '\n');
-// 			free(temp);
-// 			if (lines)
-// 				line = lines[i++];
-// 		}
-// 		else
-// 			line = lines[i++];
-// 		//line = ft_strtrim(temp, "\n");
-// 	}
-// 	else
-// 		line = readline(header);
-// 	line_counter();
-// 	errno = err;
-// 	return (line);
-// }
-
 char	*ft_read_line(char *header)
 {
 	char	*line;
@@ -247,7 +181,6 @@ char	*ft_read_line(char *header)
 	{
 		temp = get_next_line(0);
 		line = ft_strtrim(temp, "\n");
-		//line = temp;
 		free(temp);
 	}
 	else
@@ -300,11 +233,26 @@ void	print_error(bool shell_name, char *command_name, char *arg, char *str)
 		if (command_name)
 			ft_fprintf(2, "%s: ", command_name);
 		if (arg)
-			ft_fprintf(1, "%s: ", arg);
+			ft_fprintf(2, "%s: ", arg);
 		if (str)
 			ft_fprintf(2, "%s", str);
 		ft_fprintf(2, "\n");
 	}
+}
+
+//bash prints: bash: export: `4add=hi': not a valid identifier
+// and with the above function i was missing the quotes
+void	print_error_addsq(bool shell_name, char *command_name, char *arg, char *str)
+{
+	if (shell_name)
+		ft_fprintf(2, "%s: ", SHELL_NAME);
+	if (command_name)
+		ft_fprintf(2, "%s: ", command_name);
+	if (arg)
+		ft_fprintf(2, "`%s': ", arg);
+	if (str)
+		ft_fprintf(2, "%s", str);
+	ft_fprintf(2, "\n");
 }
 
 bool	ft_free(void **ptr)
@@ -416,7 +364,7 @@ void	print_redir_list(t_redir *redir, int level, bool left)
 
 bool	is_operator(t_type type)
 {
-	if (type == PIPE || type == OR || type == AND)
+	if (type == PIPE || type == OR || type == AND || type == SEMICOL)
 	{
 		return (true);
 	}
@@ -488,17 +436,51 @@ void	free_token(t_token *token)
 	free(token);
 }
 
-void	cleanup(char *location)
+// check errno when calling this
+char	*extract_command_name(char *path)
 {
-	printf("clean up placeholder: %s\n", location);
+	char	*name;
+	int		i;
+	char	**arr;
+
+	if (ft_strncmp("/", path, 1) && ft_strncmp(".", path, 1) && ft_strncmp("..", path, 2))
+		return (ft_strdup(path));
+	arr = ft_split(path, '/');
+	if (!arr)
+		return (NULL);
+	i = 0;
+	while (arr[i])
+	{
+		i++;
+	}
+	if (!i)
+		return (ft_free_2darr(arr), NULL);
+	name = arr[i - 1];
+	arr[i - 1] = NULL;
+	ft_free_2darr(arr);
+	return (name);
 }
 
 bool	is_termination_char(char c)
 {
 	if (c == 0 || c == '(' || c == ')' || c == '|' || c == '\'' || c == '\"' 
-		|| c == '>' || c == '<' || c == '?' || c == '\'' 
+		|| c == '>' || c == '<' 
 		|| c == '$' || c == '&'
-		|| ft_iswhitespace(c))
+		|| ft_iswhitespace(c)
+		|| c == ';')
+	{
+		return (true);
+	}
+	return (false);
+}
+
+bool	is_wildcard_block_termination(char c)
+{
+	if (c == 0 || c == '(' || c == ')' || c == '|'
+		|| c == '>' || c == '<'
+		|| c == '$' || c == '&'
+		|| ft_iswhitespace(c)
+		|| c == ';')
 	{
 		return (true);
 	}

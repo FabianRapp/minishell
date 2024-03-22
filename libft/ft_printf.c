@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/12 15:47:23 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/29 10:33:46 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/21 15:29:37 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "../headers/libft.h"
 
 int	logic_part(va_list *arg, const char **format_str,
 		int *written_bytes, int fd)
@@ -50,7 +50,7 @@ int	ft_fprintf(int fd, const char *format_str, ...)
 		len = 0;
 		while (format_str[len] && format_str[len] != '%')
 			len++;
-		if (len && write (fd, format_str, len) == -1)
+		if (len && write(fd, format_str, len) == -1)
 			return (-1);
 		written_bytes += len;
 		format_str += len;
@@ -79,7 +79,7 @@ int	ft_printf(const char *format_str, ...)
 		len = 0;
 		while (format_str[len] && format_str[len] != '%')
 			len++;
-		if (len && write (1, format_str, len) == -1)
+		if (len && write(1, format_str, len) == -1)
 			return (-1);
 		written_bytes += len;
 		format_str += len;
@@ -87,11 +87,7 @@ int	ft_printf(const char *format_str, ...)
 			break ;
 		if (*format_str == '%')
 			format_str++;
-		if (!(*format_str) || written_bytes < 0)
-			break ;
 		if (logic_part(&arg, &format_str, &written_bytes, 1) == -1)
-			break ;
-		if (!(*format_str) || written_bytes < 0)
 			break ;
 		format_str++;
 	}

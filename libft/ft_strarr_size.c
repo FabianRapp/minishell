@@ -1,13 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   child_parent_coms.c                                :+:      :+:    :+:   */
+/*   ft_strarr_size.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/03 15:01:17 by frapp             #+#    #+#             */
-/*   Updated: 2024/02/25 06:40:02 by frapp            ###   ########.fr       */
+/*   Created: 2024/03/14 00:25:37 by mevangel          #+#    #+#             */
+/*   Updated: 2024/03/14 02:48:36 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/signals.h"
+#include "../headers/libft.h"
+
+//returns the size of a NULL-terminated array of strings
+size_t	ft_strarr_size(char **ptr)
+{
+	size_t	i;
+
+	i = 0;
+	while (ptr[i] != NULL)
+		i++;
+	return (i);
+}

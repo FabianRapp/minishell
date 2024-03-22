@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/08 00:57:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 11:35:58 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/21 15:24:24 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,26 @@ char	*ft_strtrim(char const *s1, char const *set)
 	while (len-- > 0)
 		*(trim++) = *(s1++);
 	return (trim_ret);
+}
+
+char	*ft_strstrtrim(char const *s1, char const *sub)
+{
+	char	*trim;
+
+	if (!s1)
+		return (NULL);
+	trim = NULL;
+	while (*s1)
+	{
+		if (*s1 && !ft_strncmp(s1, sub, ft_strlen(sub)))
+		{
+			s1 += ft_strlen(sub);
+			continue ;
+		}
+		if (*s1)
+			if (!ft_strjoin_inplace_char(&trim, *s1))
+				return (NULL);
+		s1++;
+	}
+	return (trim);
 }

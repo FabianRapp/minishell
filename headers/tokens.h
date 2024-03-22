@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:16:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 17:04:55 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 01:01:42 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ typedef enum e_type
 	REDIR_ARG,// not identified by lexer->parser
 	DUMMY_COMMAND, // empty command but not a syntax error (redir only)
 	LITERAL,
+	SEMICOL,
+	HERE_STR,
 }	t_type;
 
 
@@ -57,7 +59,6 @@ typedef struct s_token
 	char		*left_redir_arg;
 	bool		here_doc_arg_literal;
 	char		*old_data;
-	bool		expand_wildcards;
 }	t_token;
 
 void		init_token(t_token *token, t_lexer *lexer);

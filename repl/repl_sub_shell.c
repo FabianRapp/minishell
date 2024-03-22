@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 07:36:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/10 13:17:08 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 00:20:14 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,11 @@ static t_result	mange_sub_shell_fds(t_ast *ast)
 	return (SUCCESS);
 }
 
-static t_ast	*init_sub_shell(t_ast *ast, char *input, t_env *sub_env, t_cleanup_data *cleanup_data)
+static t_ast	*init_sub_shell(t_ast *ast, char *input, t_shared_data *shared_sub_vars, t_cleanup_data *sub_cleanup_data)
 {
-	t_ast	*sub_ast;
+	t_ast		*sub_ast;
 
+	sub_cleanup_data->shared_data = shared_sub_vars;
 	ast->pid = fork();
 	errno = 0;
 	if (ast->pid)
@@ -53,6 +54,14 @@ static t_ast	*init_sub_shell(t_ast *ast, char *input, t_env *sub_env, t_cleanup_
 		// printf("val: %d\n", ast->exit_status);
 		return (NULL);
 	}
+	*shared_sub_vars = *(ast->shared_data);
+	*(shared_sub_vars->envs) = ft_initialize_our_env(*(ast->shared_data->envs));
+	if (*(shared_sub_vars->envs) == NULL)
+		return (NULL);
+	*(shared_sub_vars->env_exp) = ft_initialize_our_env(*(ast->shared_data->envs));
+	get_env_list(shared_sub_vars->envs);
+	if (*(shared_sub_vars->env_exp) == NULL)
+		return (ft_free_2darr(*(shared_sub_vars->envs)), NULL);
 	// if (!contains_non_white_spcace(input))
 	// {
 	// 	return (NULL);
@@ -60,25 +69,26 @@ static t_ast	*init_sub_shell(t_ast *ast, char *input, t_env *sub_env, t_cleanup_
 	sub_ast = parser(input);
 	if (!sub_ast)
 	{
-		main_exit(cleanup_data, true, false);
+		main_exit(sub_cleanup_data, true, false);
 	}
-	cleanup_data->input = input;
-	cleanup_data->root = sub_ast;
-	add_global_data(sub_ast, sub_env, ast->envs, cleanup_data);
+	sub_cleanup_data->input = input;
+	sub_cleanup_data->root = sub_ast;
+	shared_sub_vars->cleanup_data = sub_cleanup_data;
+	add_global_data(sub_ast, shared_sub_vars);
 	if (mange_sub_shell_fds(ast) == ERROR)
 		return (free_ast(sub_ast), exit(ast->exit_status), NULL);
 	return (sub_ast);
 }
 
 // TODO: does every sub process command update the last exit?
-static void	run_sub_shell(t_env sub_env, char *input, t_ast *ast)
+static void	run_sub_shell(t_shared_data shared_sub_vars, char *input, t_ast *ast)
 {
 	t_ast			*sub_ast;
-	t_cleanup_data	cleanup_data;
+	t_cleanup_data	sub_cleanup_data;
 
-	cleanup_data.root = NULL;
-	cleanup_data.input = NULL;
-	sub_ast = init_sub_shell(ast, input, &sub_env, &cleanup_data);
+	sub_cleanup_data.root = NULL;
+	sub_cleanup_data.input = NULL;
+	sub_ast = init_sub_shell(ast, input, &shared_sub_vars, &sub_cleanup_data);
 	if (sub_ast == NULL)
 		return ;
 	sub_ast->exit_status = ast->exit_status;
@@ -102,6 +112,7 @@ static void	run_sub_shell(t_env sub_env, char *input, t_ast *ast)
 // lets make sure thers no segault just in case =)
 static t_result	check_missing_input(char *input)
 {
+
 	if (!input)
 	{
 		print_error(true, NULL, NULL, "Error");
@@ -111,26 +122,43 @@ static t_result	check_missing_input(char *input)
 	if (!*input)
 	{
 		print_error(true, NULL, NULL,
-			"syntax 111 error near unexpected token `)'");
+			"syntax error near unexpected token `)'");
 		set_last_exit(2);
 		return (ERROR);
 	}
+	// char	*tmp;
+	// char	*tmp2;
+	// if (*input == '(' && input[ft_strlen(input) - 1] == ')')
+	// {
+	// 	set_last_exit(1);
+	// 	tmp = ft_strndup(input + 1, ft_strlen(input) - 1);
+	// 	if (ft_strchr(tmp, ')') == tmp + ft_strlen(tmp) - 1)
+	// 	{
+	// 		tmp2 = ft_strjoin("syntax error in expression (error token is \"", tmp);
+	// 		ft_strjoin_inplace(&tmp2, "\")");
+	// 		print_error(true, "((", tmp, tmp2);
+	// 		free(tmp2);
+	// 	}
+	// 	free(tmp);
+	// 	return (ERROR);
+	// }
 	return (SUCCESS);
 }
 
 void	create_sub_shell(t_ast *ast)
 {
-	if (ast->env->stop_execution && ast->exit_status == DEFAULT_EXIT_STATUS)
+	if (ast->shared_data->stop_execution && ast->exit_status == DEFAULT_EXIT_STATUS)
 		ast->exit_status = 1;
 	if (ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
 	if (check_missing_input(ast->name->token->str_data) == ERROR)
 	{
-		ast->exit_status = 2;
+		//ast->exit_status = 2;
+		ast->exit_status = get_last_exit();
 		return ;
 	}
 	sub_shell_mode(SET_SUB_SHELL);
-	run_sub_shell(*(ast->env), ast->name->token->str_data, ast);
+	run_sub_shell(*(ast->shared_data), ast->name->token->str_data, ast);
 	sub_shell_mode(UNSET_SUB_SHELL);
 	if (ast->pid == -1)
 	{

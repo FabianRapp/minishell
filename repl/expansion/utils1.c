@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:00 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 14:33:14 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/21 20:31:54 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ t_result	env_to_word_token(t_token *token)
 
 	token->type = WORD;
 	ft_free((void **)&(token->str_data));
-	env_var = getenv(token->old_data);
+	//env_var = getenv(token->old_data);
+	env_var = get_env_value(NULL, token->old_data);
 	errno = 0;
 	if (!env_var)
 	{
@@ -66,7 +67,7 @@ t_result	env_to_word_token(t_token *token)
 // 	return (SUCCESS);
 // }
 
-t_result	pidreq_to_literal_token(t_env *env, t_token *token)
+t_result	pidreq_to_literal_token(t_shared_data *env, t_token *token)
 {
 	token->type = LITERAL;
 	token->str_data = ft_itoa(env->main_pid);
@@ -74,6 +75,7 @@ t_result	pidreq_to_literal_token(t_env *env, t_token *token)
 		return (ERROR);
 	return (SUCCESS);
 }
+
 
 // // for error messages where the base string is needed and here_doc expansion
 // t_result	add_dollar(t_token *token)

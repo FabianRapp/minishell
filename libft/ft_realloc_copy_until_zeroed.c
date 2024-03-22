@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_realloc_copy_until_zeroed.c                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 02:29:02 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/07 03:11:19 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/21 15:25:06 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,19 @@ bool	is_buffer_all_zeros(void *buffer, size_t size)
  * @param ptr The old buffer to copy data from.
  * @param new_count The number of elements in the new buffer.
  * @param size The size of each element.
- * @return A pointer to the newly allocated buffer, or NULL on failure or if new_count is 0.
+ * @return A pointer to the newly allocated buffer, or NULL on failure or 
+ * 		   if new_count is 0.
  */
-void	*ft_realloc_copy_until_zeroed(void *ptr, size_t new_count, size_t size)
+void	*ft_realloc_copy_until_zeroed(void *ptr, size_t new_cnt, size_t size)
 {
 	int8_t			*new;
 	size_t			i;
 	int8_t			*old;
 	size_t			offset;
 
-	if (!new_count)
+	if (!new_cnt)
 		return (free(ptr), NULL);
-	new = ft_calloc(new_count, size);
+	new = ft_calloc(new_cnt, size);
 	if (!new)
 		return (free(ptr), NULL);
 	old = (int8_t *)ptr;
@@ -57,7 +58,7 @@ void	*ft_realloc_copy_until_zeroed(void *ptr, size_t new_count, size_t size)
 		return (new);
 	i = 0;
 	offset = 0;
-	while (!is_buffer_all_zeros(ptr + offset, size) && i < new_count)
+	while (!is_buffer_all_zeros(ptr + offset, size) && i < new_cnt)
 	{
 		ft_memcpy(new + offset, ptr + offset, size);
 		i++;

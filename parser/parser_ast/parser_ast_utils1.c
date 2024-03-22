@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 05:44:50 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 07:08:12 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 00:33:59 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,12 @@
 
 t_parser	*find_highest_operator(t_parser *parser)
 {
+	while (parser && parser->p_type != T_EOF && parser->p_type != SEMICOL)
+		parser = parser->next;
+	if (parser->p_type == T_EOF)
+		parser = parser->next;
+	else
+		return (parser);
 	while (!is_command_block_terminator(parser->p_type)
 		|| parser->p_type == PIPE)
 	{

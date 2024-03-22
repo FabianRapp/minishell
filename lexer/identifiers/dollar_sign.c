@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 21:33:17 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 10:37:26 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/19 02:25:54 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,6 @@ static t_result	pid_req(t_lexer *lexer, t_token *token)
 	lexer->read_position = lexer->position + 2;
 	return (SUCCESS);
 }
-
-// // has to be called from dollar_lexing()
-// t_result	void_env_type(t_lexer *lexer, t_token *token)
-// {
-// 	if (!ft_isdigit((lexer->str)[lexer->position + 1]))
-// 		return (ERROR);
-// 	lexer->read_position = lexer->position + 2;
-// 	token->type = VOID;
-// 	return (SUCCESS);
-// }
 
 // has to be called from dollar_lexing()
 // caller has to check for malloc fail
@@ -78,11 +68,11 @@ t_result	dollar_lexing(t_lexer *lexer, t_token *token)
 			return (read_char(lexer), SUCCESS);
 		return (ERROR);
 	}
-	if (lexer->str[lexer->position + 1] == '\'' || lexer->str[lexer->position + 1] == '\"')
+	if (lexer->str[lexer->position + 1] == '\''
+		|| lexer->str[lexer->position + 1] == '\"')
 	{
 		if (hande_quote(lexer, token) == ERROR)
-		{
-		}
+			return (ERROR);
 		if (token->type)
 			return (read_char(lexer), SUCCESS);
 	}
@@ -94,7 +84,6 @@ t_result	dollar_lexing(t_lexer *lexer, t_token *token)
 	token->old_data = ft_strndup((lexer->str) + lexer->position + 1, len);
 	if (!token->str_data || !token->old_data)
 		return (ERROR);
-	lexer->read_position = lexer->position + 1 + len;
-	read_char(lexer);
+	(lexer->read_position = lexer->position + 1 + len, read_char(lexer));
 	return (SUCCESS);
 }
