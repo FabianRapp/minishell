@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:46:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 00:28:48 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 22:53:30 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,19 @@
 // reads the next char into the lexer and updates indexes
 void	read_char(t_lexer *lexer)
 {
+	if (lexer->read_position > ((int)ft_strlen(lexer->str)))
+	{
+		printf("debuig read_char\n");
+		exit(1);
+	}
 	lexer->last_char = lexer->cur_char;
-	lexer->cur_char = (lexer->str)[lexer->read_position];
+	if (lexer->str)
+		lexer->cur_char = (lexer->str)[lexer->read_position];
 	lexer->position = lexer->read_position;
 	if (lexer->read_position < ((int)ft_strlen(lexer->str)))
 		(lexer->read_position)++;
+	else
+		lexer->read_position = (int)ft_strlen(lexer->str);
 }
 
 void	init_token(t_token *token, t_lexer *lexer)

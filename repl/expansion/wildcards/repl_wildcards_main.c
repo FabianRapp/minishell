@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:49:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 20:19:19 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 23:45:39 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,51 +85,52 @@ t_result	expand_wildcard_node(t_token_list *node)
 	return (errno_to_result());
 }
 
+t_result	trim_identifiers(t_token_list *name, bool set_this_true)
+{
+	char	*tmp;
+	char	**to_edit;
+
+	if (set_this_true)
+		to_edit = &(name->token->str_data);
+	else
+		to_edit = &(name->token->old_data);
+	tmp = ft_strstrtrim(*to_edit, "1}{");
+	free(*to_edit);
+	*to_edit = tmp;
+	tmp = ft_strstrtrim(tmp, "2}{");
+	free(*to_edit);
+	*to_edit = tmp;
+	tmp = ft_strstrtrim(tmp, "3}{!");
+	free(*to_edit);
+	*to_edit = tmp;
+	tmp = ft_strstrtrim(tmp, "3}{");
+	free(*to_edit);
+	*to_edit = tmp;
+	if (!*to_edit)
+		return (ERROR);
+	return (trim_identifiers(name, false));
+}
+
 t_result	wildcards(t_token_list *name)
 {
-	
 	char		*data_str;
 	char		*tmp;
 
 	data_str = NULL;
 	while (name)
 	{
-		// if (name->token->type == WILDCARD && ft_strchr(name->token->str_data, '*'))
-		free(data_str);
-		data_str = NULL;
+		ft_free((void **)&data_str);
 		if (name && name->token)
 			data_str = ft_strdup(name->token->str_data);
-		// /if (name->token && data_str && ft_strchr(data_str, '*'))
 		while (data_str && ft_strchr(data_str, '*'))
 		{
-			//printf("dat str: %s\n", data_str);
 			if (ft_strchr(data_str, '*') - data_str >= 3 && *(ft_strchr(data_str, '*') - 1) == '{'
 				&& *(ft_strchr(data_str, '*') - 2) == '}')
 			{
-				// tmp = ft_strstrtrim(name->token->str_data, "}{");
-				// printf("before: %s\n after: %s\n", name->token->str_data, tmp);
-				// free(name->token->str_data);
-				// name->token->str_data = tmp;
-				// if (!name->token->str_data)
-				// {// todo error
-				// }
 				name->token->type = LITERAL;
-				// printf("before: %s\n", name->token->str_data);
 				expand_wildcard_node(name);
-				
-				//printf("before: %s\n", name->token->str_data);
-				tmp = ft_strstrtrim(name->token->str_data, "1}{");
-				free(name->token->str_data);
-				name->token->str_data = tmp;
-				tmp = ft_strstrtrim(tmp, "2}{");
-				free(name->token->str_data);
-				name->token->str_data = tmp;
-				tmp = ft_strstrtrim(tmp, "3}{");
-				free(name->token->str_data);
-				name->token->str_data = tmp;
-				//printf("after: %s\n", tmp);
-				if (!name->token->str_data)
-				{// todo error
+				if (trim_identifiers(name, true) == ERROR)
+				{// TODO ERROR
 				}
 				break ;
 			}

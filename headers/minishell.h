@@ -3,20 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 19:41:30 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/22 23:48:04 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 
-             TOTAL TEST COUNT: 994  TESTS PASSED: 970  LEAKING: 0 
-                     STD_OUT: 16  STD_ERR: 3  EXIT_CODE: 7  
+
+
+             TOTAL TEST COUNT: 994  TESTS PASSED: 971  LEAKING: 0 
+                     STD_OUT: 16  STD_ERR: 2  EXIT_CODE: 7  
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 26   
-                                     ✅ 2956 
+                                     ❌ 25   
+                                     ✅ 2957 
 
 TODO:
 	- lexer: check for too many closing quotes

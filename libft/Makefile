@@ -1,9 +1,9 @@
-FLAGS_NO_LEAK_CHECK =
-# -fsanitize=undefined -fsanitize=address -g
+FLAGS_NO_LEAK_CHECK = 
+#  -fsanitize=undefined -fsanitize=address -g
+CFLAGS=-Wall -Wextra -Werror
 
-LDFLAGS = 
+LDFLAGS =
 # -fsanitize=undefined -fsanitize=address -g
-
 NAME	=	libft.a
 CFLAGS	=	-Wall -Wextra -Werror
 CC		=	cc

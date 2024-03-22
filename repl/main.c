@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 20:12:18 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 20:30:11 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,7 @@ int	main(int ac, char **av, char **base_env)
 	if (!ast)
 		main_exit(&cleanup_data, full_exit_status(false) == true, false);
 	if (TESTER && !cleanup_data.input)
-		exit(get_last_exit());
+		main_exit(&cleanup_data, true, false);
 	while (1)
 	{
 		if (ast)

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/20 14:22:18 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 23:02:32 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ void	skip_leading_void_whitespace(t_lexer *lexer)
 {
 	t_lexer	last;
 	t_token	*token;
+	char	*tmp;
 
 	read_char(lexer);
 	last = *lexer;
@@ -108,7 +109,9 @@ void	skip_leading_void_whitespace(t_lexer *lexer)
 		last.str = NULL;
 	else
 		free_token(token);
+	tmp = lexer->str;
 	*lexer = last;
+	lexer->str = tmp;
 }
 
 // inits a lexer object, returns the object

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 01:13:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 02:59:21 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 23:02:52 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ t_result	handle_wildcard(t_lexer *lexer, bool is_start, t_token *token)
 			tmp = ft_strndup(lexer->str, lexer->position + 1);
 			if (!ft_strjoin_inplace(&tmp, "3}{!"))
 				return (ERROR);
+			//printf(" lexer->str + lexer->position + 1: %s\n",  lexer->str + lexer->position + 1);
 			if (!ft_strjoin_inplace(&tmp, lexer->str + lexer->position + 1))
 				return (ERROR);
 			free(lexer->str);
@@ -86,9 +87,9 @@ t_result	handle_wildcard(t_lexer *lexer, bool is_start, t_token *token)
 static t_result	copy_str(t_lexer *lexer,
 	t_token *token, bool skip_next_term, bool is_start)
 {
-	while ((!is_termination_char(lexer->cur_char) || skip_next_term)
-		&& lexer->cur_char)
+	while (lexer->cur_char && ((!is_termination_char(lexer->cur_char) || skip_next_term)))
 	{
+		//printf("lexer before read: %s\n", lexer->str + lexer->position);
 		if (!skip_next_term && lexer->cur_char == '*'
 			&& handle_wildcard(lexer, is_start, token) == ERROR)
 			return (ERROR);
@@ -102,6 +103,8 @@ static t_result	copy_str(t_lexer *lexer,
 		if (!ft_strjoin_inplace_char(&(token->str_data), lexer->cur_char))
 			return (ERROR);
 		read_char(lexer);
+		//printf("lexer after read: %s\n", lexer->str + lexer->position);
+		//printf("token->strdata: %s\n", token->str_data);
 		is_start = false;
 	}
 	return (SUCCESS);
