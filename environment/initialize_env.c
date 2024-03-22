@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/22 02:38:12 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 19:08:01 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	**ft_initialize_our_env(char **base_env)
 	shlvl_index = 0;
 	while (base_env[i])
 		i++;
-	ret = ft_calloc((i + 1), sizeof(char *));
+	ret = ft_calloc((i + 60), sizeof(char *));
 	if (ret == NULL)
 		return (NULL);
 	ret[i] = NULL;
