@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:33:33 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 00:04:15 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 03:01:02 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static t_result	word_split_baseclean(t_token *old, char **arr,
 static t_result	handle_end(int i, t_token *old, t_token_list **list, char **arr)
 {
 	ft_free_2darr(arr);
-	// if (i && ft_iswhitespace(old->str_data[ft_strlen(old->str_data) - 1]))
+	//if (i && ft_iswhitespace(old->str_data[ft_strlen(old->str_data) - 1]))
 	if (old && ft_strlen(old->str_data) && ft_iswhitespace(old->str_data[ft_strlen(old->str_data) - 1]))
 	{
 		return (insert_whitespace_end(list));
