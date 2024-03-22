@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 01:57:59 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 20:12:18 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,6 +199,8 @@ int	main(int ac, char **av, char **base_env)
 		ast = get_input(&cleanup_data);
 		if (!ast)
 			main_exit(&cleanup_data, full_exit_status(false) == true, false);
+	// system("leaks minishell");
+	// exit(1);
 	}
 	return (0);
 }

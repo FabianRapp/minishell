@@ -99,6 +99,7 @@ $(NAME): $(OBJECTS)
 
 
 leaks: CFLAGS += -DLEAK_CHECK=1
+leaks: fclean
 leaks: libs_leaks
 leaks: $(OBJECTS)
 leaks: $(NAME)

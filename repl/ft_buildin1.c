@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_buildin1.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 19:30:55 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/22 20:16:15 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ bool	ft_buildin(t_ast *ast)
 		return (ft_export(ast, ast->arg), true);
 	if (!ft_strcmp(ast->name->token->str_data, "unset"))
 		return (ft_unset(ast), true);
+	if (!ft_strcmp(ast->name->token->str_data, "echo"))
+		return (ft_echo(ast, ast->arg), true);
 	cmd_name = ft_strdup(ast->name->token->str_data);
 	if (!cmd_name)
 	{
@@ -34,16 +36,12 @@ bool	ft_buildin(t_ast *ast)
 	}
 	ft_strtolower(cmd_name);
 	if (!ft_strcmp(cmd_name, "echo"))
-	{
-		if (!ft_strcmp(ast->name->token->str_data, "echo"))
-			return (free(cmd_name), ft_echo(ast, ast->arg), true);
 		return (free(cmd_name), ft_cap_echo(ast, ast->arg), true);
-	}
 	if (!ft_strcmp(cmd_name, "pwd"))
 		return (free(cmd_name), ft_pwd(ast), true);
 	if (!ft_strcmp(cmd_name, "env"))
 		return (free(cmd_name), ft_env(ast), true);
-	return (false);
+	return (free(cmd_name), false);
 }
 
 void	ft_cur_exit(t_ast *ast, int exit_value)

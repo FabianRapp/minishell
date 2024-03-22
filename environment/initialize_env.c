@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initialize_env.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/22 19:36:38 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/22 20:06:25 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ static void	ft_update_shlvl(int shlvl_index, char ***env)
 	free(before);
 	after = ft_itoa(num + 1);
 	ft_update_env("SHLVL", after, *env);
+	free(after);
 }
 
 char	**ft_initialize_our_env(char **base_env)
