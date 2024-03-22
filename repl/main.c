@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 01:57:59 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 22:22:22 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,16 +124,13 @@ void	add_global_data(t_ast *ast, t_shared_data *shared_data)
 	ast->exit_status = DEFAULT_EXIT_STATUS;
 }
 
-// bool	init_shared_data(t_shared_data *new_env, char **env_list)
-// {
-// 	if (!new_env)
-// 		return (false);
-// 	if (!env_list)
-// 		return (false);
-// 	new_env->main_process = true;
-// 	new_env->stop_execution = false;
-// 	return (true);
-// }
+static bool	init_shared_data(t_shared_data *new_env)
+{
+	if (!new_env)
+		return (false);
+	new_env->stop_execution = false;
+	return (true);
+}
 
 t_result	init_main(int ac, t_shared_data *shared_data)
 {

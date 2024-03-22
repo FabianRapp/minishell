@@ -6,12 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/22 19:36:38 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/22 22:44:25 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
-#include "../headers/eval.h"
 
 /*
 if shlvl is unset or non-numeric -> new subterminal has SHLVL=1.

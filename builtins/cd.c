@@ -6,12 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:26:07 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/22 19:38:22 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/22 22:44:00 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
-#include "../headers/eval.h"
 
 static void	ft_cd_to_var(t_ast *ast, bool not_alone, char *path, char *var)
 {

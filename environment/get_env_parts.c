@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   get_env_parts.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/22 19:23:04 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 22:44:22 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
-#include "../headers/eval.h"
 
 char	*get_env_var_name(char *line)
 {

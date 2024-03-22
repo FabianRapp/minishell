@@ -6,12 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/22 19:34:22 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/22 22:44:28 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
-#include "../headers/eval.h"
 
 static char	**if_already_in_env(char **env, char *str_to_add, int *add)
 {
