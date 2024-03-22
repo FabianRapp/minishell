@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:16:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 00:24:29 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 01:01:42 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef enum e_type
 	DUMMY_COMMAND, // empty command but not a syntax error (redir only)
 	LITERAL,
 	SEMICOL,
+	HERE_STR,
 }	t_type;
 
 

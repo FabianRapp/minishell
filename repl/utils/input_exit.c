@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/21 20:25:13 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 01:59:15 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,11 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 
 	cleanup_data->root = NULL;
 	cleanup_data->input = NULL;
+	//set_ctrl_c(&(cleanup_data->shared_data->sig_set));
 	input = ft_read_line("minishell-$: ");
+	//signal(SIGINT, SIG_DFL);
 	//input = readline("minishell-$: ");
+	
 	if (!input)
 	{
 		if (!TESTER)

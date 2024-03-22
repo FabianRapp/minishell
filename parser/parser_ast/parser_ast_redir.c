@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 05:35:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/21 22:25:09 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 01:27:03 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,9 +147,7 @@ t_result	parser_resovle_here_doc(t_redir *redir)
 	if (!redir->token_str_data)
 		return (close(pipe_fd[READ]), close(pipe_fd[WRITE]),
 			free(termination), ERROR);
-	temp = NULL;
-	if (redir->token_str_data)
-		temp = ft_strjoin("<<<<", redir->token_str_data);
+	temp = ft_strjoin("<<<<", redir->token_str_data);
 	free(redir->token_str_data);
 	redir->token_str_data = temp;
 	if (!redir->token_str_data
@@ -158,6 +156,36 @@ t_result	parser_resovle_here_doc(t_redir *redir)
 			free(termination), ERROR);
 	return (close(pipe_fd[WRITE]), free(termination), SUCCESS);
 }
+
+t_result	parser_resovle_here_str(t_redir *redir)
+{
+	int				pipe_fd[2];
+	char			*str;
+	char			*temp;
+
+	str = redir->arg->name->token->str_data;
+	redir->arg->name->token->str_data = NULL;
+	if (pipe(pipe_fd) == -1)
+		return (set_last_exit(errno), free(str), ERROR);
+	redir->token_str_data = ft_itoa(pipe_fd[READ]);
+	if (!redir->token_str_data)
+		return (close(pipe_fd[READ]), close(pipe_fd[WRITE]),
+			free(str), ERROR);
+	temp = ft_strjoin("<<<<", redir->token_str_data);
+	free(redir->token_str_data);
+	if (!temp)
+		return (close(pipe_fd[READ]), close(pipe_fd[WRITE]),
+			free(str), ERROR);
+	redir->token_str_data = temp;
+	if (write (pipe_fd[WRITE], str, ft_strlen(str)) == -1)
+		return (close(pipe_fd[READ]), close(pipe_fd[WRITE]),
+			free(str), ERROR);
+	if (write (pipe_fd[WRITE], "\n", 1) == -1)
+		return (close(pipe_fd[READ]), close(pipe_fd[WRITE]),
+			free(str), ERROR);
+	return (close(pipe_fd[WRITE]), free(str), SUCCESS);
+}
+
 
 t_result	append_redir(t_ast *ast_node, t_parser *args, t_redir **cur_redir)
 {

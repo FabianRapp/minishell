@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 00:49:08 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 01:46:56 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -344,6 +344,7 @@ char	***get_env_list(char ***set_new_env);//added
 /* ---------------------------- SIGNALS ----------------------------------- */
 
 t_result	set_ctrl_c(struct sigaction *sig_set);
+t_result	set_ctrl_slash(struct sigaction *sig);
 
 // ----------- additional utils -----------------
 void	print_error_addsq(bool shell_name, char *command_name, char *arg, char *str);

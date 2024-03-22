@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 19:21:02 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 07:12:00 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 01:13:16 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ t_parser				*last_parser(t_parser *parser);
 t_result				append_redir(t_ast *ast_node, t_parser *args,
 							t_redir **cur_redir);
 t_result				parser_resovle_here_doc(t_redir *redir);
+t_result				parser_resovle_here_str(t_redir *redir);
 
 // parser_ast/parser_ast_utils1.c
 t_left_right_parsers	split_parser(t_parser *split_location);

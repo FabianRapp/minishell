@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 00:48:41 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 01:57:59 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,10 @@ t_result	init_main(int ac, t_shared_data *shared_data)
 {
 	errno = 0;
 	set_last_exit(0);
+	shared_data->env_exp = NULL;
+	shared_data->envs = NULL;
+	set_ctrl_slash(&(shared_data->sig_set));
+	set_ctrl_c(&(shared_data->sig_set));
 	if (ac > 2)
 	{
 		print_error(true, NULL, NULL, "max one arg allowed");
@@ -152,14 +156,6 @@ t_result	init_main(int ac, t_shared_data *shared_data)
 	return (SUCCESS);
 }
 
-void	check_exit_and_cleanup(t_cleanup_data *cleanup_data)
-{
-	if (full_exit_status(false) == true)
-		main_exit(cleanup_data, true, false);
-	else
-		main_exit(cleanup_data, false, false);
-}
-
 int	main(int ac, char **av, char **base_env)
 {
 	t_ast			*ast;
@@ -169,9 +165,6 @@ int	main(int ac, char **av, char **base_env)
 	char			**exp_list;
 
 	cleanup_data.shared_data = &shared_data;
-	shared_data.env_exp = NULL;
-	shared_data.envs = NULL;
-	set_ctrl_c(&(shared_data.sig_set));
 	if (init_main(ac, &shared_data) == ERROR)
 		return (1);
 	(void)av;
@@ -187,7 +180,7 @@ int	main(int ac, char **av, char **base_env)
 	shared_data.cleanup_data = &cleanup_data;
 	ast = get_input(&cleanup_data);
 	if (!ast)
-		check_exit_and_cleanup(&cleanup_data);
+		main_exit(&cleanup_data, full_exit_status(false) == true, false);
 	if (TESTER && !cleanup_data.input)
 		exit(get_last_exit());
 	while (1)
@@ -201,11 +194,11 @@ int	main(int ac, char **av, char **base_env)
 			ast->shared_data->cleanup_data = &cleanup_data;
 			//print_ast(ast);
 			run_node(ast);
-			check_exit_and_cleanup(&cleanup_data);
+			main_exit(&cleanup_data, full_exit_status(false) == true, false);
 		}
 		ast = get_input(&cleanup_data);
 		if (!ast)
-			check_exit_and_cleanup(&cleanup_data);
+			main_exit(&cleanup_data, full_exit_status(false) == true, false);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/20 17:57:18 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 02:39:22 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,8 @@ void	ft_update_env(char *var_name, char *new_value, char **env)
 	i = 0;
 	while (env[i] && ft_strncmp(var_name, env[i], ft_strlen(var_name)))
 		i++;
+	if (!env[i])
+		return ;
 	free(env[i]);
 	half = ft_strjoin(var_name, "=");
 	env[i] = ft_strjoin(half, new_value);
