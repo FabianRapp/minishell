@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/20 12:34:40 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/22 01:57:59 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ bool	check_edgecases(t_ast *ast)
 {
 	if (no_command(ast) == true)
 		return (true);
-	if (ft_buildin(ast) == true)
+	if (!ast->dont_run_buildins && ft_buildin(ast) == true)
 		return (true);
 	return (false);
 }
@@ -94,17 +94,20 @@ void	run_command_node(t_ast *ast)
 		free_child_data(&data);
 		return ;
 	}
-	if (ast->fd_to_close != INIT_VAL)
-		close(ast->fd_to_close);
-	if (ast->fd_to_close_write != INIT_VAL)
-		close(ast->fd_to_close_write);
-	if (ast->fd_to_close_read != INIT_VAL)
-	{
-		close(ast->fd_to_close_read);
-	}
+	ft_close(&(ast->fd_to_close));
+	ft_close(&(ast->fd_to_close_write));
+	ft_close(&(ast->fd_to_close_read));
 	//check_fds();
-	if (execve(data.path, data.argv, *(ast->shared_data->envs)) == -1)
-		print_error("true", data.command_name, NULL, strerror(errno));
+	if (ast->shared_data->envs)
+	{
+		if (execve(data.path, data.argv, *(ast->shared_data->envs)) == -1)
+			print_error("true", data.command_name, NULL, strerror(errno));
+	}
+	else
+	{
+		if (execve(data.path, data.argv, NULL) == -1)
+			print_error("true", data.command_name, NULL, strerror(errno));
+	}
 	exit(errno);
 }
 
@@ -136,6 +139,10 @@ t_result	init_main(int ac, t_shared_data *shared_data)
 {
 	errno = 0;
 	set_last_exit(0);
+	shared_data->env_exp = NULL;
+	shared_data->envs = NULL;
+	set_ctrl_slash(&(shared_data->sig_set));
+	set_ctrl_c(&(shared_data->sig_set));
 	if (ac > 2)
 	{
 		print_error(true, NULL, NULL, "max one arg allowed");
@@ -149,70 +156,15 @@ t_result	init_main(int ac, t_shared_data *shared_data)
 	return (SUCCESS);
 }
 
-void	check_exit_and_cleanup(t_cleanup_data *cleanup_data)
-{
-	if (full_exit_status(false) == true)
-		main_exit(cleanup_data, true, false);
-	else
-		main_exit(cleanup_data, false, false);
-}
-
-
-void what_sig(int signal_number) {
-	// Print the received signal number
-	printf("Received signal: %d\n", signal_number);
-	// Re-register the signal handler for next time
-	//signal(signal_number, signal_handler);
-}
-
-void display_dynamic_prompt(void)
-{
-	// Move cursor up one line if this is not the first time
-	printf("\033[A\033[2K");
-	// Display the dynamic prompt
-	// printf("\r%s\n", dynamic_text);
-	printf("\r\n%s", SHELL_PROMPT);
-}
-
-void	signal_handler(int signal)
-{
-	// if (signal == 3)
-	// 	return ;
-	if (signal == 2)
-	{
-		//write(1, "\n\0", 2);
-		//free(readline(NULL));
-		// write(1, "\n\0", 2);
-		display_dynamic_prompt();
-		rl_replace_line(SHELL_PROMPT, 0);
-		
-		rl_redisplay();
-		
-		// free(readline(NULL));
-		
-	}
-}
 int	main(int ac, char **av, char **base_env)
 {
-	//signal(SIGINT, signal_handler);
-	//signal(SIGQUIT, signal_handler);
-	// signal(SIGINT, signal_handler);
-	// for (int i = 0; i <= 255; i++)
-	// {
-	// 	if (i != 3 && i != 2)
-	// 		signal(i, what_sig);
-	// }
-	// Infinite loop to keep the program running to catch the signal
-	// while (1) {
-	// 	//sleep(1); // Sleep for 1 second
-	// }
-	
 	t_ast			*ast;
 	t_cleanup_data	cleanup_data;
 	t_shared_data	shared_data;
 	char			**env_list;
 	char			**exp_list;
 
+	cleanup_data.shared_data = &shared_data;
 	if (init_main(ac, &shared_data) == ERROR)
 		return (1);
 	(void)av;
@@ -228,11 +180,9 @@ int	main(int ac, char **av, char **base_env)
 	shared_data.cleanup_data = &cleanup_data;
 	ast = get_input(&cleanup_data);
 	if (!ast)
-		check_exit_and_cleanup(&cleanup_data);
+		main_exit(&cleanup_data, full_exit_status(false) == true, false);
 	if (TESTER && !cleanup_data.input)
-	{
 		exit(get_last_exit());
-	}
 	while (1)
 	{
 		if (ast)
@@ -244,19 +194,11 @@ int	main(int ac, char **av, char **base_env)
 			ast->shared_data->cleanup_data = &cleanup_data;
 			//print_ast(ast);
 			run_node(ast);
-			check_exit_and_cleanup(&cleanup_data);
-			if (TESTER && !cleanup_data.input)
-			{
-				exit(get_last_exit());
-			}
+			main_exit(&cleanup_data, full_exit_status(false) == true, false);
 		}
 		ast = get_input(&cleanup_data);
 		if (!ast)
-			check_exit_and_cleanup(&cleanup_data);
-		if (TESTER && !ast && !cleanup_data.input)
-		{
-			exit(get_last_exit());
-		}
+			main_exit(&cleanup_data, full_exit_status(false) == true, false);
 	}
 	return (0);
 }

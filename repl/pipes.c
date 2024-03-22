@@ -6,144 +6,134 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 03:48:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/19 06:32:22 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/21 16:04:38 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-
-static t_result	fork_left(t_ast *ast, int base, int pipe_fd[2])
+t_result	pipe_init_left(t_pipe_data *vars)
 {
-	int	pid;
-
-	pid = fork();
-	if (pid < 0)
+	vars->base_write = dup(WRITE);
+	if (vars->base_write == -1)
 	{
-		set_errno_as_exit(ast, true);
-		dup2(base, WRITE);
-		close (base);
-		close (pipe_fd[READ]);
-		errno = 0;
+		pipe_error_handler(vars);
 		return (ERROR);
 	}
-	else if (pid == 0)
+	if (pipe(vars->pipe_fd) == -1)
 	{
-		errno = 0;
-		close (base);
-		close (pipe_fd[READ]);
-		run_node(ast->left);
-		if (ast->left->exit_status == DEFAULT_EXIT_STATUS)
-		{
-			waitpid(ast->left->pid, &(ast->left->exit_status), 0);
-			ast->left->exit_status = WEXITSTATUS(ast->left->exit_status);
-		}
-		exit(ast->left->exit_status);
+		pipe_error_handler(vars);
+		return (ERROR);
+	}
+	if (dup2(vars->pipe_fd[WRITE], WRITE) == -1
+		|| ft_close(&(vars->pipe_fd[WRITE])) == -1)
+	{
+		pipe_error_handler(vars);
+		return (ERROR);
 	}
 	return (SUCCESS);
 }
 
-static t_result	fork_right(t_ast *ast, int base)
+t_result	pipe_init_right(t_pipe_data *vars)
 {
-	ast->pid = fork();
-	if (ast->pid < 0)
+	if (dup2(vars->base_write, WRITE) == -1
+		|| ft_close(&(vars->base_write)) == -1)
 	{
-		set_errno_as_exit(ast, true);
-		dup2(base, READ);
-		//if (ast->fd_to_close_read == INIT_VAL)
-			close(base);
-		errno = 0;
+		pipe_error_handler(vars);
 		return (ERROR);
 	}
-	else if (ast->pid == 0)
+	vars->ast->shared_data->stop_execution = false;
+	vars->base_read = vars->ast->fd_to_close_read;
+	if (vars->base_read == INIT_VAL)
+		vars->base_read = dup(READ);
+	if (vars->base_read == -1)
+	{
+		pipe_error_handler(vars);
+		return (ERROR);
+	}
+	if (dup2(vars->pipe_fd[READ], READ) == -1
+		|| ft_close(&(vars->pipe_fd[READ])) == -1)
+	{
+		pipe_error_handler(vars);
+		return (ERROR);
+	}
+	vars->ast->right->fd_to_close_read = vars->base_read;
+	return (SUCCESS);
+}
+
+static t_result	pipe_fork_left(t_pipe_data *vars)
+{
+	vars->left_pid = fork();
+	if (vars->left_pid < 0)
+		return (pipe_error_handler(vars));
+	else if (vars->left_pid == 0)
 	{
 		errno = 0;
-		close (base);
-		run_node(ast->right);
-		if (ast->right->exit_status == DEFAULT_EXIT_STATUS)
+		if (vars->ast->fd_to_close_read == INIT_VAL)
+			ft_close(&(vars->base_read));
+		ft_close(&(vars->pipe_fd[READ]));
+		run_node(vars->ast->left);
+		if (vars->ast->left->exit_status == DEFAULT_EXIT_STATUS)
 		{
-			waitpid(ast->right->pid, &(ast->right->exit_status), 0);
-			ast->right->exit_status = WEXITSTATUS(ast->right->exit_status);
+			waitpid(vars->ast->left->pid, &(vars->ast->left->exit_status), 0);
+			vars->ast->left->exit_status
+				= WEXITSTATUS(vars->ast->left->exit_status);
 		}
-		exit(ast->right->exit_status);
+		exit(vars->ast->left->exit_status);
 	}
 	return (SUCCESS);
 }
 
-void	ft_pipe(t_ast *ast)
+static t_result	pipe_fork_right(t_pipe_data *vars)
 {
-	int			pipe_fd[2];
-	int			base;
+	if (vars->ast->right->type != COMMAND && vars->ast->right->type != SUBSHELL)
+	{
+		run_node(vars->ast->right);
+		vars->ast->pid = vars->ast->right->pid;
+		vars->ast->exit_status = vars->ast->right->exit_status;
+		return (SUCCESS);
+	}
+	vars->ast->pid = fork();
+	if (vars->ast->pid < 0)
+		return (pipe_error_handler(vars));
+	else if (vars->ast->pid == 0)
+	{
+		errno = 0;
+		if (vars->ast->fd_to_close_read == INIT_VAL)
+			ft_close(&(vars->base_read));
+		run_node(vars->ast->right);
+		if (vars->ast->right->exit_status == DEFAULT_EXIT_STATUS)
+		{
+			waitpid(vars->ast->right->pid, &(vars->ast->right->exit_status), 0);
+			vars->ast->right->exit_status
+				= WEXITSTATUS(vars->ast->right->exit_status);
+		}
+		exit(vars->ast->right->exit_status);
+	}
+	return (SUCCESS);
+}
+
+t_result	ft_pipe(t_ast *ast)
+{
+	t_pipe_data					vars;
+	static const t_pipe_data	init_val = {{-1, -1}, -1, -1, -1, NULL};
 
 	if (ast->shared_data->stop_execution)
 	{
 		ast->exit_status = 1;
-		return ;
+		return (SUCCESS);
 	}
-	//check_fds();
-	base = dup(WRITE);
-	//ast->left->fd_to_close_write = base;
-	if (base == -1)
-	{
-		set_errno_as_exit(ast, true);
-		return ;
-	}
-	if (pipe(pipe_fd) == -1)
-	{
-		close (base);
-		set_errno_as_exit(ast, true);
-		return ;
-	}
-	if (dup2(pipe_fd[WRITE], WRITE) == -1)
-	{
-		close (base);
-		close (pipe_fd[WRITE]);
-		close (pipe_fd[READ]);
-		set_errno_as_exit(ast, true);
-		return ;
-	}
-	close(pipe_fd[WRITE]);
-	if (fork_left(ast, base, pipe_fd) == ERROR)
-		return ;
-	if (dup2(base, WRITE) == -1)
-	{
-		close (base);
-		close (pipe_fd[READ]);
-		set_errno_as_exit(ast, true);
-		return ;
-	}
-	close(base);
-	ast->shared_data->stop_execution = false;
-	if (ast->fd_to_close_read != INIT_VAL)
-		base = ast->fd_to_close_read;
-	else
-		base = dup(READ);
-	if (base == -1)
-	{
-		close(pipe_fd[READ]);
-		set_errno_as_exit(ast, true);
-		return ;
-	}
-	if (dup2(pipe_fd[READ], READ) == -1)
-	{
-		//if (ast->fd_to_close_read == INIT_VAL)
-			close(base);
-		close(pipe_fd[READ]);
-		set_errno_as_exit(ast, true);
-		return ;
-	}
-	close(pipe_fd[READ]);
-	//ast->right->fd_to_close_read = base;
-	if (fork_right(ast, base) == ERROR)
-		return ;
-	if (dup2(base, READ) == -1)
-	{
-		//if (ast->fd_to_close_read == INIT_VAL)
-			close(base);
-		set_errno_as_exit(ast, true);
-		return ;
-	}
-	//if (ast->fd_to_close_read == INIT_VAL)
-		close(base);
-	//check_fds();
+	vars = init_val;
+	vars.ast = ast;
+	if (pipe_init_left(&vars) == ERROR)
+		return (ERROR);
+	if (pipe_fork_left(&vars) == ERROR)
+		return (ERROR);
+	if (pipe_init_right(&vars) == ERROR)
+		return (ERROR);
+	if (pipe_fork_right(&vars) == ERROR)
+		return (ERROR);
+	(dup2(vars.base_read, READ) == -1 && pipe_error_handler(&vars));
+	return ((ast->fd_to_close_read == INIT_VAL
+			&& ft_close(&(vars.base_read))), SUCCESS);
 }

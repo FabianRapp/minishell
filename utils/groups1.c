@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:34:43 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/11 17:17:58 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 01:04:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ bool	is_redir(t_type type)
 		|| type == REDIR_OUT
 		|| type == REDIR_APPEND
 		|| type == HERE_DOC
-		|| type == REDIR_IN_OUT)
+		|| type == REDIR_IN_OUT
+		|| type == HERE_STR)
 	{
 		return (true);
 	}
@@ -36,7 +37,7 @@ bool	is_redir(t_type type)
 bool	is_redir_arg_terminator(t_type type)
 {
 	if (type == T_EOF || type == OR || type == AND || type == PIPE
-		|| is_redir(type) || type == WHITE_SPACE)
+		|| is_redir(type) || type == WHITE_SPACE || type == SEMICOL)
 	{
 		return (true);
 	}
@@ -47,7 +48,8 @@ bool	is_word_terminator(t_type type)
 {
 	if (type != T_EOF && type != OR && type != AND && type != PIPE
 		&& !is_redir(type) && type != WHITE_SPACE && type != SUBSHELL
-		&& type != COMMAND && type != DUMMY_COMMAND)
+		&& type != COMMAND && type != DUMMY_COMMAND
+		&& type != SEMICOL)
 	{
 		return (false);
 	}
@@ -57,7 +59,7 @@ bool	is_word_terminator(t_type type)
 bool	command_terminator(t_type type)
 {
 	if (type == PIPE || type == OR || type == AND || type == WHITE_SPACE || type == T_EOF
-		|| type == SUBSHELL || type == COMMAND || type == DUMMY_COMMAND)
+		|| type == SUBSHELL || type == COMMAND || type == DUMMY_COMMAND || type == SEMICOL)
 	{
 		return (true);
 	}

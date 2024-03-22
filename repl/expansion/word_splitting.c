@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:33:33 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/16 21:28:44 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 03:01:02 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,10 @@ static t_token_list	*create_new_node_wordsplit(char *data, char *old_data)
 	new->token->old_data = ft_strdup(old_data);
 	if (!new->token->old_data)
 		return (free_token_list(new), NULL);
-	new->token->type = LITERAL;
+	if (contains_non_white_spcace(data))
+		new->token->type = LITERAL;
+	else
+		new->token->type = WHITE_SPACE;
 	return (new);
 }
 
@@ -47,10 +50,14 @@ static t_result	word_split_baseclean(t_token *old, char **arr,
 static t_result	handle_end(int i, t_token *old, t_token_list **list, char **arr)
 {
 	ft_free_2darr(arr);
-	if (i && ft_iswhitespace(old->str_data[ft_strlen(old->str_data) - 1]))
+	//if (i && ft_iswhitespace(old->str_data[ft_strlen(old->str_data) - 1]))
+	if (old && ft_strlen(old->str_data) && ft_iswhitespace(old->str_data[ft_strlen(old->str_data) - 1]))
 	{
 		return (insert_whitespace_end(list));
 	}
+	// (void)list;
+	// (void)old;
+	(void)i;
 	return (SUCCESS);
 }
 
@@ -70,6 +77,26 @@ t_result	word_splitting(t_token_list **list)
 	old = (*list)->token;
 	next = (*list)->next;
 	arr = ft_split_fn(old->str_data, ft_iswhitespace);
+
+	// next = (*list)->next;
+	// if (contains_non_white_spcace(old->str_data) || !old->str_data)
+	// 	arr = ft_split_fn(old->str_data, ft_iswhitespace);
+	// else
+	// {
+	// 	arr = ft_calloc(2, sizeof(char *));
+	// 	if (arr)
+	// 	{
+	// 		arr[0] = ft_calloc(2, sizeof(char));
+	// 		if (!arr[0])
+	// 		{
+	// 			free(arr);
+	// 			arr = NULL;
+	// 		}
+	// 		else
+	// 			arr[0][0] = ' ';
+	// 	}
+	// }
+
 	if (!ft_free((void **)list) || !arr)
 		return (word_split_baseclean(old, arr, next, NULL), errno_to_result());
 	i = 0;

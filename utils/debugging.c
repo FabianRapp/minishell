@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 07:01:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 18:06:45 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/22 19:30:36 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ char	*type_to_str(t_type tokenType)
 		case REDIR_OUT: return "syntax error near unexpected token `>'";
 		case REDIR_APPEND: return "syntax error near unexpected token `>>'";
 		case HERE_DOC: return "syntax error near unexpected token `<<'";
+		case HERE_STR: return "syntax error near unexpected token `<<<'";
 		case SUBSHELL: return "syntax error near unexpected token `("; //TODO this is not sufficent for error msgs
 		//case FLAG: return "FLAG";
 		case COMMAND: return "COMMAND";
@@ -78,6 +79,7 @@ char	*type_to_str(t_type tokenType)
 		case DUMMY_COMMAND: return "DUMMY_COMMAND";
 		case LITERAL: return "syntax error near unexpected token `''";
 		case PID_REQUEST: return "syntax error near unexpected token `$$'";
+		case SEMICOL: return "syntax error near unexpected token `;'";
 		default: return "Type not found";
 	}
 }
@@ -114,6 +116,8 @@ char	*type_to_str_type(t_type tokenType)
 		case DUMMY_COMMAND: return "DUMMY_COMMAND";
 		case LITERAL: return "LITERAL";
 		case PID_REQUEST: return "PID_REQUEST";
+		case SEMICOL: return "SEMICOL";
+		case HERE_STR: return "HERE_STR";
 		default: return "Type not found";
 	}
 }

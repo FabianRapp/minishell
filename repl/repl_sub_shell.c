@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   repl_sub_shell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 07:36:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/20 02:33:54 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/22 00:20:14 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,11 @@ static t_result	mange_sub_shell_fds(t_ast *ast)
 	return (SUCCESS);
 }
 
-static t_ast	*init_sub_shell(t_ast *ast, char *input, t_shared_data *shared_sub_vars, t_cleanup_data *sub_cleanup_data, char ***env_list, char ***exp_list)
+static t_ast	*init_sub_shell(t_ast *ast, char *input, t_shared_data *shared_sub_vars, t_cleanup_data *sub_cleanup_data)
 {
 	t_ast		*sub_ast;
 
+	sub_cleanup_data->shared_data = shared_sub_vars;
 	ast->pid = fork();
 	errno = 0;
 	if (ast->pid)
@@ -53,13 +54,14 @@ static t_ast	*init_sub_shell(t_ast *ast, char *input, t_shared_data *shared_sub_
 		// printf("val: %d\n", ast->exit_status);
 		return (NULL);
 	}
-	*env_list = ft_initialize_our_env(*(ast->shared_data->envs));
-	if (*env_list == NULL)
+	*shared_sub_vars = *(ast->shared_data);
+	*(shared_sub_vars->envs) = ft_initialize_our_env(*(ast->shared_data->envs));
+	if (*(shared_sub_vars->envs) == NULL)
 		return (NULL);
-	*exp_list = ft_initialize_our_env(*(ast->shared_data->envs));
-	get_env_list(exp_list);
-	if (*exp_list == NULL)
-		return (ft_free_2darr(*env_list), NULL);
+	*(shared_sub_vars->env_exp) = ft_initialize_our_env(*(ast->shared_data->envs));
+	get_env_list(shared_sub_vars->envs);
+	if (*(shared_sub_vars->env_exp) == NULL)
+		return (ft_free_2darr(*(shared_sub_vars->envs)), NULL);
 	// if (!contains_non_white_spcace(input))
 	// {
 	// 	return (NULL);
@@ -71,8 +73,6 @@ static t_ast	*init_sub_shell(t_ast *ast, char *input, t_shared_data *shared_sub_
 	}
 	sub_cleanup_data->input = input;
 	sub_cleanup_data->root = sub_ast;
-	shared_sub_vars->envs = env_list;
-	shared_sub_vars->env_exp = exp_list;
 	shared_sub_vars->cleanup_data = sub_cleanup_data;
 	add_global_data(sub_ast, shared_sub_vars);
 	if (mange_sub_shell_fds(ast) == ERROR)
@@ -85,12 +85,10 @@ static void	run_sub_shell(t_shared_data shared_sub_vars, char *input, t_ast *ast
 {
 	t_ast			*sub_ast;
 	t_cleanup_data	sub_cleanup_data;
-	char			**env_list;
-	char			**exp_list;
 
 	sub_cleanup_data.root = NULL;
 	sub_cleanup_data.input = NULL;
-	sub_ast = init_sub_shell(ast, input, &shared_sub_vars, &sub_cleanup_data, &env_list, &exp_list);
+	sub_ast = init_sub_shell(ast, input, &shared_sub_vars, &sub_cleanup_data);
 	if (sub_ast == NULL)
 		return ;
 	sub_ast->exit_status = ast->exit_status;

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 04:20:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/17 19:25:37 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 01:22:43 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ t_result	resolve_redirs(t_ast *ast)
 				return (ERROR);
 		}
 		// TODO
-		else if (redir->type == HERE_DOC)
+		else if (redir->type == HERE_DOC || redir->type == HERE_STR)
 		{
 			if (repl_handle_here_doc(ast, redir, &fds) == ERROR)
 				return (ERROR);

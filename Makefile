@@ -1,13 +1,13 @@
 CC=cc
 
 
-FLAGS_NO_LEAK_CHECK =
-#   -fsanitize=undefined -fsanitize=address -g
+FLAGS_NO_LEAK_CHECK =  
+# -fsanitize=undefined -fsanitize=address -g
 CFLAGS=-Wall -Wextra -Werror
 
 LDFLAGS = 
-# -fsanitize=undefined -fsanitize=address -g
-# 
+#-fsanitize=undefined -fsanitize=address -g
+#  
 # 
 
 
@@ -52,8 +52,10 @@ SOURCES = repl/main.c \
 		  environment/get_env_parts.c \
 		  repl/repl_redir/repl_redir_main.c \
 		  repl/repl_redir/repl_redir_utils.c \
-		  repl/repl_redir/repl_redir_error_handler.c \
-		  repl/pipes.c
+		  repl/repl_redir/repl_redir_error_handler.c\
+		  repl/pipes.c\
+		  repl/utils/pipe_utils.c\
+		  repl/signals/signals1.c
 
 OBJECTS= $(SOURCES:.c=.o)
 

@@ -1,11 +1,21 @@
 
 source_file = "failed_tests_details.txt"
 target_file = "filtered_failed_tests.txt"
+target_file_filter = "filter.txt"
 
-filter_strs = ["env -i"]
+filter_strs = ["STD_OUT"]
 
 def	save_block(source):
 	with open(target_file, "a") as target:
+		line = source.readline()
+		while line:
+			target.write(line)
+			if (line.strip() == "------"):
+				return
+			line = source.readline()
+
+def	save_block_filter(source):
+	with open(target_file_filter, "a") as target:
 		line = source.readline()
 		while line:
 			target.write(line)
@@ -23,6 +33,7 @@ def	insert_count(count_after, count_before):
 if	__name__ == '__main__':
 	try:
 		tmp = open(target_file, "w")
+		tmp = open(target_file_filter, "w")
 		tmp.close()
 	except:
 		pass
@@ -44,6 +55,10 @@ if	__name__ == '__main__':
 					file.seek(last_block)
 					save_block(file)
 					count_after += 1
+				else:
+					file.seek(last_block)
+					save_block_filter(file)
+
 				found_filter = False
 				last_block = 0
 				count_before += 1

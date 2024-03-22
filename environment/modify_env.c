@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/21 16:35:24 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/22 19:34:22 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,8 @@ void	ft_update_env(char *var_name, char *new_value, char **env)
 	i = 0;
 	while (env[i] && ft_strncmp(var_name, env[i], ft_strlen(var_name)))
 		i++;
+	if (!env[i])
+		return ;
 	free(env[i]);
 	half = ft_strjoin(var_name, "=");
 	env[i] = ft_strjoin(half, new_value);

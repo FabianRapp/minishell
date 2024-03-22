@@ -6,11 +6,22 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/19 05:48:53 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 01:55:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
+int	ft_close(int *fd)
+{
+	int	ret;
+
+	ret = 0;
+	if (*fd != INIT_VAL)
+		ret = close(*fd);
+	*fd = INIT_VAL;
+	return (ret);
+}
 
 int	count_open_fds(void)
 {
@@ -170,7 +181,6 @@ char	*ft_read_line(char *header)
 	{
 		temp = get_next_line(0);
 		line = ft_strtrim(temp, "\n");
-		//line = temp;
 		free(temp);
 	}
 	else
@@ -354,7 +364,7 @@ void	print_redir_list(t_redir *redir, int level, bool left)
 
 bool	is_operator(t_type type)
 {
-	if (type == PIPE || type == OR || type == AND)
+	if (type == PIPE || type == OR || type == AND || type == SEMICOL)
 	{
 		return (true);
 	}
@@ -451,17 +461,13 @@ char	*extract_command_name(char *path)
 	return (name);
 }
 
-void	cleanup(char *location)
-{
-	printf("clean up placeholder: %s\n", location);
-}
-
 bool	is_termination_char(char c)
 {
 	if (c == 0 || c == '(' || c == ')' || c == '|' || c == '\'' || c == '\"' 
 		|| c == '>' || c == '<' 
 		|| c == '$' || c == '&'
-		|| ft_iswhitespace(c))
+		|| ft_iswhitespace(c)
+		|| c == ';')
 	{
 		return (true);
 	}
@@ -473,7 +479,8 @@ bool	is_wildcard_block_termination(char c)
 	if (c == 0 || c == '(' || c == ')' || c == '|'
 		|| c == '>' || c == '<'
 		|| c == '$' || c == '&'
-		|| ft_iswhitespace(c))
+		|| ft_iswhitespace(c)
+		|| c == ';')
 	{
 		return (true);
 	}

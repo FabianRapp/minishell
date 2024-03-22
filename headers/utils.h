@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:23:25 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/19 01:07:45 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/21 16:09:41 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 typedef enum e_type				t_type;
 typedef enum e_result			t_result;
 
-void			cleanup(char *location);
 bool			is_termination_char(char c);
 bool			is_wildcard_block_termination(char c);
 
@@ -41,7 +40,7 @@ typedef struct s_status_handler
 }	t_status_handler;
 
 char			*type_to_str(t_type tokenType);
-
+int				ft_close(int *fd);
 bool			is_operator(t_type type);
 t_result		errno_to_result(void);
 t_result		set_errno_as_exit(t_ast *ast, bool msg);

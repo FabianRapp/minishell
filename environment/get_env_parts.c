@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_env_parts.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/19 04:20:41 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/22 19:23:04 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,6 @@ char	*get_env_value(char **env, char *var_name)
 			break ;
 		}
 	}
-	if (env[i] == NULL)
-		return (NULL);
 	value = ft_substr(env[i], ft_strlen(var_name) + 1, ft_strlen(env[i])
 			- ft_strlen(var_name) - 1);
 	if (value == NULL)

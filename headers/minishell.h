@@ -6,20 +6,18 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 19:24:35 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/22 19:34:09 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 
-echo 1 | echo 2 | echo 3
-ls | cat << stop | ls -la | cat << stop1
-
-             TOTAL TEST COUNT: 994  TESTS PASSED: 965  LEAKING: 0 
-                     STD_OUT: 21  STD_ERR: 7  EXIT_CODE: 9  
+             TOTAL TEST COUNT: 994  TESTS PASSED: 970  LEAKING: 0 
+                     STD_OUT: 16  STD_ERR: 3  EXIT_CODE: 7  
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 37   
-                                     ✅ 2945
+                                     ❌ 26   
+                                     ✅ 2956 
+
 TODO:
 	- lexer: check for too many closing quotes
 	- ft_atoi undef behaivior for huge number strs
@@ -105,7 +103,7 @@ weird stuff to keep in mind about bash
 
 # define TESTER 1
 # define SHELL_NAME "minishell\0"
-# define SHELL_PROMPT "minishell: \0"
+# define SHELL_PROMPT "minishell-$: \0"
 
 # define DEBUG 0
 
@@ -147,8 +145,9 @@ typedef struct s_ast	t_ast;
 // is reachable for cleanup
 typedef struct s_cleanup_data
 {
-	t_ast	*root;
-	char	*input;
+	t_ast			*root;
+	char			*input;
+	t_shared_data	*shared_data;
 }	t_cleanup_data;
 
 // typedef	struct s_arg	t_arg;
@@ -188,11 +187,12 @@ typedef struct s_fd_set
 
 typedef struct s_shared_data
 {
-	int				main_pid;
-	bool			stop_execution;
-	char			***envs;
-	char			***env_exp;
-	t_cleanup_data	*cleanup_data;
+	int					main_pid;
+	bool				stop_execution;
+	char				***envs;
+	char				***env_exp;
+	t_cleanup_data		*cleanup_data;
+	struct sigaction	sig_set;
 }	t_shared_data;
 
 typedef struct s_ast
@@ -209,7 +209,17 @@ typedef struct s_ast
 	int				fd_to_close;
 	int				fd_to_close_read;
 	int				fd_to_close_write;
+	bool			dont_run_buildins;
 }	t_ast;
+
+typedef struct s_pipe_data
+{
+	int			pipe_fd[2];
+	int			base_write;
+	int			base_read;
+	int			left_pid;
+	t_ast		*ast;
+}	t_pipe_data;
 
 // lexer
 t_token		*next_new_token(t_lexer *lexer, bool recursuve_call);
@@ -277,6 +287,10 @@ t_ast	*parser(char *str);
 #  define REDIR_FDS 4
 #  define CLEANUP_FDS 5
 
+
+// repl/utils/pipe_utils.c
+t_result	pipe_error_handler(t_pipe_data *vars);
+
 // utils/fd1.c
 t_fd_set	*io_data(int flag, void *data);
 t_result	redir_fds(void);
@@ -285,7 +299,7 @@ t_fd_set	*get_fds(void);
 t_result	cleanup_fds(void);
 
 
-void	ft_pipe(t_ast *ast);
+t_result	ft_pipe(t_ast *ast);
 
 char	*get_file_name(int fd);
 void	print_fds(void);
@@ -349,6 +363,11 @@ char	*get_env_var_name(char *line);
 char	**new_env_list_after_delete(char *var_to_rm, char **env_before);
 void	ft_update_env(char *var_name, char *new_value, char **env);
 char	***get_env_list(char ***set_new_env);//added
+
+/* ---------------------------- SIGNALS ----------------------------------- */
+
+t_result	set_ctrl_c(struct sigaction *sig_set);
+t_result	set_ctrl_slash(struct sigaction *sig);
 
 // ----------- additional utils -----------------
 void	print_error_addsq(bool shell_name, char *command_name, char *arg, char *str);

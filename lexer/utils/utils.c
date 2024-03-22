@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:46:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/19 02:24:38 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 00:28:48 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ void	lexer_error(t_token *token)
 bool	is_redir_terminator_char(char c)
 {
 	if (ft_iswhitespace(c) || c == '|' || c == '&' || c == '('
-		|| c == ')' || c == '\0' || c == '<' || c == '>')
+		|| c == ')' || c == '\0' || c == '<' || c == '>'
+		|| c == ';')
 	{
 		return (true);
 	}
