@@ -69,15 +69,13 @@ t_result	expand_name(t_ast *ast)
 		return (set_errno_as_exit(ast, false));
 	if (ast->name)
 		ast->name = remove_non_literals(ast->name);
-	if (wildcards(ast->name) == ERROR)
-		return (ERROR);
+	if (errno || wildcards(ast->name) == ERROR)
+		return (set_errno_as_exit(ast, false));
 	// if (errno)
 	// 	return (ERROR);
 	// merge_literals(ast->name);
 	// if (errno)
 	// 	return (set_errno_as_exit(ast, false));
-	if (ast->name)
-		ast->name = remove_non_literals(ast->name);
 	if (!ast->name)
 	{
 		ast->name = ft_calloc(1, sizeof(t_token_list));
@@ -92,9 +90,6 @@ t_result	expand_name(t_ast *ast)
 		return (set_errno_as_exit(ast, false));
 	return (SUCCESS);
 }
-
-
-
 
 t_result	expand_args(t_ast *ast, t_arg **base_arg, bool here_doc)
 {

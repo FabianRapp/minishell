@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:49:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 23:57:32 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/24 00:08:13 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	expand_wildcard_node_exit(t_wildcard_node_expasion this_data,
 	if (node && this_data.w_head)
 	{
 		*node = *(this_data.w_head);
+		free(this_data.w_head);
 	}
 	if (this_data.cur_dir)
 		closedir(this_data.cur_dir);
@@ -92,6 +93,7 @@ t_result	expand_wildcard_node(t_token_list *node)
 		this_data.cur->next = next_wildcard_token(
 				this_data.cur_dir, &(this_data.w_para));
 	}
+
 	expand_wildcard_node_exit(this_data, node);
 	return (errno_to_result());
 }
@@ -145,7 +147,6 @@ t_result	wildcards(t_token_list *name)
 				if (trim_identifiers(name, true) == ERROR)
 				{// TODO ERROR
 				}
-
 				break ;
 			}
 			tmp = ft_strdup(ft_strchr(data_str, '*') + 1);
