@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   internals_parser.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 19:21:02 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 01:13:16 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 16:53:11 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,14 @@ t_token_list			*extract_token_list(t_parser *parser, char name_or_arg);
 
 // parser_ast/parser_ast_utils2.c
 t_arg					*append_arg(t_parser *parser, t_arg *head_arg);
+char					*handle_env_var_astparser(char *dollar_str, int *index);
+char					*parser_expand_dollar(char *dollar_str, int *index);
+char					*parser_expand_line(char *line);
+
+//parser_utils.c
+t_parser				*has_none_redir_arg(t_parser *parser);
+bool					has_redir_arg(t_parser *parser);
+t_result				has_content(t_parser *parser);
+void					type_command(t_parser *parser, bool *found_command);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   add_new.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:13:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/20 14:26:48 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 15:44:17 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,7 @@ t_parser	*init_parser(char *str)
 		}
 		insert_token(&parser, token);
 	}
-	free(lexer.str);
 	if (parser)
-		return (parser->next);
-	return (NULL);
+		return (free(lexer.str), parser->next);
+	return (free(lexer.str), NULL);
 }

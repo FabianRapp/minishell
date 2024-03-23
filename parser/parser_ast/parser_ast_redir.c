@@ -3,82 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser_ast_redir.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 05:35:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 04:48:14 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 16:54:50 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/parser.h"
 #include "../internals_parser.h"
 #include "../../headers/lexer.h"
-
-char	*handle_env_var_astparser(char *dollar_str, int *index)
-{
-	char	*return_str;
-	char	*env_var;
-
-	*index += name_len(dollar_str + 1) + 1;
-	env_var = ft_strndup(dollar_str + 1, name_len(dollar_str + 1));
-	if (!env_var)
-		return (NULL);
-	return_str = get_env_value(NULL, env_var, 0, 0);
-	if (!return_str)
-		return_str = ft_calloc(1, 1);
-	return (free(env_var), return_str);
-}
-
-char	*parser_expand_dollar(char *dollar_str, int *index)
-{
-	char	*return_str;
-
-	if (!*(dollar_str + 1))
-		return ((*index)++, ft_strdup("$"));
-	else if (*(dollar_str + 1) == '?')
-		return_str = get_last_exit_str();
-	else if (*(dollar_str + 1) == '$')
-		return_str = ft_itoa(ft_pid(0));
-	else if (ft_isdigit(*(dollar_str + 1)))
-		return ((*index)++, ft_strdup("$"));
-	else if (name_len(dollar_str + 1) == 0)
-		return ((*index)++, ft_strdup("$"));
-	else if (ft_isalpha(*(dollar_str + 1)) || *(dollar_str + 1) == '_')
-		return (handle_env_var_astparser(dollar_str, index));
-	else
-		return ((*index)++, ft_strdup(""));
-	*index += 2;
-	return (return_str);
-}
-
-char	*parser_expand_line(char *line)
-{
-	char	*new_line;
-	int		i;
-	char	*temp;
-
-	new_line = ft_calloc(1, 1);
-	if (!new_line)
-		return (free(line), NULL);
-	i = -1;
-	while (line[++i] && line[i] != '\n')
-	{
-		if (line[i] != '$')
-		{
-			if (!ft_strjoin_inplace_char(&new_line, line[i]))
-				return (free(line), NULL);
-			continue ;
-		}
-		temp = parser_expand_dollar(line + i, &i);
-		if (!temp)
-			return (free(new_line), free(line), NULL);
-		if (!ft_strjoin_inplace(&new_line, temp))
-			return (free(temp), free(line), NULL);
-		free(temp);
-	}
-	return (free(line), ft_strjoin_inplace_char(&new_line, '\n'), new_line);
-}
-
 
 t_result	parser_resolve_here_doc(char *termination,
 	int pipe_fd[2], bool expand_vars)
@@ -108,7 +42,8 @@ t_result	parser_resolve_here_doc(char *termination,
 		if (!line)
 		{
 			temp = ft_strtrim(termination, "\n");
-			ft_fprintf(2, "%s: warning: here-document at line %d delimited by end-of-file (wanted `%s')\n", SHELL_NAME, count, temp);
+			ft_fprintf(2, "%s: warning: here-document at line %d delimited by \
+				end-of-file (wanted `%s')\n", SHELL_NAME, count, temp);
 			return (free(temp), SUCCESS);
 		}
 		ft_strjoin_inplace(&line, "\n");
@@ -123,7 +58,6 @@ t_result	parser_resolve_here_doc(char *termination,
 		return (free(line), set_last_exit(errno), ERROR);
 	return (free(line), set_last_exit(1), ERROR);
 }
-
 
 // Initializes a pipe and captures input until
 //	a termination string is encountered.
@@ -150,8 +84,8 @@ t_result	parser_resovle_here_doc(t_redir *redir)
 	temp = ft_strjoin("<<<<", redir->token_str_data);
 	free(redir->token_str_data);
 	redir->token_str_data = temp;
-	if (!redir->token_str_data
-		|| parser_resolve_here_doc(termination, pipe_fd, !(redir->here_doc_literal)) == ERROR)
+	if (!redir->token_str_data || parser_resolve_here_doc(termination,
+			pipe_fd,!(redir->here_doc_literal)) == ERROR)
 		return (close(pipe_fd[READ]), close(pipe_fd[WRITE]),
 			free(termination), ERROR);
 	return (close(pipe_fd[WRITE]), free(termination), SUCCESS);
@@ -185,7 +119,6 @@ t_result	parser_resovle_here_str(t_redir *redir)
 			free(str), ERROR);
 	return (close(pipe_fd[WRITE]), free(str), SUCCESS);
 }
-
 
 t_result	append_redir(t_ast *ast_node, t_parser *args, t_redir **cur_redir)
 {

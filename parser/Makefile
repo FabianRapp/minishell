@@ -17,7 +17,7 @@ NAME=min
 
 LIB_PARSER=parser
 LIB_PARSER_NAME = parser.a
-SOURCES= parser.c ../utils/utils1.c\
+SOURCES= parser.c parse_utils.c ../utils/utils1.c\
  parser_ast/parser_ast.c \
  parser_ast/parser_ast_redir.c\
  parser_ast/parser_ast_utils1.c\

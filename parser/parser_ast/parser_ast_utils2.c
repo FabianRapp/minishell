@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_ast_utils2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 06:03:37 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 07:08:32 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 16:52:17 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,73 @@ t_arg	*append_arg(t_parser *parser, t_arg *head_arg)
 	{
 		cur->name->next = extract_token_list(parser->rest_name, RECURSIVE_CALL);
 		if (!cur->name->next)
-		{
 			return (free_arg_list(head_arg), NULL);
-		}
 	}
 	cur->type = cur->name->token->type;
 	return (head_arg);
+}
+
+char	*handle_env_var_astparser(char *dollar_str, int *index)
+{
+	char	*return_str;
+	char	*env_var;
+
+	*index += name_len(dollar_str + 1) + 1;
+	env_var = ft_strndup(dollar_str + 1, name_len(dollar_str + 1));
+	if (!env_var)
+		return (NULL);
+	return_str = get_env_value(NULL, env_var, 0, 0);
+	if (!return_str)
+		return_str = ft_calloc(1, 1);
+	return (free(env_var), return_str);
+}
+
+char	*parser_expand_dollar(char *dollar_str, int *index)
+{
+	char	*return_str;
+
+	if (!*(dollar_str + 1))
+		return ((*index)++, ft_strdup("$"));
+	else if (*(dollar_str + 1) == '?')
+		return_str = get_last_exit_str();
+	else if (*(dollar_str + 1) == '$')
+		return_str = ft_itoa(ft_pid(0));
+	else if (ft_isdigit(*(dollar_str + 1)))
+		return ((*index)++, ft_strdup("$"));
+	else if (name_len(dollar_str + 1) == 0)
+		return ((*index)++, ft_strdup("$"));
+	else if (ft_isalpha(*(dollar_str + 1)) || *(dollar_str + 1) == '_')
+		return (handle_env_var_astparser(dollar_str, index));
+	else
+		return ((*index)++, ft_strdup(""));
+	*index += 2;
+	return (return_str);
+}
+
+char	*parser_expand_line(char *line)
+{
+	char	*new_line;
+	int		i;
+	char	*temp;
+
+	new_line = ft_calloc(1, 1);
+	if (!new_line)
+		return (free(line), NULL);
+	i = -1;
+	while (line[++i] && line[i] != '\n')
+	{
+		if (line[i] != '$')
+		{
+			if (!ft_strjoin_inplace_char(&new_line, line[i]))
+				return (free(line), NULL);
+			continue ;
+		}
+		temp = parser_expand_dollar(line + i, &i);
+		if (!temp)
+			return (free(new_line), free(line), NULL);
+		if (!ft_strjoin_inplace(&new_line, temp))
+			return (free(temp), free(line), NULL);
+		free(temp);
+	}
+	return (free(line), ft_strjoin_inplace_char(&new_line, '\n'), new_line);
 }

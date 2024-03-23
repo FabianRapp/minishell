@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/21 23:17:45 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 16:34:26 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,68 +104,16 @@ void	merge_names(t_parser *parser)
 	}
 }
 
-t_result	has_content(t_parser *parser)
-{
-	t_parser	*head;
-
-	if (!parser)
-		return (ERROR);
-	head = parser;
-	while (parser->p_type == WHITE_SPACE || parser->p_type == VOID
-		|| parser->p_type == T_EOF)
-	{
-		parser = parser->next;
-		if (parser == head)
-		{
-			free_parser_main(parser, true);
-			return (ERROR);
-		}
-	}
-	return (SUCCESS);
-}
-
-
-bool	has_redir_arg(t_parser *parser)
-{
-	t_parser	*cur_arg;
-
-	cur_arg = parser->arg;
-	while (cur_arg)
-	{
-		if ((is_redir(cur_arg->p_type)
-				|| is_redir(cur_arg->token->type))
-			&& cur_arg->token->type != HERE_DOC)
-		{
-			return (true);
-		}
-		cur_arg = cur_arg->next;
-	}
-	return (false);
-}
-
-// might not be needed
-t_parser	*has_none_redir_arg(t_parser *parser)
-{
-	t_parser	*cur_arg;
-
-	cur_arg = parser->arg;
-	while (cur_arg)
-	{
-		if (!(is_redir(cur_arg->p_type) || is_redir(cur_arg->token->type)))
-			return (cur_arg);
-		cur_arg = cur_arg->next;
-	}
-	return (NULL);
-}
-
 t_result	check_error_valid_order(t_parser *parser, bool in_command_block)
 {
 	char	*temp;
 
 	if (parser->token && parser->token->type == SUBSHELL && has_none_redir_arg(parser))
 	{
-		temp = ft_strjoin("syntax error near unexpected token ", has_none_redir_arg(parser)->token->str_data);
-		return (print_error(true, NULL, NULL, temp), free(temp), set_last_exit(2), ERROR);
+		temp = ft_strjoin("syntax error near unexpected token ",
+			has_none_redir_arg(parser)->token->str_data);
+		print_error(true, NULL, NULL, temp);
+		return (free(temp), set_last_exit(2), ERROR);
 	}
 	if ((parser->p_type == COMMAND || parser->p_type == SUBSHELL || parser->p_type == DUMMY_COMMAND) && in_command_block)
 	{
@@ -184,10 +132,9 @@ t_result	check_error_valid_order(t_parser *parser, bool in_command_block)
 	return (SUCCESS);
 }
 
-t_result	validate_command_oder(t_parser *parser)
+static t_result	validate_command_order(t_parser *parser)
 {
 	bool	in_command_block;
-	
 
 	if (!parser)
 		return (ERROR);
@@ -196,16 +143,19 @@ t_result	validate_command_oder(t_parser *parser)
 	{
 		if (check_error_valid_order(parser, in_command_block) == ERROR)
 			return (ERROR);
-		if (parser->p_type == COMMAND || parser->p_type == SUBSHELL || parser->p_type == DUMMY_COMMAND)
+		if (parser->p_type == COMMAND || parser->p_type == SUBSHELL
+			|| parser->p_type == DUMMY_COMMAND)
 			in_command_block = true;
 		if (is_operator(parser->p_type) && !in_command_block)
-			return (set_last_exit(2), print_error(true, NULL, false, type_to_str(parser->p_type)), ERROR);
+			return (set_last_exit(2), print_error(true, NULL,
+				false, type_to_str(parser->p_type)), ERROR);
 		if (is_operator(parser->p_type))
 			in_command_block = false;
 		parser = parser->next;
 	}
 	if (!in_command_block)
-		return (set_last_exit(2), print_error(true, false, false, type_to_str(T_EOF)), ERROR);
+		return (set_last_exit(2), print_error(true, false,
+			false, type_to_str(T_EOF)), ERROR);
 	return (SUCCESS);
 }
 
@@ -229,7 +179,7 @@ t_ast	*parser(char *str)
 		return (free_parser_main(parser, true), NULL);
 	move_commands_infront(parser);
 	type_args(parser);
-	if (validate_command_oder(parser) == ERROR)
+	if (validate_command_order(parser) == ERROR)
 		return (free_parser_main(parser, true), NULL);
 	return (build_ast(parser));
 }
