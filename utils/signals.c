@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals1.c                                         :+:      :+:    :+:   */
+/*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 18:05:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 02:12:04 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 21:43:28 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/minishell.h"
+#include "../headers/minishell.h"
 
 void	signal_handler_ctrl_c(int signal, siginfo_t *info, void *data)
 {

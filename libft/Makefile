@@ -44,11 +44,12 @@ $(OBJ_DIR)%.o: %.c
 
 clean:
 	@rm -rf $(OBJ_DIR)
-	@echo "$(YELLOW)libft objects cleaned$(CLEAR)"
+	@echo "$(CYAN)libft objects cleaned$(CLEAR)"
 
-fclean: clean
+fclean:
 	@rm -f $(NAME)
-	@echo "$(YELLOW)libft fclean$(CLEAR)"
+	@rm -rf $(OBJ_DIR)
+	@echo "$(CYAN)libft fclean$(CLEAR)"
 
 re: fclean all
 

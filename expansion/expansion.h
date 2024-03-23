@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:52 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/20 02:26:26 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 21:42:11 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXPANSION_H
 # define EXPANSION_H
 
-# include "../../headers/minishell.h"
+# include "../headers/minishell.h"
 
 typedef enum e_result	t_result;
 

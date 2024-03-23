@@ -18,5 +18,4 @@ filtered_failed_tests.txt
 la
 
 notes.c
-Makefile
-*Makefile
+*_Makefile

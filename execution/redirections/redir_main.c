@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   repl_redir_main.c                                  :+:      :+:    :+:   */
+/*   redir_main.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 04:20:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 01:22:43 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 21:43:13 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "repl_redir_internals.h"
+#include "redir_internals.h"
 
 t_result	handle_redir_out(t_ast *ast, t_fd_set **fds, t_redir *redir, bool append)
 {

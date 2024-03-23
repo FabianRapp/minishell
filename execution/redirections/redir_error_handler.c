@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   repl_redir_error_handler.c                         :+:      :+:    :+:   */
+/*   redir_error_handler.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 04:24:43 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/17 19:25:37 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 21:43:04 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "repl_redir_internals.h"
+#include "redir_internals.h"
 
 t_result	handle_open_error(t_ast *ast, t_fd_set *fd_pair)
 {

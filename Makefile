@@ -11,14 +11,12 @@ NAME	=	minishell
 
 CFLAGS	=	-Wall -Wextra -Werror
 CC		=	cc
+LIBFT 	=	libft/libft.a
 
 GREEN	=	\033[0;32m
 YELLOW	=	\033[33m
 CYAN	=	\033[0;36m
 CLEAR	=	\033[0m
-
-LIBFT 	=	./libft/libft.a
-LINKS 	=	-lreadline -L/usr/local/opt/readline/lib
 
 SRC_BUILTINS	=	builtins/pwd.c builtins/env.c builtins/export.c \
 					builtins/unset.c builtins/exit.c builtins/echo.c \
@@ -62,27 +60,28 @@ SRC_UTILS		=	utils/signals.c utils/debugging.c utils/fd1.c utils/groups1.c \
 SRCS	:=	$(SRC_BUILTINS) $(SRC_ENVIRONMENT) $(SRC_LEXER) $(SRC_PARSER) \
 			$(SRC_EXPANSION) $(SRC_EXECUTION) $(SRC_UTILS) main.c
 
-
-
-OBJS	:=	$(addprefix src/, $(SRCS:.c=.o))
-
-all: BUILDLIB ${NAME}
+OBJS	=	$(SRCS:%.c=%.o)
 
 %.o: %.c
-	@$(CC) $(CFLAGS) -o $@ -c $<
+	@$(CC) $(CFLAGS) -c $< -o $@
 
-${NAME}: $(LIBFT) $(OBJS)
-	@$(CC) $(OBJS) $(LINKS) $(LIBFT) -o $(NAME) && echo "Successful $(NAME) build...!"
-
-BUILDLIB:
+$(NAME): $(OBJS)
 	@cd libft && make
+	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT) -lreadline -o $(NAME)
+	@echo "$(GREEN)minishell compiled!$(WHITE)"
+
+all: $(NAME)
 
 clean:
-	@rm -rf $(OBJS)
+	@cd libft && make clean
+	@rm -f $(OBJS)
+	@echo "$(CYAN)object files cleaned$(CLEAR)"
 
-fclean: clean
+fclean:
 	@cd libft && make fclean
-	rm -f ${NAME}
+	@rm -f $(OBJS)
+	@rm -f $(NAME)
+	@echo "$(CYAN)minishell fclean$(CLEAR)"
 
 re: fclean all
 
