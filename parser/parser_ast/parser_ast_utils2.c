@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_ast_utils2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 06:03:37 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 16:52:17 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/23 23:56:45 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_arg	*append_arg(t_parser *parser, t_arg *head_arg)
 		return (free_arg_list(head_arg), NULL);
 	if (!head_arg)
 		head_arg = cur;
-	cur->name = ft_calloc(1, sizeof(t_arg));
+	cur->name = ft_calloc(1, sizeof(t_token_list));
 	if (!cur->name)
 		return (free_arg_list(head_arg), NULL);
 	cur->name->token = parser->token;

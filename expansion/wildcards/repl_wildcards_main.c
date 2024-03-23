@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:49:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 23:22:30 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 23:57:32 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,13 @@ void	expand_wildcard_node_exit(t_wildcard_node_expasion this_data,
 	t_token_list *node)
 {
 	if (node)
+	{
 		free_token(node->token);
-	printf("node: %p\nw_head: %p\n", node, this_data.w_head);
-	printf("diff: %ld\n", node - this_data.w_head);
+		node->token = NULL;
+	}
 	if (node && this_data.w_head)
 	{
-		*node
-		= *(this_data.w_head);
+		*node = *(this_data.w_head);
 	}
 	if (this_data.cur_dir)
 		closedir(this_data.cur_dir);
@@ -128,7 +128,9 @@ t_result	wildcards(t_token_list *name)
 	char		*tmp;
 
 	data_str = NULL;
-	while (name)
+	while (name
+		&& name->token
+		&& name->token->type != T_EOF)
 	{
 		ft_free((void **)&data_str);
 		if (name && name->token)
