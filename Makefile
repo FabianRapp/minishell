@@ -23,7 +23,6 @@ SOURCES = repl/main.c \
 		  repl/utils/input_exit.c \
 		  repl/utils/data_utils.c \
 		  repl/run_ast.c \
-		  repl/env.c \
 		  utils/fd1.c \
 		  repl/repl_sub_shell.c \
 		  repl/expansion/expansion.c \

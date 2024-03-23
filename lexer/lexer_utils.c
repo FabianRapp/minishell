@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:46:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 15:27:21 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/23 15:37:25 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,6 @@ void	read_char(t_lexer *lexer)
 		(lexer->read_position)++;
 	else
 		lexer->read_position = (int)ft_strlen(lexer->str);
-}
-
-void	init_token(t_token *token, t_lexer *lexer)
-{
-	token->type = 0;
-	token->str_data = NULL;
-	token->unknown = 0;
-	token->input_str = lexer->str;
-	token->input_position = lexer->position;
-	token->old_data = NULL;
-	token->left_redir_arg = NULL;
-	token->here_doc_arg_literal = false;
 }
 
 bool	is_redir_terminator_char(char c)
@@ -64,35 +52,44 @@ void	lexer_error(t_token *token)
 	}
 }
 
-char	*get_potential_fd(t_lexer *lexer)
+// util for new_lexer
+void	skip_leading_void_whitespace(t_lexer *lexer)
 {
-	char	*left_redir_arg;
-	t_lexer	lexer_backup;
+	t_lexer	last;
+	t_token	*token;
+	char	*tmp;
 
-	lexer_backup = *lexer;
-	left_redir_arg = NULL;
-	while (ft_isdigit(lexer->cur_char))
+	read_char(lexer);
+	last = *lexer;
+	token = next_new_token(lexer, false);
+	while (token && (token->type == WHITE_SPACE || token->type == VOID))
 	{
-		if (!ft_strjoin_inplace_char(&left_redir_arg, lexer->cur_char))
-			return (NULL);
-		read_char(lexer);
+		free_token(token);
+		last = *lexer;
+		token = next_new_token(lexer, false);
 	}
-	return (left_redir_arg);
+	if (!token)
+		last.str = NULL;
+	else
+		free_token(token);
+	tmp = lexer->str;
+	*lexer = last;
+	lexer->str = tmp;
 }
 
-char	*check_limis_potential_fd(char *left_redir_arg,
-	t_lexer *lexer, t_lexer lexer_backup)
+// inits a lexer object, returns the object
+// NOT a pointer to a dynamic memory location!!
+t_lexer	new_lexer(char *str)
 {
-	if (lexer->cur_char != '<' && lexer->cur_char != '>')
-		ft_free((void **)&left_redir_arg);
-	else if (ft_strlen(left_redir_arg) > ft_strlen("2147483647"))
-		ft_free((void **)&left_redir_arg);
-	else if (ft_strlen(left_redir_arg) == ft_strlen("2147483647"))
-	{
-		if (ft_strcmp(left_redir_arg, "2147483647") > 0)
-			ft_free((void **)&left_redir_arg);
-	}
-	if (!left_redir_arg)
-		*lexer = lexer_backup;
-	return (left_redir_arg);
+	t_lexer		lexer;
+
+	lexer.last_char = 0;
+	lexer.position = 0;
+	lexer.read_position = 0;
+	lexer.str = NULL;
+	lexer.str = ft_strdup(str);
+	if (!lexer.str)
+		return (lexer);
+	skip_leading_void_whitespace(&lexer);
+	return (lexer);
 }

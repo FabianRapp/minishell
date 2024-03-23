@@ -14,7 +14,7 @@ LDFLAGS =
 LIB_LEXER=lexer
 LIB_LEXER_NAME = lexer.a
 SOURCES= ../utils/utils1.c ../utils/debugging.c lexer_main.c lexer_utils.c \
- ident_type.c dollar_sign.c subshell.c \
+ ident_type.c dollar_sign.c subshell.c fd_utils.c \
  ident_redir.c \
  lexer_ident_literal_wildcards.c \
   ../utils/utils1.c

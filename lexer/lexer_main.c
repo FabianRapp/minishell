@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 14:26:45 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/23 15:36:45 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,18 @@ t_token	*classify_sub_str(t_token *token, t_lexer *lexer, bool recursive_call)
 	return (token);
 }
 
+static void	init_token(t_token *token, t_lexer *lexer)
+{
+	token->type = 0;
+	token->str_data = NULL;
+	token->unknown = 0;
+	token->input_str = lexer->str;
+	token->input_position = lexer->position;
+	token->old_data = NULL;
+	token->left_redir_arg = NULL;
+	token->here_doc_arg_literal = false;
+}
+
 t_token	*next_new_token(t_lexer *lexer, bool recursive_call)
 {
 	t_token		*token;
@@ -82,46 +94,4 @@ t_token	*next_new_token(t_lexer *lexer, bool recursive_call)
 	printf("DEBUG: no function IDed the type\n");
 	printf("%s\n", lexer->str + lexer->position);
 	return (lexer_error(token), exit(1), NULL);
-}
-
-// util for new_lexer
-void	skip_leading_void_whitespace(t_lexer *lexer)
-{
-	t_lexer	last;
-	t_token	*token;
-	char	*tmp;
-
-	read_char(lexer);
-	last = *lexer;
-	token = next_new_token(lexer, false);
-	while (token && (token->type == WHITE_SPACE || token->type == VOID))
-	{
-		free_token(token);
-		last = *lexer;
-		token = next_new_token(lexer, false);
-	}
-	if (!token)
-		last.str = NULL;
-	else
-		free_token(token);
-	tmp = lexer->str;
-	*lexer = last;
-	lexer->str = tmp;
-}
-
-// inits a lexer object, returns the object
-// NOT a pointer to a dynamic memory location!!
-t_lexer	new_lexer(char *str)
-{
-	t_lexer		lexer;
-
-	lexer.last_char = 0;
-	lexer.position = 0;
-	lexer.read_position = 0;
-	lexer.str = NULL;
-	lexer.str = ft_strdup(str);
-	if (!lexer.str)
-		return (lexer);
-	skip_leading_void_whitespace(&lexer);
-	return (lexer);
 }
