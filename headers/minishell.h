@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 03:13:17 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 03:16:51 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,13 +95,12 @@ weird stuff to keep in mind about bash
 # include <termios.h>
 # include <signal.h>
 
-// this projects headers
+// this project's headers
 # include "libft.h"
 # include "utils.h"
 # include "lexer.h"
 # include "tokens.h"
 # include "parser.h"
-# include "eval.h"
 
 # define TESTER 1
 # define SHELL_NAME "minishell\0"
@@ -143,16 +142,6 @@ typedef struct s_lexer	t_lexer;
 typedef struct s_parser	t_parser;
 typedef struct s_ast	t_ast;
 
-// for the main proecess: through this struct all data
-// is reachable for cleanup
-typedef struct s_cleanup_data
-{
-	t_ast			*root;
-	char			*input;
-	t_shared_data	*shared_data;
-}	t_cleanup_data;
-
-// typedef	struct s_arg	t_arg;
 typedef	struct s_arg
 {
 	
@@ -161,12 +150,11 @@ typedef	struct s_arg
 	struct s_arg	*next;
 }	t_arg;
 
-typedef	struct s_redir	t_redir;
 typedef	struct s_redir
 {
 	t_type			type;
 	t_arg			*arg;
-	t_redir			*next;
+	struct s_redir			*next;
 	int				left_redir_arg;
 	char			*token_str_data;
 	bool			here_doc_literal;
@@ -179,13 +167,21 @@ typedef struct s_child_data
 	char		**argv;
 }	t_child_data;
 
-
 typedef struct s_fd_set
 {
 	int	base_fd;
 	int	overload_with_fd;
 	int	base_fd_backup;
 }	t_fd_set;
+
+// for the main proecess: through this struct all data
+// is reachable for cleanup
+typedef struct s_cleanup_data
+{
+	t_ast					*root;
+	char					*input;
+	struct s_shared_data	*shared_data;
+}	t_cleanup_data;
 
 typedef struct s_shared_data
 {
@@ -214,6 +210,17 @@ typedef struct s_ast
 	bool			dont_run_buildins;
 }	t_ast;
 
+
+typedef struct s_path
+{
+	char	*all_paths;
+	char	*cur_path;
+	int		position;
+	int		read_postion;
+	char	*command_name;
+	t_ast	*ast;
+}	t_path;
+
 typedef struct s_pipe_data
 {
 	int			pipe_fd[2];
@@ -241,11 +248,22 @@ t_result	resolve_redirs(t_ast *ast);
 void		print_token(t_token *token, t_parser *parser, int depth);
 bool		test_lexer_manualy(char *str);
 
-//env
-bool		init_shared_data(t_shared_data *new_env);
+//from eval.h:
+t_result	expansion(t_ast *ast);
+char		*find_path(t_ast *ast, char *command_name, char *path_env);
+bool		ft_buildin(t_ast *ast);
+
+// input_exit.c
+t_ast		*get_input(t_cleanup_data *cleanup_data);
+void		main_exit(t_cleanup_data *data, bool full_exit, bool ft_exit_call);
+t_ast		*handle_manunal_input(char **av, t_cleanup_data *cleanup_data);
+
+// data_utils.c
+int			count_args(t_arg *args);
+void		fill_args(t_ast *ast, char *argv[], int type);
 
 // repl/utils/repl_get_pid.c
-int			get_pid(void);
+int		get_pid(void);
 int		ft_pid(int set);
 
 // utils

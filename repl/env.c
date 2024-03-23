@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 07:19:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/17 19:11:38 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/22 22:21:42 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,4 @@
 // 	return (true);
 // }
 
-bool	init_shared_data(t_shared_data *new_env)
-{
-	if (!new_env)
-		return (false);
-	new_env->stop_execution = false;
-	return (true);
-}
+
