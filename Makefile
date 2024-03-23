@@ -1,12 +1,3 @@
-FLAGS_NO_LEAK_CHECK = 
-#  
-CFLAGS=-Wall -Wextra -Werror
-
-LDFLAGS =
-# -fsanitize=undefined -fsanitize=address -g
-# 
-
-
 NAME	=	minishell
 
 CFLAGS	=	-Wall -Wextra -Werror
@@ -99,41 +90,3 @@ fclean:
 re: fclean all
 
 .PHONY: all clean fclean re
-
-
-
-
-
-
-
-# OBJS	=	$(SRCS:%.c=$(OBJ_DIR)%.o)
-
-# LIBFT	=	libft/libft.a
-
-# $(NAME): $(OBJS)
-# 	@cd libft && make
-# 	@$(CC) $(CFLAGS) $(LIBFT) $(OBJS) -lreadline -o $(NAME) $(LDFLAGS)
-# 	@echo "$(GREEN)minishell build$(WHITE)"
-
-# $(OBJ_DIR)%.o: %.c
-# 	@mkdir -p $(OBJ_DIR)
-# 	@$(CC) $(CFLAGS) -c $< -o $@
-
-
-# all:	$(NAME)
-
-# clean:	
-# 		rm -f $(OBJS)
-# 		@cd libft && make clean
-# 		@rm -rf $(OBJ_DIR)
-# 		@echo "$(CYAN)object files cleaned!$(WHITE)"
-
-# fclean:	
-# 		@cd libft && make fclean
-# 		@rm -rf $(OBJ_DIR)
-# 		@rm -f $(NAME)
-# 		@echo "$(CYAN)Executable and object files cleaned!$(WHITE)"
-
-# re:		fclean all
-
-# .PHONY: all clean fclean re
