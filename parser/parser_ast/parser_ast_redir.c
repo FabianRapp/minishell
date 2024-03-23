@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 05:35:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 01:27:03 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 04:48:14 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*handle_env_var_astparser(char *dollar_str, int *index)
 	env_var = ft_strndup(dollar_str + 1, name_len(dollar_str + 1));
 	if (!env_var)
 		return (NULL);
-	return_str = get_env_value(NULL, env_var);
+	return_str = get_env_value(NULL, env_var, 0, 0);
 	if (!return_str)
 		return_str = ft_calloc(1, 1);
 	return (free(env_var), return_str);

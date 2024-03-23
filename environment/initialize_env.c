@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/23 03:16:28 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 04:50:26 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	ft_update_shlvl(int shlvl_index, char ***env)
 	char	*after;
 
 	num = -1;
-	before = get_env_value(*(env), "SHLVL");
+	before = get_env_value(*(env), "SHLVL", 0, 0);
 	if (shlvl_index == 0 || is_not_numeric(before))
 	{
 		*env = new_env_list_after_add("SHLVL=1", *env);

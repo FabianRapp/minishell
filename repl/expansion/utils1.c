@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:00 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 20:25:37 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 04:48:21 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_result	env_to_word_token(t_token *token)
 	token->type = WORD;
 	ft_free((void **)&(token->str_data));
 	//env_var = getenv(token->old_data);
-	env_var = get_env_value(NULL, token->old_data);
+	env_var = get_env_value(NULL, token->old_data, 0, 0);
 	if (errno)
 		return (ERROR);
 	if (!env_var)

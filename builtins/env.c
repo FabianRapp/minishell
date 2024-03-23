@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/22 22:44:06 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/23 04:49:52 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	ft_env(t_ast *ast)
 	char	**tmp;
 	char	*path;
 
-	path = get_env_value(*(ast->shared_data->envs), "PATH");
+	path = get_env_value(*(ast->shared_data->envs), "PATH", 0, 0);
 	if (!path)
 	{
 		print_error(true, "env", NULL, "No such file or directory");

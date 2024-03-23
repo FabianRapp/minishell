@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 02:37:21 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 04:48:54 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static char	*handle_shell_fn(char *name)
 	}
 	if (!all_fns[i])
 		return (NULL);
-	tmp = get_env_value(NULL, "PWD");
+	tmp = get_env_value(NULL, "PWD", 0, 0);
 	if (errno)
 		return (set_last_exit(errno), free(tmp), NULL);
 	pwd = ft_strjoin(":", tmp);
@@ -99,7 +99,7 @@ t_result	init_path_object(t_ast *ast, char *command_name, t_path *path_ob,
 	if (!*command_name)
 		return (print_error(true, "", NULL, "command not found"),
 			ast->exit_status = 127, set_last_exit(127), ERROR);
-	path_ob->all_paths = get_env_value(NULL, path_var);
+	path_ob->all_paths = get_env_value(NULL, path_var, 0, 0);
 	if (errno)
 		return (set_errno_as_exit(ast, false), ERROR);
 	tmp = handle_shell_fn(command_name);
@@ -131,7 +131,7 @@ char	*init_path(t_ast *ast, char *command_name, t_path *path_ob,
 			print_error(true, "/", NULL, "Is a directory");
 		else
 		{
-			tmp = get_env_value(*(ast->shared_data->envs), "HOME");
+			tmp = get_env_value(*(ast->shared_data->envs), "HOME", 0, 0);
 			print_error(true, tmp, NULL, "Is a directory");
 			free(tmp);
 		}

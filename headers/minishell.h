@@ -6,12 +6,17 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 03:16:51 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 05:33:26 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 
+             TOTAL TEST COUNT: 935  TESTS PASSED: 913  LEAKING: 30 
+                     STD_OUT: 15  STD_ERR: 2  EXIT_CODE: 7  
+                         TOTAL FAILED AND PASSED CASES:
+                                     ❌ 24   
+                                     ✅ 2781 
 
 
              TOTAL TEST COUNT: 994  TESTS PASSED: 971  LEAKING: 0 
@@ -353,8 +358,8 @@ typedef struct	s_cd_vars
 	char	**steps;
 	char	*cd_arg;
 	int		i;
-	char	*tmp;
-	char	*old_pwd;
+	char	pwd_before[PATH_MAX + 1];
+	char	old_pwd[PATH_MAX + 1];
 }	t_cd_vars;
 
 typedef	struct s_cd_step_data
@@ -365,9 +370,9 @@ typedef	struct s_cd_step_data
 	char	*cd_arg;
 	bool	first;
 	char	*to_go;
-	char	*before;
+	char	before[PATH_MAX + 1];
 	char	*after;
-	char	*old_pwd;
+	char	old_pwd[PATH_MAX + 1];
 }	t_cd_step_data;
 
 char	*get_parent_dir_path(void);
@@ -377,7 +382,7 @@ char	*init_ft_cd_step(t_ast *ast, char *step, int index);
 /* ---------------------------- ENV FUNCTIONS ---------------------------- */
 
 char	**ft_initialize_our_env(char **base_env);
-char	*get_env_value(char **env, char *var_name);
+char	*get_env_value(char **env, char *var_name, char *buffer, int buf_size);
 char	**new_env_list_after_add(char *str_to_add, char **env);
 char	*get_env_var_name(char *line);
 char	**new_env_list_after_delete(char *var_to_rm, char **env_before);

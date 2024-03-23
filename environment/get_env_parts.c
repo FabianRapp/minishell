@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/23 03:16:22 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 05:16:31 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,31 @@ char	***get_env_list(char ***set_new_env)
 	return (env);
 }
 
-char	*get_env_value(char **env, char *var_name)
+static char	*handle_buffer(char *value, char *buffer, int buf_size)
+{
+	if (!buffer || (int)ft_strlen(value) >= buf_size)
+	{
+		if (buffer)
+		{
+			free(value);
+			return (NULL);
+		}
+		return (value);
+	}
+	ft_strlcpy(buffer, value, buf_size);
+	free(value);
+	return (buffer);
+}
+
+// enters the value into the buffer
+// unless strlen(value) >= buf_size ||
+// buffer == NULL, in that case the value
+// is allotcated
+// even without allocated return internally allocation
+// if the value does not fit in the buffer and a buffer is given NULL is
+// retured
+// returns the pointer to the value
+char	*get_env_value(char **env, char *var_name, char *buffer, int buf_size)
 {
 	int		i;
 	char	*value;
@@ -60,7 +84,5 @@ char	*get_env_value(char **env, char *var_name)
 	}
 	value = ft_substr(env[i], ft_strlen(var_name) + 1, ft_strlen(env[i])
 			- ft_strlen(var_name) - 1);
-	if (value == NULL)
-		return (NULL);
-	return (value);
+	return (handle_buffer(value, buffer, buf_size));
 }

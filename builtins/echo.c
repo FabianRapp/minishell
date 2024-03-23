@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 08:00:49 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/23 03:15:49 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 04:46:10 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ t_result	expand_home(t_arg *cur_arg, t_ast *ast)
 	if (str_value && *str_value == '~' && !*(str_value + 1))
 	{
 		free(str_value);
-		str_value = get_env_value(NULL, "HOME");
+		str_value = get_env_value(NULL, "HOME", 0, 0);
 		cur_arg->name->token->str_data = str_value;
 	}
 	return (set_errno_as_exit(ast, false));
