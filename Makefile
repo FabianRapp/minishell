@@ -68,7 +68,7 @@ OBJS	=	$(SRCS:%.c=%.o)
 $(NAME): $(OBJS)
 	@cd libft && make
 	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT) -lreadline -o $(NAME)
-	@echo "$(GREEN)minishell compiled!$(WHITE)"
+	@echo "$(GREEN)minishell compiled!$(CLEAR)"
 
 all: $(NAME)
 
@@ -77,13 +77,13 @@ flags: LDFLAGS += -fsanitize=undefined -fsanitize=address -g
 flags: $(OBJS)
 	@cd libft && make flags
 	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT) -lreadline -o $(NAME)
-	@echo "$(GREEN)minishell compiled!$(WHITE)"
+	@echo "$(GREEN)minishell compiled!$(CLEAR)"
 
 leaks: CFLAGS += -DLEAK_CHECK=1
 leaks: $(OBJS)
 	@cd libft && make leaks
 	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT) -lreadline -o $(NAME)
-	@echo "$(GREEN)minishell compiled!$(WHITE)"
+	@echo "$(GREEN)minishell compiled!$(CLEAR)"
 
 clean:
 	@cd libft && make clean
