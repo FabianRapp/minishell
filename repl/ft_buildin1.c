@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 00:49:15 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 02:51:56 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,9 @@ bool	ft_buildin(t_ast *ast)
 	return (free(cmd_name), false);
 }
 
-void	ft_cur_exit(t_ast *ast, int exit_value)
+t_result	ft_cur_exit(t_ast *ast, int exit_value)
 {
 	ast->exit_status = exit_value;
 	set_last_exit(exit_value);
+	return (SUCCESS);
 }

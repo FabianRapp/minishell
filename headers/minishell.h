@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 23:48:04 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 03:13:17 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -326,8 +326,8 @@ int			ft_env(t_ast *ast);
 void		ft_export(t_ast *ast, t_arg *cur_arg);
 void		ft_unset(t_ast *ast);
 void		ft_exit(t_ast *ast);
-int			ft_echo(t_ast *ast, t_arg *cur_arg);
-int			ft_cap_echo(t_ast *ast, t_arg *cur_arg);
+t_result	ft_echo(t_ast *ast, t_arg *cur_arg);
+t_result	ft_cap_echo(t_ast *ast, t_arg *cur_arg);
 int			ft_cd(t_ast *ast);
 
 typedef struct	s_cd_vars
@@ -372,8 +372,8 @@ t_result	set_ctrl_c(struct sigaction *sig_set);
 t_result	set_ctrl_slash(struct sigaction *sig);
 
 // ----------- additional utils -----------------
-void	print_error_addsq(bool shell_name, char *command_name, char *arg, char *str);
-void	ft_cur_exit(t_ast *ast, int exit_value);
+void		print_error_addsq(bool shell_name, char *command_name, char *arg, char *str);
+t_result	ft_cur_exit(t_ast *ast, int exit_value);
 
 //! delete later
 t_parser	*parser_testing(char *str);

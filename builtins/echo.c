@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 08:00:49 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/22 18:23:01 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/23 03:14:06 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,23 +37,33 @@ static bool	print_with_or_without_space(t_arg *cur_arg, char *str_value)
 	return (true);
 }
 
-int	ft_echo(t_ast *ast, t_arg *cur_arg)
+t_result	expand_home(t_arg *cur_arg, t_ast *ast)
+{
+	char	*str_value;
+
+	str_value = cur_arg->name->token->str_data;
+	if (str_value && *str_value == '~' && !*(str_value + 1))
+	{
+		free(str_value);
+		str_value = get_env_value(NULL, "HOME");
+		cur_arg->name->token->str_data = str_value;
+	}
+	return (set_errno_as_exit(ast, false));
+}
+
+t_result	ft_echo(t_ast *ast, t_arg *cur_arg)
 {
 	char	*str_value;
 	bool	no_new_line;
 	bool	stop_check;
 
-	ft_cur_exit(ast, 0);
-	if (!cur_arg)
-		return (printf("\n"), 0);
 	no_new_line = false;
 	stop_check = false;
 	while (cur_arg && cur_arg->name->token->type != T_EOF)
 	{
+		if (expand_home(cur_arg, ast) == ERROR)
+			return (ERROR);
 		str_value = cur_arg->name->token->str_data;
-		if (str_value && *str_value == '~' && !*(str_value + 1))
-			(free(str_value), str_value = get_env_value(NULL, "HOME"));
-		cur_arg->name->token->str_data = str_value;
 		if (!stop_check && is_the_n_option(str_value))
 			no_new_line = true;
 		else if (str_value)
@@ -62,10 +72,10 @@ int	ft_echo(t_ast *ast, t_arg *cur_arg)
 	}
 	if (no_new_line == false)
 		printf("\n");
-	return (0);
+	return (ft_cur_exit(ast, 0));
 }
 
-int	ft_cap_echo(t_ast *ast, t_arg *cur_arg)
+t_result	ft_cap_echo(t_ast *ast, t_arg *cur_arg)
 {
 	char	*str;
 	bool	no_new_line;
@@ -82,6 +92,8 @@ int	ft_cap_echo(t_ast *ast, t_arg *cur_arg)
 	}
 	while (cur_arg && cur_arg->name->token->type != T_EOF)
 	{
+		if (expand_home(cur_arg, ast) == ERROR)
+			return (ERROR);
 		str = cur_arg->name->token->str_data;
 		if (str)
 			print_with_or_without_space(cur_arg, str);
@@ -89,5 +101,5 @@ int	ft_cap_echo(t_ast *ast, t_arg *cur_arg)
 	}
 	if (no_new_line == false)
 		printf("\n");
-	return (0);
+	return (SUCCESS);
 }
