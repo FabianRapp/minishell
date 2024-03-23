@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:26:07 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/23 05:49:41 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 06:59:46 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void	ft_cd_to_var(t_ast *ast, char *var)
 {
 	char	to_go[PATH_MAX + 1];
 	char	before[PATH_MAX + 1];
-	char	*after;
+	char	after[PATH_MAX + 1];
 	char	old_pwd[PATH_MAX + 1];
 
 	getcwd(before, PATH_MAX);
@@ -29,7 +29,7 @@ static void	ft_cd_to_var(t_ast *ast, char *var)
 		print_error(true, "cd", NULL, strerror(errno));
 		return ;
 	}
-	after = getcwd(NULL, PATH_MAX);
+	getcwd(after, PATH_MAX);
 	ft_update_dir_vars(ast, before, after);
 	if (!ft_strcmp(var, "OLDPWD"))
 		ft_pwd(ast);
@@ -37,30 +37,24 @@ static void	ft_cd_to_var(t_ast *ast, char *var)
 
 static int	ft_cd_step(t_cd_step_data data)
 {
-
-	// if (init_ft_cd_step(data.ast, data.step, data.index, data.to_go) == ERROR)
-	// {
-		
-	// }
 	char	*tmp;
-	
+
 	tmp = init_ft_cd_step(data.ast, data.step, data.index);
 	if (!tmp)
 		return (0);
+	if (check_path_len(data.ast, tmp) == ERROR)
+		return (free(tmp), 0);
 	ft_strlcpy(data.to_go, tmp, PATH_MAX);
 	free(tmp);
-	getcwd(data.before , PATH_MAX);
-	if (ft_strlen(data.to_go) == 0)
-	{
-		
-	}
-	getcwd(data.before , PATH_MAX);
+	getcwd(data.before, PATH_MAX);
 	if (ft_strlen(data.to_go) == 0)
 		ft_strlcpy(data.to_go, "/", PATH_MAX);
 	get_env_value(NULL, "OLDPWD", data.old_pwd, PATH_MAX);
 	if (chdir(data.to_go) < 0)
-		return (chdir(data.old_pwd), ft_cur_exit(data.ast, 1), print_error(true, "cd", data.cd_arg, "No such file or directory"), 0);
-	data.after = getcwd(NULL, PATH_MAX);
+		return (chdir(data.old_pwd), ft_cur_exit(data.ast, 1),
+			print_error(true, "cd",
+				data.cd_arg, "No such file or directory"), 0);
+	getcwd(data.after, PATH_MAX);
 	if (data.first)
 		ft_update_dir_vars(data.ast, data.before, data.after);
 	return (1);
@@ -76,7 +70,8 @@ static t_arg	*cd_edge_cases(t_ast *ast)
 	if (!args)
 		return (ft_cd_to_var(ast, "HOME"), NULL);
 	if (count_args(ast->arg) > 1)
-		return (ft_cur_exit(ast, 1), print_error(true, "cd", NULL, "too many arguments"), NULL);
+		return (ft_cur_exit(ast, 1), print_error(true,
+				"cd", NULL, "too many arguments"), NULL);
 	cd_arg = ast->arg->name->token->str_data;
 	if (*cd_arg == '\0')
 		return (NULL);
@@ -84,13 +79,19 @@ static t_arg	*cd_edge_cases(t_ast *ast)
 		return (ft_cd_to_var(ast, "OLDPWD"), NULL);
 	if (ft_strcmp(cd_arg, "--") == 0)
 		return (ft_cd_to_var(ast, "HOME"), NULL);
+	if (check_path_len(ast, cd_arg) == ERROR)
+		return (NULL);
 	return (args);
 }
 
 static bool	cd_loop(t_cd_vars vars, t_cd_step_data step_data)
 {
 	if (!vars.steps)
-		return (chdir(vars.pwd_before), ft_update_env("OLDPWD", vars.old_pwd, *(step_data.ast->shared_data->envs)), 0);
+	{
+		return (chdir(vars.pwd_before),
+			ft_update_env("OLDPWD", vars.old_pwd,
+				*(step_data.ast->shared_data->envs)), 0);
+	}
 	while (vars.steps[++(vars.i)])
 	{
 		step_data.step = vars.steps[vars.i];
@@ -98,7 +99,9 @@ static bool	cd_loop(t_cd_vars vars, t_cd_step_data step_data)
 		step_data.first = vars.i == 0;
 		if (!ft_cd_step(step_data))
 		{
-			return (chdir(vars.pwd_before), ft_update_env("OLDPWD", vars.old_pwd, *(step_data.ast->shared_data->envs)), 0);
+			return (chdir(vars.pwd_before),
+				ft_update_env("OLDPWD", vars.old_pwd,
+					*(step_data.ast->shared_data->envs)), 0);
 		}
 	}
 	return (1);
@@ -124,10 +127,10 @@ int	ft_cd(t_ast *ast)
 	step_data.cd_arg = vars.cd_arg;
 	step_data.first = true;
 	if (*(vars.cd_arg) == '/' && !ft_cd_step(step_data))
-		return (chdir(vars.pwd_before), ft_update_env("OLDPWD", vars.old_pwd, *(ast->shared_data->envs)), 0);
+		return (chdir(vars.pwd_before), ft_update_env("OLDPWD",
+				vars.old_pwd, *(ast->shared_data->envs)), 0);
 	vars.steps = ft_split(vars.cd_arg, '/');
 	cd_loop(vars, step_data);
 	ft_free_2darr(vars.steps);
-	//system("leaks minishell");
 	return (1);
 }

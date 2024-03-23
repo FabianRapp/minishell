@@ -6,11 +6,21 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:26:07 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/23 05:48:52 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 07:05:02 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
+t_result	check_path_len(t_ast *ast, char *path)
+{
+	if (ft_strlen(path) <= PATH_MAX)
+		return (SUCCESS);
+	ast->exit_status = 36;
+	set_last_exit(36);
+	print_error(true, NULL, NULL, strerror(36));
+	return (ERROR);
+}
 
 char	*get_parent_dir_path(void)
 {
@@ -31,7 +41,6 @@ int	ft_update_dir_vars(t_ast *ast, char *before, char *after)
 	ft_update_env("PWD", after, *(ast->shared_data->envs));
 	ft_update_env("OLDPWD", before, *(ast->shared_data->env_exp));
 	ft_update_env("PWD", after, *(ast->shared_data->env_exp));
-	free(after);
 	return (0);
 }
 
@@ -59,42 +68,3 @@ char	*init_ft_cd_step(t_ast *ast, char *step, int index)
 		return (set_errno_as_exit(ast, false), NULL);
 	return (to_go);
 }
-
-
-// t_result	init_ft_cd_step(t_ast *ast, char *step, int index, char *to_go)
-// {
-// 	char	*tmp;
-
-// 	tmp = NULL;
-// 	if (index == 0 && !ft_strcmp(step, "~"))
-// 	{
-// 		tmp = get_env_value(*(ast->shared_data->envs), "HOME", 0, 0);
-// 		if (!tmp)
-// 			return (set_errno_as_exit(ast, false));
-// 	}
-// 	else if (!ft_strcmp(step, "."))
-// 	{
-// 		tmp = get_env_value(*(ast->shared_data->envs), "PWD", 0, 0);
-// 		if (!tmp)
-// 			return (set_errno_as_exit(ast, false));
-// 	}
-// 	else if (!ft_strcmp(step, ".."))
-// 	{
-// 		tmp =  get_parent_dir_path();
-// 		if (!tmp)
-// 			return (set_errno_as_exit(ast, false));
-// 	}
-// 	if (ft_strlen(tmp) >= PATH_MAX)
-// 	{
-// 		print_error(true, NULL, NULL, "too long path");
-// 		ast->exit_status = 1;
-// 		set_last_exit(1);
-// 		return (ERROR);
-// 	}
-// 	if (tmp)
-// 		ft_strlcpy(to_go, tmp, PATH_MAX);
-// 	else
-// 		*to_go = 0;
-// 	free(tmp);
-// 	return (SUCCESS);
-// }

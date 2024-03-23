@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:47:46 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/22 22:44:09 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/23 07:03:16 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,9 @@ void	ft_exit(t_ast *ast)
 		tmp++;
 	if (tmp && includes_non_num(tmp))
 	{
-		print_error(true, "exit", ast->arg->name->token->str_data, "numeric argument required");
+		print_error(true, "exit", ast->arg->name->token->str_data,
+			"numeric argument required");
 		ft_cur_exit(ast, 2);
-		main_exit(ast->shared_data->cleanup_data, true, true);
-		return ;
 	}
 	else if (count_args(ast->arg) > 1)
 	{
@@ -52,7 +51,8 @@ void	ft_exit(t_ast *ast)
 		ast->shared_data->stop_execution = true;
 		return ;
 	}
-	ft_cur_exit(ast, ft_atoi(ast->arg->name->token->str_data));
+	else
+		ft_cur_exit(ast, ft_atoi(ast->arg->name->token->str_data));
 	main_exit(ast->shared_data->cleanup_data, true, true);
 }
 

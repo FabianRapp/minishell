@@ -6,18 +6,11 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 05:49:30 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 07:05:54 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
-
-             TOTAL TEST COUNT: 935  TESTS PASSED: 913  LEAKING: 30 
-                     STD_OUT: 15  STD_ERR: 2  EXIT_CODE: 7  
-                         TOTAL FAILED AND PASSED CASES:
-                                     ❌ 24   
-                                     ✅ 2781 
-
 
              TOTAL TEST COUNT: 994  TESTS PASSED: 971  LEAKING: 0 
                      STD_OUT: 16  STD_ERR: 2  EXIT_CODE: 7  
@@ -371,14 +364,14 @@ typedef	struct s_cd_step_data
 	bool	first;
 	char	to_go[PATH_MAX + 1];
 	char	before[PATH_MAX + 1];
-	char	*after;
+	char	after[PATH_MAX + 1];
 	char	old_pwd[PATH_MAX + 1];
 }	t_cd_step_data;
 
+t_result	check_path_len(t_ast *ast, char *path);
 char		*get_parent_dir_path(void);
 int			ft_update_dir_vars(t_ast *ast, char *before, char *after);
 char		*init_ft_cd_step(t_ast *ast, char *step, int inde);
-// t_result	init_ft_cd_step(t_ast *ast, char *step, int inde, char *to_go);
 
 /* ---------------------------- ENV FUNCTIONS ---------------------------- */
 
