@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:46:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 22:53:30 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 15:27:21 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/lexer.h"
+#include "../headers/lexer.h"
 
 // reads the next char into the lexer and updates indexes
 void	read_char(t_lexer *lexer)
 {
 	if (lexer->read_position > ((int)ft_strlen(lexer->str)))
 	{
-		printf("debuig read_char\n");
+		printf("debug read_char\n");
 		exit(1);
 	}
 	lexer->last_char = lexer->cur_char;
@@ -42,17 +42,6 @@ void	init_token(t_token *token, t_lexer *lexer)
 	token->here_doc_arg_literal = false;
 }
 
-void	lexer_error(t_token *token)
-{
-	if (token)
-	{
-		ft_free((void **)&(token->str_data));
-		ft_free((void **)&(token->old_data));
-		ft_free((void **)&(token->left_redir_arg));
-		ft_free((void **)&(token));
-	}
-}
-
 bool	is_redir_terminator_char(char c)
 {
 	if (ft_iswhitespace(c) || c == '|' || c == '&' || c == '('
@@ -64,7 +53,33 @@ bool	is_redir_terminator_char(char c)
 	return (false);
 }
 
-// TODO idk if here to check for larger fd than MAX_FD or let open handle that
+void	lexer_error(t_token *token)
+{
+	if (token)
+	{
+		ft_free((void **)&(token->str_data));
+		ft_free((void **)&(token->old_data));
+		ft_free((void **)&(token->left_redir_arg));
+		ft_free((void **)&(token));
+	}
+}
+
+char	*get_potential_fd(t_lexer *lexer)
+{
+	char	*left_redir_arg;
+	t_lexer	lexer_backup;
+
+	lexer_backup = *lexer;
+	left_redir_arg = NULL;
+	while (ft_isdigit(lexer->cur_char))
+	{
+		if (!ft_strjoin_inplace_char(&left_redir_arg, lexer->cur_char))
+			return (NULL);
+		read_char(lexer);
+	}
+	return (left_redir_arg);
+}
+
 char	*check_limis_potential_fd(char *left_redir_arg,
 	t_lexer *lexer, t_lexer lexer_backup)
 {

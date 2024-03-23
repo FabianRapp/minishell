@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_main.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 23:02:32 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 14:26:45 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/lexer.h"
-#include "internals.h"
+#include "../headers/minishell.h"
 
-t_result	valid_first_char(t_lexer *lexer)
+static t_result	valid_first_char(t_lexer *lexer)
 {
 	if (lexer->cur_char == ')')
 	{
@@ -31,7 +31,7 @@ t_result	valid_first_char(t_lexer *lexer)
 	return (SUCCESS);
 }
 
-t_result	handle_exception_char(t_lexer *lexer, t_token *token)
+static t_result	handle_exception_char(t_lexer *lexer, t_token *token)
 {
 	if (lexer->cur_char != '\\')
 		return (SUCCESS);
@@ -41,7 +41,6 @@ t_result	handle_exception_char(t_lexer *lexer, t_token *token)
 
 t_token	*classify_sub_str(t_token *token, t_lexer *lexer, bool recursive_call)
 {
-	//printf("lexer str at start: %s\n", lexer-> str + lexer->position);
 	if (handle_exception_char(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);
 	if (!token->type)
@@ -58,11 +57,11 @@ t_token	*classify_sub_str(t_token *token, t_lexer *lexer, bool recursive_call)
 		return (lexer_error(token), NULL);
 	else if (!token->type && subshell_type(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);
-	else if (!token->type && ident_wildcard_literals(lexer, token, false) == ERROR)
+	else if (!token->type && ident_wildcard_literals(lexer, token,
+			false) == ERROR)
 		return (lexer_error(token), NULL);
 	else if (!token->type)
 		token->unknown = lexer->cur_char;
-	//ft_fprintf(2, "token data: %s\n", token->str_data);
 	return (token);
 }
 
@@ -79,11 +78,7 @@ t_token	*next_new_token(t_lexer *lexer, bool recursive_call)
 	if (!classify_sub_str(token, lexer, recursive_call))
 		return (NULL);
 	if (token->type)
-	{
-		//if (!is_redir(token->type))
 		return (token);
-		//return (token);
-	}
 	printf("DEBUG: no function IDed the type\n");
 	printf("%s\n", lexer->str + lexer->position);
 	return (lexer_error(token), exit(1), NULL);

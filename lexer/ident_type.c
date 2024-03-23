@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ident_type.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 00:28:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 15:28:24 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/lexer.h"
-#include "../internals.h"
+#include "../headers/lexer.h"
+#include "../headers/minishell.h"
 
-char	*extract_str_data(t_lexer *lexer)
+static char	*extract_str_data(t_lexer *lexer)
 {
 	char	*str_data;
 	int		len;
@@ -23,6 +23,12 @@ char	*extract_str_data(t_lexer *lexer)
 	return (str_data);
 }
 
+static void	set_type_and_position(t_lexer *lexer, t_token *token, t_type type)
+{
+	token->type = type;
+	lexer->read_position = lexer->position + 2;
+}
+
 void	basic_sign_type(t_lexer *lexer, t_token *token)
 {
 	if (lexer->cur_char == 0)
@@ -30,15 +36,9 @@ void	basic_sign_type(t_lexer *lexer, t_token *token)
 	else if (ft_iswhitespace(lexer->cur_char))
 		token->type = WHITE_SPACE;
 	else if (lexer->cur_char == '&' && (lexer->str)[lexer->position + 1] == '&')
-	{
-		token->type = AND;
-		lexer->read_position = lexer->position + 2;
-	}
+		set_type_and_position(lexer, token, AND);
 	else if (lexer->cur_char == '|' && (lexer->str)[lexer->position + 1] == '|')
-	{
-		token->type = OR;
-		lexer->read_position = lexer->position + 2;
-	}
+		set_type_and_position(lexer, token, OR);
 	else if (lexer->cur_char == '|' && lexer->last_char != '\\')
 		token->type = PIPE;
 	else if (lexer->cur_char == '$' && (lexer->str)[lexer->position + 1] == '?')

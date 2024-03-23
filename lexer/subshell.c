@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   subshell.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 21:34:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/19 02:11:32 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 15:28:36 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/lexer.h"
-#include "../internals.h"
+#include "../headers/lexer.h"
+#include "../headers/minishell.h"
 
 static t_result	verify_subshell_chars(t_lexer *lexer)
 {

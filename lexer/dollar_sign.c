@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   dollar_sign.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 21:33:17 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/19 02:25:54 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 15:28:12 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/lexer.h"
-#include "../internals.h"
+#include "../headers/lexer.h"
+#include "../headers/minishell.h"
 
-// has to be called from dollar_lexing()
 static t_result	pid_req(t_lexer *lexer, t_token *token)
 {
 	if (!((lexer->str)[lexer->position + 1] == '$'))
@@ -23,8 +22,6 @@ static t_result	pid_req(t_lexer *lexer, t_token *token)
 	return (SUCCESS);
 }
 
-// has to be called from dollar_lexing()
-// caller has to check for malloc fail
 static t_result	is_dollar_literal(t_lexer *lexer, t_token *token)
 {
 	if (lexer->cur_char != '$')
@@ -54,10 +51,25 @@ static	t_result	hande_quote(t_lexer *lexer, t_token *token)
 	return (SUCCESS);
 }
 
-t_result	dollar_lexing(t_lexer *lexer, t_token *token)
+static t_result	dollar_lexing_rest(t_lexer *lexer, t_token *token)
 {
 	int	len;
 
+	len = name_len((lexer->str) + lexer->position + 1);
+	if (ft_isdigit(lexer->str[lexer->position + 1]))
+		len = 1;
+	token->type = ENV_VAR;
+	token->str_data = ft_strndup((lexer->str) + lexer->position + 1, len);
+	token->old_data = ft_strndup((lexer->str) + lexer->position + 1, len);
+	if (!token->str_data || !token->old_data)
+		return (ERROR);
+	lexer->read_position = lexer->position + 1 + len;
+	read_char(lexer);
+	return (SUCCESS);
+}
+
+t_result	dollar_lexing(t_lexer *lexer, t_token *token)
+{
 	if (lexer->cur_char != '$')
 		return (SUCCESS);
 	if (pid_req(lexer, token))
@@ -76,14 +88,5 @@ t_result	dollar_lexing(t_lexer *lexer, t_token *token)
 		if (token->type)
 			return (read_char(lexer), SUCCESS);
 	}
-	len = name_len((lexer->str) + lexer->position + 1);
-	if (ft_isdigit(lexer->str[lexer->position + 1]))
-		len = 1;
-	token->type = ENV_VAR;
-	token->str_data = ft_strndup((lexer->str) + lexer->position + 1, len);
-	token->old_data = ft_strndup((lexer->str) + lexer->position + 1, len);
-	if (!token->str_data || !token->old_data)
-		return (ERROR);
-	(lexer->read_position = lexer->position + 1 + len, read_char(lexer));
-	return (SUCCESS);
+	return (dollar_lexing_rest(lexer, token));
 }

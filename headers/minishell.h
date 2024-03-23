@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 07:05:54 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 15:19:59 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -394,6 +394,21 @@ t_result	ft_cur_exit(t_ast *ast, int exit_value);
 
 //! delete later
 t_parser	*parser_testing(char *str);
+
+//FROM INTERNALS_H:
+t_result		dollar_lexing(t_lexer *lexer, t_token *token);
+void			basic_sign_type(t_lexer *lexer, t_token *token);
+t_result		literal_type(t_lexer *lexer, t_token *token);
+t_result		interpreted_type(t_lexer *lexer, t_token *token);
+t_result		redir_type(t_lexer *lexer, t_token *token, bool recursive_call);
+bool			is_redir_terminator_char(char c);
+char			*get_potential_fd(t_lexer *lexer);
+t_result		subshell_type(t_lexer *lexer, t_token *token);
+t_result		ident_wildcard_literals(t_lexer *lexer, t_token *token, bool skip_next_term);
+int				name_len(char *str);
+void			lexer_error(t_token *token);
+char			*check_limis_potential_fd(char *left_redir_arg,
+					t_lexer *lexer, t_lexer lexer_backup);
 
 #endif
 

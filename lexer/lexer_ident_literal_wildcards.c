@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_ident_literal_wildcards.c                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 01:13:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 23:02:52 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 15:28:30 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/lexer.h"
-#include "../internals.h"
+#include "../headers/lexer.h"
+#include "../headers/minishell.h"
 
 bool	contains_more_wildcards(char *str)
 {
@@ -52,44 +52,35 @@ t_result	handle_wildcard(t_lexer *lexer, bool is_start, t_token *token)
 
 	if (!is_start && !contained_a_wildcard(*lexer))
 	{
-		//printf("prefix: %s\n", token->str_data);
 		if (!ft_strjoin_inplace(&(token->str_data), "1}{"))
 			return (ERROR);
 		if (!contains_more_wildcards(lexer->str + lexer->position))
 		{
 			tmp = ft_strndup(lexer->str, lexer->position + 1);
-			if (!ft_strjoin_inplace(&tmp, "3}{!"))
-				return (ERROR);
-			//printf(" lexer->str + lexer->position + 1: %s\n",  lexer->str + lexer->position + 1);
-			if (!ft_strjoin_inplace(&tmp, lexer->str + lexer->position + 1))
+			if (!ft_strjoin_inplace(&tmp, "3}{!") || !ft_strjoin_inplace(&tmp,
+					lexer->str + lexer->position + 1))
 				return (ERROR);
 			free(lexer->str);
-			//printf("tmp: %s\n", tmp);
 			lexer->str = tmp;
-			//printf("lexer rest str: %s\n", lexer->str + lexer->position);
 		}
 	}
 	else if (contains_more_wildcards(lexer->str + lexer->position))
 	{
-		//printf("substr: %s\n", token->str_data);
 		if (!ft_strjoin_inplace(&(token->str_data), "2}{"))
 			return (ERROR);
 	}
 	else
-	{
-		//printf("sufix: %s\n", token->str_data);
 		if (!ft_strjoin_inplace(&(token->str_data), "3}{"))
 			return (ERROR);
-	}
 	return (SUCCESS);
 }
 
 static t_result	copy_str(t_lexer *lexer,
 	t_token *token, bool skip_next_term, bool is_start)
 {
-	while (lexer->cur_char && ((!is_termination_char(lexer->cur_char) || skip_next_term)))
+	while (lexer->cur_char && ((!is_termination_char(lexer->cur_char)
+				|| skip_next_term)))
 	{
-		//printf("lexer before read: %s\n", lexer->str + lexer->position);
 		if (!skip_next_term && lexer->cur_char == '*'
 			&& handle_wildcard(lexer, is_start, token) == ERROR)
 			return (ERROR);
@@ -103,8 +94,6 @@ static t_result	copy_str(t_lexer *lexer,
 		if (!ft_strjoin_inplace_char(&(token->str_data), lexer->cur_char))
 			return (ERROR);
 		read_char(lexer);
-		//printf("lexer after read: %s\n", lexer->str + lexer->position);
-		//printf("token->strdata: %s\n", token->str_data);
 		is_start = false;
 	}
 	return (SUCCESS);
@@ -127,8 +116,6 @@ t_result	ident_wildcard_literals(t_lexer *lexer,
 		is_start = false;
 	if (copy_str(lexer, token, skip_next_term, is_start) == ERROR)
 		return (ERROR);
-	// if (skip_next_term && !ft_strjoin_inplace_char(&(token->str_data), '\n'))
-	// 	return (ERROR);
 	token->type = LITERAL;
 	return (SUCCESS);
 }

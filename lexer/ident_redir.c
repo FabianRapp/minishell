@@ -3,34 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ident_redir.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 00:06:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 01:32:56 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 15:28:19 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/lexer.h"
-#include "../internals.h"
+#include "../headers/lexer.h"
+#include "../headers/minishell.h"
 
-// util for redir_type
-char	*get_potential_fd(t_lexer *lexer)
-{
-	char	*left_redir_arg;
-	t_lexer	lexer_backup;
-
-	lexer_backup = *lexer;
-	left_redir_arg = NULL;
-	while (ft_isdigit(lexer->cur_char))
-	{
-		if (!ft_strjoin_inplace_char(&left_redir_arg, lexer->cur_char))
-			return (NULL);
-		read_char(lexer);
-	}
-	return (left_redir_arg);
-}
-
-t_result	handle_redir_fd(t_lexer *lexer, t_token *token)
+static t_result	handle_redir_fd(t_lexer *lexer, t_token *token)
 {
 	t_lexer	lexer_backup;
 
@@ -80,9 +63,7 @@ t_result	lexer_here_doc(t_lexer *lexer, t_token *token)
 	if (token->type != HERE_DOC)
 		return (SUCCESS);
 	while (ft_iswhitespace(lexer->cur_char))
-	{
 		read_char(lexer);
-	}
 	while (!is_redir_terminator_char(lexer->cur_char))
 	{
 		if (lexer->cur_char == '\'')
@@ -98,6 +79,30 @@ t_result	lexer_here_doc(t_lexer *lexer, t_token *token)
 	return (SUCCESS);
 }
 
+static void	ft_redir_in(t_lexer *lexer, t_token *token)
+{
+	token->type = REDIR_IN;
+	if (lexer->str[lexer->read_position] == '<')
+	{
+		read_char(lexer);
+		if (lexer->str[lexer->read_position] == '<')
+		{
+			read_char(lexer);
+			token->type = HERE_STR;
+		}
+		else
+		{
+			read_char(lexer);
+			token->type = HERE_DOC;
+		}
+	}
+	else if (lexer->str[lexer->read_position] == '>')
+	{
+		read_char(lexer);
+		token->type = REDIR_IN_OUT;
+	}
+}
+
 t_result	redir_type(t_lexer *lexer, t_token *token, bool recursive_call)
 {
 	if (handle_redir_fd(lexer, token) == ERROR)
@@ -105,19 +110,7 @@ t_result	redir_type(t_lexer *lexer, t_token *token, bool recursive_call)
 	if (lexer->cur_char != '<' && lexer->cur_char != '>')
 		return (SUCCESS);
 	if (lexer->cur_char == '<')
-	{
-		token->type = REDIR_IN;
-		if (lexer->str[lexer->read_position] == '<')
-		{
-			read_char(lexer);
-			if (lexer->str[lexer->read_position] == '<')
-				(read_char(lexer), token->type = HERE_STR);
-			else
-				(read_char(lexer), token->type = HERE_DOC);
-		}
-		else if (lexer->str[lexer->read_position] == '>')
-			(read_char(lexer), token->type = REDIR_IN_OUT);
-	}
+		ft_redir_in(lexer, token);
 	else if (lexer->cur_char == '>')
 	{
 		token->type = REDIR_OUT;
