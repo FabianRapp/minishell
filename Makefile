@@ -1,6 +1,3 @@
-CC=cc
-
-
 FLAGS_NO_LEAK_CHECK = 
 #  -fsanitize=undefined -fsanitize=address -g
 CFLAGS=-Wall -Wextra -Werror
@@ -8,145 +5,125 @@ CFLAGS=-Wall -Wextra -Werror
 LDFLAGS =
 # -fsanitize=undefined -fsanitize=address -g
 # 
-#  
-# 
 
 
-NAME=minishell
+NAME	=	minishell
 
-GENERAL_SOURCES=
-GENERAL_OBJECTS=
+CFLAGS	=	-Wall -Wextra -Werror
+CC		=	cc
 
-SOURCES = repl/main.c \
-		  repl/utils/path.c \
-		  repl/ft_buildin1.c \
-		  repl/utils/input_exit.c \
-		  repl/utils/data_utils.c \
-		  repl/run_ast.c \
-		  utils/fd1.c \
-		  repl/repl_sub_shell.c \
-		  repl/expansion/expansion.c \
-		  repl/expansion/utils1.c \
-		  repl/expansion/word_splitting.c \
-		  repl/expansion/utils2.c \
-		  repl/expansion/utils3.c \
-		  repl/expansion/wildcards/repl_wildcards_main.c \
-		  repl/expansion/wildcards/repl_wildcards_utils1.c \
-		  repl/expansion/wildcards/repl_fill_wildcard_data.c \
-		  utils/utils3.c \
-		  repl/utils/repl_get_pid.c \
-		  cleanup/cleanup1.c \
-		  utils/debugging.c \
-		  utils/utils1.c \
-		  utils/groups1.c \
-		  builtins/pwd.c \
-		  builtins/env.c \
-		  builtins/export.c \
-		  builtins/unset.c \
-		  builtins/exit.c \
-		  builtins/echo.c \
-		  builtins/cd.c \
-		  builtins/cd_utils.c \
-		  environment/initialize_env.c \
-		  environment/modify_env.c \
-		  environment/get_env_parts.c \
-		  repl/repl_redir/repl_redir_main.c \
-		  repl/repl_redir/repl_redir_utils.c \
-		  repl/repl_redir/repl_redir_error_handler.c\
-		  repl/pipes.c\
-		  repl/utils/pipe_utils.c\
-		  repl/signals/signals1.c
+GREEN	=	\033[0;32m
+YELLOW	=	\033[33m
+CYAN	=	\033[0;36m
+CLEAR	=	\033[0m
 
-OBJECTS= $(SOURCES:.c=.o)
+LIBFT 	=	./libft/libft.a
+LINKS 	=	-lreadline -L/usr/local/opt/readline/lib
 
-#$(GENERAL_OBJECTS)
-LEXER_DIR = ./lexer
-export LIB_LEXER = lexer
-LIB_LEXER_NAME = lexer.a
-LEXER_PATH = $(LEXER_DIR)/$(LIB_LEXER_NAME)
+SRC_BUILTINS	=	builtins/pwd.c builtins/env.c builtins/export.c \
+					builtins/unset.c builtins/exit.c builtins/echo.c \
+					builtins/cd.c builtins/cd_utils.c
 
-NAME_TESTER=
+SRC_ENVIRONMENT =	environment/initialize_env.c environment/modify_env.c \
+					environment/get_env_parts.c
 
-LIBFT_DIR = ./libft
-export LIBFT = libft
-LIBFT_NAME = libft.a
-LIBFT_PATH = $(LIBFT_DIR)/$(LIBFT_NAME)
+SRC_LEXER		=	lexer/lexer_main.c lexer/lexer_utils.c lexer/dollar_sign.c \
+					lexer/fd_utils.c lexer/ident_redir.c lexer/ident_type.c \
+					lexer/lexer_ident_literal_wildcards.c lexer/subshell.c
 
-PARSER_DIR = ./parser
-export LIB_PARSER = parser
-LIB_PARSER_NAME = parser.a
-PARSER_PATH = $(PARSER_DIR)/$(LIB_PARSER_NAME)
+SRC_PARSER		=	parser/parser.c parser/parser_type_commands.c \
+					parser/parse_utils.c parser/parser_ast/parser_ast.c \
+					parser/parser_ast/parser_ast_redir.c \
+					parser/parser_ast/parser_ast_utils1.c \
+					parser/parser_ast/parser_ast_utils2.c \
+					parser/list_operations/add_new.c \
+					parser/list_operations/move_nodes.c \
+					parser/list_operations/remove_nodes.c \
+					parser/list_operations/utils.c
 
-LIBS = $(LIBFT) $(LIB_LEXER) $(LIB_PARSER)
-LIBS_NAME = $(LIBFT_NAME) $(LIB_LEXER_NAME) $(LIB_PARSER_NAME)
+SRC_EXPANSION	=	expansion/expansion.c expansion/word_splitting.c \
+					expansion/utils1.c expansion/utils2.c expansion/utils3.c \
+					expansion/wildcards/repl_fill_wildcard_data.c \
+					expansion/wildcards/repl_wildcards_main.c \
+					expansion/wildcards/repl_wildcards_utils1.c
+
+SRC_EXECUTION	=	execution/redirections/redir_error_handler.c \
+					execution/redirections/redir_main.c \
+					execution/redirections/redir_utils.c \
+					execution/pipes.c execution/run_ast.c \
+					execution/exec_buildin.c execution/exec_subshell.c \
+					execution/utils/data_utils.c execution/utils/path.c \
+					execution/utils/input_exit.c execution/utils/get_pid.c \
+					execution/utils/pipe_utils.c
+
+SRC_UTILS		=	utils/signals.c utils/debugging.c utils/fd1.c utils/groups1.c \
+					utils/utils1.c utils/utils2.c utils/cleanup.c
+
+SRCS	:=	$(SRC_BUILTINS) $(SRC_ENVIRONMENT) $(SRC_LEXER) $(SRC_PARSER) \
+			$(SRC_EXPANSION) $(SRC_EXECUTION) $(SRC_UTILS) main.c
 
 
 
-.PHONY: all clean fclean re clean2 libs $(LIBFT) $(LIB_LEXER) $(LIB_PARSER)
+OBJS	:=	$(addprefix src/, $(SRCS:.c=.o))
 
-all: normal
-
-normal: CFLAGS += $(FLAGS_NO_LEAK_CHECK)
-normal: LDFLAGS += $(FLAGS_NO_LEAK_CHECK)
-normal: $(OBJECTS) libs
-	$(CC) $(LIBS_NAME) $(OBJECTS)  -lreadline -o $(NAME) $(CFLAGS) $(LDFLAGS)
-	cp $(NAME) ../../../bash_testing
-
-
-$(NAME): $(OBJECTS)
-	$(CC) $(LIBS_NAME) $(OBJECTS)  -lreadline -o $(NAME) $(CFLAGS) $(LDFLAGS)
-	cp $(NAME) ../../../bash_testing
-
-
-leaks: CFLAGS += -DLEAK_CHECK=1
-leaks: fclean
-leaks: libs_leaks
-leaks: $(OBJECTS)
-leaks: $(NAME)
-
-#leaks: fclean
-
-libs: $(LIBS)
-
-$(LIBFT):
-	@$(MAKE) -C $(LIBFT_DIR)
-	@cp $(LIBFT_PATH) $(LIBFT_NAME)
-
-$(LIB_LEXER):
-	@$(MAKE) -C $(LEXER_DIR)
-	@cp $(LEXER_PATH) $(LIB_LEXER_NAME)
-
-$(LIB_PARSER):
-	@$(MAKE) -C $(PARSER_DIR)
-	@cp $(PARSER_PATH) $(LIB_PARSER_NAME)
-
-libs_leaks:
-	@$(MAKE) -C $(LIBFT_DIR) leaks
-	@cp $(LIBFT_PATH) $(LIBFT_NAME)
-	@$(MAKE) -C $(LEXER_DIR) $(LIB_LEXER) leaks
-	@cp $(LEXER_PATH) $(LIB_LEXER_NAME)
-	@$(MAKE) -C $(PARSER_DIR) $(LIB_PARSER) leaks
-	@cp $(PARSER_PATH) $(LIB_PARSER_NAME)
+all: BUILDLIB ${NAME}
 
 %.o: %.c
-	@$(CC) $(CFLAGS) -o $@ -c $^
+	@$(CC) $(CFLAGS) -o $@ -c $<
+
+${NAME}: $(LIBFT) $(OBJS)
+	@$(CC) $(OBJS) $(LINKS) $(LIBFT) -o $(NAME) && echo "Successful $(NAME) build...!"
+
+BUILDLIB:
+	@cd libft && make
 
 clean:
-	@rm -f $(OBJECTS)
-	@$(MAKE) -C $(LEXER_DIR) clean
-	@$(MAKE) -C $(LIBFT_DIR) clean
-	@$(MAKE) -C $(PARSER_DIR) clean
-	@echo "\033[33mroot objects cleaned\033[0m"
+	@rm -rf $(OBJS)
 
-#TODO add cleaning of testers
 fclean: clean
-	@rm -f $(LIB_LEXER_NAME) $(LIBFT_NAME) $(NAME_TESTER) $(LIB_PARSER_NAME) $(NAME) a.out
-	@rm -f $(LIBFT_PATH)
-	@rm -f $(LEXER_PATH) $(LEXER_DIR)/$(LIBFT_NAME) $(LEXER_DIR)/a.out
-	@rm -f $(PARSER_PATH) $(PARSER_DIR)/$(LIBFT_NAME) $(PARSER_DIR)/$(LIB_PARSER_NAME) a.out
-	@echo "\033[33mroot fcleaned\033[0m"
+	@cd libft && make fclean
+	rm -f ${NAME}
 
 re: fclean all
 
-norm:
-	norminette $(SOURCES)
+.PHONY: all clean fclean re
+
+
+
+
+
+
+
+# OBJS	=	$(SRCS:%.c=$(OBJ_DIR)%.o)
+
+# LIBFT	=	libft/libft.a
+
+# $(NAME): $(OBJS)
+# 	@cd libft && make
+# 	@$(CC) $(CFLAGS) $(LIBFT) $(OBJS) -lreadline -o $(NAME) $(LDFLAGS)
+# 	@echo "$(GREEN)minishell build$(WHITE)"
+
+# $(OBJ_DIR)%.o: %.c
+# 	@mkdir -p $(OBJ_DIR)
+# 	@$(CC) $(CFLAGS) -c $< -o $@
+
+
+# all:	$(NAME)
+
+# clean:	
+# 		rm -f $(OBJS)
+# 		@cd libft && make clean
+# 		@rm -rf $(OBJ_DIR)
+# 		@echo "$(CYAN)object files cleaned!$(WHITE)"
+
+# fclean:	
+# 		@cd libft && make fclean
+# 		@rm -rf $(OBJ_DIR)
+# 		@rm -f $(NAME)
+# 		@echo "$(CYAN)Executable and object files cleaned!$(WHITE)"
+
+# re:		fclean all
+
+# .PHONY: all clean fclean re
+
+

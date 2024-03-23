@@ -6,6 +6,7 @@ lexer/tempCodeRunnerFile.clexer/tempCodeRunnerFile.tempCodeRunnerFile.c
 lexer/tempCodeRunnerFile.c
 test123/*
 repl/tempCodeRunnerFile.c
+*.o
 */*.o
 */*/*.o
 */*/*/*.o
@@ -17,3 +18,5 @@ filtered_failed_tests.txt
 la
 
 notes.c
+Makefile
+*Makefile
