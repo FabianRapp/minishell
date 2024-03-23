@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 05:33:26 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 05:49:30 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -369,15 +369,16 @@ typedef	struct s_cd_step_data
 	int		index;
 	char	*cd_arg;
 	bool	first;
-	char	*to_go;
+	char	to_go[PATH_MAX + 1];
 	char	before[PATH_MAX + 1];
 	char	*after;
 	char	old_pwd[PATH_MAX + 1];
 }	t_cd_step_data;
 
-char	*get_parent_dir_path(void);
-int		ft_update_dir_vars(t_ast *ast, char *before, char *after);
-char	*init_ft_cd_step(t_ast *ast, char *step, int index);
+char		*get_parent_dir_path(void);
+int			ft_update_dir_vars(t_ast *ast, char *before, char *after);
+char		*init_ft_cd_step(t_ast *ast, char *step, int inde);
+// t_result	init_ft_cd_step(t_ast *ast, char *step, int inde, char *to_go);
 
 /* ---------------------------- ENV FUNCTIONS ---------------------------- */
 

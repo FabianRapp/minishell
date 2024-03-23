@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:26:07 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/23 05:30:36 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 05:49:41 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,22 +37,30 @@ static void	ft_cd_to_var(t_ast *ast, char *var)
 
 static int	ft_cd_step(t_cd_step_data data)
 {
-	data.to_go = init_ft_cd_step(data.ast, data.step, data.index);
-	if (!data.to_go)
+
+	// if (init_ft_cd_step(data.ast, data.step, data.index, data.to_go) == ERROR)
+	// {
+		
+	// }
+	char	*tmp;
+	
+	tmp = init_ft_cd_step(data.ast, data.step, data.index);
+	if (!tmp)
 		return (0);
+	ft_strlcpy(data.to_go, tmp, PATH_MAX);
+	free(tmp);
 	getcwd(data.before , PATH_MAX);
-	if (data.to_go && ft_strlen(data.to_go) == 0)
+	if (ft_strlen(data.to_go) == 0)
 	{
-		free(data.to_go);
-		data.to_go = ft_strdup("/");
-		if (!data.to_go)
-			return (set_errno_as_exit(data.ast, false), 0);
+		
 	}
+	getcwd(data.before , PATH_MAX);
+	if (ft_strlen(data.to_go) == 0)
+		ft_strlcpy(data.to_go, "/", PATH_MAX);
 	get_env_value(NULL, "OLDPWD", data.old_pwd, PATH_MAX);
 	if (chdir(data.to_go) < 0)
-		return (chdir(data.old_pwd), ft_cur_exit(data.ast, 1), free(data.to_go), print_error(true, "cd", data.cd_arg, "No such file or directory"), 0);
+		return (chdir(data.old_pwd), ft_cur_exit(data.ast, 1), print_error(true, "cd", data.cd_arg, "No such file or directory"), 0);
 	data.after = getcwd(NULL, PATH_MAX);
-	free(data.to_go);
 	if (data.first)
 		ft_update_dir_vars(data.ast, data.before, data.after);
 	return (1);

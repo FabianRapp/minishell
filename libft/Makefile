@@ -4,6 +4,7 @@ CFLAGS=-Wall -Wextra -Werror
 
 LDFLAGS =
 # -fsanitize=undefined -fsanitize=address -g
+# 
 NAME	=	libft.a
 CFLAGS	=	-Wall -Wextra -Werror
 CC		=	cc
