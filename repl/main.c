@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 20:30:11 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 00:12:12 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,9 @@ bool	check_edgecases(t_ast *ast)
 	if (no_command(ast) == true)
 		return (true);
 	if (!ast->dont_run_buildins && ft_buildin(ast) == true)
+	{
 		return (true);
+	}
 	return (false);
 }
 
@@ -190,6 +192,7 @@ int	main(int ac, char **av, char **base_env)
 			errno = 0;
 			//print_ast(ast);
 			add_global_data(ast, &shared_data);
+
 			// printf("hello form ft_main\n");
 			ast->shared_data->cleanup_data = &cleanup_data;
 			//print_ast(ast);

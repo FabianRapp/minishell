@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:44:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 20:16:15 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 00:49:15 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ bool	ft_buildin(t_ast *ast)
 	if (!ft_strcmp(ast->name->token->str_data, "exit"))
 		return (ft_exit(ast), true);
 	if (!ft_strcmp(ast->name->token->str_data, "cd"))
-		return (ft_cd(ast), true);
+	{
+		ft_cd(ast);
+		return (true);
+	}
 	if (!ft_strcmp(ast->name->token->str_data, "export"))
 		return (ft_export(ast, ast->arg), true);
 	if (!ft_strcmp(ast->name->token->str_data, "unset"))

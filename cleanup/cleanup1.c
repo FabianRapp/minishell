@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup1.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 06:07:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 18:01:47 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/23 02:45:15 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	free_redir(t_redir *redir)
 					"<<<<", 4))
 			{
 				close(ft_atoi(redir->token_str_data + 4));
+				ft_free((void **)&(redir->token_str_data));
 			}
 		}
 		free_arg_list(redir->arg);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:26:07 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/22 19:38:22 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/23 00:31:13 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,15 @@ static void	ft_cd_to_var(t_ast *ast, bool not_alone, char *path, char *var)
 			print_error(true, "cd", path, "No such file or directory");
 		else
 			print_error(true, "cd", NULL, strerror(errno));
-		(free(before), free(to_go));
+		free(before);
+		free(to_go);
 		return ;
 	}
 	after = getcwd(NULL, PATH_MAX);
-	(ft_update_dir_vars(ast, before, after),
-		(ft_strcmp(var, "OLDPWD") || ft_pwd(ast)), free(to_go));
+	ft_update_dir_vars(ast, before, after);
+	if (!ft_strcmp(var, "OLDPWD"))
+		ft_pwd(ast);
+	free(to_go);
 }
 
 static int	ft_cd_step(t_cd_step_data data)
@@ -57,17 +60,12 @@ static int	ft_cd_step(t_cd_step_data data)
 	}
 	data.old_pwd = get_env_value(NULL, "OLDPWD");
 	if (!data.old_pwd)
-		return (ft_cur_exit(data.ast, 1), free(data.to_go),
-			free(data.before), set_errno_as_exit(data.ast, false));
+		return (ft_cur_exit(data.ast, 1), free(data.to_go), free(data.before), set_errno_as_exit(data.ast, false));
 	if (chdir(data.to_go) < 0)
-		return (chdir(data.old_pwd), free(data.old_pwd),
-			ft_cur_exit(data.ast, 1), free(data.to_go), free(data.before),
-			print_error(true, "cd", data.cd_arg,
-				"No such file or directory"), 0);
+		return (chdir(data.old_pwd), free(data.old_pwd), ft_cur_exit(data.ast, 1), free(data.to_go), free(data.before), print_error(true, "cd", data.cd_arg, "No such file or directory"), 0);
 	free(data.old_pwd);
 	data.after = getcwd(NULL, PATH_MAX);
-	return ((data.first && ft_update_dir_vars(data.ast,
-				data.before, data.after)), 1);
+	return (free(data.to_go), (data.first && ft_update_dir_vars(data.ast, data.before, data.after)), 1);
 }
 
 static t_arg	*cd_edge_cases(t_ast *ast)
@@ -79,8 +77,7 @@ static t_arg	*cd_edge_cases(t_ast *ast)
 	if (!args)
 		return (ft_cd_to_var(ast, false, NULL, "HOME"), NULL);
 	if (count_args(ast->arg) > 1)
-		return (ft_cur_exit(ast, 1), print_error(true, "cd", NULL,
-				"too many arguments"), NULL);
+		return (ft_cur_exit(ast, 1), print_error(true, "cd", NULL, "too many arguments"), NULL);
 	cd_arg = ast->arg->name->token->str_data;
 	if (*cd_arg == '\0')
 		return (NULL);
@@ -94,19 +91,16 @@ static t_arg	*cd_edge_cases(t_ast *ast)
 static bool	cd_loop(t_cd_vars vars, t_cd_step_data step_data)
 {
 	if (!vars.steps)
-		return (chdir(vars.tmp), free(vars.tmp), ft_update_env("OLDPWD",
-				vars.old_pwd, *(step_data.ast->shared_data->envs)),
-			free(vars.old_pwd), 0);
+		return (chdir(vars.tmp), free(vars.tmp), ft_update_env("OLDPWD", vars.old_pwd, *(step_data.ast->shared_data->envs)), free(vars.old_pwd), 0);
 	while (vars.steps[++(vars.i)])
 	{
 		step_data.step = vars.steps[vars.i];
 		step_data.index = vars.i;
 		step_data.first = vars.i == 0;
 		if (!ft_cd_step(step_data))
-			return (chdir(vars.tmp), free(vars.tmp),
-				ft_update_env("OLDPWD", vars.old_pwd,
-					*(step_data.ast->shared_data->envs)),
-				free(vars.old_pwd), 0);
+		{
+			return (chdir(vars.tmp), free(vars.tmp), ft_free_2darr(vars.steps), ft_update_env("OLDPWD", vars.old_pwd, *(step_data.ast->shared_data->envs)), free(vars.old_pwd), 0);
+		}
 	}
 	return (free(vars.tmp), free(vars.old_pwd), ft_free_2darr(vars.steps), 1);
 }
@@ -129,12 +123,13 @@ int	ft_cd(t_ast *ast)
 	step_data.cd_arg = vars.cd_arg;
 	step_data.first = true;
 	if (*(vars.cd_arg) == '/' && !ft_cd_step(step_data))
-		return (chdir(vars.tmp), free(vars.tmp), ft_update_env("OLDPWD",
-				vars.old_pwd, *(ast->shared_data->envs)),
-			free(vars.old_pwd), 0);
+		return (chdir(vars.tmp), free(vars.tmp), ft_update_env("OLDPWD", vars.old_pwd, *(ast->shared_data->envs)), free(vars.old_pwd), 0);
 	if (*(vars.cd_arg) == '*')
-		(free(vars.cd_arg),
-			vars.cd_arg = get_env_value(*(ast->shared_data->envs), "HOME"));
+	{
+		free(vars.cd_arg);
+		vars.cd_arg = get_env_value(*(ast->shared_data->envs), "HOME");
+	}
 	vars.steps = ft_split(vars.cd_arg, '/');
-	return (cd_loop(vars, step_data));
+	cd_loop(vars, step_data);
+	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:49:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 23:45:39 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 00:00:43 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	expand_wildcard_node_exit(t_wildcard_node_expasion this_data,
 		free_token(node->token);
 	*node = *(this_data.w_head);
 	closedir(this_data.cur_dir);
+	ft_free((void **)&(this_data.w_str));
 	clean_wildcard_data(&(this_data.w_para));
 	this_data.cur->next = this_data.base_next;
 }
@@ -63,14 +64,14 @@ t_result	expand_wildcard_node(t_token_list *node)
 		ft_memmove(tmp, tmp + 4, ft_strlen(tmp + 4) + 1);
 	this_data.base_next = node->next;
 	if (fill_wildcard_data(this_data.w_str, &(this_data.w_para)) == ERROR)
-		return (ERROR);
+		return (free(this_data.w_str), ERROR);
 	this_data.cur_dir = opendir(".");
 	if (errno)
-		return (clean_wildcard_data(&(this_data.w_para)), ERROR);
+		return (free(this_data.w_str), clean_wildcard_data(&(this_data.w_para)), ERROR);
 	this_data.w_head = next_wildcard_token
 		(this_data.cur_dir, &(this_data.w_para));
 	if (!this_data.w_head)
-		return (clean_wildcard_data(&(this_data.w_para)),
+		return (free(this_data.w_str), clean_wildcard_data(&(this_data.w_para)),
 			closedir(this_data.cur_dir), errno_to_result());
 	this_data.cur = this_data.w_head;
 	this_data.cur->next = next_wildcard_token(
@@ -132,6 +133,7 @@ t_result	wildcards(t_token_list *name)
 				if (trim_identifiers(name, true) == ERROR)
 				{// TODO ERROR
 				}
+
 				break ;
 			}
 			tmp = ft_strdup(ft_strchr(data_str, '*') + 1);
