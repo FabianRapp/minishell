@@ -1,3 +1,4 @@
+
 FLAGS_NO_LEAK_CHECK = 
 #  -fsanitize=undefined -fsanitize=address -g
 CFLAGS=-Wall -Wextra -Werror
@@ -54,6 +55,10 @@ fclean:
 re: fclean all
 
 all: $(NAME)
+
+flags: CFLAGS += -fsanitize=undefined -fsanitize=address -g
+flags: LDFLAGS += -fsanitize=undefined -fsanitize=address -g
+flags: $(NAME)
 
 build: CFLAGS += $(FLAGS_NO_LEAK_CHECK)
 build: LDFLAGS += $(FLAGS_NO_LEAK_CHECK)

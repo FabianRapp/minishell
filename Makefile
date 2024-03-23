@@ -1,5 +1,5 @@
 FLAGS_NO_LEAK_CHECK = 
-#  -fsanitize=undefined -fsanitize=address -g
+#  
 CFLAGS=-Wall -Wextra -Werror
 
 LDFLAGS =
@@ -72,6 +72,19 @@ $(NAME): $(OBJS)
 
 all: $(NAME)
 
+flags: CFLAGS += -fsanitize=undefined -fsanitize=address -g
+flags: LDFLAGS += -fsanitize=undefined -fsanitize=address -g
+flags: $(OBJS)
+	@cd libft && make flags
+	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT) -lreadline -o $(NAME)
+	@echo "$(GREEN)minishell compiled!$(WHITE)"
+
+leaks: CFLAGS += -DLEAK_CHECK=1
+leaks: $(OBJS)
+	@cd libft && make leaks
+	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT) -lreadline -o $(NAME)
+	@echo "$(GREEN)minishell compiled!$(WHITE)"
+
 clean:
 	@cd libft && make clean
 	@rm -f $(OBJS)
@@ -124,5 +137,3 @@ re: fclean all
 # re:		fclean all
 
 # .PHONY: all clean fclean re
-
-

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:52:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/18 06:35:41 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/23 23:07:42 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ typedef struct s_parser
 typedef	struct s_token_list	t_token_list;
 typedef	struct s_token_list
 {
-	
 	t_token			*token;
 	t_token_list	*next;
+	int				arr[100];
 }	t_token_list;
 
 typedef struct s_ast	t_ast;

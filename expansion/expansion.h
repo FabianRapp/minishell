@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:52 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 21:42:11 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/23 23:17:17 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,12 @@ typedef struct s_wildcard_parameters
 
 typedef struct s_wildcard_node_expansion
 {
+	t_token_list			*w_head;
 	t_token_list			*base_next;
 	t_token_list			*cur;
 	DIR						*cur_dir;
-	t_wildcard_parameters	w_para;
 	char					*w_str;
-	t_token_list			*w_head;
+	t_wildcard_parameters	w_para;
 }	t_wildcard_node_expasion;
 
 // repl_wildcards_main.c

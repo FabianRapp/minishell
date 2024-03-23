@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:49:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 00:00:43 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/23 23:22:30 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,18 +46,28 @@ void	expand_wildcard_node_exit(t_wildcard_node_expasion this_data,
 {
 	if (node)
 		free_token(node->token);
-	*node = *(this_data.w_head);
-	closedir(this_data.cur_dir);
+	printf("node: %p\nw_head: %p\n", node, this_data.w_head);
+	printf("diff: %ld\n", node - this_data.w_head);
+	if (node && this_data.w_head)
+	{
+		*node
+		= *(this_data.w_head);
+	}
+	if (this_data.cur_dir)
+		closedir(this_data.cur_dir);
 	ft_free((void **)&(this_data.w_str));
 	clean_wildcard_data(&(this_data.w_para));
-	this_data.cur->next = this_data.base_next;
+	if (this_data.cur)
+		this_data.cur->next = this_data.base_next;
 }
 
 t_result	expand_wildcard_node(t_token_list *node)
 {
-	t_wildcard_node_expasion	this_data;
+	t_wildcard_node_expasion		this_data;
+	static t_wildcard_node_expasion	init_data = {NULL, NULL, NULL, NULL, NULL, {NULL, NULL, NULL}};
 	char	*tmp;
 
+	this_data = init_data;
 	this_data.w_str = ft_strdup(node->token->str_data);
 	tmp = ft_strnstr(node->token->str_data, "3}{!", ft_strlen(node->token->str_data));
 	if (tmp)
