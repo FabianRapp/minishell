@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir_error_handler.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 04:24:43 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 21:43:04 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/24 03:37:21 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ t_result	check_valid_arg(t_ast *ast, t_redir *redir)
 	{
 		if (count_args(redir->arg) == 0)
 		{
-			print_error(true, false, false, type_to_str(T_EOF));
+			print_error(true, false, false, type_to_error(T_EOF));
 			ast->exit_status = 2;
 			set_last_exit(2);
 		}

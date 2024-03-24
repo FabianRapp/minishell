@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 01:14:13 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/24 03:40:13 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -302,7 +302,7 @@ void	print_token_list(t_token_list *token_node, int level)
 {
 	while (token_node)
 	{
-		print_colored(type_to_str_type(token_node->token->type), level);
+		print_colored(type_to_str(token_node->token->type), level);
 		print_colored(": ", level);
 		print_colored(token_node->token->str_data, level);
 		print_colored(" ; ", level);
@@ -327,7 +327,7 @@ void	print_arg_list(t_arg *arg, int level, bool left)
 		printf("\n");
 		print_indent(level, false);
 		(void)left;
-		//print_colored(type_to_str_type(arg->type), level);
+		//print_colored(type_to_str(arg->type), level);
 		//print_colored(" : ", level);
 		print_token_list(arg->name, level);
 		arg = arg->next;
@@ -342,7 +342,7 @@ void	print_redir_list(t_redir *redir, int level, bool left)
 	{
 		printf("\n");
 		print_indent_arg(level);
-		print_colored(type_to_str_type(redir->type), level);
+		print_colored(type_to_str(redir->type), level);
 		print_colored(": ", level);
 		if (redir->type == HERE_DOC)
 		{
@@ -384,7 +384,7 @@ void	start_rec_print(t_ast *ast, int level, char *path, bool left)
 	print_colored(path, level);
 	printf("\n");
 	print_indent(level, left);
-	print_colored(type_to_str_type(ast->type), level);
+	print_colored(type_to_str(ast->type), level);
 	print_colored("; ", level);
 	if (!(ast->name) && !(ast->redir) && !(ast->arg))
 		printf("\n");

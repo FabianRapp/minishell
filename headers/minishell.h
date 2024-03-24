@@ -6,24 +6,24 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 23:03:25 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/24 04:00:52 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 
-             TOTAL TEST COUNT: 994  TESTS PASSED: 971  LEAKING: 0 
-                     STD_OUT: 16  STD_ERR: 2  EXIT_CODE: 7  
+             TOTAL TEST COUNT: 994  TESTS PASSED: 974  LEAKING: 0 
+                     STD_OUT: 13  STD_ERR: 2  EXIT_CODE: 7  
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 25   
-                                     ✅ 2957 
+                                     ❌ 22   
+                                     ✅ 2960   
 
 TODO:
 	- lexer: check for too many closing quotes
 	- ft_atoi undef behaivior for huge number strs
 	- redir error msgs
 	- wildcards should not expand in quotes
-	- type_to_str() needs refactor to follow norm with same returns
+	- type_to_error() needs refactor to follow norm with same returns
 	- make insert_token() return value and error handeling more clear
 	- cleanup_fds() return val checks
 	- update the old_data in the token in the str expansion correctly 

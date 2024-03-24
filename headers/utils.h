@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:23:25 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/21 16:09:41 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/24 03:40:13 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,14 @@ typedef struct s_status_handler
 	int		val;
 }	t_status_handler;
 
-char			*type_to_str(t_type tokenType);
+char			*type_to_error(t_type type);
 int				ft_close(int *fd);
 bool			is_operator(t_type type);
 t_result		errno_to_result(void);
 t_result		set_errno_as_exit(t_ast *ast, bool msg);
 
 // debug
-char			*type_to_str_type(t_type tokenType);
+char			*type_to_str(t_type type);
 void			print_indent(int depth, bool left);
 void			print_colored(const char *text, int color_index);
 void			print_new_indent(int depth, bool left);

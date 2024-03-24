@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debugging.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 07:01:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 19:30:36 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/24 04:04:59 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,47 +46,9 @@ void print_colored(const char *text, int color_index)
 	printf("%s%s%s", color, text, RESET_COLOR);
 }
 
-char	*type_to_str(t_type tokenType)
+char	*type_to_str(t_type type)
 {
-	switch (tokenType)
-	{
-		case UNKNOWN: return "UNKNOWN";
-		case T_EOF: return "syntax error: unexpected end of file";
-		case WHITE_SPACE: return " ";
-		case PIPE: return "syntax error near unexpected token `|'";
-		case OR: return "syntax error near unexpected token `||'";
-		case AND: return "syntax error near unexpected token `&&'";
-		case ENV_VAR: return "syntax error near unexpected token `$'";
-		case EXIT_STATUS_REQUEST: return "EXIT_STATUS_REQUEST";
-		//case FT_BUILDIN: return "FT_BUILDIN";
-		case WILDCARD: return "syntax error near unexpected token `*'";
-		//case CTRL_C: return "CTRL_C";
-		//case CTRL_D: return "CTRL_D";
-		//case CTRL_BACKSLASH: return "CTRL_BACKSLASH";
-		case WORD: return "WORD";
-		case INTERPRETED: return "syntax error near unexpected token `''";
-		case REDIR_IN: return "syntax error near unexpected token `<'";
-		case REDIR_OUT: return "syntax error near unexpected token `>'";
-		case REDIR_APPEND: return "syntax error near unexpected token `>>'";
-		case HERE_DOC: return "syntax error near unexpected token `<<'";
-		case HERE_STR: return "syntax error near unexpected token `<<<'";
-		case SUBSHELL: return "syntax error near unexpected token `("; //TODO this is not sufficent for error msgs
-		//case FLAG: return "FLAG";
-		case COMMAND: return "COMMAND";
-		case ARGUMENT: return "ARGUMENT";
-		case REDIR_ARG: return "REDIR_ARG";
-		case VOID: return "VOID";
-		case DUMMY_COMMAND: return "DUMMY_COMMAND";
-		case LITERAL: return "syntax error near unexpected token `''";
-		case PID_REQUEST: return "syntax error near unexpected token `$$'";
-		case SEMICOL: return "syntax error near unexpected token `;'";
-		default: return "Type not found";
-	}
-}
-
-char	*type_to_str_type(t_type tokenType)
-{
-	switch (tokenType)
+	switch (type)
 	{
 		case UNKNOWN: return "UNKNOWN";
 		case T_EOF: return "T_EOF";
@@ -191,7 +153,7 @@ void print_parser_tree(t_parser *parser, const char *label, int depth)
 
 void	print_token(t_token *token, t_parser *parser, int depth)
 {
-	const char* token_type_str = type_to_str_type(token->type);
+	const char* token_type_str = type_to_str(token->type);
 
 	printf("\n");
 	print_indent(depth, false);
@@ -206,7 +168,7 @@ void	print_token(t_token *token, t_parser *parser, int depth)
 	}
 	else
 	{
-		const char* parser_type_str = type_to_str_type(parser->p_type);
+		const char* parser_type_str = type_to_str(parser->p_type);
 		print_colored(parser_type_str, depth);
 		print_colored("/", depth);
 		print_colored(token_type_str, depth);

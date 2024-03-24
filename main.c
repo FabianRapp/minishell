@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 22:01:29 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/24 04:02:55 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,10 +178,13 @@ int	main(int ac, char **av, char **base_env)
 	shared_data.env_exp = &exp_list;
 	shared_data.cleanup_data = &cleanup_data;
 	ast = get_input(&cleanup_data);
+	if (TESTER && !cleanup_data.input)
+	{
+		main_exit(&cleanup_data, true, false);
+	}
 	if (!ast)
 		main_exit(&cleanup_data, full_exit_status(false) == true, false);
-	if (TESTER && !cleanup_data.input)
-		main_exit(&cleanup_data, true, false);
+
 	while (1)
 	{
 		if (ast)

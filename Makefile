@@ -55,7 +55,8 @@ SRC_EXECUTION	=	execution/redirections/redir_error_handler.c \
 					execution/utils/pipe_utils.c
 
 SRC_UTILS		=	utils/signals.c utils/debugging.c utils/fd1.c utils/groups1.c \
-					utils/utils1.c utils/utils2.c utils/cleanup.c
+					utils/utils1.c utils/utils2.c utils/cleanup.c \
+					utils/type_to_error.c
 
 SRCS	:=	$(SRC_BUILTINS) $(SRC_ENVIRONMENT) $(SRC_LEXER) $(SRC_PARSER) \
 			$(SRC_EXPANSION) $(SRC_EXECUTION) $(SRC_UTILS) main.c

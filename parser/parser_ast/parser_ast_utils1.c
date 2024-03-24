@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 05:44:50 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 00:33:59 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/24 03:37:21 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static t_parser	*unlink_left_get_left(t_parser *cut_location)
 	jump_to_start(&left_head);
 	if (left_head == cut_location)
 		return (print_error(true, NULL, NULL,
-				type_to_str(cut_location->p_type)), set_last_exit(2), NULL);
+				type_to_error(cut_location->p_type)), set_last_exit(2), NULL);
 	left_last = last_parser(cut_location);
 	left_eof_token = ft_calloc(1, sizeof(t_token));
 	if (!left_eof_token)

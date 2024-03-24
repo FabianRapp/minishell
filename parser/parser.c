@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 16:34:26 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/24 03:37:21 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_result	redirs_have_arg(t_parser *parser)
 		{
 			while (parser->next->p_type == WHITE_SPACE)
 				parser = parser->next;
-			print_error(true, NULL, NULL, type_to_str(parser->next->token->type));
+			print_error(true, NULL, NULL, type_to_error(parser->next->token->type));
 			return (ERROR);
 		}
 		parser = parser->next;
@@ -148,14 +148,14 @@ static t_result	validate_command_order(t_parser *parser)
 			in_command_block = true;
 		if (is_operator(parser->p_type) && !in_command_block)
 			return (set_last_exit(2), print_error(true, NULL,
-				false, type_to_str(parser->p_type)), ERROR);
+				false, type_to_error(parser->p_type)), ERROR);
 		if (is_operator(parser->p_type))
 			in_command_block = false;
 		parser = parser->next;
 	}
 	if (!in_command_block)
 		return (set_last_exit(2), print_error(true, false,
-			false, type_to_str(T_EOF)), ERROR);
+			false, type_to_error(T_EOF)), ERROR);
 	return (SUCCESS);
 }
 

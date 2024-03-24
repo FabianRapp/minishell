@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_type_commands.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 19:47:45 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 16:48:36 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/24 03:37:21 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ static void	handle_operator_2ndscenario(t_parser *parser, bool *found_command)
 				"syntax error: unexpected end of file\nexit");
 	}
 	else if (parser->next)
-		print_error(true, NULL, NULL, type_to_str(parser->next->p_type));
+		print_error(true, NULL, NULL, type_to_error(parser->next->p_type));
 	else
-		print_error(true, NULL, NULL, type_to_str(T_EOF));
+		print_error(true, NULL, NULL, type_to_error(T_EOF));
 }
 
 // for type_commands
@@ -38,7 +38,7 @@ static t_parser	*handle_operator(t_parser *parser,
 {
 	if (!*found_command && !*found_redir)
 		return (set_last_exit(2), print_error(true, NULL, NULL,
-				type_to_str(parser->p_type)), NULL);
+				type_to_error(parser->p_type)), NULL);
 	else if (!parser->next || is_operator(parser->next->p_type)
 		|| parser->next->p_type == T_EOF)
 	{
@@ -60,7 +60,7 @@ t_result	parser_handle_end(t_parser *parser, bool found_command,
 {
 	if (!found_redir && !found_command)
 	{
-		print_error(true, NULL, NULL, type_to_str(T_EOF));
+		print_error(true, NULL, NULL, type_to_error(T_EOF));
 		set_last_exit(2);
 		return (ERROR);
 	}
@@ -91,7 +91,7 @@ static t_result	handle_subshell(t_parser *parser, bool *found_command,
 		&& !is_redir(parser->next->p_type))
 	{
 		set_last_exit(2);
-		print_error(true, NULL, NULL, type_to_str(parser->next->p_type));
+		print_error(true, NULL, NULL, type_to_error(parser->next->p_type));
 		return (ERROR);
 	}
 	*found_command = true;
