@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:52 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 23:17:17 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/24 22:58:24 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int				check_empty_arg(t_arg *last, t_arg **cur,
 
 // utils2.c
 t_result		expand_interpreted(t_token *token);
-char			*expand_dollar(char *dollar_str, int *index);
+// char			*expand_dollar(char *dollar_str, int *index);
 t_token_list	*remove_non_literals(t_token_list *list);
 t_result		expansion_move_to_arg(t_arg **next_arg, t_token_list *list);
 

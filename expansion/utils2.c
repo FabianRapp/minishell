@@ -3,26 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 13:01:55 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 04:48:30 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/24 23:00:07 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansion.h"
 
-char			*expand_dollar(char *dollar_str, int *index)
+static char	*expand_dollar(char *dollar_str, int *index, char **return_str)
 {
 	char	*env_var;
-	char	*return_str;
 
 	if (!*(dollar_str + 1))
 		return ((*index)++, ft_strdup("$"));
 	else if (*(dollar_str + 1) == '?')
-		return_str = get_last_exit_str();
+		*return_str = get_last_exit_str();
 	else if (*(dollar_str + 1) == '$')
-		return_str = ft_itoa(ft_pid(0));
+		*return_str = ft_itoa(ft_pid(0));
 	else if (ft_isdigit(*(dollar_str + 1)))
 		return ((*index)++, ft_strdup("$"));
 	else if (name_len(dollar_str + 1) == 0)
@@ -33,13 +32,13 @@ char			*expand_dollar(char *dollar_str, int *index)
 		env_var = ft_strndup(dollar_str + 1, name_len(dollar_str + 1));
 		if (!env_var)
 			return (NULL);
-		return_str = get_env_value(NULL, env_var, 0, 0);
-		return (free(env_var), return_str);
+		*return_str = get_env_value(NULL, env_var, 0, 0);
+		return (free(env_var), *return_str);
 	}
 	else
 		return ((*index)++, ft_strdup(""));
 	*index += 2;
-	return (return_str);
+	return (*return_str);
 }
 
 t_result	expand_interpreted(t_token *token)
@@ -59,9 +58,7 @@ t_result	expand_interpreted(t_token *token)
 			ft_strjoin_inplace_char(&token->str_data, data_str[index++]);
 		else
 		{
-			temp = expand_dollar(data_str + index, &index);
-			if (errno)
-				return (ERROR);
+			temp = expand_dollar(data_str + index, &index, &temp);
 			if (temp)
 				ft_strjoin_inplace(&token->str_data, temp);
 			free(temp);
@@ -70,8 +67,7 @@ t_result	expand_interpreted(t_token *token)
 			return (ERROR);
 	}
 	token->type = LITERAL;
-	free(data_str);
-	return (SUCCESS);
+	return (free(data_str), SUCCESS);
 }
 
 // copies the data of the nodes into their parent node
@@ -97,12 +93,6 @@ t_token_list	*move_nodes_ahead(t_token_list *list, bool set_this_true)
 		free(list);
 		return (NULL);
 	}
-	// if (!list->next->next)
-	// {
-	// 	free(list->next);
-	// 	list->next = NULL;
-	// 	return (list);
-	// }
 	list->next = move_nodes_ahead(list->next, false);
 	return (list);
 }
@@ -121,9 +111,8 @@ t_token_list	*remove_non_literals(t_token_list *list)
 		return (NULL);
 	head = list;
 	last = NULL;
-	while (list)
+	while (list && merge_literals(list))
 	{
-		merge_literals(list);
 		if (list->token->type != LITERAL && list->token->type
 			!= DUMMY_COMMAND && list->token->type != WILDCARD)
 		{
@@ -131,24 +120,13 @@ t_token_list	*remove_non_literals(t_token_list *list)
 			{
 				list = move_nodes_ahead(list, true);
 				head = list;
-				//list = move_nodes_ahead(list, true);
-				// if (list == head)
-				// 	list = move_nodes_ahead(list, true);
-				// if (list == head)
-				// 	head = list;
 			}
 			else
-			{
 				last->next = list;
-			}
 		}
 		last = list;
 		if (list)
-		{
-			// if (list->token && ft_strchr(list->token->str_data, '*'))
-			// 	list->token->type = WILDCARD;
 			list = list->next;
-		}
 	}
 	return (head);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:00 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 04:48:21 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/24 23:01:11 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,46 +27,17 @@ t_result	env_to_word_token(t_token *token)
 
 	token->type = WORD;
 	ft_free((void **)&(token->str_data));
-	//env_var = getenv(token->old_data);
 	env_var = get_env_value(NULL, token->old_data, 0, 0);
 	if (errno)
 		return (ERROR);
 	if (!env_var)
-	{
 		token->str_data = ft_strdup("");
-	}
 	else
-	{
 		token->str_data = env_var;
-	}
 	if (!token->str_data)
 		return (ERROR);
 	return (SUCCESS);
 }
-
-// t_result	env_to_word_token(t_token *token)
-// {
-// 	char	*env_var;
-
-// 	token->type = WORD;
-// 	ft_free((void **)&(token->str_data));
-// 	env_var = getenv(token->old_data);
-// 	errno = 0;
-// 	if (!env_var)
-// 	{
-// 		token->type = WHITE_SPACE;
-// 	}
-// 	else
-// 	{
-// 		if (env_var)
-// 			token->str_data = ft_strdup(env_var);
-// 		else
-// 			token->str_data = ft_strdup("");
-// 	}
-// 	if (!token->str_data)
-// 		return (ERROR);
-// 	return (SUCCESS);
-// }
 
 t_result	pidreq_to_literal_token(t_shared_data *env, t_token *token)
 {
@@ -76,25 +47,6 @@ t_result	pidreq_to_literal_token(t_shared_data *env, t_token *token)
 		return (ERROR);
 	return (SUCCESS);
 }
-
-
-// // for error messages where the base string is needed and here_doc expansion
-// t_result	add_dollar(t_token *token)
-// {
-// 	if (token->type == ENV_VAR)
-// 	{
-// 		free(token->str_data);
-// 		token->str_data = ft_strjoin("$", token->old_data);
-// 	}
-// 	else if (token->type == PID_REQUEST)
-// 		token->str_data = ft_strjoin("$", "$");
-// 	else if (token->type == EXIT_STATUS_REQUEST)
-// 		token->str_data = ft_strjoin("$", "?");
-// 	token->type = LITERAL;
-// 	if (!token->str_data)
-// 		return (ERROR);
-// 	return (SUCCESS);
-// }
 
 // utils for expand_args
 // returns true if expanding args is finsihed
@@ -121,4 +73,28 @@ int	check_empty_arg(t_arg *last, t_arg **cur,
 			return (RETURN_NOW);
 	}
 	return (CONTINUE);
+}
+
+t_result	merge_literals(t_token_list *node)
+{
+	t_token_list	*to_free;
+
+	while (node)
+	{
+		while (node && node->token->type == LITERAL && node->next
+			&& node->next->token->type == LITERAL)
+		{
+			if (!ft_strjoin_inplace(&(node->token->str_data),
+					node->next->token->str_data))
+			{
+				return (ERROR);
+			}
+			to_free = node->next;
+			node->next = node->next->next;
+			free_token(to_free->token);
+			free(to_free);
+		}
+		node = node->next;
+	}
+	return (SUCCESS);
 }

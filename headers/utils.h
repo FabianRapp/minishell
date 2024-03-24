@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:23:25 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 03:40:13 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/24 22:41:54 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void			free_token(t_token *token);
 void			print_ast(t_ast *ast);
 t_result		wait_all_children(t_ast *ast);
 
-char			*expand_dollar(char *dollar_str, int *index);
+// char			*expand_dollar(char *dollar_str, int *index);
 
 void			print_token_list(t_token_list *token_node, int level);
 void			print_arg_list(t_arg *arg, int level, bool left);

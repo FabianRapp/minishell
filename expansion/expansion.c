@@ -30,7 +30,6 @@ void	expandlist_convert_white_space(t_token *token)
 	token->type = WHITE_SPACE;
 }
 
-// check errno for error after calling
 t_token_list	*expand_list(t_shared_data *env, t_token_list *list)
 {
 	if (!list)
@@ -53,7 +52,6 @@ t_token_list	*expand_list(t_shared_data *env, t_token_list *list)
 	list->next = expand_list(env, list->next);
 	if ((list->token->type == WORD && word_splitting(&list) == ERROR) || !list)
 		return (list);
-	// merge_literals(list);
 	return (list);
 }
 
@@ -71,11 +69,6 @@ t_result	expand_name(t_ast *ast)
 		ast->name = remove_non_literals(ast->name);
 	if (errno || wildcards(ast->name) == ERROR)
 		return (set_errno_as_exit(ast, false));
-	// if (errno)
-	// 	return (ERROR);
-	// merge_literals(ast->name);
-	// if (errno)
-	// 	return (set_errno_as_exit(ast, false));
 	if (!ast->name)
 	{
 		ast->name = ft_calloc(1, sizeof(t_token_list));
@@ -111,14 +104,6 @@ t_result	expand_args(t_ast *ast, t_arg **base_arg, bool here_doc)
 		cur->name = remove_non_literals(cur->name);
 		if (errno || (!here_doc && wildcards(cur->name) == ERROR))
 			return (set_errno_as_exit(ast, false));
-		// if (!here_doc && wildcards(cur->name) == ERROR)
-		// 	return (set_errno_as_exit(ast, false));
-		// merge_literals(cur->name);
-		// if (errno)
-		// 	return (set_errno_as_exit(ast, false));
-		// cur->name = remove_non_literals(cur->name);
-		// if (errno)
-		// 	return (set_errno_as_exit(ast, false));
 		flag = check_empty_arg(last, &cur, ast, base_arg);
 		if (flag == RETURN_NOW)
 			return (SUCCESS);
@@ -156,7 +141,6 @@ t_result	expand_redirs(t_ast *ast)
 	return (SUCCESS);
 }
 
-// TODO:
 // expands the current ast nodes env vars and interpreted strs (if the first)
 t_result	expansion(t_ast *ast)
 {

@@ -33,7 +33,7 @@ SRC_PARSER		=	parser/parser.c parser/parser_type_commands.c \
 					parser/list_operations/utils.c
 
 SRC_EXPANSION	=	expansion/expansion.c expansion/word_splitting.c \
-					expansion/utils1.c expansion/utils2.c expansion/utils3.c \
+					expansion/utils1.c expansion/utils2.c \
 					expansion/wildcards/repl_fill_wildcard_data.c \
 					expansion/wildcards/repl_wildcards_main.c \
 					expansion/wildcards/repl_wildcards_utils1.c
