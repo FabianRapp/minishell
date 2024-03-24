@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:52:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 23:50:56 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/24 01:58:22 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,11 @@ typedef struct s_parser
 typedef	struct s_token_list	t_token_list;
 typedef	struct s_token_list
 {
+	int				arr[1000]; // why is this neded?? (abort is some test without this)
 	t_token_list	*next;
-	int				arr[1000];
 	t_token			*token;
 }	t_token_list;
+//int				arr[1000];
 
 typedef struct s_ast	t_ast;
 typedef struct s_left_right_parsers
