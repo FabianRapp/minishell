@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 03:45:29 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/24 04:20:23 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 // updates the cur_path in the path_ob, if its NULL all paths have been checked
 // frees the old path
-// returns EXIT_ERROR on malloc fail, otherwise NOT_FINISHED
 bool	next_path(t_path *path_ob)
 {
 	ft_free((void **)&(path_ob->cur_path));
