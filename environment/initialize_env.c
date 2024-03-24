@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initialize_env.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/23 04:50:26 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/24 02:09:30 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static void	ft_update_shlvl(int shlvl_index, char ***env)
 	free(after);
 }
 
-char	**ft_initialize_our_env(char **base_env)
+char	**ft_initialize_env(char **base_env)
 {
 	int		i;
 	char	**ret;
@@ -85,7 +85,7 @@ char	**ft_initialize_our_env(char **base_env)
 // 		*env = new_env_list_after_add("OLDPWD", *env);
 // }
 
-// char	**ft_initialize_our_env(char **base_env, bool keep_oldpwd)
+// char	**ft_initialize_env(char **base_env, bool keep_oldpwd)
 // {
 // 	int		i;
 // 	char	**ret;

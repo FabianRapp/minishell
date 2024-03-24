@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 04:24:43 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 03:37:21 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/24 04:11:44 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ void	*add_fd_pair_error(t_fd_set *fds, t_fd_set new_fd_pair)
 	return (NULL);
 }
 
-// TODO: first if not correct (this can be many diffrent errors)
 t_result	check_valid_arg(t_ast *ast, t_redir *redir)
 {
 	if ((count_args(redir->arg) != 1 && redir->type != HERE_DOC)

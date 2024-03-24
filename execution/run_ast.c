@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_ast.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 00:11:17 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/24 02:15:02 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	ft_or(t_ast *ast)
 			ast->left->exit_status = WEXITSTATUS(ast->left->exit_status);
 		}
 	}
-	set_last_exit(ast->left->exit_status);//TODO mb out this behind a condtion so it only updates for process nodes not operators
+	set_last_exit(ast->left->exit_status);
 	success_left = !((bool)ast->left->exit_status);
 	if (success_left)
 		ast->right->exit_status = 0;
@@ -37,11 +37,10 @@ void	ft_or(t_ast *ast)
 		waitpid(ast->right->pid, &(ast->right->exit_status), 0);
 		ast->right->exit_status = WEXITSTATUS(ast->right->exit_status);
 	}
-	set_last_exit(ast->right->exit_status);//TODO mb out this behind a condtion so it only updates for process nodes not operators
+	set_last_exit(ast->right->exit_status);
 	ast->exit_status = ast->right->exit_status;
 }
 
-// kinda workarround for wrong build ast for multiple condtions without subshell
 void	ft_and(t_ast *ast)
 {
 	bool	success_left;
@@ -57,7 +56,7 @@ void	ft_and(t_ast *ast)
 			ast->left->exit_status = WEXITSTATUS(ast->left->exit_status);
 		}
 	}
-	set_last_exit(ast->left->exit_status);//TODO mb out this behind a condtion so it only updates for process nodes not operators
+	set_last_exit(ast->left->exit_status);
 	success_left = !((bool)ast->left->exit_status);
 	if (!success_left)
 		ast->right->exit_status = ast->left->exit_status;
@@ -67,7 +66,7 @@ void	ft_and(t_ast *ast)
 		waitpid(ast->right->pid, &(ast->right->exit_status), 0);
 		ast->right->exit_status = WEXITSTATUS(ast->right->exit_status);
 	}
-	set_last_exit(ast->right->exit_status);//TODO mb out this behind a condtion so it only updates for process nodes not operators
+	set_last_exit(ast->right->exit_status);
 	ast->exit_status = ast->right->exit_status;
 }
 
@@ -80,7 +79,6 @@ void	init_command(t_ast *ast)
 	}
 	if (!ast->dont_run_buildins && !expansion(ast))
 	{
-		//printf("DEBUG create_sub\n");
 		exit(1);
 		return ;
 	}
@@ -92,7 +90,6 @@ void	init_command(t_ast *ast)
 	if (ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
 	redir_fds();
-
 	run_command_node(ast);
 	cleanup_fds();
 	set_last_exit(ast->exit_status);

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 04:00:52 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/24 04:10:43 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,7 +249,12 @@ bool		test_lexer_manualy(char *str);
 //from eval.h:
 t_result	expansion(t_ast *ast);
 char		*find_path(t_ast *ast, char *command_name, char *path_env);
-bool		ft_buildin(t_ast *ast);
+t_result	init_path_object(t_ast *ast, char *command_name,
+	t_path *path_ob, char *path_var);
+char	*handle_shell_fn(char *name);
+char	*handle_absolute_path(char *path);
+bool	next_path(t_path *path_ob);
+
 
 // input_exit.c
 t_ast		*get_input(t_cleanup_data *cleanup_data);
@@ -337,6 +342,7 @@ struct fd_request
 };
 
 /* ------------------------------ BUILT-INS ------------------------------ */
+bool		ft_builtin_control(t_ast *ast);
 int			ft_pwd(t_ast *ast);
 int			ft_env(t_ast *ast);
 void		ft_export(t_ast *ast, t_arg *cur_arg);
@@ -375,7 +381,7 @@ char		*init_ft_cd_step(t_ast *ast, char *step, int inde);
 
 /* ---------------------------- ENV FUNCTIONS ---------------------------- */
 
-char	**ft_initialize_our_env(char **base_env);
+char	**ft_initialize_env(char **base_env);
 char	*get_env_value(char **env, char *var_name, char *buffer, int buf_size);
 char	**new_env_list_after_add(char *str_to_add, char **env);
 char	*get_env_var_name(char *line);

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils3.c                                           :+:      :+:    :+:   */
+/*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/09 19:27:17 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 00:33:40 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/24 01:38:02 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,13 @@ bool	full_exit_status(bool set_full_exit)
 	if (set_full_exit)
 		full_exit = true;
 	return (full_exit);
+}
+
+t_result	ft_cur_exit(t_ast *ast, int exit_value)
+{
+	ast->exit_status = exit_value;
+	set_last_exit(exit_value);
+	return (SUCCESS);
 }
 
 bool	sub_shell_mode(int flag)

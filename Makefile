@@ -1,12 +1,3 @@
-FLAGS_NO_LEAK_CHECK = 
-#  
-CFLAGS=-Wall -Wextra -Werror
-
-LDFLAGS =
-# -fsanitize=undefined -fsanitize=address -g
-# 
-
-
 NAME	=	minishell
 
 CFLAGS	=	-Wall -Wextra -Werror
@@ -20,7 +11,7 @@ CLEAR	=	\033[0m
 
 SRC_BUILTINS	=	builtins/pwd.c builtins/env.c builtins/export.c \
 					builtins/unset.c builtins/exit.c builtins/echo.c \
-					builtins/cd.c builtins/cd_utils.c
+					builtins/cd.c builtins/cd_utils.c builtins/builtin_control.c
 
 SRC_ENVIRONMENT =	environment/initialize_env.c environment/modify_env.c \
 					environment/get_env_parts.c
@@ -49,10 +40,10 @@ SRC_EXECUTION	=	execution/redirections/redir_error_handler.c \
 					execution/redirections/redir_main.c \
 					execution/redirections/redir_utils.c \
 					execution/pipes.c execution/run_ast.c \
-					execution/exec_buildin.c execution/exec_subshell.c \
-					execution/utils/data_utils.c execution/utils/path.c \
-					execution/utils/input_exit.c execution/utils/get_pid.c \
-					execution/utils/pipe_utils.c
+					execution/exec_subshell.c execution/utils/pipe_utils.c \
+					execution/utils/data_utils.c execution/utils/input_exit.c \
+					execution/utils/path.c execution/utils/path_utils.c \
+					execution/utils/get_pid.c
 
 SRC_UTILS		=	utils/signals.c utils/debugging.c utils/fd1.c utils/groups1.c \
 					utils/utils1.c utils/utils2.c utils/cleanup.c \
@@ -69,7 +60,7 @@ OBJS	=	$(SRCS:%.c=%.o)
 $(NAME): $(OBJS)
 	@cd libft && make
 	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT) -lreadline -o $(NAME)
-	@echo "$(GREEN)minishell compiled!$(WHITE)"
+	@echo "$(GREEN)minishell compiled!$(CLEAR)"
 
 all: $(NAME)
 
@@ -78,13 +69,13 @@ flags: LDFLAGS += -fsanitize=undefined -fsanitize=address -g
 flags: $(OBJS)
 	@cd libft && make flags
 	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT) -lreadline -o $(NAME)
-	@echo "$(GREEN)minishell compiled!$(WHITE)"
+	@echo "$(GREEN)minishell compiled!$(CLEAR)"
 
 leaks: CFLAGS += -DLEAK_CHECK=1
 leaks: $(OBJS)
 	@cd libft && make leaks
 	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT) -lreadline -o $(NAME)
-	@echo "$(GREEN)minishell compiled!$(WHITE)"
+	@echo "$(GREEN)minishell compiled!$(CLEAR)"
 
 clean:
 	@cd libft && make clean
@@ -100,41 +91,3 @@ fclean:
 re: fclean all
 
 .PHONY: all clean fclean re
-
-
-
-
-
-
-
-# OBJS	=	$(SRCS:%.c=$(OBJ_DIR)%.o)
-
-# LIBFT	=	libft/libft.a
-
-# $(NAME): $(OBJS)
-# 	@cd libft && make
-# 	@$(CC) $(CFLAGS) $(LIBFT) $(OBJS) -lreadline -o $(NAME) $(LDFLAGS)
-# 	@echo "$(GREEN)minishell build$(WHITE)"
-
-# $(OBJ_DIR)%.o: %.c
-# 	@mkdir -p $(OBJ_DIR)
-# 	@$(CC) $(CFLAGS) -c $< -o $@
-
-
-# all:	$(NAME)
-
-# clean:	
-# 		rm -f $(OBJS)
-# 		@cd libft && make clean
-# 		@rm -rf $(OBJ_DIR)
-# 		@echo "$(CYAN)object files cleaned!$(WHITE)"
-
-# fclean:	
-# 		@cd libft && make fclean
-# 		@rm -rf $(OBJ_DIR)
-# 		@rm -f $(NAME)
-# 		@echo "$(CYAN)Executable and object files cleaned!$(WHITE)"
-
-# re:		fclean all
-
-# .PHONY: all clean fclean re
