@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 01:59:11 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/24 02:09:15 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -376,7 +376,7 @@ char		*init_ft_cd_step(t_ast *ast, char *step, int inde);
 
 /* ---------------------------- ENV FUNCTIONS ---------------------------- */
 
-char	**ft_initialize_our_env(char **base_env);
+char	**ft_initialize_env(char **base_env);
 char	*get_env_value(char **env, char *var_name, char *buffer, int buf_size);
 char	**new_env_list_after_add(char *str_to_add, char **env);
 char	*get_env_var_name(char *line);

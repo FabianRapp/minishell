@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 01:59:00 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/24 02:08:40 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,10 +167,10 @@ int	main(int ac, char **av, char **base_env)
 	if (init_main(ac, &shared_data) == ERROR)
 		return (1);
 	(void)av;
-	env_list = ft_initialize_our_env(base_env);
+	env_list = ft_initialize_env(base_env);
 	if (env_list == NULL)
 		return (get_last_exit());
-	exp_list = ft_initialize_our_env(base_env);
+	exp_list = ft_initialize_env(base_env);
 	if (exp_list == NULL)
 		return (ft_free_2darr(env_list), get_last_exit());
 	get_env_list(&env_list);
