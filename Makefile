@@ -23,11 +23,13 @@ SRC_LEXER		=	lexer/lexer_main.c lexer/lexer_utils.c lexer/dollar_sign.c \
 SRC_PARSER		=	parser/parser.c parser/parser_type_commands.c \
 					parser/parse_utils.c parser/parser_ast/parser_ast.c \
 					parser/parser_ast/parser_ast_redir.c \
+					parser/parser_ast/parser_ast_here_doc.c \
 					parser/parser_ast/parser_ast_utils1.c \
 					parser/parser_ast/parser_ast_utils2.c \
 					parser/list_operations/add_new.c \
 					parser/list_operations/move_nodes.c \
 					parser/list_operations/remove_nodes.c \
+					parser/parser_args_redirs.c \
 					parser/list_operations/utils.c
 
 SRC_EXPANSION	=	expansion/expansion.c expansion/word_splitting.c \

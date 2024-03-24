@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   internals_parser.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 19:21:02 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 16:53:11 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/24 05:09:44 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,10 @@ t_parser				*last_parser(t_parser *parser);
 // parser_ast/parser_ast_redir.c
 t_result				append_redir(t_ast *ast_node, t_parser *args,
 							t_redir **cur_redir);
-t_result				parser_resovle_here_doc(t_redir *redir);
 t_result				parser_resovle_here_str(t_redir *redir);
+
+// parser_ast/parser_ast_here_doc.c
+t_result				parser_resovle_here_doc(t_redir *redir);
 
 // parser_ast/parser_ast_utils1.c
 t_left_right_parsers	split_parser(t_parser *split_location);
@@ -63,5 +65,10 @@ t_parser				*has_none_redir_arg(t_parser *parser);
 bool					has_redir_arg(t_parser *parser);
 t_result				has_content(t_parser *parser);
 void					type_command(t_parser *parser, bool *found_command);
+
+//parser_args_redirs.c
+t_result				redirs_have_arg(t_parser *parser);
+t_result				parse_redir_paths(t_parser *parser);
+void					type_args(t_parser *parser);
 
 #endif
