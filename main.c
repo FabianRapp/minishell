@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 22:01:29 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/24 01:59:00 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ bool	check_edgecases(t_ast *ast)
 {
 	if (no_command(ast) == true)
 		return (true);
-	if (!ast->dont_run_buildins && ft_buildin(ast) == true)
+	if (!ast->dont_run_buildins && ft_builtin_control(ast) == true)
 	{
 		return (true);
 	}

@@ -11,7 +11,7 @@ CLEAR	=	\033[0m
 
 SRC_BUILTINS	=	builtins/pwd.c builtins/env.c builtins/export.c \
 					builtins/unset.c builtins/exit.c builtins/echo.c \
-					builtins/cd.c builtins/cd_utils.c
+					builtins/cd.c builtins/cd_utils.c builtins/builtin_control.c
 
 SRC_ENVIRONMENT =	environment/initialize_env.c environment/modify_env.c \
 					environment/get_env_parts.c
@@ -40,10 +40,9 @@ SRC_EXECUTION	=	execution/redirections/redir_error_handler.c \
 					execution/redirections/redir_main.c \
 					execution/redirections/redir_utils.c \
 					execution/pipes.c execution/run_ast.c \
-					execution/exec_buildin.c execution/exec_subshell.c \
+					execution/exec_subshell.c execution/utils/pipe_utils.c \
 					execution/utils/data_utils.c execution/utils/path.c \
-					execution/utils/input_exit.c execution/utils/get_pid.c \
-					execution/utils/pipe_utils.c
+					execution/utils/input_exit.c execution/utils/get_pid.c
 
 SRC_UTILS		=	utils/signals.c utils/debugging.c utils/fd1.c utils/groups1.c \
 					utils/utils1.c utils/utils2.c utils/cleanup.c

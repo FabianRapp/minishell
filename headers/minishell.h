@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 23:03:25 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/24 01:59:11 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,7 +249,7 @@ bool		test_lexer_manualy(char *str);
 //from eval.h:
 t_result	expansion(t_ast *ast);
 char		*find_path(t_ast *ast, char *command_name, char *path_env);
-bool		ft_buildin(t_ast *ast);
+
 
 // input_exit.c
 t_ast		*get_input(t_cleanup_data *cleanup_data);
@@ -337,6 +337,7 @@ struct fd_request
 };
 
 /* ------------------------------ BUILT-INS ------------------------------ */
+bool		ft_builtin_control(t_ast *ast);
 int			ft_pwd(t_ast *ast);
 int			ft_env(t_ast *ast);
 void		ft_export(t_ast *ast, t_arg *cur_arg);
