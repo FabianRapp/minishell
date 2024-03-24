@@ -41,8 +41,9 @@ SRC_EXECUTION	=	execution/redirections/redir_error_handler.c \
 					execution/redirections/redir_utils.c \
 					execution/pipes.c execution/run_ast.c \
 					execution/exec_subshell.c execution/utils/pipe_utils.c \
-					execution/utils/data_utils.c execution/utils/path.c \
-					execution/utils/input_exit.c execution/utils/get_pid.c
+					execution/utils/data_utils.c execution/utils/input_exit.c \
+					execution/utils/path.c execution/utils/path_utils.c \
+					execution/utils/get_pid.c
 
 SRC_UTILS		=	utils/signals.c utils/debugging.c utils/fd1.c utils/groups1.c \
 					utils/utils1.c utils/utils2.c utils/cleanup.c

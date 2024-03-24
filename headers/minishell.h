@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 02:09:15 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/24 03:40:58 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,6 +249,11 @@ bool		test_lexer_manualy(char *str);
 //from eval.h:
 t_result	expansion(t_ast *ast);
 char		*find_path(t_ast *ast, char *command_name, char *path_env);
+t_result	init_path_object(t_ast *ast, char *command_name,
+	t_path *path_ob, char *path_var);
+char	*handle_shell_fn(char *name);
+char	*handle_absolute_path(char *path);
+bool	next_path(t_path *path_ob);
 
 
 // input_exit.c

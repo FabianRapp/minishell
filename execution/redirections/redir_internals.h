@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   repl_redir_internals.h                             :+:      :+:    :+:   */
+/*   redir_internals.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 04:21:19 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/17 19:25:37 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/24 02:33:04 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef REPL_REDIR_INTERNALS_H
-# define REPL_REDIR_INTERNALS_H
+#ifndef REDIR_INTERNALS_H
+# define REDIR_INTERNALS_H
 
-#  include "../../headers/minishell.h"
+# include "../../headers/minishell.h"
 
 // main interface
 t_result	resolve_redirs(t_ast *ast);

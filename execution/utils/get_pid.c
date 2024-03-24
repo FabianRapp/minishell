@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   repl_get_pid.c                                    :+:      :+:    :+:   */
+/*   get_pid.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 08:53:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 08:54:58 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/24 02:36:01 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ static void	send_pid(int fd[2], int pid)
 {
 	int	exit_status;
 
-	if (pid == -1 || close(fd[READ]) == -1 || write(fd[WRITE], &pid, sizeof(pid_t)) == -1 || close(fd[WRITE]) == -1)
+	if (pid == -1 || close(fd[READ]) == -1 || write(fd[WRITE],
+			&pid, sizeof(pid_t)) == -1 || close(fd[WRITE]) == -1)
 	{
 		exit(errno);
 	}
@@ -51,7 +52,7 @@ static void	send_pid(int fd[2], int pid)
 // returns the pid
 int	ft_pid(int set)
 {
-	static int pid = -1;
+	static int	pid = -1;
 
 	if (set)
 		pid = set;
