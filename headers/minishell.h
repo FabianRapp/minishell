@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 04:30:18 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 00:12:32 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -347,7 +347,7 @@ t_result	set_ctrl_c(struct sigaction *sig_set);
 t_result	set_ctrl_slash(struct sigaction *sig);
 
 // ----------- additional utils -----------------
-void		print_error_addsq(bool shell_name, char *command_name,
+void		print_error_weird_quotes(bool shell_name, char *command_name,
 				char *arg, char *str);
 t_result	ft_cur_exit(t_ast *ast, int exit_value);
 

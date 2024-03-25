@@ -1,17 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cleanup1.c                                         :+:      :+:    :+:   */
+/*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 06:07:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 02:45:15 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 00:43:59 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/parser.h"
 #include "../headers/lexer.h"
+
+void	free_token_list(t_token_list *list)
+{
+	t_token_list	*last;
+
+	while (list)
+	{
+		last = list;
+		list = list->next;
+		free_token(last->token);
+		free(last);
+	}
+}
+
+void	free_arg_list(t_arg *list)
+{
+	t_arg	*last;
+
+	while (list)
+	{
+		last = list;
+		list = list->next;
+		free_token_list(last->name);
+		free(last);
+	}
+}
 
 /*
 	Iterates through and frees all associated redirection and argument structures.
@@ -51,4 +77,19 @@ void	free_ast(t_ast *ast)
 	free_arg_list(ast->arg);
 	free_redir(ast->redir);
 	free(ast);
+}
+
+t_result	wait_all_children(t_ast *ast)
+{
+	int		status;
+
+	errno = 0;
+	if (ast && ast->pid != INIT_VAL && ast->exit_status == INIT_VAL)
+		waitpid(ast->pid, &status, 0);
+	while (errno != ECHILD)
+	{
+		waitpid(-1, &status, 0);
+	}
+	errno = 0;
+	return (SUCCESS);
 }

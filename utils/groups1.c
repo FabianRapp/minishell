@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:34:43 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/22 01:04:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 00:36:09 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 bool	is_command_block_terminator(t_type type)
 {
-	if (is_operator(type) || type == T_EOF)// || type == SUBSHELL)
+	if (is_operator(type) || type == T_EOF)
 		return (true);
 	return (false);
 }
@@ -27,7 +27,8 @@ bool	is_redir(t_type type)
 		|| type == REDIR_APPEND
 		|| type == HERE_DOC
 		|| type == REDIR_IN_OUT
-		|| type == HERE_STR)
+		|| type == HERE_STR
+	)
 	{
 		return (true);
 	}
@@ -36,8 +37,14 @@ bool	is_redir(t_type type)
 
 bool	is_redir_arg_terminator(t_type type)
 {
-	if (type == T_EOF || type == OR || type == AND || type == PIPE
-		|| is_redir(type) || type == WHITE_SPACE || type == SEMICOL)
+	if (type == T_EOF
+		|| type == OR
+		|| type == AND
+		|| type == PIPE
+		|| type == SEMICOL
+		|| is_redir(type)
+		|| type == WHITE_SPACE
+	)
 	{
 		return (true);
 	}
@@ -49,7 +56,8 @@ bool	is_word_terminator(t_type type)
 	if (type != T_EOF && type != OR && type != AND && type != PIPE
 		&& !is_redir(type) && type != WHITE_SPACE && type != SUBSHELL
 		&& type != COMMAND && type != DUMMY_COMMAND
-		&& type != SEMICOL)
+		&& type != SEMICOL
+	)
 	{
 		return (false);
 	}
@@ -58,8 +66,16 @@ bool	is_word_terminator(t_type type)
 
 bool	command_terminator(t_type type)
 {
-	if (type == PIPE || type == OR || type == AND || type == WHITE_SPACE || type == T_EOF
-		|| type == SUBSHELL || type == COMMAND || type == DUMMY_COMMAND || type == SEMICOL)
+	if (type == PIPE
+		|| type == OR
+		|| type == AND
+		|| type == WHITE_SPACE
+		|| type == T_EOF
+		|| type == SUBSHELL
+		| type == COMMAND
+		|| type == DUMMY_COMMAND
+		|| type == SEMICOL
+	)
 	{
 		return (true);
 	}

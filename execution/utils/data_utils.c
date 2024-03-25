@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:38:43 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 08:57:50 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 00:27:04 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,29 @@ void	fill_args(t_ast *ast, char *argv[], int type)
 		args = args->next;
 	}
 	argv[i] = NULL;
+}
+
+// check errno when calling this
+char	*extract_command_name(char *path)
+{
+	char	*name;
+	int		i;
+	char	**arr;
+
+	if (ft_strncmp("/", path, 1) && ft_strncmp(".", path, 1) && ft_strncmp("..", path, 2))
+		return (ft_strdup(path));
+	arr = ft_split(path, '/');
+	if (!arr)
+		return (NULL);
+	i = 0;
+	while (arr[i])
+	{
+		i++;
+	}
+	if (!i)
+		return (ft_free_2darr(arr), NULL);
+	name = arr[i - 1];
+	arr[i - 1] = NULL;
+	ft_free_2darr(arr);
+	return (name);
 }

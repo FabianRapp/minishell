@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 18:05:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 21:43:28 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/25 00:08:26 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,3 @@ t_result	set_ctrl_c(struct sigaction *sig)
 	}
 	return (SUCCESS);
 }
-
-// void	reset_terminal()
-// {
-// }
-
-// void	set_terminal()
-// {
-// }

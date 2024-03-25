@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 04:10:54 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 00:18:20 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,12 @@ void	init_child_data(t_child_data *data, t_ast *ast)
 	}
 	if (ast->exit_status != DEFAULT_EXIT_STATUS)
 		return ;
-	data->argv[0] = extract_command_name(data->path); // TODO: mall error
-	data->command_name = extract_command_name(data->path); // TODO: mall error
-	fill_args(ast, data->argv + 1, ARGS);
+	data->argv[0] = extract_command_name(data->path);
+	data->command_name = extract_command_name(data->path);
+	if (errno)
+		set_errno_as_exit(ast, false);
+	else
+		fill_args(ast, data->argv + 1, ARGS);
 }
 
 void	free_child_data(t_child_data *data)

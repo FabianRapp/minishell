@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:52 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 22:58:24 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/25 00:58:18 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ t_result		word_splitting(t_token_list **list);
 t_result		insert_whitespace_before(t_token_list **head);
 
 // utils1.c
+t_result		merge_literals(t_token_list *node);
 t_result		env_to_word_token(t_token *token);
 t_result		pidreq_to_literal_token(t_shared_data *env, t_token *token);
-//t_result		add_dollar(t_token *token);
 int				check_empty_arg(t_arg *last, t_arg **cur,
 					t_ast *ast, t_arg **base_arg);
 
@@ -49,8 +49,10 @@ t_token_list	*remove_non_literals(t_token_list *list);
 t_result		expansion_move_to_arg(t_arg **next_arg, t_token_list *list);
 
 // utils3.c
-t_result		merge_literals(t_token_list *node);
+void	expandlist_convert_white_space(t_token *token);
+void	init_expand_args(t_arg **cur, t_arg **base_arg, t_arg **last);
 //t_token_list	*expand_list_here_doc(t_shared_data *env, t_token_list *list);
+
 
 // wildcards:
 typedef struct s_wildcard_parameters

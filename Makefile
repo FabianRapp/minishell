@@ -36,7 +36,8 @@ SRC_EXPANSION	=	expansion/expansion.c expansion/word_splitting.c \
 					expansion/utils1.c expansion/utils2.c \
 					expansion/wildcards/repl_fill_wildcard_data.c \
 					expansion/wildcards/repl_wildcards_main.c \
-					expansion/wildcards/repl_wildcards_utils1.c
+					expansion/wildcards/repl_wildcards_utils1.c \
+					expansion/utils3.c
 
 SRC_EXECUTION	=	execution/redirections/redir_error_handler.c \
 					execution/redirections/redir_main.c \
@@ -48,7 +49,12 @@ SRC_EXECUTION	=	execution/redirections/redir_error_handler.c \
 					execution/utils/get_pid.c
 
 SRC_UTILS		=	utils/signals.c utils/debugging.c utils/fd1.c utils/groups1.c \
-					utils/utils1.c utils/utils2.c utils/cleanup.c \
+					utils/groups2.c \
+					utils/get_state.c \
+					utils/cleanup2.c \
+					utils/alloc_utils.c \
+					utils/utils.c utils/exit_state.c utils/cleanup.c \
+					utils/error_handlers.c \
 					utils/type_to_error.c
 
 SRCS	:=	$(SRC_BUILTINS) $(SRC_ENVIRONMENT) $(SRC_LEXER) $(SRC_PARSER) \

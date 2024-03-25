@@ -12,24 +12,6 @@
 
 #include "expansion.h"
 
-void	expandlist_convert_white_space(t_token *token)
-{
-	int	i;
-
-	if (token->type != WORD)
-		return ;
-	if (!token->str_data)
-		return ;
-	i = 0;
-	while (token->str_data[i])
-	{
-		if (!ft_iswhitespace(token->str_data[i]))
-			return ;
-	}
-	ft_free((void **)&(token->str_data));
-	token->type = WHITE_SPACE;
-}
-
 t_token_list	*expand_list(t_shared_data *env, t_token_list *list)
 {
 	if (!list)
@@ -90,16 +72,12 @@ t_result	expand_args(t_ast *ast, t_arg **base_arg, bool here_doc)
 	t_arg	*last;
 	int		flag;
 
-	cur = *base_arg;
-	if (!cur)
-		return (SUCCESS);
-	last = NULL;
+	init_expand_args(&cur, base_arg, &last);
 	while (cur)
 	{
 		if (!here_doc)
 			cur->name = expand_list(ast->shared_data, cur->name);
-		merge_literals(cur->name);
-		if (errno)
+		if (merge_literals(cur->name) == ERROR || errno)
 			return (set_errno_as_exit(ast, false));
 		cur->name = remove_non_literals(cur->name);
 		if (errno || (!here_doc && wildcards(cur->name) == ERROR))

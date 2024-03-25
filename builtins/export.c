@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:29:13 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/23 07:04:46 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 00:12:32 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,12 +110,12 @@ static int	arg_is_valid(char *arg, t_ast *ast, char *cmd_name)
 		return (ft_cur_exit(ast, 2), 3);
 	}
 	if (!(ft_isalpha((int) *arg) || *arg == '_'))
-		return (ft_cur_exit(ast, 1), print_error_addsq(true, cmd_name,
+		return (ft_cur_exit(ast, 1), print_error_weird_quotes(true, cmd_name,
 				save, "not a valid identifier"), 0);
 	while (++arg && *arg && *arg != '=')
 	{
 		if (!(ft_isalnum((int) *arg) || *arg == '_'))
-			return (ft_cur_exit(ast, 1), print_error_addsq(true, cmd_name,
+			return (ft_cur_exit(ast, 1), print_error_weird_quotes(true, cmd_name,
 					save, "not a valid identifier"), 0);
 	}
 	if (*arg != '=')
