@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 05:14:33 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 06:10:37 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,7 +191,10 @@ t_lexer		new_lexer(char *str);
 
 // main
 void		run_node(t_ast *ast);
-void		run_command_node(t_ast *ast);
+int			run_command_node(t_ast *ast);
+
+// execution/run_command.c
+int			run_command_node(t_ast *ast);
 
 bool		check_edgecases(t_ast *ast);
 void		add_global_data(t_ast *ast, t_shared_data *env);

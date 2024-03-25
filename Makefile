@@ -40,6 +40,7 @@ SRC_EXPANSION	=	expansion/expansion.c expansion/word_splitting.c \
 					expansion/utils3.c
 
 SRC_EXECUTION	=	execution/redirections/redir_error_handler.c \
+					execution/run_command.c \
 					execution/redirections/redir_main.c \
 					execution/redirections/redir_utils.c \
 					execution/pipes.c execution/run_ast.c \

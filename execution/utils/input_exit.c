@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 06:02:02 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 06:13:40 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 			ft_fprintf(2, "exit\n");
 		main_exit(cleanup_data, true, true);
 	}
+	errno = 0;
 	if (!contains_non_white_spcace(input))
 		return (free(input), NULL);
 	add_history(input);
