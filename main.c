@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 00:18:20 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 05:06:29 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ void	run_command_node(t_ast *ast)
 		free_child_data(&data);
 		return ;
 	}
+	reset_signals();
 	ft_close(&(ast->fd_to_close));
 	ft_close(&(ast->fd_to_close_write));
 	ft_close(&(ast->fd_to_close_read));
@@ -143,8 +144,8 @@ t_result	init_main(int ac, t_shared_data *shared_data)
 	set_last_exit(0);
 	shared_data->env_exp = NULL;
 	shared_data->envs = NULL;
-	set_ctrl_slash(&(shared_data->sig_set));
-	set_ctrl_c(&(shared_data->sig_set));
+	// set_ctrl_slash();
+	// set_ctrl_c();
 	if (ac > 2)
 	{
 		print_error(true, NULL, NULL, "max one arg allowed");
@@ -166,6 +167,8 @@ int	main(int ac, char **av, char **base_env)
 	char			**env_list;
 	char			**exp_list;
 
+	set_signals();
+	//init_terminal_settings();
 	cleanup_data.shared_data = &shared_data;
 	if (init_main(ac, &shared_data) == ERROR)
 		return (1);

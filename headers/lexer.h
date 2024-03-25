@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:19:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/18 06:34:48 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/25 01:37:07 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,4 +31,5 @@ t_lexer			new_lexer(char *str);
 void			read_char(t_lexer *lexer);
 t_token			*next_new_token(t_lexer *lexer, bool recursive_call);
 
+void			print_error_redir_arg(t_lexer *lexer);
 #endif

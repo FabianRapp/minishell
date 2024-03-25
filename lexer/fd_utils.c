@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fd_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 15:34:51 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/23 15:35:21 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/25 01:37:20 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,24 @@ char	*check_limis_potential_fd(char *left_redir_arg,
 	if (!left_redir_arg)
 		*lexer = lexer_backup;
 	return (left_redir_arg);
+}
+
+void	print_error_redir_arg(t_lexer *lexer)
+{
+	int		base_std_err;
+	int		temp_pipe[2];
+	t_token	*error_token;
+
+	set_last_exit(2);
+	base_std_err = dup(2);
+	pipe(temp_pipe);
+	close(temp_pipe[READ]);
+	dup2(temp_pipe[WRITE], 2);
+	close(temp_pipe[WRITE]);
+	error_token = next_new_token(lexer, true);
+	dup2(base_std_err, 2);
+	close(base_std_err);
+	if (error_token)
+		print_error(true, NULL, NULL, type_to_error(error_token->type));
+	free_token(error_token);
 }

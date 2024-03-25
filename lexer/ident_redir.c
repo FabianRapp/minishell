@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ident_redir.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 00:06:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 22:32:45 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/25 01:37:30 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,6 @@ static t_result	handle_redir_fd(t_lexer *lexer, t_token *token)
 
 bool	valid_redir_arg(t_lexer *lexer, t_type type)
 {
-	t_token	*error_token;
-	int		temp_pipe[2];
-	int		base_std_err;
 	t_lexer	temp;
 
 	temp = *lexer;
@@ -46,19 +43,9 @@ bool	valid_redir_arg(t_lexer *lexer, t_type type)
 		*lexer = temp;
 		return (true);
 	}
-	set_last_exit(2);
-	base_std_err = dup(2);
-	pipe(temp_pipe);
-	close(temp_pipe[READ]);
-	dup2(temp_pipe[WRITE], 2);
-	close(temp_pipe[WRITE]);
-	error_token = next_new_token(lexer, true);
-	dup2(base_std_err, 2);
-	close(base_std_err);
-	if (error_token)
-		print_error(true, NULL, NULL, type_to_error(error_token->type));
+	print_error_redir_arg(lexer);
 	*lexer = temp;
-	return (free_token(error_token), false);
+	return (false);
 }
 
 t_result	lexer_here_doc(t_lexer *lexer, t_token *token)

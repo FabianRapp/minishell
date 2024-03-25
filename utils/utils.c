@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils1.c                                           :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 00:34:29 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 02:58:02 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,11 @@ char	*ft_read_line(char *header)
 		free(temp);
 	}
 	else
+	{
+		redisplay_prompt(true, true);
 		line = readline(header);
+		redisplay_prompt(true, false);
+	}
 	line_counter();
 	return (line);
 }
