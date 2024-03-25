@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 18:05:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 00:08:26 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 01:32:54 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ t_result	set_ctrl_slash(struct sigaction *sig)
 	if (sigaction(3, sig, NULL) == -1)
 	{
 		printf("%s\n", strerror(errno));
+		//! need to add the cleanup
 		exit(errno);
 		return (ERROR);
 	}
@@ -53,6 +54,7 @@ t_result	set_ctrl_c(struct sigaction *sig)
 	if (sigaction(SIGINT, sig, NULL) == -1)
 	{
 		printf("%s\n", strerror(errno));
+		//! need to add the cleanup
 		exit(errno);
 		return (ERROR);
 	}
