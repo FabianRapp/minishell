@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:23:25 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 05:17:01 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 05:25:16 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,4 +95,4 @@ int				name_len(char *str);
 // t_here_doc_child_data	child_data(char *new_line,
 // 					char *new_tmp, bool free_line, bool free_tmp);
 
-#endif,s
+#endif

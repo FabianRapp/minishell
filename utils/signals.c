@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 18:05:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 05:12:43 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 06:03:05 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,6 @@ bool	redisplay_prompt(bool set_state, bool new_state)
 		redisplay_prompt_state = new_state;
 	return (redisplay_prompt_state);
 }
-
-
-
-// void	signal_handler_ctrl_slash(int signal)
-// {
-// 	printf("got SIGQUIT signal\n");
-// 	(void)info;
-// 	(void)data;
-// 	(void)signal;
-// }
 
 t_result	set_ctrl_slash(void)
 {
@@ -95,7 +85,7 @@ void	reset_terminal_settings(void)
 	struct termios	terminal;
 
 	if (tcgetattr(STDIN_FILENO, &terminal) == -1)
-	{	
+	{
 		print_error(true, NULL, NULL, strerror(errno));
 		set_last_exit(errno);
 		full_exit_status(true);
@@ -103,7 +93,7 @@ void	reset_terminal_settings(void)
 	}
 	terminal.c_lflag |= ECHO;
 	if (tcsetattr(STDIN_FILENO, TCSANOW, &terminal) == -1)
-	{	
+	{
 		print_error(true, NULL, NULL, strerror(errno));
 		set_last_exit(errno);
 		full_exit_status(true);
@@ -125,7 +115,7 @@ void	init_terminal_settings(void)
 	terminal.c_lflag &= ~ECHO;
 	terminal.c_lflag &= ~ISIG;
 	if (tcsetattr(STDIN_FILENO, TCSANOW, &terminal) == -1)
-	{	
+	{
 		reset_terminal_settings();
 		print_error(true, NULL, NULL, strerror(errno));
 		set_last_exit(errno);
