@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   data_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:38:43 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 00:27:04 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 01:16:39 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ char	*extract_command_name(char *path)
 	int		i;
 	char	**arr;
 
-	if (ft_strncmp("/", path, 1) && ft_strncmp(".", path, 1) && ft_strncmp("..", path, 2))
+	if (ft_strncmp("/", path, 1) && ft_strncmp(".", path, 1)
+		&& ft_strncmp("..", path, 2))
 		return (ft_strdup(path));
 	arr = ft_split(path, '/');
 	if (!arr)

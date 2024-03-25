@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:29:13 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/25 00:12:32 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 01:12:03 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,8 +115,8 @@ static int	arg_is_valid(char *arg, t_ast *ast, char *cmd_name)
 	while (++arg && *arg && *arg != '=')
 	{
 		if (!(ft_isalnum((int) *arg) || *arg == '_'))
-			return (ft_cur_exit(ast, 1), print_error_weird_quotes(true, cmd_name,
-					save, "not a valid identifier"), 0);
+			return (ft_cur_exit(ast, 1), print_error_weird_quotes(true,
+					cmd_name, save, "not a valid identifier"), 0);
 	}
 	if (*arg != '=')
 		return (2);
@@ -150,7 +150,3 @@ void	ft_export(t_ast *ast, t_arg *cur_arg)
 	if (num == 0)
 		ft_export_no_args(ast);
 }
-
-// print_error(true, NULL, NULL, strerror(errno));
-// print_error(true, "string1", "string2", strerror(errno));
-// ft_fprintf(2, "%s %s\n", SHELL_NAME, );

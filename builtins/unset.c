@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:34:24 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/25 00:12:32 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 01:12:26 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ static bool	arg_is_valid_unset(char *arg, t_ast *ast, char *cmd_name)
 	while (*arg && *arg != '=')
 	{
 		if (!(ft_isprint((int) *arg)))
-			return (ft_cur_exit(ast, 1), print_error_weird_quotes(true, cmd_name,
-					save, "not a valid identifier"), false);
+			return (ft_cur_exit(ast, 1), print_error_weird_quotes(true,
+					cmd_name, save, "not a valid identifier"), false);
 		arg++;
 	}
 	return (true);

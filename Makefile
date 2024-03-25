@@ -49,15 +49,12 @@ SRC_EXECUTION	=	execution/redirections/redir_error_handler.c \
 					execution/utils/get_pid.c
 
 SRC_UTILS		=	utils/signals.c utils/debugging.c utils/fd1.c utils/groups1.c \
-					utils/groups2.c \
-					utils/get_state.c \
-					utils/cleanup2.c \
-					utils/alloc_utils.c \
+					utils/groups2.c utils/get_state.c utils/cleanup2.c \
 					utils/utils.c utils/exit_state.c utils/cleanup.c \
-					utils/error_handlers.c \
+					utils/error_handlers.c utils/alloc_utils.c \
 					utils/type_to_error.c
 
-SRCS	:=	$(SRC_BUILTINS) $(SRC_ENVIRONMENT) $(SRC_LEXER) $(SRC_PARSER) \
+SRCS	=	$(SRC_BUILTINS) $(SRC_ENVIRONMENT) $(SRC_LEXER) $(SRC_PARSER) \
 			$(SRC_EXPANSION) $(SRC_EXECUTION) $(SRC_UTILS) main.c
 
 OBJS	=	$(SRCS:%.c=%.o)

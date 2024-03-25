@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:52 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 00:58:18 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 01:15:27 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,9 @@ t_token_list	*remove_non_literals(t_token_list *list);
 t_result		expansion_move_to_arg(t_arg **next_arg, t_token_list *list);
 
 // utils3.c
-void	expandlist_convert_white_space(t_token *token);
-void	init_expand_args(t_arg **cur, t_arg **base_arg, t_arg **last);
+void			expandlist_convert_white_space(t_token *token);
+void			init_expand_args(t_arg **cur, t_arg **base_arg, t_arg **last);
 //t_token_list	*expand_list_here_doc(t_shared_data *env, t_token_list *list);
-
 
 // wildcards:
 typedef struct s_wildcard_parameters
