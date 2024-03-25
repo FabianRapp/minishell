@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 11:01:03 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 13:12:54 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@
 # include "parser.h"
 
 # ifndef TESTER
-#  define TESTER 0
+#  define TESTER 1
 # endif
 
 # ifndef SHELL_NAME
