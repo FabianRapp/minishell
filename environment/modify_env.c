@@ -3,25 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   modify_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/22 22:44:28 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/25 08:02:27 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-static char	**if_already_in_env(char **env, char *str_to_add, int *add)
+static bool	if_already_in_env(char **env, char *str_to_add, bool plus)
 {
 	char	*var_to_add;
 	char	*line_name;
 	int		i;
-	char	**ret;
 
 	i = 0;
+	if (!env)
+		return (false);
 	var_to_add = get_env_var_name(str_to_add);
-	ret = env;
 	line_name = get_env_var_name(env[i]);
 	while (env[i] && ft_strcmp(line_name, var_to_add))
 	{
@@ -29,17 +29,19 @@ static char	**if_already_in_env(char **env, char *str_to_add, int *add)
 		line_name = get_env_var_name(env[++i]);
 	}
 	free(line_name);
-	if (env[i])
+	if (!env[i])
+		return (free(var_to_add), false);
+	if (!plus)
 	{
-		if (ft_strchr(str_to_add, '='))
-			ret = new_env_list_after_delete(var_to_add, env);
-		else
-			*add = 0;
+		free(env[i]);
+		env[i] = ft_strdup(str_to_add);
 	}
-	return (free(var_to_add), ret);
+	else
+		ft_strjoin_inplace(&(env[i]), ft_strchr(str_to_add, '='));
+	return (true);
 }
 
-char	**new_env_list_after_add(char *str_to_add, char **env)
+char	**new_env_list_after_add(char *str_to_add, char **env, bool plus)
 {
 	char	**env_before;
 	int		i;
@@ -48,8 +50,8 @@ char	**new_env_list_after_add(char *str_to_add, char **env)
 
 	i = 0;
 	add = 1;
-	env_before = if_already_in_env(env, str_to_add, &add);
-	if (add == 0)
+	env_before = env;
+	if (if_already_in_env(env, str_to_add, plus))
 		return (env_before);
 	while (env_before[i])
 		i++;

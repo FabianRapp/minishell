@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initialize_env.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/24 02:09:30 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/25 09:55:39 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static void	ft_update_shlvl(int shlvl_index, char ***env)
 	before = get_env_value(*(env), "SHLVL", 0, 0);
 	if (shlvl_index == 0 || is_not_numeric(before))
 	{
-		*env = new_env_list_after_add("SHLVL=1", *env);
+		*env = new_env_list_after_add("SHLVL=1", *env, false);
 		free(before);
 		return ;
 	}
@@ -56,24 +56,28 @@ char	**ft_initialize_env(char **base_env)
 	int		i;
 	char	**ret;
 	int		shlvl_index;
+	char	*tmp;
+	char	buffer[PATH_MAX + 1];
 
 	i = 0;
 	shlvl_index = 0;
-	while (base_env[i])
+	while (base_env && base_env[i])
 		i++;
 	ret = ft_calloc((i + 60), sizeof(char *));
 	if (ret == NULL)
 		return (NULL);
-	ret[i] = NULL;
 	i = -1;
-	while (base_env[++i])
-	{
+	while (base_env && base_env[++i])
 		ret[i] = ft_strdup(base_env[i]);
-		if (ft_strncmp(ret[i], "SHLVL=", 6) == 0)
-			shlvl_index = i;
-	}
+	i = 0;
+	while (base_env && base_env[i] && ft_strncmp(ret[i], "SHLVL=", 6))
+		shlvl_index = i++;
 	ft_update_shlvl(shlvl_index, &ret);
-	return (ret);
+	tmp = ft_strjoin("PWD=", getcwd(buffer, PATH_MAX));
+	ret = new_env_list_after_add(tmp, ret, false);
+	tmp = ft_strjoin("_=", getenv("_"));
+	ret = new_env_list_after_add(tmp, ret, false);
+	return (free(tmp), ret);
 }
 
 // // THE PREVIOUS VERSION THAT I DELETE THE OLDPWD IN ENV LIST LIKE BASH

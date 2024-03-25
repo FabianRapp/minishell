@@ -6,16 +6,16 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 06:10:37 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 07:09:24 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
-             TOTAL TEST COUNT: 994  TESTS PASSED: 974  LEAKING: 0 
-                     STD_OUT: 13  STD_ERR: 2  EXIT_CODE: 7  
+             TOTAL TEST COUNT: 994  TESTS PASSED: 978  LEAKING: 0 
+                     STD_OUT: 10  STD_ERR: 1  EXIT_CODE: 6  
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 22   
-                                     ✅ 2960  
+                                     ❌ 17   
+                                     ✅ 2965 
 */
 
 #ifndef MINISHELL_H
@@ -338,7 +338,7 @@ char		*init_ft_cd_step(t_ast *ast, char *step, int inde);
 char		**ft_initialize_env(char **base_env);
 char		*get_env_value(char **env, char *var_name,
 				char *buffer, int buf_size);
-char		**new_env_list_after_add(char *str_to_add, char **env);
+char		**new_env_list_after_add(char *str_to_add, char **env, bool plus);
 char		*get_env_var_name(char *line);
 char		**new_env_list_after_delete(char *var_to_rm, char **env_before);
 void		ft_update_env(char *var_name, char *new_value, char **env);

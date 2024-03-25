@@ -6,12 +6,31 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 06:04:52 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 06:09:12 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 09:51:02 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 #include "../headers/parser.h"
+
+void	update_underscre_var(t_ast *ast)
+{
+	char	*update_val;
+	t_arg	*cur_arg;
+
+	update_val = NULL;
+	if (ast->name)
+		update_val = ast->name->token->str_data;
+	cur_arg = ast->arg;
+	while (cur_arg && cur_arg->next)
+	{
+		cur_arg = cur_arg->next;
+	}
+	if (cur_arg)
+		update_val = cur_arg->name->token->str_data;
+	if (update_val)
+		ft_update_env("_", update_val, *(ast->shared_data->envs));
+}
 
 bool	check_edgecases(t_ast *ast)
 {
@@ -20,6 +39,8 @@ bool	check_edgecases(t_ast *ast)
 		ast->exit_status = 0;
 		return (true);
 	}
+	if (!TESTER)
+		update_underscre_var(ast);
 	if (!ast->dont_run_buildins && ft_builtin_control(ast) == true)
 	{
 		return (true);
