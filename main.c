@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 10:10:29 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 10:19:00 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ t_result	init_main(int ac, t_shared_data *shared_data)
 	set_last_exit(0);
 	shared_data->env_exp = NULL;
 	shared_data->envs = NULL;
+	shared_data->main_pid = get_pid();
 	if (ac > 2)
 	{
 		print_error(true, NULL, NULL, "max one arg allowed");

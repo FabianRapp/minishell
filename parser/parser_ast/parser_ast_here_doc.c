@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 04:56:10 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 04:56:42 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 11:09:24 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ static bool	handle_success(char **line, int count, char *termination)
 	if (!*line)
 	{
 		tmp = ft_strtrim(termination, "\n");
-		ft_fprintf(2, "%s: warning: here-document at line %d delimited by \
-			end-of-file (wanted `%s')\n", SHELL_NAME, count, tmp);
+		ft_fprintf(2, "%s: warning: here-document at line %d delimited by " 
+			"end-of-file (wanted `%s')\n", SHELL_NAME, count, tmp);
 		return (free(tmp), true);
 	}
 	ft_strjoin_inplace(line, "\n");

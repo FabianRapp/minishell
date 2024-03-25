@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 06:04:52 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 09:51:02 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 10:31:07 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,6 @@ int	run_command_node(t_ast *ast)
 		execve(data.path, data.argv, *(ast->shared_data->envs));
 	else
 		execve(data.path, data.argv, NULL);
-	print_error("true", data.command_name, NULL, strerror(errno));
+	print_error(true, data.command_name, NULL, strerror(errno));
 	return (exit(errno), 0);
 }
