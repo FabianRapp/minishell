@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 03:31:52 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/26 07:05:03 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 07:02:18 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ bool	file_in_pwd(char *file)
 	read_val = readdir(pwd);
 	while (read_val)
 	{
-		if (!ft_strncmp(file, read_val->d_name, read_val->d_namlen + 1))
+		if (!ft_strncmp(file, read_val->d_name, ft_strlen(read_val->d_name) + 1))
 			return (closedir(pwd), true);
 		read_val = readdir(pwd);
 	}

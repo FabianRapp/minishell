@@ -78,8 +78,8 @@ flags: $(OBJS)
 	@cd libft && make flags
 	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT) -lreadline -o $(NAME)
 	@echo "$(GREEN)minishell compiled!$(CLEAR)"
-
-leaks: CFLAGS += -DLEAK_CHECK=1
+#-DLEAK_CHECK=1
+leaks: CFLAGS +=  -g
 leaks: $(OBJS)
 	@cd libft && make leaks
 	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT) -lreadline -o $(NAME)

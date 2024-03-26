@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_exit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 06:13:40 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 07:17:50 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ static void	free_and_exit(t_shared_data	*shared_data, bool full_exit)
 			ft_free_2darr(*(shared_data->envs));
 		if (LEAK_CHECK)
 			system("leaks minishell");
+		rl_clear_history();
 		exit(get_last_exit());
 	}
 	if (LEAK_CHECK)
