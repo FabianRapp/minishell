@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 22:22:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/21 16:01:57 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 23:20:23 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,6 @@ char	*reading(t_file	*current_file);
 char	*shrink_out(int fd, t_file *first_file);
 
 /**************************   MINISHELL ADDITIONS   **************************/
-void	set_last_exit(int exit_status);
 bool	contains_non_white_spcace(char *str);
 void	*ft_realloc_copy_until_zeroed(void *ptr,
 			size_t new_count, size_t size);
