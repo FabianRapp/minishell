@@ -3,34 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:29:13 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/26 02:22:02 by codespace        ###   ########.fr       */
+/*   Updated: 2024/03/26 14:31:16 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-/*
-export VARIABLE=value
-command1		->  with export (comparing to just env) the variable becomes
-					available not only for the "command1" but also for any
-					subsequent commands in the current shell session
-
-the VARIABLE name can NOT start with a number:
-EXAMPLE: 	bash-3.2$ export 4abc=hello
-			bash: export: `4abc=hello': not a valid identifier
-but it can be a number somewhere else in the name
-
-the "export" alone, prints a list of all the environment variables along with
-their values in the formatting:
-		declare -x HOME="/Users/mevangel"
-		declare -x LANG="en_US.UTF-8"
-		declare -x LOGNAME="mevangel"
-		declare -x MallocNanoZone="0"
-		etc...
-*/
-
-//? if there is a lot of time, maybe check if i could handle the += for export
 
 #include "../headers/minishell.h"
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   modify_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/26 01:32:36 by codespace        ###   ########.fr       */
+/*   Updated: 2024/03/26 14:35:04 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static bool	if_already_in_env(char **env, char *str_to_add, bool plus)
 		env[i] = ft_strdup(str_to_add);
 	}
 	else
-		ft_strjoin_inplace(&(env[i]), ft_strchr(str_to_add, '='));
+		ft_strjoin_inplace(&(env[i]), ft_strchr(str_to_add, '=') + 1);
 	return (free(var_to_add), true);
 }
 
