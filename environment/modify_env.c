@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/26 14:35:04 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 16:06:34 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,18 @@ static bool	if_already_in_env(char **env, char *str_to_add, bool plus)
 	return (free(var_to_add), true);
 }
 
+static char	*ft_rm_the_plus_from_str(char *str)
+{
+	char	*var_name;
+	char	*value;
+
+	var_name = get_env_var_name(str);
+	value = ft_substr(str, ft_strlen(var_name) + 1, ft_strlen(str)
+			- ft_strlen(var_name) - 1);
+	free(str);
+	return (ft_strjoin_free_both(var_name, value));
+}
+
 char	**new_env_list_after_add(char *str_to_add, char **env, bool plus)
 {
 	char	**env_before;
@@ -51,6 +63,8 @@ char	**new_env_list_after_add(char *str_to_add, char **env, bool plus)
 	env_before = env;
 	if (if_already_in_env(env, str_to_add, plus))
 		return (env_before);
+	if (ft_strchr(str_to_add, '+'))
+		str_to_add = ft_rm_the_plus_from_str(str_to_add);
 	while (env_before[i])
 		i++;
 	new = (char **)ft_calloc((i + 2), sizeof(char *));

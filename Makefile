@@ -1,7 +1,7 @@
 NAME	=	minishell
 
 CFLAGS	=	-Wall -Wextra -Werror
-CC		=	clang
+CC		=	cc
 LIBFT 	=	libft/libft.a
 
 GREEN	=	\033[0;32m
@@ -54,7 +54,7 @@ SRC_UTILS		=	utils/signals.c utils/debugging.c utils/fd1.c utils/groups1.c \
 					utils/groups2.c utils/get_state.c utils/cleanup2.c \
 					utils/utils.c utils/exit_state.c utils/cleanup.c \
 					utils/error_handlers.c utils/alloc_utils.c \
-					utils/type_to_error.c\
+					utils/type_to_error.c \
 					utils/signals2.c
 
 SRCS	=	$(SRC_BUILTINS) $(SRC_ENVIRONMENT) $(SRC_LEXER) $(SRC_PARSER) \
@@ -78,6 +78,7 @@ flags: $(OBJS)
 	@cd libft && make flags
 	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT) -lreadline -o $(NAME)
 	@echo "$(GREEN)minishell compiled!$(CLEAR)"
+
 #-DLEAK_CHECK=1
 leaks: CFLAGS +=  -g
 leaks: $(OBJS)
