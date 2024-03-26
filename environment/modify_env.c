@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   modify_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/25 08:02:27 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 01:32:36 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static bool	if_already_in_env(char **env, char *str_to_add, bool plus)
 	}
 	else
 		ft_strjoin_inplace(&(env[i]), ft_strchr(str_to_add, '='));
-	return (true);
+	return (free(var_to_add), true);
 }
 
 char	**new_env_list_after_add(char *str_to_add, char **env, bool plus)
@@ -46,10 +46,8 @@ char	**new_env_list_after_add(char *str_to_add, char **env, bool plus)
 	char	**env_before;
 	int		i;
 	char	**new;
-	int		add;
 
 	i = 0;
-	add = 1;
 	env_before = env;
 	if (if_already_in_env(env, str_to_add, plus))
 		return (env_before);

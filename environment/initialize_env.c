@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initialize_env.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/25 09:55:39 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 01:30:29 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ char	**ft_initialize_env(char **base_env)
 	ft_update_shlvl(shlvl_index, &ret);
 	tmp = ft_strjoin("PWD=", getcwd(buffer, PATH_MAX));
 	ret = new_env_list_after_add(tmp, ret, false);
+	free(tmp);
 	tmp = ft_strjoin("_=", getenv("_"));
 	ret = new_env_list_after_add(tmp, ret, false);
 	return (free(tmp), ret);

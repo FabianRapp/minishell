@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fd_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 15:34:51 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/25 01:37:20 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 01:15:52 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,7 @@
 char	*get_potential_fd(t_lexer *lexer)
 {
 	char	*left_redir_arg;
-	t_lexer	lexer_backup;
 
-	lexer_backup = *lexer;
 	left_redir_arg = NULL;
 	while (ft_isdigit(lexer->cur_char))
 	{

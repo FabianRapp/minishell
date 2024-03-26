@@ -3,31 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:29:13 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/25 07:33:46 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 01:14:11 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
-export VARIABLE=value 
-command1		->  with export (comparing to just env) the variable becomes 
-					available not only for the "command1" but also for any 
-					subsequent commands in the current shell session 
+export VARIABLE=value
+command1		->  with export (comparing to just env) the variable becomes
+					available not only for the "command1" but also for any
+					subsequent commands in the current shell session
 
 the VARIABLE name can NOT start with a number:
 EXAMPLE: 	bash-3.2$ export 4abc=hello
 			bash: export: `4abc=hello': not a valid identifier
 but it can be a number somewhere else in the name
 
-the "export" alone, prints a list of all the environment variables along with 
-their values in the formatting: 
+the "export" alone, prints a list of all the environment variables along with
+their values in the formatting:
 		declare -x HOME="/Users/mevangel"
 		declare -x LANG="en_US.UTF-8"
 		declare -x LOGNAME="mevangel"
 		declare -x MallocNanoZone="0"
-		etc... 
+		etc...
 */
 
 //? if there is a lot of time, maybe check if i could handle the += for export
@@ -103,10 +103,8 @@ static void	ft_export_no_args(t_ast *ast)
 	*/
 static int	arg_is_valid(char *arg, t_ast *ast, char *cmd_name)
 {
-	int		i;
 	char	*save;
 
-	i = 0;
 	save = arg;
 	if (!arg)
 		return (0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 10:28:06 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 01:22:16 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,8 @@ char	*find_path(t_ast *ast, char *command_name, char *path_var)
 			return (set_errno_as_exit(ast, 0), free(path_ob.all_paths), NULL);
 		if (!access(path, X_OK))
 			return (free(path_ob.all_paths), path);
-		if ((0 * ft_free((void **)&(path))) || (errno != ENOENT && errno != 20))
+		ft_free((void **)&(path));
+		if (errno != ENOENT && errno != 20)
 			return (set_errno_as_exit(ast, true), NULL);
 		errno = 0;
 		if (!next_path(&path_ob))

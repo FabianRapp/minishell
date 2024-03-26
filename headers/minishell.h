@@ -3,23 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 13:12:54 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 01:13:09 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
-             TOTAL TEST COUNT: 994  TESTS PASSED: 978  LEAKING: 0 
-                     STD_OUT: 10  STD_ERR: 1  EXIT_CODE: 6  
+             TOTAL TEST COUNT: 994  TESTS PASSED: 978  LEAKING: 0
+                     STD_OUT: 10  STD_ERR: 1  EXIT_CODE: 6
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 17   
-                                     ✅ 2965 
+                                     ❌ 17
+                                     ✅ 2965
 */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
+# ifdef __linux__
+#  include <sys/types.h>
+#  include <sys/wait.h>
+# endif
 
 // libs
 # include <sys/stat.h>
@@ -369,7 +374,7 @@ t_result	redir_type(t_lexer *lexer, t_token *token, bool recursive_call);
 bool		is_redir_terminator_char(char c);
 char		*get_potential_fd(t_lexer *lexer);
 void		skip_leading_void_whitespace(t_lexer *lexer);
-t_lexer		new_lexer(char *str);	
+t_lexer		new_lexer(char *str);
 t_result	subshell_type(t_lexer *lexer, t_token *token);
 t_result	ident_wildcard_literals(t_lexer *lexer,
 				t_token *token, bool skip_next_term);

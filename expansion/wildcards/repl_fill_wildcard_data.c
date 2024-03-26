@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   repl_fill_wildcard_data.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 19:22:05 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 23:10:51 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 01:19:02 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	print_wildcard_data(t_wildcard_parameters *data)
 	printf("pre: %s\n", data->prefix);
 	printf("mid: ");
 	if (!data->sub_str || !data->sub_str[i])
-		printf("%s\n", NULL);
+		printf("%s\n", (char *)NULL);
 	else
 		printf("\n");
 	while (data->sub_str && data->sub_str[i])
@@ -30,9 +30,6 @@ void	print_wildcard_data(t_wildcard_parameters *data)
 
 t_result	fill_prefix(char **str, t_wildcard_parameters *w_para)
 {
-	int		i;
-
-	i = 0;
 	if (!ft_strnstr(*str, "1}{*", ft_strlen(*str)))
 	{
 		return (SUCCESS);

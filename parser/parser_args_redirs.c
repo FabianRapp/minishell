@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_args_redirs.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 05:08:38 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 05:08:51 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 01:18:08 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,6 @@ t_result	parse_redir_paths(t_parser *parser)
 
 void	type_args(t_parser *parser)
 {
-	t_parser	*last_command_start;
-
-	last_command_start = parser;
 	while (parser->p_type != T_EOF)
 	{
 		if (parser->p_type == COMMAND)

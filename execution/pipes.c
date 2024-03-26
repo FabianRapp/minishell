@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 03:48:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/21 16:04:38 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 01:21:00 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,9 @@ t_result	ft_pipe(t_ast *ast)
 		return (ERROR);
 	if (pipe_fork_right(&vars) == ERROR)
 		return (ERROR);
-	(dup2(vars.base_read, READ) == -1 && pipe_error_handler(&vars));
-	return ((ast->fd_to_close_read == INIT_VAL
-			&& ft_close(&(vars.base_read))), SUCCESS);
+	if (dup2(vars.base_read, READ) == -1)
+		pipe_error_handler(&vars);
+	if (ast->fd_to_close_read == INIT_VAL)
+		ft_close(&(vars.base_read));
+	return (SUCCESS);
 }
