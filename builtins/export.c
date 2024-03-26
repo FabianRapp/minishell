@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:29:13 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/26 15:34:30 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 16:19:26 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,13 +71,13 @@ static void	ft_export_no_args(t_ast *ast)
 *	Variable names must begin with a letter (a-z or A-Z) or an underscore (_).
 *	Subsequent characters can be letters, numbers, or underscores.
 *	Variable names are case-sensitive.
-
+*
 *	retuns value:
 *	0: Invalid variable name due to incorrect characters.
 *	1: Variable name ends with an '=', indicating a valid assignment operation.
 *	2: Variable name is valid without any assignment operation.
 *	3: Argument starts with a '-', indicating an unsupported option or flag.
-*	4: Indicates a valid '+=' append assignment operatio
+*	4: Indicates a valid '+=' append assignment operation
 	*/
 static int	arg_is_valid(char *arg, t_ast *ast, char *cmd_name)
 {
