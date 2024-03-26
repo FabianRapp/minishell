@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 02:41:18 by codespace        ###   ########.fr       */
+/*   Updated: 2024/03/26 07:58:33 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,14 @@ bool	next_path(t_path *path_ob)
 	ft_free((void **)&(path_ob->cur_path));
 	if (!(path_ob->all_paths) || !(path_ob->all_paths)[path_ob->read_postion])
 	{
-		print_error(SHELL_NAME, path_ob->command_name, NULL,
-			"No such file or directory");
-		return (ft_cur_exit(path_ob->ast, 127), false);
+		get_env_value(NULL, "PATH", path_ob->path_buffer, PATH_MAX + 1);
+		if (!*(path_ob->path_buffer) && file_in_pwd(path_ob->command_name))
+			return (print_error(SHELL_NAME, path_ob->command_name, NULL,
+					"Permission denied"), ft_cur_exit(path_ob->ast, 126),
+				false);
+		return (print_error(SHELL_NAME, path_ob->command_name, NULL,
+				"No such file or directory"), ft_cur_exit(path_ob->ast, 127),
+			false);
 	}
 	path_ob->position = path_ob->read_postion;
 	while ((path_ob->all_paths)[path_ob->read_postion] != ':'
@@ -62,7 +67,7 @@ static bool	init_edgecases(t_ast *ast, char *command_name)
 static char	*init_path(t_ast *ast, char *command_name, t_path *path_ob,
 	char *path_var)
 {
-	const t_path	init_val = {NULL, NULL, 0, 0, NULL, NULL};
+	const t_path	init_val = {NULL, NULL, 0, 0, NULL, NULL, {0}};
 
 	*path_ob = init_val;
 	if (init_edgecases(ast, command_name) == false)

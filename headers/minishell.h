@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 05:14:59 by codespace        ###   ########.fr       */
+/*   Updated: 2024/03/26 07:58:26 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,7 @@ typedef struct s_path
 	int		read_postion;
 	char	*command_name;
 	t_ast	*ast;
+	char	path_buffer[PATH_MAX + 1];
 }	t_path;
 
 typedef struct s_pipe_data
@@ -216,6 +217,8 @@ t_result	expansion(t_ast *ast);
 char		*find_path(t_ast *ast, char *command_name, char *path_env);
 t_result	init_path_object(t_ast *ast, char *command_name,
 				t_path *path_ob, char *path_var);
+bool		file_in_pwd(char *file);
+
 char		*handle_shell_fn(char *name);
 char		*handle_absolute_path(char *path);
 bool		next_path(t_path *path_ob);
