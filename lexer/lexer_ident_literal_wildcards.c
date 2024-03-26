@@ -6,11 +6,10 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 01:13:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 17:29:20 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:35:04 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/lexer.h"
 #include "../headers/minishell.h"
 
 static bool	contains_more_wildcards(char *str)

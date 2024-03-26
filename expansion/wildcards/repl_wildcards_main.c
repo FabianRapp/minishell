@@ -6,11 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:49:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 18:34:02 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:33:32 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../expansion.h"
+#include "../../headers/minishell.h"
 
 static t_token_list	*next_wildcard_token(DIR *cur_dir,
 	t_wildcard_parameters *w_para)

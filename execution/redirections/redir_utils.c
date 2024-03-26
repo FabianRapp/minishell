@@ -6,11 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:37:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 16:31:05 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:27:06 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "redir_internals.h"
+#include "../../headers/minishell.h"
 
 t_fd_set	redir_fd_write(char *file, bool append, int base_fd)
 {

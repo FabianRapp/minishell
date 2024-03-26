@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 00:43:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 00:44:03 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 22:37:14 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/parser.h"
-#include "../headers/lexer.h"
+#include "../headers/minishell.h"
 
 void	free_token(t_token *token)
 {

@@ -6,13 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 05:44:50 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 16:35:27 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:36:48 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/parser.h"
-#include "../internals_parser.h"
-#include "../../headers/lexer.h"
+#include "../../headers/minishell.h"
 
 t_parser	*find_highest_operator(t_parser *parser)
 {

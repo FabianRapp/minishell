@@ -6,12 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:34:43 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 16:38:33 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:37:50 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/parser.h"
-#include "../headers/lexer.h"
+#include "../headers/minishell.h"
 
 bool	is_command_block_terminator(t_type type)
 {

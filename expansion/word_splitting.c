@@ -6,11 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:33:33 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 22:37:04 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:34:14 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "expansion.h"
+#include "../headers/minishell.h"
 
 static t_token_list	*create_new_node_wordsplit(char *data, char *old_data)
 {

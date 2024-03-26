@@ -6,11 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:00 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 18:36:04 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:34:02 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "expansion.h"
+#include "../headers/minishell.h"
 
 void	add_arg_front(t_arg **head, t_arg *new_arg)
 {

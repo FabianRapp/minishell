@@ -6,13 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 05:35:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 16:35:00 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:36:42 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/parser.h"
-#include "../internals_parser.h"
-#include "../../headers/lexer.h"
+#include "../../headers/minishell.h"
 
 t_result	parser_resovle_here_str(t_redir *redir)
 {

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "expansion.h"
+#include "../headers/minishell.h"
 
 static t_token_list	*expand_list(t_shared_data *env, t_token_list *list)
 {

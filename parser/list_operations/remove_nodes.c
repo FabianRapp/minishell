@@ -3,17 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   remove_nodes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:36:42 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 07:12:41 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 22:36:18 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
-#include "../../headers/parser.h"
-#include "../../headers/lexer.h"
-#include "../internals_parser.h"
 
 void	trim_whitespace(t_parser *parser)
 {

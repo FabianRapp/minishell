@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   type_to_error.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 03:35:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 04:06:10 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 22:38:04 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/lexer.h"
-#include "../headers/parser.h"
+#include "../headers/minishell.h"
 
-char	*type_to_error_2(t_type type)
+static char	*type_to_error_2(t_type type)
 {
 	if (type == REDIR_IN)
 		return ("syntax error near unexpected token `>'");
@@ -40,7 +39,7 @@ char	*type_to_error_2(t_type type)
 	return (NULL);
 }
 
-char	*type_to_error_1(t_type type)
+static char	*type_to_error_1(t_type type)
 {
 	if (type == UNKNOWN)
 		return ("UNKNOWN");

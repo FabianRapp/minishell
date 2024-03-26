@@ -6,11 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 19:22:05 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 18:32:13 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:33:19 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../expansion.h"
+#include "../../headers/minishell.h"
 
 // void	print_wildcard_data(t_wildcard_parameters *data)
 // {

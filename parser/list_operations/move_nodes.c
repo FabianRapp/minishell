@@ -6,14 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:38:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 17:41:52 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:36:09 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
-#include "../../headers/parser.h"
-#include "../../headers/lexer.h"
-#include "../internals_parser.h"
 
 void	move_to_arg(t_parser *parser, bool is_terminator(t_type),
 	t_type new_type, bool as_must_as_possible)

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   get_state.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 00:30:16 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 05:13:48 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 22:37:45 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/utils.h"
+#include "../headers/minishell.h"
 
 bool	sub_shell_mode(int flag)
 {

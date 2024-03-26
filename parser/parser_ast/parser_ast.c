@@ -6,15 +6,14 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 06:15:18 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 17:54:52 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:55:12 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/parser.h"
-#include "../internals_parser.h"
-#include "../../headers/lexer.h"
+#include "../../headers/minishell.h"
 
-static t_ast	*append_redirs_args(t_parser *args, t_ast *ast_node, t_parser *parser)
+static t_ast	*append_redirs_args(t_parser *args, t_ast *ast_node,
+	t_parser *parser)
 {
 	t_redir		*cur_redir;
 

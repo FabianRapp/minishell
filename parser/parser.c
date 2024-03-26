@@ -6,13 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 18:01:30 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:35:39 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/parser.h"
-#include "internals_parser.h"
-#include "../headers/lexer.h"
+#include "../headers/minishell.h"
 
 // merges concurrent literal nodes to one node
 static t_result	merge_literals_parser(t_parser *parser)

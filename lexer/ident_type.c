@@ -6,11 +6,10 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 15:28:24 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:34:59 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/lexer.h"
 #include "../headers/minishell.h"
 
 static char	*extract_str_data(t_lexer *lexer)

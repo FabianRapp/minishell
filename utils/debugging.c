@@ -6,12 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 07:01:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 16:36:22 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:37:29 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "../headers/lexer.h"
-// #include "../headers/parser.h"
+#include "../headers/minishell.h"
 
 // DEBUG: unallowed function for debugging and finding leaks (fcntl)
 // void	check_fds(void)

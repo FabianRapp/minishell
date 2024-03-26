@@ -6,11 +6,10 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 17:30:02 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:54:35 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/lexer.h"
 #include "../headers/minishell.h"
 
 static t_result	valid_first_char(t_lexer *lexer)
@@ -39,7 +38,8 @@ static t_result	handle_exception_char(t_lexer *lexer, t_token *token)
 	return (ident_wildcard_literals(lexer, token, true));
 }
 
-static t_token	*classify_sub_str(t_token *token, t_lexer *lexer, bool recursive_call)
+static t_token	*classify_sub_str(t_token *token, t_lexer *lexer,
+	bool recursive_call)
 {
 	if (handle_exception_char(lexer, token) == ERROR)
 		return (lexer_error(token), NULL);

@@ -1,18 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils1.c                                           :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:04:11 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 07:13:27 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 23:09:09 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/parser.h"
-#include "../internals_parser.h"
-#include "../../headers/lexer.h"
+#include "../../headers/minishell.h"
 
 void	jump_to_start(t_parser **parser)
 {

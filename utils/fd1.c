@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 07:42:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 16:36:56 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 21:26:22 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ t_result	redir_fds(void)
 // Resets fds to their original state after command execution.
 // Uses stored backup fds to restore the original file descriptor state.
 // Ensures the shell's fd environment is clean for subsequent commands.
-t_result	reset_fds(void)
+static t_result	reset_fds(void)
 {
 	t_fd_set	*fds;
 	int			i;

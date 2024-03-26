@@ -6,13 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 16:16:15 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/26 18:03:20 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:35:52 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/parser.h"
-#include "internals_parser.h"
-#include "../headers/lexer.h"
+#include "../headers/minishell.h"
 
 t_result	has_content(t_parser *parser)
 {

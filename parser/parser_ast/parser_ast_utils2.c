@@ -6,13 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 06:03:37 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 17:53:22 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:36:52 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/parser.h"
-#include "../internals_parser.h"
-#include "../../headers/lexer.h"
+#include "../../headers/minishell.h"
 
 // for append_arg()
 static t_arg	*get_cur_arg(t_arg *head_arg)

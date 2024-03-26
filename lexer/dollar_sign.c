@@ -6,11 +6,10 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 21:33:17 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 15:28:12 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:34:34 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/lexer.h"
 #include "../headers/minishell.h"
 
 static t_result	pid_req(t_lexer *lexer, t_token *token)

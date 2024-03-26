@@ -6,11 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 00:57:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 18:29:16 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:34:10 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "expansion.h"
+#include "../headers/minishell.h"
 
 // void	expandlist_convert_white_space(t_token *token)
 // {

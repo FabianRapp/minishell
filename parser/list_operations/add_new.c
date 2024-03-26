@@ -6,14 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:13:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 17:40:26 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:36:01 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
-#include "../../headers/parser.h"
-#include "../../headers/lexer.h"
-#include "../internals_parser.h"
 
 // t_result	insert_dummy_after(t_parser *parser)
 // {

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   repl_wildcards_utils1.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:51:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 05:59:28 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 22:33:36 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../expansion.h"
+#include "../../headers/minishell.h"
 
 char	*next_file_name(DIR *dir, bool hidden)
 {

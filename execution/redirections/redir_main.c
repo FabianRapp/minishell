@@ -6,11 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 04:20:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 18:51:38 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:27:00 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "redir_internals.h"
+#include "../../headers/minishell.h"
 
 static t_result	handle_redir_out(t_ast *ast, t_fd_set **fds, t_redir *redir,
 	bool append)

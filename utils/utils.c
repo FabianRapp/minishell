@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 05:25:33 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 22:31:34 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@ void	add_token_back_node(t_token_list **list, t_token_list *new_node)
 	return ;
 }
 
-void	add_token_node_front(t_token_list **head, t_token_list *new)
+void	add_token_node_front(t_token_list **head, t_token_list *new_list)
 {
 	t_token_list	*temp;
 
 	temp = *head;
-	*head = new;
-	new->next = temp;
+	*head = new_list;
+	new_list->next = temp;
 }
 
 char	*ft_read_line(char *header)

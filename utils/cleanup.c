@@ -6,12 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 06:07:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 16:35:54 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:37:10 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/parser.h"
-#include "../headers/lexer.h"
+#include "../headers/minishell.h"
 
 void	free_token_list(t_token_list *list)
 {
@@ -44,7 +43,7 @@ void	free_arg_list(t_arg *list)
 	If the here-doc/-str arg starts with "<<<<" that means
 	the following integer string corresponds to an open fd
 */
-void	free_redir(t_redir *redir)
+static void	free_redir(t_redir *redir)
 {
 	t_redir	*last;
 

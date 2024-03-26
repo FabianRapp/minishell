@@ -6,11 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:46:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 17:31:08 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:35:16 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/lexer.h"
+#include "../headers/minishell.h"
 
 // reads the next char into the lexer and updates indexes
 void	read_char(t_lexer *lexer)

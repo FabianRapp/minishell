@@ -6,12 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 06:04:52 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 18:49:13 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:32:41 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
-#include "../headers/parser.h"
 
 static void	update_underscre_var(t_ast *ast)
 {

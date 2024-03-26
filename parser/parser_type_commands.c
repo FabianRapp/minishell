@@ -6,13 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 19:47:45 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 18:01:48 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:35:44 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/parser.h"
-#include "internals_parser.h"
-#include "../headers/lexer.h"
+#include "../headers/minishell.h"
 
 static void	handle_operator_2ndscenario(t_parser *parser, bool *found_command)
 {

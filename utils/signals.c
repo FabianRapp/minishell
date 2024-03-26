@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 18:05:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 13:48:30 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 21:11:34 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ bool	redisplay_prompt(bool set_state, bool new_state)
 	return (redisplay_prompt_state);
 }
 
-t_result	set_ctrl_slash(void)
+static t_result	set_ctrl_slash(void)
 {
 	struct sigaction	sig;
 
@@ -38,7 +38,7 @@ t_result	set_ctrl_slash(void)
 	return (SUCCESS);
 }
 
-void	signal_handler_ctrl_c(int signal, siginfo_t *info, void *data)
+static void	signal_handler_ctrl_c(int signal, siginfo_t *info, void *data)
 {
 	(void)info;
 	(void)data;
@@ -51,7 +51,7 @@ void	signal_handler_ctrl_c(int signal, siginfo_t *info, void *data)
 		rl_redisplay();
 }
 
-t_result	set_ctrl_c(void)
+static t_result	set_ctrl_c(void)
 {
 	struct sigaction	sig;
 

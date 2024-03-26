@@ -6,11 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 13:01:55 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 23:00:07 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:34:07 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "expansion.h"
+#include "../headers/minishell.h"
 
 static char	*expand_dollar(char *dollar_str, int *index, char **return_str)
 {

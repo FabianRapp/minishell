@@ -6,11 +6,10 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 15:34:51 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/26 16:32:12 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:34:47 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/lexer.h"
 #include "../headers/minishell.h"
 
 char	*get_potential_fd(t_lexer *lexer)

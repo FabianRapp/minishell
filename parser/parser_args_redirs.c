@@ -6,13 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 05:08:38 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 18:02:32 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 22:35:49 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/parser.h"
-#include "internals_parser.h"
-#include "../headers/lexer.h"
+#include "../headers/minishell.h"
 
 // syntax check for parse_redir_paths()
 // if returns false execUtion of the current input ends
