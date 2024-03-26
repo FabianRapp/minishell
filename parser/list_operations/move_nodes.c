@@ -6,14 +6,14 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:38:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 22:36:09 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 23:48:53 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 
 void	move_to_arg(t_parser *parser, bool is_terminator(t_type),
-	t_type new_type, bool as_must_as_possible)
+	t_type new_type, bool as_much)
 {
 	t_parser	*command;
 	t_parser	**next_arg;
@@ -31,7 +31,7 @@ void	move_to_arg(t_parser *parser, bool is_terminator(t_type),
 		*next_arg = parser;
 		next_arg = &(parser->next);
 		parser = parser->next;
-		if (as_must_as_possible == false)
+		if (as_much == false)
 			break ;
 	}
 	command->next = parser;
