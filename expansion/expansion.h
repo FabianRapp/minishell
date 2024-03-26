@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:52 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 01:15:27 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/25 05:59:41 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ t_result		wildcards(t_token_list *name);
 // repl_wildcards_utils1.c
 char			*next_file_name(DIR *dir, bool hidden);
 void			clean_wildcard_data(t_wildcard_parameters *data);
+t_result		trim_identifiers(t_token_list *name, bool set_this_true);
 
 // repl_fill_wildcard_data.c
 t_result		fill_wildcard_data(char *wildcard_str,

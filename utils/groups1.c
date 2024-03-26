@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   groups1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:34:43 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 00:36:09 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 01:22:44 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ bool	command_terminator(t_type type)
 		|| type == WHITE_SPACE
 		|| type == T_EOF
 		|| type == SUBSHELL
-		| type == COMMAND
+		|| type == COMMAND
 		|| type == DUMMY_COMMAND
 		|| type == SEMICOL
 	)

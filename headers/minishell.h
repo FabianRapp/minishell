@@ -6,20 +6,25 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 00:12:32 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 07:58:26 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
-             TOTAL TEST COUNT: 994  TESTS PASSED: 974  LEAKING: 0 
-                     STD_OUT: 13  STD_ERR: 2  EXIT_CODE: 7  
+             TOTAL TEST COUNT: 994  TESTS PASSED: 978  LEAKING: 0
+                     STD_OUT: 10  STD_ERR: 1  EXIT_CODE: 6
                          TOTAL FAILED AND PASSED CASES:
-                                     ❌ 22   
-                                     ✅ 2960  
+                                     ❌ 17
+                                     ✅ 2965
 */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
+# ifdef __linux__
+#  include <sys/types.h>
+#  include <sys/wait.h>
+# endif
 
 // libs
 # include <sys/stat.h>
@@ -45,7 +50,7 @@
 # include "parser.h"
 
 # ifndef TESTER
-#  define TESTER 1
+#  define TESTER 0
 # endif
 
 # ifndef SHELL_NAME
@@ -174,6 +179,7 @@ typedef struct s_path
 	int		read_postion;
 	char	*command_name;
 	t_ast	*ast;
+	char	path_buffer[PATH_MAX + 1];
 }	t_path;
 
 typedef struct s_pipe_data
@@ -191,7 +197,10 @@ t_lexer		new_lexer(char *str);
 
 // main
 void		run_node(t_ast *ast);
-void		run_command_node(t_ast *ast);
+int			run_command_node(t_ast *ast);
+
+// execution/run_command.c
+int			run_command_node(t_ast *ast);
 
 bool		check_edgecases(t_ast *ast);
 void		add_global_data(t_ast *ast, t_shared_data *env);
@@ -208,6 +217,8 @@ t_result	expansion(t_ast *ast);
 char		*find_path(t_ast *ast, char *command_name, char *path_env);
 t_result	init_path_object(t_ast *ast, char *command_name,
 				t_path *path_ob, char *path_var);
+bool		file_in_pwd(char *file);
+
 char		*handle_shell_fn(char *name);
 char		*handle_absolute_path(char *path);
 bool		next_path(t_path *path_ob);
@@ -335,7 +346,7 @@ char		*init_ft_cd_step(t_ast *ast, char *step, int inde);
 char		**ft_initialize_env(char **base_env);
 char		*get_env_value(char **env, char *var_name,
 				char *buffer, int buf_size);
-char		**new_env_list_after_add(char *str_to_add, char **env);
+char		**new_env_list_after_add(char *str_to_add, char **env, bool plus);
 char		*get_env_var_name(char *line);
 char		**new_env_list_after_delete(char *var_to_rm, char **env_before);
 void		ft_update_env(char *var_name, char *new_value, char **env);
@@ -343,13 +354,22 @@ char		***get_env_list(char ***set_new_env);//added
 
 /* ---------------------------- SIGNALS ----------------------------------- */
 
-t_result	set_ctrl_c(struct sigaction *sig_set);
-t_result	set_ctrl_slash(struct sigaction *sig);
+t_result	set_ctrl_c(void);
+//t_result	set_ctrl_slash(void);
+t_result	child_heredoc_signal_init(void);
+void		init_terminal_settings(void);
+void		reset_terminal_settings(void);
+void		set_signals(void);
+void		reset_signals(void);
+bool		redisplay_prompt(bool set_state, bool new_state);
 
 // ----------- additional utils -----------------
 void		print_error_weird_quotes(bool shell_name, char *command_name,
 				char *arg, char *str);
 t_result	ft_cur_exit(t_ast *ast, int exit_value);
+
+// execution/utils/subshell_bracket_verification.c
+t_result	check_brackets(t_ast *ast, char *input);
 
 //FROM INTERNALS_H:
 t_result	dollar_lexing(t_lexer *lexer, t_token *token);
@@ -360,7 +380,7 @@ t_result	redir_type(t_lexer *lexer, t_token *token, bool recursive_call);
 bool		is_redir_terminator_char(char c);
 char		*get_potential_fd(t_lexer *lexer);
 void		skip_leading_void_whitespace(t_lexer *lexer);
-t_lexer		new_lexer(char *str);	
+t_lexer		new_lexer(char *str);
 t_result	subshell_type(t_lexer *lexer, t_token *token);
 t_result	ident_wildcard_literals(t_lexer *lexer,
 				t_token *token, bool skip_next_term);

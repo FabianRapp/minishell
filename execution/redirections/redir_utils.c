@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:37:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 21:43:20 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 02:34:18 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int	extend_fd_array(t_fd_set **fds)
 	}
 	new = ft_calloc(len + 2, sizeof(t_fd_set));
 	if (!new)
-		return (free(*fds), -1);
+		return (-1);
 	ft_memcpy(new, *fds, sizeof(t_fd_set) * len);
 	free(*fds);
 	*fds = new;

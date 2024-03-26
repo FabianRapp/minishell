@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:34:24 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/25 01:12:26 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 01:14:56 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,8 @@
 
 static bool	arg_is_valid_unset(char *arg, t_ast *ast, char *cmd_name)
 {
-	int		i;
 	char	*save;
 
-	i = 0;
 	save = arg;
 	if (!arg)
 		return (false);
@@ -41,9 +39,7 @@ void	ft_unset(t_ast *ast)
 {
 	t_arg	*cur_arg;
 	char	*str_value;
-	int		res;
 
-	res = 0;
 	cur_arg = ast->arg;
 	ft_cur_exit(ast, 0);
 	while (cur_arg && cur_arg->name->token->type != T_EOF)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir_main.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 04:20:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 02:28:03 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 03:18:43 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ t_result	repl_handle_here_doc(t_ast *ast, t_redir *redir, t_fd_set **fds)
 {
 	t_fd_set	new_fd_pair;
 
+	new_fd_pair.base_fd_backup = INIT_VAL;
 	new_fd_pair.base_fd = redir->left_redir_arg;
 	if (new_fd_pair.base_fd == INIT_VAL)
 		new_fd_pair.base_fd = 0;
@@ -123,7 +124,6 @@ static t_result	check_case(t_ast *ast, t_fd_set	**fds, t_redir *redir)
 t_result	resolve_redirs(t_ast *ast)
 {
 	t_redir		*redir;
-	int			base_fd;
 	t_fd_set	*fds;
 
 	redir = ast->redir;
@@ -132,7 +132,6 @@ t_result	resolve_redirs(t_ast *ast)
 	{
 		if (!check_valid_arg(ast, redir))
 			return (io_data(SET_NEW_FDS, NULL), ERROR);
-		base_fd = redir->left_redir_arg;
 		if (check_case(ast, &fds, redir) == ERROR)
 			return (ERROR);
 		redir = redir->next;

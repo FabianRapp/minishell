@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fd1.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 07:42:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 00:41:27 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 03:55:44 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_result	redir_fds(void)
 
 	fds = get_fds();
 	i = 0;
-	while (fds + i && !is_buffer_all_zeros(fds + i, sizeof(t_fd_set)))
+	while (fds && !is_buffer_all_zeros(fds + i, sizeof(t_fd_set)))
 	{
 		dup2(fds[i].overload_with_fd, fds[i].base_fd);
 		if (errno)
@@ -63,7 +63,7 @@ t_result	reset_fds(void)
 	fds = get_fds();
 	i = 0;
 	errno = 0;
-	while (fds + i && !is_buffer_all_zeros(fds + i, sizeof(t_fd_set)))
+	while (fds && !is_buffer_all_zeros(fds + i, sizeof(t_fd_set)))
 	{
 		dup2(fds[i].base_fd_backup, fds[i].base_fd);
 		i++;
@@ -89,7 +89,7 @@ t_result	cleanup_fds(void)
 	return_val = reset_fds();
 	fds = get_fds();
 	i = 0;
-	while (fds + i && !is_buffer_all_zeros(fds + i, sizeof(t_fd_set)))
+	while (fds && !is_buffer_all_zeros(fds + i, sizeof(t_fd_set)))
 	{
 		close(fds[i].base_fd_backup);
 		close(fds[i++].overload_with_fd);

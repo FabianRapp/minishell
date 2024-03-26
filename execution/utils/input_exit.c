@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_exit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 04:06:31 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 07:17:50 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,19 +51,17 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 			ft_fprintf(2, "exit\n");
 		main_exit(cleanup_data, true, true);
 	}
+	errno = 0;
 	if (!contains_non_white_spcace(input))
 		return (free(input), NULL);
 	add_history(input);
 	ast = parser(input);
-	if (ast)
-	{
-		cleanup_data->input = input;
-		cleanup_data->root = ast;
-		return (ast);
-	}
-	else
-		free(input);
-	return (NULL);
+	errno = 0;
+	if (!ast)
+		return (free(input), NULL);
+	cleanup_data->input = input;
+	cleanup_data->root = ast;
+	return (ast);
 }
 
 static void	free_and_exit(t_shared_data	*shared_data, bool full_exit)
@@ -76,6 +74,7 @@ static void	free_and_exit(t_shared_data	*shared_data, bool full_exit)
 			ft_free_2darr(*(shared_data->envs));
 		if (LEAK_CHECK)
 			system("leaks minishell");
+		rl_clear_history();
 		exit(get_last_exit());
 	}
 	if (LEAK_CHECK)

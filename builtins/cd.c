@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:26:07 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/23 06:59:46 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/25 11:00:26 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ static int	ft_cd_step(t_cd_step_data data)
 		return (free(tmp), 0);
 	ft_strlcpy(data.to_go, tmp, PATH_MAX);
 	free(tmp);
-	getcwd(data.before, PATH_MAX);
 	if (ft_strlen(data.to_go) == 0)
 		ft_strlcpy(data.to_go, "/", PATH_MAX);
 	get_env_value(NULL, "OLDPWD", data.old_pwd, PATH_MAX);
@@ -112,6 +111,7 @@ int	ft_cd(t_ast *ast)
 	t_cd_vars		vars;
 	t_cd_step_data	step_data;
 
+	getcwd(step_data.before, PATH_MAX);
 	step_data.ast = ast;
 	if (!cd_edge_cases(ast))
 		return (0);

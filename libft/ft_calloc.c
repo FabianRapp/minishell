@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 21:18:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/21 15:13:57 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/25 01:38:50 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,20 +29,23 @@ static void	print_error_calloc(bool shell_name, char *cmd, char *arg, char *str)
 
 void	*ft_calloc(size_t count, size_t size)
 {
-	char	*arr;
+	char	*buffer;
 	int		i;
 	int		bytes;
 
 	bytes = count * size;
-	arr = (char *)malloc(bytes);
-	if (!arr)
+	if (!bytes)
+		return (NULL);
+	buffer = (char *)malloc(bytes);
+	if (!buffer)
 	{
+		full_exit_status(true);
 		print_error_calloc(true, NULL, "Error", "Memory allocation failed");
 		set_last_exit(errno);
 		return (NULL);
 	}
 	i = 0;
 	while (i < bytes)
-		arr[i++] = 0;
-	return ((void *)arr);
+		buffer[i++] = 0;
+	return ((void *)buffer);
 }

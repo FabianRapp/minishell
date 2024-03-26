@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fd_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 15:34:51 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/23 15:35:21 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 07:22:54 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,7 @@
 char	*get_potential_fd(t_lexer *lexer)
 {
 	char	*left_redir_arg;
-	t_lexer	lexer_backup;
 
-	lexer_backup = *lexer;
 	left_redir_arg = NULL;
 	while (ft_isdigit(lexer->cur_char))
 	{
@@ -44,4 +42,10 @@ char	*check_limis_potential_fd(char *left_redir_arg,
 	if (!left_redir_arg)
 		*lexer = lexer_backup;
 	return (left_redir_arg);
+}
+
+void	print_error_redir_arg(t_lexer *lexer)
+{
+	print_error(true, NULL, "unexpected input", lexer->str + lexer->position);
+	set_last_exit(2);
 }

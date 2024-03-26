@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_pid.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 08:53:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 02:36:01 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/25 10:24:43 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,9 @@ int	ft_pid(int set)
 // the parent sends the new main processes pid via a pipe to it
 int	get_pid(void)
 {
-	pid_t	pid;
-	int		fd[2];
+	pid_t				pid;
+	int					fd[2];
+	struct sigaction	sig;
 
 	if (pipe(fd) == -1)
 		return (print_error(true, false, false, "Error creating pipe\n"), 0);
@@ -78,6 +79,13 @@ int	get_pid(void)
 	errno = 0;
 	if (pid > 0)
 	{
+		sigemptyset(&(sig.sa_mask));
+		sig.sa_flags = 0;
+		sig.sa_handler = SIG_IGN;
+		if (sigaction(SIGQUIT, &sig, NULL) == -1
+			|| sigaction(SIGINT, &sig, NULL) == -1)
+			return (print_error(true, NULL, NULL, strerror(errno)),
+				wait_all_children(NULL), exit(1), -1);
 		send_pid(fd, pid);
 	}
 	return (catch_pid(fd));

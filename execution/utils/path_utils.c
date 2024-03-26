@@ -3,14 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   path_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 03:31:52 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/24 03:35:45 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 07:02:18 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
+
+bool	file_in_pwd(char *file)
+{
+	DIR				*pwd;
+	struct dirent	*read_val;
+
+	if (!file)
+		return (false);
+	pwd = opendir(".");
+	read_val = readdir(pwd);
+	while (read_val)
+	{
+		if (!ft_strncmp(file, read_val->d_name, ft_strlen(read_val->d_name) + 1))
+			return (closedir(pwd), true);
+		read_val = readdir(pwd);
+	}
+	closedir(pwd);
+	return (false);
+}
 
 char	*handle_absolute_path(char *path)
 {
@@ -20,6 +39,8 @@ char	*handle_absolute_path(char *path)
 	}
 	ft_fprintf(2, "%s: %s\n", SHELL_NAME, strerror(errno));
 	set_last_exit(127);
+	if (errno == 20 || errno == 13)
+		set_last_exit(126);
 	errno = 0;
 	return (NULL);
 }

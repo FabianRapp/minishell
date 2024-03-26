@@ -10,6 +10,7 @@ repl/tempCodeRunnerFile.c
 */*.o
 */*/*.o
 */*/*/*.o
+parser/parser_ast/here_doc_child.c
 
 *.a
 

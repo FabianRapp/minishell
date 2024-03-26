@@ -6,57 +6,70 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 18:05:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 01:32:54 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 13:48:30 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
+bool	redisplay_prompt(bool set_state, bool new_state)
+{
+	static bool		redisplay_prompt_state = false;
+
+	if (set_state)
+		redisplay_prompt_state = new_state;
+	return (redisplay_prompt_state);
+}
+
+t_result	set_ctrl_slash(void)
+{
+	struct sigaction	sig;
+
+	sigemptyset(&(sig.sa_mask));
+	sig.sa_flags = 0;
+	sig.sa_handler = SIG_IGN;
+	if (sigaction(SIGQUIT, &sig, NULL) == -1)
+	{
+		print_error(true, NULL, NULL, strerror(errno));
+		set_last_exit(errno);
+		full_exit_status(true);
+		return (ERROR);
+	}
+	return (SUCCESS);
+}
 
 void	signal_handler_ctrl_c(int signal, siginfo_t *info, void *data)
 {
 	(void)info;
 	(void)data;
 	(void)signal;
+	set_last_exit(130);
 	rl_replace_line("", 0);
-	rl_redisplay();
 	rl_on_new_line();
 	printf("\n");
+	if (redisplay_prompt(false, false))
+		rl_redisplay();
 }
 
-void	signal_handler_ctrl_slash(int signal, siginfo_t *info, void *data)
+t_result	set_ctrl_c(void)
 {
-	printf("%d\n", signal);
-	(void)info;
-	(void)data;
-	(void)signal;
-}
+	struct sigaction	sig;
 
-t_result	set_ctrl_slash(struct sigaction *sig)
-{
-	sigemptyset(&(sig->sa_mask));
-	sig->sa_flags = SA_SIGINFO;
-	sig->sa_sigaction = signal_handler_ctrl_slash;
-	if (sigaction(3, sig, NULL) == -1)
+	sigemptyset(&(sig.sa_mask));
+	sig.sa_flags = SA_SIGINFO;
+	sig.sa_sigaction = signal_handler_ctrl_c;
+	if (sigaction(SIGINT, &sig, NULL) == -1)
 	{
-		printf("%s\n", strerror(errno));
-		//! need to add the cleanup
-		exit(errno);
+		print_error(true, NULL, NULL, strerror(errno));
+		set_last_exit(errno);
+		full_exit_status(true);
 		return (ERROR);
 	}
 	return (SUCCESS);
 }
 
-t_result	set_ctrl_c(struct sigaction *sig)
+void	set_signals(void)
 {
-	sigemptyset(&(sig->sa_mask));
-	sig->sa_flags = SA_SIGINFO;
-	sig->sa_sigaction = signal_handler_ctrl_c;
-	if (sigaction(SIGINT, sig, NULL) == -1)
-	{
-		printf("%s\n", strerror(errno));
-		//! need to add the cleanup
-		exit(errno);
-		return (ERROR);
-	}
-	return (SUCCESS);
+	set_ctrl_slash();
+	set_ctrl_c();
 }

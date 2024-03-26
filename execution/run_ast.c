@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_ast.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 02:15:02 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 02:37:08 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,13 @@ void	init_command(t_ast *ast)
 void	ft_semicol(t_ast *ast)
 {
 	if (ast->left)
+	{
 		run_node(ast->left);
+		if (ast->left->exit_status != DEFAULT_EXIT_STATUS)
+			ast->exit_status = ast->left->exit_status;
+		else
+			ast->pid = ast->left->pid;
+	}
 	if (ast->right)
 	{
 		run_node(ast->right);
@@ -106,13 +112,6 @@ void	ft_semicol(t_ast *ast)
 			ast->exit_status = ast->right->exit_status;
 		else
 			ast->pid = ast->right->pid;
-	}
-	else
-	{
-		if (ast->left->exit_status != DEFAULT_EXIT_STATUS)
-			ast->exit_status = ast->left->exit_status;
-		else
-			ast->pid = ast->left->pid;
 	}
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 06:07:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 00:43:59 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 04:28:12 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ void	free_arg_list(t_arg *list)
 }
 
 /*
-	Iterates through and frees all associated redirection and argument structures.
-	If the here-doc arg starts with "<<<<" that means the following integer string
-	corresponds to an open fd
+	Iterates through and frees all associated redirs and argument structures.
+	If the here-doc/-str arg starts with "<<<<" that means
+	the following integer string corresponds to an open fd
 */
 void	free_redir(t_redir *redir)
 {
@@ -50,7 +50,7 @@ void	free_redir(t_redir *redir)
 
 	while (redir)
 	{
-		if (redir->type == HERE_DOC)
+		if (redir->type == HERE_DOC || redir->type == HERE_STR)
 		{
 			if (redir->token_str_data
 				&& !ft_strncmp(redir->token_str_data,
