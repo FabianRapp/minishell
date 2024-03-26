@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_ast_utils1.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 05:44:50 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 02:38:35 by codespace        ###   ########.fr       */
+/*   Updated: 2024/03/26 16:35:27 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,15 +123,6 @@ t_left_right_parsers	split_parser(t_parser *split_location)
 	return (new_parsers);
 }
 
-// does not clean up the parser
-// uses tokens of parser -->> dont free tokens when freeing parser
-/*
-old:
-	if (!parser || parser->p_type == T_EOF || !parser->token
-		|| parser->token->type == T_EOF)
-		return (NULL);
-	changed for norm
-*/
 t_token_list	*extract_token_list(t_parser *parser, char name_or_arg)
 {
 	t_token_list	*new_list;

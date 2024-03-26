@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_args_redirs.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 05:08:38 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 01:18:08 by codespace        ###   ########.fr       */
+/*   Updated: 2024/03/26 16:34:03 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "../headers/lexer.h"
 
 // syntax check for parse_redir_paths()
-// if returns false exection of the current input ends
+// if returns false execUtion of the current input ends
 t_result	redirs_have_arg(t_parser *parser)
 {
 	while (parser->p_type != T_EOF)

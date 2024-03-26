@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   initialize_env.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/26 04:14:16 by codespace        ###   ########.fr       */
+/*   Updated: 2024/03/26 16:29:47 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
 /*
-if shlvl is unset or non-numeric -> new subterminal has SHLVL=1.
-if shlvl is negative -> new subshell has SHLVL=0.
+*	if shlvl is unset or non-numeric -> new subterminal has SHLVL=1.
+*	if shlvl is negative -> new subshell has SHLVL=0.
 */
 static bool	is_not_numeric(char *str)
 {
@@ -78,38 +78,3 @@ char	**ft_initialize_env(char **base_env)
 	ret = new_env_list_after_add(tmp, ret, false);
 	return (free(tmp), ret);
 }
-
-// // THE PREVIOUS VERSION THAT I DELETE THE OLDPWD IN ENV LIST LIKE BASH
-
-// static void	ft_clear_oldpwd(char ***env, bool keep)
-// {
-// 	*env = new_env_list_after_delete("OLDPWD", *env);
-// 	if (keep == true)
-// 		*env = new_env_list_after_add("OLDPWD", *env);
-// }
-
-// char	**ft_initialize_env(char **base_env, bool keep_oldpwd)
-// {
-// 	int		i;
-// 	char	**ret;
-// 	int		shlvl_index;
-
-// 	i = 0;
-// 	shlvl_index = 0;
-// 	while (base_env[i])
-// 		i++;
-// 	ret = ft_calloc((i + 1), sizeof(char *));
-// 	if (ret == NULL)
-// 		return (NULL);
-// 	ret[i] = NULL;
-// 	i = -1;
-// 	while (base_env[++i])
-// 	{
-// 		ret[i] = ft_strdup(base_env[i]);
-// 		if (ft_strncmp(ret[i], "SHLVL=", 6) == 0)
-// 			shlvl_index = i;
-// 	}
-// 	ft_update_shlvl(shlvl_index, &ret);
-// 	ft_clear_oldpwd(&ret, keep_oldpwd);
-// 	return (ret);
-// }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   subshell_bracket_verification.c                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/26 05:13:18 by codespace         #+#    #+#             */
-/*   Updated: 2024/03/26 05:14:14 by codespace        ###   ########.fr       */
+/*   Created: 2024/03/26 16:38:49 by mevangel          #+#    #+#             */
+/*   Updated: 2024/03/26 16:39:00 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

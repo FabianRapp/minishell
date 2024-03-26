@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 04:29:20 by codespace        ###   ########.fr       */
+/*   Updated: 2024/03/26 16:34:38 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ t_result	merge_literals_parser(t_parser *parser)
 	return (SUCCESS);
 }
 
-// merges nodes that are next to each other without sepertator to one node
+// merges nodes that are next to each other without separator to one node
 // these nodes will later be the strings that are the commands and arguments
 void	merge_names(t_parser *parser)
 {

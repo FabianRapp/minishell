@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   redir_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 03:37:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 02:34:18 by codespace        ###   ########.fr       */
+/*   Updated: 2024/03/26 16:31:05 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "redir_internals.h"
 
-// caller needs to handle open error
 t_fd_set	redir_fd_write(char *file, bool append, int base_fd)
 {
 	int			flag;
@@ -32,7 +31,6 @@ t_fd_set	redir_fd_write(char *file, bool append, int base_fd)
 	return (fd_pair);
 }
 
-// caller needs to handle open error
 t_fd_set	redir_read(char *file, int base_fd, bool in_out)
 {
 	int			flag;

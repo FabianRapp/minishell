@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fd1.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/14 07:42:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 03:55:44 by codespace        ###   ########.fr       */
+/*   Updated: 2024/03/26 16:36:56 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ t_fd_set	*io_data(int flag, void *data)
 }
 
 // Redirects fds based on the prepared fd sets before command execution.
-// uses dup2 to apply redirections for command input/output
-// on each fd set.
+// uses dup2 to apply redirections for command input/output on each fd set.
 // Ensures commands use the correct inputs and outputs,
 // including here-doc and here-str content.
 t_result	redir_fds(void)

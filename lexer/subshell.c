@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   subshell.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 21:34:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 04:20:51 by codespace        ###   ########.fr       */
+/*   Updated: 2024/03/26 16:32:51 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,7 @@ static t_result	verify_subshell_chars(t_lexer *lexer)
 		full_exit_status(true);
 	if (count_open)
 		return (print_error(true, NULL, "syntax error",
-				" unexpected end of file\nexit\n"), set_last_exit(2),
-			ERROR);
+				" unexpected end of file\nexit\n"), set_last_exit(2), ERROR);
 	return (SUCCESS);
 }
 

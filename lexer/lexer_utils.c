@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:46:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 02:46:17 by codespace        ###   ########.fr       */
+/*   Updated: 2024/03/26 16:32:38 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	skip_leading_void_whitespace(t_lexer *lexer)
 }
 
 // inits a lexer object, returns the object
-// NOT a pointer to a dynamic memory location!!
+// NOT a pointer to a dynamic memory location!
 t_lexer	new_lexer(char *str)
 {
 	t_lexer		lexer;
