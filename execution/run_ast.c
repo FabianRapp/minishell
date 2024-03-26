@@ -6,13 +6,13 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 16:30:39 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 18:47:33 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-void	ft_or(t_ast *ast)
+static void	ft_or(t_ast *ast)
 {
 	bool	success_left;
 
@@ -41,7 +41,7 @@ void	ft_or(t_ast *ast)
 	ast->exit_status = ast->right->exit_status;
 }
 
-void	ft_and(t_ast *ast)
+static void	ft_and(t_ast *ast)
 {
 	bool	success_left;
 
@@ -70,7 +70,7 @@ void	ft_and(t_ast *ast)
 	ast->exit_status = ast->right->exit_status;
 }
 
-void	init_command(t_ast *ast)
+static void	init_command(t_ast *ast)
 {
 	if (ast->shared_data->stop_execution)
 	{
@@ -95,7 +95,7 @@ void	init_command(t_ast *ast)
 	set_last_exit(ast->exit_status);
 }
 
-void	ft_semicol(t_ast *ast)
+static void	ft_semicol(t_ast *ast)
 {
 	if (ast->left)
 	{

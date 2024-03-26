@@ -12,7 +12,7 @@
 
 #include "expansion.h"
 
-t_token_list	*expand_list(t_shared_data *env, t_token_list *list)
+static t_token_list	*expand_list(t_shared_data *env, t_token_list *list)
 {
 	if (!list)
 		return (NULL);
@@ -37,7 +37,7 @@ t_token_list	*expand_list(t_shared_data *env, t_token_list *list)
 	return (list);
 }
 
-t_result	expand_name(t_ast *ast)
+static t_result	expand_name(t_ast *ast)
 {
 	if (!ast->name)
 		return (SUCCESS);
@@ -95,7 +95,7 @@ t_result	expand_args(t_ast *ast, t_arg **base_arg, bool here_doc)
 	return (SUCCESS);
 }
 
-t_result	expand_redirs(t_ast *ast)
+static t_result	expand_redirs(t_ast *ast)
 {
 	t_redir	*cur;
 

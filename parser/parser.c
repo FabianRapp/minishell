@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 16:34:38 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 18:01:30 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "../headers/lexer.h"
 
 // merges concurrent literal nodes to one node
-t_result	merge_literals_parser(t_parser *parser)
+static t_result	merge_literals_parser(t_parser *parser)
 {
 	while (parser && parser->token->type != T_EOF)
 	{
@@ -37,7 +37,7 @@ t_result	merge_literals_parser(t_parser *parser)
 
 // merges nodes that are next to each other without separator to one node
 // these nodes will later be the strings that are the commands and arguments
-void	merge_names(t_parser *parser)
+static void	merge_names(t_parser *parser)
 {
 	t_parser	*rest_name_end;
 
@@ -59,7 +59,7 @@ void	merge_names(t_parser *parser)
 	}
 }
 
-t_result	check_error_valid_order(t_parser *parser, bool in_command_block)
+static t_result	check_error_valid_order(t_parser *parser, bool in_command_block)
 {
 	char	*temp;
 

@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 06:15:18 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 15:59:24 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 17:54:52 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "../internals_parser.h"
 #include "../../headers/lexer.h"
 
-t_ast	*append_redirs_args(t_parser *args, t_ast *ast_node, t_parser *parser)
+static t_ast	*append_redirs_args(t_parser *args, t_ast *ast_node, t_parser *parser)
 {
 	t_redir		*cur_redir;
 
@@ -42,7 +42,7 @@ t_ast	*append_redirs_args(t_parser *args, t_ast *ast_node, t_parser *parser)
 	return (free_parser_main(parser, false), ast_node);
 }
 
-t_ast	*build_leaf_node(t_ast *ast_node, t_parser *parser)
+static t_ast	*build_leaf_node(t_ast *ast_node, t_parser *parser)
 {
 	ast_node->type = parser->p_type;
 	ast_node->name = extract_token_list(parser, NAME);
@@ -51,7 +51,7 @@ t_ast	*build_leaf_node(t_ast *ast_node, t_parser *parser)
 	return (append_redirs_args(parser->arg, ast_node, parser));
 }
 
-t_result	build_operator_node(t_ast *ast_node, t_parser *highest_operator)
+static t_result	build_operator_node(t_ast *ast_node, t_parser *highest_operator)
 {
 	t_left_right_parsers	child_parsers;
 

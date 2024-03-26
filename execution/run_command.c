@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   run_command.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 06:04:52 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 10:31:07 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 18:49:13 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 #include "../headers/parser.h"
 
-void	update_underscre_var(t_ast *ast)
+static void	update_underscre_var(t_ast *ast)
 {
 	char	*update_val;
 	t_arg	*cur_arg;
@@ -32,7 +32,7 @@ void	update_underscre_var(t_ast *ast)
 		ft_update_env("_", update_val, *(ast->shared_data->envs));
 }
 
-bool	check_edgecases(t_ast *ast)
+static bool	check_edgecases(t_ast *ast)
 {
 	if (!ast->name || ast->name->token->type == DUMMY_COMMAND)
 	{
@@ -48,7 +48,7 @@ bool	check_edgecases(t_ast *ast)
 	return (false);
 }
 
-void	init_child_data(t_child_data *data, t_ast *ast)
+static void	init_child_data(t_child_data *data, t_ast *ast)
 {
 	data->argv = NULL;
 	data->path = NULL;
@@ -77,7 +77,7 @@ void	init_child_data(t_child_data *data, t_ast *ast)
 		fill_args(ast, data->argv + 1, ARGS);
 }
 
-void	free_child_data(t_child_data *data)
+static void	free_child_data(t_child_data *data)
 {
 	ft_free((void **)&(data->argv[0]));
 	free(data->command_name);

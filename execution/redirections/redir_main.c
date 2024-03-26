@@ -6,13 +6,13 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 04:20:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 16:30:45 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 18:51:38 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "redir_internals.h"
 
-t_result	handle_redir_out(t_ast *ast, t_fd_set **fds, t_redir *redir,
+static t_result	handle_redir_out(t_ast *ast, t_fd_set **fds, t_redir *redir,
 	bool append)
 {
 	t_fd_set	new_fd_pair;
@@ -42,7 +42,7 @@ t_result	handle_redir_out(t_ast *ast, t_fd_set **fds, t_redir *redir,
 	return (SUCCESS);
 }
 
-t_result	handle_redir_in(t_ast *ast, t_fd_set **fds, t_redir *redir,
+static t_result	handle_redir_in(t_ast *ast, t_fd_set **fds, t_redir *redir,
 	bool in_out)
 {
 	t_fd_set	new_fd_pair;
@@ -75,7 +75,7 @@ t_result	handle_redir_in(t_ast *ast, t_fd_set **fds, t_redir *redir,
 // Handles the redirection for here documents during command execution.
 // Creates a new fd pair for the base and the here-doc's pipe read end.
 // Adds the file descriptor pair to the array of fds for redirection management.
-t_result	repl_handle_here_doc(t_ast *ast, t_redir *redir, t_fd_set **fds)
+static t_result	repl_handle_here_doc(t_ast *ast, t_redir *redir, t_fd_set **fds)
 {
 	t_fd_set	new_fd_pair;
 

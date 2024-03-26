@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   move_nodes.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:38:06 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/07 08:53:06 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 17:41:52 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	move_to_arg(t_parser *parser, bool is_terminator(t_type),
 	*next_arg = NULL;
 }
 
-void	swap_parser_with_next(t_parser *parser)
+static void	swap_parser_with_next(t_parser *parser)
 {
 	t_parser	temp;
 	t_parser	*next_next;
@@ -59,7 +59,7 @@ void	swap_parser_with_next(t_parser *parser)
 // moves the command of one command block to the head of the block
 // assumes exactly one commmand per block (including dummy commands)
 // returns the parser node after the command block
-t_parser	*fix_command_block(t_parser *parser)
+static t_parser	*fix_command_block(t_parser *parser)
 {
 	t_parser	*head;
 
@@ -92,7 +92,6 @@ void	move_commands_infront(t_parser *parser)
 	}
 }
 
-// util for merge_names
 void	move_next_to_restname(t_parser *parser, t_parser **rest_name)
 {
 	if (!*rest_name)

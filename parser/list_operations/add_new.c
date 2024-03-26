@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:13:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 15:44:17 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 17:40:26 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,22 @@
 #include "../../headers/lexer.h"
 #include "../internals_parser.h"
 
-t_result	insert_dummy_after(t_parser *parser)
-{
-	t_parser	*dummy;
+// t_result	insert_dummy_after(t_parser *parser)
+// {
+// 	t_parser	*dummy;
 
-	dummy = ft_calloc(1, sizeof(t_parser));
-	if (!dummy)
-		return (ERROR);
-	dummy->next = parser->next;
-	dummy->p_type = COMMAND;
-	dummy->token = new_dummy_token();
-	if (!dummy->token)
-		return (free(dummy), ERROR);
-	dummy->token->type = DUMMY_COMMAND;
-	parser->next = dummy;
-	return (SUCCESS);
-}
+// 	dummy = ft_calloc(1, sizeof(t_parser));
+// 	if (!dummy)
+// 		return (ERROR);
+// 	dummy->next = parser->next;
+// 	dummy->p_type = COMMAND;
+// 	dummy->token = new_dummy_token();
+// 	if (!dummy->token)
+// 		return (free(dummy), ERROR);
+// 	dummy->token->type = DUMMY_COMMAND;
+// 	parser->next = dummy;
+// 	return (SUCCESS);
+// }
 
 t_result	insert_dummy_here(t_parser *parser)
 {

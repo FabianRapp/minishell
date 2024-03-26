@@ -6,14 +6,14 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 01:13:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 15:28:30 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 17:29:20 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/lexer.h"
 #include "../headers/minishell.h"
 
-bool	contains_more_wildcards(char *str)
+static bool	contains_more_wildcards(char *str)
 {
 	bool	except;
 
@@ -30,7 +30,7 @@ bool	contains_more_wildcards(char *str)
 	return (false);
 }
 
-bool	contained_a_wildcard(t_lexer lexer)
+static bool	contained_a_wildcard(t_lexer lexer)
 {
 	lexer.position -= 1;
 	while (lexer.position >= 0
@@ -46,7 +46,7 @@ bool	contained_a_wildcard(t_lexer lexer)
 	return (false);
 }
 
-t_result	handle_wildcard(t_lexer *lexer, bool is_start, t_token *token)
+static t_result	handle_wildcard(t_lexer *lexer, bool is_start, t_token *token)
 {
 	char	*tmp;
 

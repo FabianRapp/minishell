@@ -6,19 +6,19 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 12:00:00 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 23:01:11 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 18:36:04 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expansion.h"
 
-void	add_arg_front(t_arg **head, t_arg *new)
+void	add_arg_front(t_arg **head, t_arg *new_arg)
 {
 	t_arg	*temp;
 
 	temp = *head;
-	*head = new;
-	new->next = temp;
+	*head = new_arg;
+	new_arg->next = temp;
 }
 
 t_result	env_to_word_token(t_token *token)

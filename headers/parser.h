@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:52:07 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 04:11:14 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 18:05:00 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,46 +15,46 @@
 
 # include "minishell.h"
 
-#define NAME 'n'
-#define RECURSIVE_CALL 'r'
+// #define NAME 'n'
+// #define RECURSIVE_CALL 'r'
 
-typedef struct s_parser	t_parser;
+// typedef struct s_parser	t_parser;
 typedef struct s_cleanup_data	t_cleanup_data;
 
-typedef struct s_parser
-{
-	t_token		*token;
-	t_type		p_type;
-	t_parser	*next;
-	t_parser	*arg;
-	t_parser	*rest_name;
-}	t_parser;
+// typedef struct s_parser
+// {
+// 	t_token		*token;
+// 	t_type		p_type;
+// 	t_parser	*next;
+// 	t_parser	*arg;
+// 	t_parser	*rest_name;
+// }	t_parser;
 
 // simplified node of t_parser list
-typedef	struct s_token_list	t_token_list;
-typedef	struct s_token_list
-{
-	int				arr[1000]; // why is this neded?? (abort is some test without this)
-	t_token_list	*next;
-	t_token			*token;
-}	t_token_list;
-//int				arr[1000];
+// typedef	struct s_token_list	t_token_list;
+// typedef	struct s_token_list
+// {
+// 	int				arr[1000]; // why is this neded?? (abort is some test without this)
+// 	t_token_list	*next;
+// 	t_token			*token;
+// }	t_token_list;
+// //int				arr[1000];
 
-typedef struct s_ast	t_ast;
-typedef struct s_left_right_parsers
-{
-	t_parser	*left;
-	t_parser	*right;
-}	t_left_right_parsers;
+// typedef struct s_ast	t_ast;
+// typedef struct s_left_right_parsers
+// {
+// 	t_parser	*left;
+// 	t_parser	*right;
+// }	t_left_right_parsers;
 
-t_ast	*parser(char *str);
+// t_ast	*parser(char *str);
 
 // AST
 
-t_parser				*find_highest_operator(t_parser *parser);
-t_parser				*remove_back(t_parser *cut_location); //!something is red for me here!
-t_left_right_parsers	split_parser(t_parser *split_location);
-t_ast 					*build_ast(t_parser *parser);
-void					free_ast(t_ast *ast);
+// t_parser				*find_highest_operator(t_parser *parser);
+// t_parser				*remove_back(t_parser *cut_location); //!something is red for me here!
+// t_left_right_parsers	split_parser(t_parser *split_location);
+// t_ast 					*build_ast(t_parser *parser);
+// void					free_ast(t_ast *ast);
 
 #endif

@@ -6,13 +6,13 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:49:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 13:47:17 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 18:34:02 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../expansion.h"
 
-t_token_list	*next_wildcard_token(DIR *cur_dir,
+static t_token_list	*next_wildcard_token(DIR *cur_dir,
 	t_wildcard_parameters *w_para)
 {
 	t_token			*new_token;
@@ -41,7 +41,7 @@ t_token_list	*next_wildcard_token(DIR *cur_dir,
 	return (new_node);
 }
 
-void	expand_wildcard_node_exit(t_wildcard_node_expasion data,
+static void	expand_wildcard_node_exit(t_wildcard_node_expasion data,
 	t_token_list *node)
 {
 	if (node)
@@ -62,7 +62,7 @@ void	expand_wildcard_node_exit(t_wildcard_node_expasion data,
 		data.cur->next = data.base_next;
 }
 
-t_result	expand_wildcard_node(t_token_list *node)
+static t_result	expand_wildcard_node(t_token_list *node)
 {
 	t_wildcard_node_expasion		data;
 	static t_wildcard_node_expasion	init_data = {NULL, NULL,

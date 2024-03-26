@@ -6,36 +6,36 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 16:31:12 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 18:54:00 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 
-t_ast	*handle_manunal_input(char **av, t_cleanup_data *cleanup_data)
-{
-	char	*input;
-	t_ast	*ast;
+// t_ast	*handle_manunal_input(char **av, t_cleanup_data *cleanup_data)
+// {
+// 	char	*input;
+// 	t_ast	*ast;
 
-	cleanup_data->root = NULL;
-	cleanup_data->input = NULL;
-	input = ft_strdup(av[1]);
-	if (!input)
-		return (NULL);
-	if (!contains_non_white_spcace(input))
-	{
-		return (free(input), NULL);
-	}
-	add_history(input);
-	ast = parser(input);
-	if (ast)
-	{
-		cleanup_data->input = input;
-		cleanup_data->root = ast;
-		return (ast);
-	}
-	return (NULL);
-}
+// 	cleanup_data->root = NULL;
+// 	cleanup_data->input = NULL;
+// 	input = ft_strdup(av[1]);
+// 	if (!input)
+// 		return (NULL);
+// 	if (!contains_non_white_spcace(input))
+// 	{
+// 		return (free(input), NULL);
+// 	}
+// 	add_history(input);
+// 	ast = parser(input);
+// 	if (ast)
+// 	{
+// 		cleanup_data->input = input;
+// 		cleanup_data->root = ast;
+// 		return (ast);
+// 	}
+// 	return (NULL);
+// }
 
 t_ast	*get_input(t_cleanup_data *cleanup_data)
 {

@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:46:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 16:32:38 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 17:31:08 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	lexer_error(t_token *token)
 }
 
 // util for new_lexer
-void	skip_leading_void_whitespace(t_lexer *lexer)
+static void	skip_leading_void_whitespace(t_lexer *lexer)
 {
 	t_lexer	last;
 	t_token	*token;

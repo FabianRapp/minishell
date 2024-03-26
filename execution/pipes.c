@@ -6,13 +6,13 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 03:48:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 16:30:28 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 18:46:22 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-t_result	pipe_init_left(t_pipe_data *vars)
+static t_result	pipe_init_left(t_pipe_data *vars)
 {
 	vars->base_write = dup(WRITE);
 	if (vars->base_write == -1)
@@ -34,7 +34,7 @@ t_result	pipe_init_left(t_pipe_data *vars)
 	return (SUCCESS);
 }
 
-t_result	pipe_init_right(t_pipe_data *vars)
+static t_result	pipe_init_right(t_pipe_data *vars)
 {
 	if (dup2(vars->base_write, WRITE) == -1
 		|| ft_close(&(vars->base_write)) == -1)

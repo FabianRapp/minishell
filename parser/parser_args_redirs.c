@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 05:08:38 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 16:34:03 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 18:02:32 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 // syntax check for parse_redir_paths()
 // if returns false execUtion of the current input ends
-t_result	redirs_have_arg(t_parser *parser)
+static t_result	redirs_have_arg(t_parser *parser)
 {
 	while (parser->p_type != T_EOF)
 	{

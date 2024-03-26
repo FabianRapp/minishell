@@ -6,29 +6,29 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 19:22:05 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 16:32:07 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 18:32:13 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../expansion.h"
 
-void	print_wildcard_data(t_wildcard_parameters *data)
-{
-	int	i;
+// void	print_wildcard_data(t_wildcard_parameters *data)
+// {
+// 	int	i;
 
-	i = 0;
-	printf("pre: %s\n", data->prefix);
-	printf("mid: ");
-	if (!data->sub_str || !data->sub_str[i])
-		printf("%s\n", (char *) NULL);
-	else
-		printf("\n");
-	while (data->sub_str && data->sub_str[i])
-		printf("%s\n", data->sub_str[i++]);
-	printf("su: %s\n", data->suffix);
-}
+// 	i = 0;
+// 	printf("pre: %s\n", data->prefix);
+// 	printf("mid: ");
+// 	if (!data->sub_str || !data->sub_str[i])
+// 		printf("%s\n", (char *) NULL);
+// 	else
+// 		printf("\n");
+// 	while (data->sub_str && data->sub_str[i])
+// 		printf("%s\n", data->sub_str[i++]);
+// 	printf("su: %s\n", data->suffix);
+// }
 
-t_result	fill_prefix(char **str, t_wildcard_parameters *w_para)
+static t_result	fill_prefix(char **str, t_wildcard_parameters *w_para)
 {
 	if (!ft_strnstr(*str, "1}{*", ft_strlen(*str)))
 	{

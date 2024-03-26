@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_type_commands.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 19:47:45 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 03:37:21 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 18:01:48 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static t_parser	*handle_operator(t_parser *parser,
 }
 
 // for type_commands()
-t_result	parser_handle_end(t_parser *parser, bool found_command,
+static t_result	parser_handle_end(t_parser *parser, bool found_command,
 	bool found_redir)
 {
 	if (!found_redir && !found_command)

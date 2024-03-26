@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 13:49:40 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 18:15:58 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,175 +21,176 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# ifdef __linux__
-#  include <sys/types.h>
-#  include <sys/wait.h>
-# endif
+// # ifdef __linux__
+// #  include <sys/types.h>
+// #  include <sys/wait.h>
+// # endif
 
-// libs
-# include <sys/stat.h>
-# include <stdbool.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <limits.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <errno.h>
-# include <dirent.h>
-# include <fcntl.h>
-# include <termios.h>
-# include <signal.h>
+// // libs
+// # include <sys/stat.h>
+// # include <stdbool.h>
+// # include <stdio.h>
+// # include <stdlib.h>
+// # include <readline/readline.h>
+// # include <readline/history.h>
+// # include <limits.h>
+// # include <stdlib.h>
+// # include <unistd.h>
+// # include <errno.h>
+// # include <dirent.h>
+// # include <fcntl.h>
+// # include <termios.h>
+// # include <signal.h>
 
-// this project's headers
-# include "libft.h"
-# include "utils.h"
-# include "lexer.h"
-# include "tokens.h"
-# include "parser.h"
+//! i didn't add these yet: 
+// // this project's headers
+// # include "libft.h"
+// # include "utils.h"
+// # include "lexer.h"
+// # include "tokens.h"
+// # include "parser.h"
 
-# ifndef TESTER
-#  define TESTER 1
-# endif
+// # ifndef TESTER
+// #  define TESTER 1
+// # endif
 
-# ifndef SHELL_NAME
-#  define SHELL_NAME "minishell\0"
-# endif
+// # ifndef SHELL_NAME
+// #  define SHELL_NAME "minishell\0"
+// # endif
 
-# ifndef SHELL_PROMPT
-#  define SHELL_PROMPT "minishell-$: \0"
-# endif
+// # ifndef SHELL_PROMPT
+// #  define SHELL_PROMPT "minishell-$: \0"
+// # endif
 
-# ifndef NEW_FILE_PERMISSIONS
-#  define NEW_FILE_PERMISSIONS 0644
-# endif
+// # ifndef NEW_FILE_PERMISSIONS
+// #  define NEW_FILE_PERMISSIONS 0644
+// # endif
 
-# ifndef INIT_VAL
-#  define INIT_VAL -1
-# endif
+// # ifndef INIT_VAL
+// #  define INIT_VAL -1
+// # endif
 
-# ifndef DEFAULT_EXIT_STATUS
-#  define DEFAULT_EXIT_STATUS -1
-# endif
+// # ifndef DEFAULT_EXIT_STATUS
+// #  define DEFAULT_EXIT_STATUS -1
+// # endif
 
-# ifndef ARGS
-#  define ARGS 2
-# endif
+// # ifndef ARGS
+// #  define ARGS 2
+// # endif
 
-# ifndef READ
-#  define READ 0
-# endif
+// # ifndef READ
+// #  define READ 0
+// # endif
 
-# ifndef WRITE
-#  define WRITE 1
-# endif
+// # ifndef WRITE
+// #  define WRITE 1
+// # endif
 
-# ifndef STD_ERROR
-#  define STD_ERROR 2
-# endif
+// # ifndef STD_ERROR
+// #  define STD_ERROR 2
+// # endif
 
-# ifndef LEAK_CHECK
-#  define LEAK_CHECK 0
-# endif
+// # ifndef LEAK_CHECK
+// #  define LEAK_CHECK 0
+// # endif
 
-typedef enum e_result
-{
-	ERROR = false,
-	SUCCESS = true,
-}	t_result;
+// typedef enum e_result
+// {
+// 	ERROR = false,
+// 	SUCCESS = true,
+// }	t_result;
 
-typedef enum e_type		t_type;
-typedef struct s_lexer	t_lexer;
-typedef struct s_parser	t_parser;
-typedef struct s_ast	t_ast;
+// typedef enum e_type		t_type;
+// typedef struct s_lexer	t_lexer;
+// typedef struct s_parser	t_parser;
+// typedef struct s_ast	t_ast;
 
-typedef struct s_arg
-{
-	t_type			type;
-	t_token_list	*name;
-	struct s_arg	*next;
-}	t_arg;
+// typedef struct s_arg
+// {
+// 	t_type			type;
+// 	t_token_list	*name;
+// 	struct s_arg	*next;
+// }	t_arg;
 
-typedef struct s_redir
-{
-	t_type			type;
-	t_arg			*arg;
-	struct s_redir	*next;
-	int				left_redir_arg;
-	char			*token_str_data;
-	bool			here_doc_literal;
-}	t_redir;
+// typedef struct s_redir
+// {
+// 	t_type			type;
+// 	t_arg			*arg;
+// 	struct s_redir	*next;
+// 	int				left_redir_arg;
+// 	char			*token_str_data;
+// 	bool			here_doc_literal;
+// }	t_redir;
 
-typedef struct s_child_data
-{
-	char		*path;
-	char		*command_name;
-	char		**argv;
-}	t_child_data;
+// typedef struct s_child_data
+// {
+// 	char		*path;
+// 	char		*command_name;
+// 	char		**argv;
+// }	t_child_data;
 
-typedef struct s_fd_set
-{
-	int	base_fd;
-	int	overload_with_fd;
-	int	base_fd_backup;
-}	t_fd_set;
+// typedef struct s_fd_set
+// {
+// 	int	base_fd;
+// 	int	overload_with_fd;
+// 	int	base_fd_backup;
+// }	t_fd_set;
 
-// for the main proecess: through this struct all data
-// is reachable for cleanup
-typedef struct s_cleanup_data
-{
-	t_ast					*root;
-	char					*input;
-	struct s_shared_data	*shared_data;
-}	t_cleanup_data;
+// // for the main proecess: through this struct all data
+// // is reachable for cleanup
+// typedef struct s_cleanup_data
+// {
+// 	t_ast					*root;
+// 	char					*input;
+// 	struct s_shared_data	*shared_data;
+// }	t_cleanup_data;
 
-typedef struct s_shared_data
-{
-	int					main_pid;
-	bool				stop_execution;
-	char				***envs;
-	char				***env_exp;
-	t_cleanup_data		*cleanup_data;
-	struct sigaction	sig_set;
-}	t_shared_data;
+// typedef struct s_shared_data
+// {
+// 	int					main_pid;
+// 	bool				stop_execution;
+// 	char				***envs;
+// 	char				***env_exp;
+// 	t_cleanup_data		*cleanup_data;
+// 	struct sigaction	sig_set;
+// }	t_shared_data;
 
-typedef struct s_ast
-{
-	t_type			type;
-	t_token_list	*name;
-	t_arg			*arg;
-	t_redir			*redir;
-	t_ast			*left;
-	t_ast			*right;
-	int				exit_status;
-	t_shared_data	*shared_data;
-	pid_t			pid;
-	int				fd_to_close;
-	int				fd_to_close_read;
-	int				fd_to_close_write;
-	bool			dont_run_buildins;
-}	t_ast;
+// typedef struct s_ast
+// {
+// 	t_type			type;
+// 	t_token_list	*name;
+// 	t_arg			*arg;
+// 	t_redir			*redir;
+// 	t_ast			*left;
+// 	t_ast			*right;
+// 	int				exit_status;
+// 	t_shared_data	*shared_data;
+// 	pid_t			pid;
+// 	int				fd_to_close;
+// 	int				fd_to_close_read;
+// 	int				fd_to_close_write;
+// 	bool			dont_run_buildins;
+// }	t_ast;
 
-typedef struct s_path
-{
-	char	*all_paths;
-	char	*cur_path;
-	int		position;
-	int		read_postion;
-	char	*command_name;
-	t_ast	*ast;
-	char	path_buffer[PATH_MAX + 1];
-}	t_path;
+// typedef struct s_path
+// {
+// 	char	*all_paths;
+// 	char	*cur_path;
+// 	int		position;
+// 	int		read_postion;
+// 	char	*command_name;
+// 	t_ast	*ast;
+// 	char	path_buffer[PATH_MAX + 1];
+// }	t_path;
 
-typedef struct s_pipe_data
-{
-	int			pipe_fd[2];
-	int			base_write;
-	int			base_read;
-	int			left_pid;
-	t_ast		*ast;
-}	t_pipe_data;
+// typedef struct s_pipe_data
+// {
+// 	int			pipe_fd[2];
+// 	int			base_write;
+// 	int			base_read;
+// 	int			left_pid;
+// 	t_ast		*ast;
+// }	t_pipe_data;
 
 // lexer
 t_token		*next_new_token(t_lexer *lexer, bool recursuve_call);
@@ -303,54 +304,54 @@ t_result	ft_pipe(t_ast *ast);
 char		*get_file_name(int fd);
 void		print_fds(void);
 
-/* ------------------------------ BUILT-INS ------------------------------ */
-bool		ft_builtin_control(t_ast *ast);
-int			ft_pwd(t_ast *ast);
-int			ft_env(t_ast *ast);
-void		ft_export(t_ast *ast, t_arg *cur_arg);
-void		ft_unset(t_ast *ast);
-void		ft_exit(t_ast *ast);
-t_result	ft_echo(t_ast *ast, t_arg *cur_arg);
-t_result	ft_cap_echo(t_ast *ast, t_arg *cur_arg);
-int			ft_cd(t_ast *ast);
+// /* ------------------------------ BUILT-INS ------------------------------ */
+// bool		ft_builtin_control(t_ast *ast);
+// int			ft_pwd(t_ast *ast);
+// int			ft_env(t_ast *ast);
+// void		ft_export(t_ast *ast, t_arg *cur_arg);
+// void		ft_unset(t_ast *ast);
+// void		ft_exit(t_ast *ast);
+// t_result	ft_echo(t_ast *ast, t_arg *cur_arg);
+// t_result	ft_cap_echo(t_ast *ast, t_arg *cur_arg);
+// int			ft_cd(t_ast *ast);
 
-typedef struct s_cd_vars
-{
-	char	**steps;
-	char	*cd_arg;
-	int		i;
-	char	pwd_before[PATH_MAX + 1];
-	char	old_pwd[PATH_MAX + 1];
-}	t_cd_vars;
+// typedef struct s_cd_vars
+// {
+// 	char	**steps;
+// 	char	*cd_arg;
+// 	int		i;
+// 	char	pwd_before[PATH_MAX + 1];
+// 	char	old_pwd[PATH_MAX + 1];
+// }	t_cd_vars;
 
-typedef struct s_cd_step_data
-{
-	t_ast	*ast;
-	char	*step;
-	int		index;
-	char	*cd_arg;
-	bool	first;
-	char	to_go[PATH_MAX + 1];
-	char	before[PATH_MAX + 1];
-	char	after[PATH_MAX + 1];
-	char	old_pwd[PATH_MAX + 1];
-}	t_cd_step_data;
+// typedef struct s_cd_step_data
+// {
+// 	t_ast	*ast;
+// 	char	*step;
+// 	int		index;
+// 	char	*cd_arg;
+// 	bool	first;
+// 	char	to_go[PATH_MAX + 1];
+// 	char	before[PATH_MAX + 1];
+// 	char	after[PATH_MAX + 1];
+// 	char	old_pwd[PATH_MAX + 1];
+// }	t_cd_step_data;
 
-t_result	check_path_len(t_ast *ast, char *path);
-char		*get_parent_dir_path(void);
-int			ft_update_dir_vars(t_ast *ast, char *before, char *after);
-char		*init_ft_cd_step(t_ast *ast, char *step, int inde);
+// t_result	check_path_len(t_ast *ast, char *path);
+// char		*get_parent_dir_path(void);
+// int			ft_update_dir_vars(t_ast *ast, char *before, char *after);
+// char		*init_ft_cd_step(t_ast *ast, char *step, int inde);
 
 /* ---------------------------- ENV FUNCTIONS ---------------------------- */
 
-char		**ft_initialize_env(char **base_env);
-char		*get_env_value(char **env, char *var_name,
-				char *buffer, int buf_size);
-char		**new_env_list_after_add(char *str_to_add, char **env, bool plus);
-char		*get_env_var_name(char *line);
-char		**new_env_list_after_delete(char *var_to_rm, char **env_before);
-void		ft_update_env(char *var_name, char *new_value, char **env);
-char		***get_env_list(char ***set_new_env);//added
+// char		**ft_initialize_env(char **base_env);
+// char		*get_env_value(char **env, char *var_name,
+// 				char *buffer, int buf_size);
+// char		**new_env_list_after_add(char *str_to_add, char **env, bool plus);
+// char		*get_env_var_name(char *line);
+// char		**new_env_list_after_delete(char *var_to_rm, char **env_before);
+// void		ft_update_env(char *var_name, char *new_value, char **env);
+// char		***get_env_list(char ***set_new_env);
 
 /* ---------------------------- SIGNALS ----------------------------------- */
 

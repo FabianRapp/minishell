@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 03:31:52 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/26 16:18:15 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 18:55:02 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ char	*handle_absolute_path(char *path)
 	return (NULL);
 }
 
-char	*handle_shell_fn(char *name)
+static char	*handle_shell_fn(char *name)
 {
 	const char	*all_fns[] = {
 		"cat",	"chmod",	"cp",	"df",	"grep",

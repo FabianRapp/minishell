@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_ast_utils2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 06:03:37 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 23:56:45 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 17:53:22 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ t_arg	*append_arg(t_parser *parser, t_arg *head_arg)
 	return (head_arg);
 }
 
-char	*handle_env_var_astparser(char *dollar_str, int *index)
+static char	*handle_env_var_astparser(char *dollar_str, int *index)
 {
 	char	*return_str;
 	char	*env_var;
@@ -75,7 +75,7 @@ char	*handle_env_var_astparser(char *dollar_str, int *index)
 	return (free(env_var), return_str);
 }
 
-char	*parser_expand_dollar(char *dollar_str, int *index)
+static char	*parser_expand_dollar(char *dollar_str, int *index)
 {
 	char	*return_str;
 

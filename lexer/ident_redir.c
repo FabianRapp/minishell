@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ident_redir.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 00:06:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 01:37:30 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 17:27:13 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static t_result	handle_redir_fd(t_lexer *lexer, t_token *token)
 	return (SUCCESS);
 }
 
-bool	valid_redir_arg(t_lexer *lexer, t_type type)
+static bool	valid_redir_arg(t_lexer *lexer, t_type type)
 {
 	t_lexer	temp;
 
@@ -48,7 +48,7 @@ bool	valid_redir_arg(t_lexer *lexer, t_type type)
 	return (false);
 }
 
-t_result	lexer_here_doc(t_lexer *lexer, t_token *token)
+static t_result	lexer_here_doc(t_lexer *lexer, t_token *token)
 {
 	if (token->type != HERE_DOC)
 		return (SUCCESS);
