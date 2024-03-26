@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 07:36:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 04:06:08 by codespace        ###   ########.fr       */
+/*   Updated: 2024/03/26 05:13:56 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ static t_ast	*init_sub_shell(t_ast *ast, char *input,
 {
 	t_ast		*sub_ast;
 
+	if (check_brackets(ast, input) == ERROR)
+		return (NULL);
 	sub_cleanup_data->shared_data = shared_sub_vars;
 	ast->pid = fork();
 	errno = 0;

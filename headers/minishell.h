@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 03:21:22 by codespace        ###   ########.fr       */
+/*   Updated: 2024/03/26 05:14:59 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -364,6 +364,9 @@ bool		redisplay_prompt(bool set_state, bool new_state);
 void		print_error_weird_quotes(bool shell_name, char *command_name,
 				char *arg, char *str);
 t_result	ft_cur_exit(t_ast *ast, int exit_value);
+
+// execution/utils/subshell_bracket_verification.c
+t_result	check_brackets(t_ast *ast, char *input);
 
 //FROM INTERNALS_H:
 t_result	dollar_lexing(t_lexer *lexer, t_token *token);

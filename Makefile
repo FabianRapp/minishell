@@ -47,6 +47,7 @@ SRC_EXECUTION	=	execution/redirections/redir_error_handler.c \
 					execution/exec_subshell.c execution/utils/pipe_utils.c \
 					execution/utils/data_utils.c execution/utils/input_exit.c \
 					execution/utils/path.c execution/utils/path_utils.c \
+					execution/utils/subshell_bracket_verification.c \
 					execution/utils/get_pid.c
 
 SRC_UTILS		=	utils/signals.c utils/debugging.c utils/fd1.c utils/groups1.c \
@@ -83,6 +84,9 @@ leaks: $(OBJS)
 	@cd libft && make leaks
 	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT) -lreadline -o $(NAME)
 	@echo "$(GREEN)minishell compiled!$(CLEAR)"
+
+tester: CFLAGS += -DTESTER=1
+tester: $(NAME)
 
 clean:
 	@cd libft && make clean
