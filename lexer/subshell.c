@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 21:34:29 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 01:17:49 by codespace        ###   ########.fr       */
+/*   Updated: 2024/03/26 04:20:51 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,12 @@ static t_result	verify_subshell_chars(t_lexer *lexer)
 			count_open--;
 		(lexer->read_position)++;
 	}
+	if (count_open && !(bool)TESTER)
+		full_exit_status(true);
 	if (count_open)
-	{
-		print_error(true, NULL,
-			"syntax error", " unexpected end of file\nexit\n");
-		if (!(bool)TESTER)
-			full_exit_status(true);
-		return (set_last_exit(2), ERROR);
-	}
+		return (print_error(true, NULL, "syntax error",
+				" unexpected end of file\nexit\n"), set_last_exit(2),
+			ERROR);
 	return (SUCCESS);
 }
 

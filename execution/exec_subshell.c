@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_subshell.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 07:36:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 02:11:36 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 04:06:08 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,6 @@ static t_ast	*init_sub_shell(t_ast *ast, char *input,
 	if (ast->pid)
 		return (NULL);
 	*shared_sub_vars = *(ast->shared_data);
-	*(shared_sub_vars->envs) = ft_initialize_env(*(ast->shared_data->envs));
-	if (*(shared_sub_vars->envs) == NULL)
-		return (NULL);
-	*(shared_sub_vars->env_exp) = ft_initialize_env(*(ast->shared_data->envs));
-	get_env_list(shared_sub_vars->envs);
-	if (*(shared_sub_vars->env_exp) == NULL)
-		return (ft_free_2darr(*(shared_sub_vars->envs)), NULL);
 	sub_ast = parser(input);
 	if (!sub_ast)
 		main_exit(sub_cleanup_data, true, false);

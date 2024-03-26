@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 03:13:57 by codespace        ###   ########.fr       */
+/*   Updated: 2024/03/26 04:29:20 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ t_result	check_error_valid_order(t_parser *parser, bool in_command_block)
 	set_last_exit(2);
 	if (parser->p_type == COMMAND)
 		return (print_error(true, NULL, NULL,
-			type_to_error(parser->token->type)), ERROR);
+				type_to_error(parser->token->type)), ERROR);
 	else if (parser->p_type == SUBSHELL)
 		return (print_error(true, NULL, NULL,
 				"syntax error near unexpected token `('"), ERROR);

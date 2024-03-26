@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 19:22:05 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 01:19:02 by codespace        ###   ########.fr       */
+/*   Updated: 2024/03/26 04:28:52 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	print_wildcard_data(t_wildcard_parameters *data)
 	printf("pre: %s\n", data->prefix);
 	printf("mid: ");
 	if (!data->sub_str || !data->sub_str[i])
-		printf("%s\n", (char *)NULL);
+		printf("%s\n", (char *) NULL);
 	else
 		printf("\n");
 	while (data->sub_str && data->sub_str[i])

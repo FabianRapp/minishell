@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/26 01:30:29 by codespace        ###   ########.fr       */
+/*   Updated: 2024/03/26 04:14:16 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	ft_update_shlvl(int shlvl_index, char ***env)
 
 	num = -1;
 	before = get_env_value(*(env), "SHLVL", 0, 0);
-	if (shlvl_index == 0 || is_not_numeric(before))
+	if (shlvl_index == -1 || is_not_numeric(before))
 	{
 		*env = new_env_list_after_add("SHLVL=1", *env, false);
 		free(before);
@@ -55,12 +55,10 @@ char	**ft_initialize_env(char **base_env)
 {
 	int		i;
 	char	**ret;
-	int		shlvl_index;
 	char	*tmp;
 	char	buffer[PATH_MAX + 1];
 
 	i = 0;
-	shlvl_index = 0;
 	while (base_env && base_env[i])
 		i++;
 	ret = ft_calloc((i + 60), sizeof(char *));
@@ -71,8 +69,8 @@ char	**ft_initialize_env(char **base_env)
 		ret[i] = ft_strdup(base_env[i]);
 	i = 0;
 	while (base_env && base_env[i] && ft_strncmp(ret[i], "SHLVL=", 6))
-		shlvl_index = i++;
-	ft_update_shlvl(shlvl_index, &ret);
+		i++;
+	ft_update_shlvl(i - 1, &ret);
 	tmp = ft_strjoin("PWD=", getcwd(buffer, PATH_MAX));
 	ret = new_env_list_after_add(tmp, ret, false);
 	free(tmp);
