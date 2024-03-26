@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 03:31:52 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/24 03:35:45 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 01:56:23 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ char	*handle_absolute_path(char *path)
 	}
 	ft_fprintf(2, "%s: %s\n", SHELL_NAME, strerror(errno));
 	set_last_exit(127);
+	if (errno == 20)
+		set_last_exit(126);
 	errno = 0;
 	return (NULL);
 }

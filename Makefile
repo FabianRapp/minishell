@@ -1,7 +1,7 @@
 NAME	=	minishell
 
 CFLAGS	=	-Wall -Wextra -Werror
-CC		=	cc
+CC		=	clang
 LIBFT 	=	libft/libft.a
 
 GREEN	=	\033[0;32m

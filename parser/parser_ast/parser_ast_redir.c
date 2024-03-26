@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_ast_redir.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 05:35:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 04:59:42 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 02:57:02 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,15 @@ static t_result	init_append_redir(t_ast *ast_node, t_redir **cur_redir)
 	{
 		(*cur_redir)->next = ft_calloc(1, sizeof(t_redir));
 		if (!(*cur_redir)->next)
-			return (set_errno_as_exit(ast_node, false));
+			return (set_errno_as_exit(ast_node, false), ERROR);
 		*cur_redir = (*cur_redir)->next;
 	}
 	else
 	{
 		*cur_redir = ft_calloc(1, sizeof(t_redir));
-		if (!*cur_redir)
-			return (set_errno_as_exit(ast_node, false));
 		ast_node->redir = *cur_redir;
+		if (!*cur_redir)
+			return (set_errno_as_exit(ast_node, false), ERROR);
 	}
 	return (SUCCESS);
 }

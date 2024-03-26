@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 01:22:16 by codespace        ###   ########.fr       */
+/*   Updated: 2024/03/26 02:41:18 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,9 @@ static bool	init_edgecases(t_ast *ast, char *command_name)
 static char	*init_path(t_ast *ast, char *command_name, t_path *path_ob,
 	char *path_var)
 {
+	const t_path	init_val = {NULL, NULL, 0, 0, NULL, NULL};
+
+	*path_ob = init_val;
 	if (init_edgecases(ast, command_name) == false)
 		return (NULL);
 	if (command_name && (*command_name == '/' || (*command_name == '.'

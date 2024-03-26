@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:46:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/23 15:37:25 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/26 02:46:17 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ t_lexer	new_lexer(char *str)
 {
 	t_lexer		lexer;
 
+	lexer.cur_char = 0;
 	lexer.last_char = 0;
 	lexer.position = 0;
 	lexer.read_position = 0;

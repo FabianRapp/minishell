@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 04:20:36 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 01:19:40 by codespace        ###   ########.fr       */
+/*   Updated: 2024/03/26 03:18:43 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ t_result	repl_handle_here_doc(t_ast *ast, t_redir *redir, t_fd_set **fds)
 {
 	t_fd_set	new_fd_pair;
 
+	new_fd_pair.base_fd_backup = INIT_VAL;
 	new_fd_pair.base_fd = redir->left_redir_arg;
 	if (new_fd_pair.base_fd == INIT_VAL)
 		new_fd_pair.base_fd = 0;

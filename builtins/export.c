@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:29:13 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/26 01:14:11 by codespace        ###   ########.fr       */
+/*   Updated: 2024/03/26 02:22:02 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,6 @@ void	ft_export(t_ast *ast, t_arg *cur_arg)
 	int		res;
 
 	num = 0;
-	res = 0;
 	ft_cur_exit(ast, 0);
 	while (cur_arg && cur_arg->name->token->type != T_EOF)
 	{

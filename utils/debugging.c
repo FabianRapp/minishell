@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debugging.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 07:01:13 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 00:43:14 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 03:04:32 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 // 	fd = 3;
 // 	while (fd < OPEN_MAX)
 // 	{
-// 		if (fcntl(fd, F_GETFD) != -1) 
+// 		if (fcntl(fd, F_GETFD) != -1)
 // 		{
 // 			printf("%d is open(fd): %s\n", fd, get_file_name(fd));
 // 			open_fd_count++;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/24 05:12:23 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/26 03:13:57 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,8 @@ t_result	check_error_valid_order(t_parser *parser, bool in_command_block)
 		return (SUCCESS);
 	set_last_exit(2);
 	if (parser->p_type == COMMAND)
-	{
-		temp = ft_strjoin("syntax error near unexpected token ",
-				parser->token->str_data);
-		return (print_error(true, NULL, NULL, temp), free(temp), ERROR);
-	}
+		return (print_error(true, NULL, NULL,
+			type_to_error(parser->token->type)), ERROR);
 	else if (parser->p_type == SUBSHELL)
 		return (print_error(true, NULL, NULL,
 				"syntax error near unexpected token `('"), ERROR);
