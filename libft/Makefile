@@ -60,6 +60,7 @@ flags: CFLAGS += -fsanitize=undefined -fsanitize=address -g
 flags: LDFLAGS += -fsanitize=undefined -fsanitize=address -g
 flags: $(NAME)
 
+
 build: CFLAGS += $(FLAGS_NO_LEAK_CHECK)
 build: LDFLAGS += $(FLAGS_NO_LEAK_CHECK)
 build: $(NAME) $(OBJS)

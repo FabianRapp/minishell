@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 06:20:46 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 01:13:09 by codespace        ###   ########.fr       */
+/*   Updated: 2024/03/26 03:21:22 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@
 # include "parser.h"
 
 # ifndef TESTER
-#  define TESTER 1
+#  define TESTER 0
 # endif
 
 # ifndef SHELL_NAME
