@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/14 17:12:34 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/09 06:32:38 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 09:54:30 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,20 @@ char	*shrink_out(int fd, t_file *first_file)
 	return (new_output);
 }
 
-char	*get_next_line(int fd)
+static void	cleanup_all(t_file *cur, t_file *first_file)
 {
-	static t_file	first_file = {{}, {}, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	if (cur->next_file)
+		cleanup_all(cur->next_file, first_file);
+	cleanup_libft(cur, first_file);
+}
+
+char	*get_next_line(int fd, bool cleanup)
+{
+	static t_file	first_file = {{}, {}, 0, -1, 0, 0, 0, 0, 0, 0, 0};
 	t_file			*current_file;
 
+	if (cleanup)
+		return (cleanup_all(&first_file, &first_file), NULL);
 	if (BUFFER_SIZE <= 0)
 		return (NULL);
 	if (!(first_file.first_file))

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 08:07:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 22:31:34 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 09:51:02 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,9 @@ char	*ft_read_line(char *header)
 	redisplay_prompt(true, true);
 	if (!isatty(0))
 	{
-		temp = get_next_line(0);
+		temp = get_next_line(0, false);
 		line = ft_strtrim(temp, "\n");
+		get_next_line(0, true);
 		free(temp);
 	}
 	else

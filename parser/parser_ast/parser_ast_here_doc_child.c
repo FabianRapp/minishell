@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 07:49:52 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 08:44:56 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 10:01:58 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,19 +25,16 @@ t_here_doc_child_data	*heredoc_chil_data_state(
 static char	*get_line(int fd)
 {
 	char	*line;
-	char	*tmp;
+	//char	*tmp;
 
-	line = NULL;
-	//if (!isatty(0))
-	{
-		tmp = get_next_line(fd);
-		set_signals();
-		line = ft_strtrim(tmp, "\n");
-		free(tmp);
-		set_ctrl_c_heredoc();
-	}
-	//else
-	//	line = readline(">");
+	set_signals();
+	//line = NULL;
+	//tmp = get_next_line(fd, false);
+	line = get_next_line(fd, false);
+	get_next_line(fd, true);
+	//line = ft_strtrim(tmp, "\n");
+	//free(tmp);
+	set_ctrl_c_heredoc();
 	return (line);
 }
 
@@ -46,14 +43,14 @@ static bool	handle_success(char **line, int count, char *termination)
 	char	*tmp;
 
 	set_signals();
-	if (!*line || !**line)
+	if (!*line)// || !**line)
 	{
 		tmp = ft_strtrim(termination, "\n");
 		ft_fprintf(2, "%s: warning: here-document at line %d delimited by "
 			"end-of-file (wanted `%s')\n", SHELL_NAME, count, tmp);
 		return (free(tmp), true);
 	}
-	ft_strjoin_inplace(line, "\n");
+	//ft_strjoin_inplace(line, "\n");
 	if (ft_strcmp(*line, termination) == 0)
 		return (ft_free((void **)line), true);
 	set_ctrl_c_heredoc();
@@ -102,10 +99,11 @@ void	init_here_doc_child(int pipe_fd[2], char *termination, t_redir *redir, int 
 	child_data.line = NULL;
 	heredoc_chil_data_state(&child_data);
 	set_ctrl_c_heredoc();
-	if (parser_resolve_here_doc(&child_data) == ERROR)
-		printf("child resolving returned WITH error (exit status: %d)\n", get_last_exit());
-	else
-		printf("child resolving returned with no error (exit status: %d)\n", get_last_exit());
+	parser_resolve_here_doc(&child_data);
+	// if (parser_resolve_here_doc(&child_data) == ERROR)
+	// 	printf("child resolving returned WITH error (exit status: %d)\n", get_last_exit());
+	// else
+	// 	printf("child resolving returned with no error (exit status: %d)\n", get_last_exit());
 	set_signals();
 	close(std_in_pipe[READ]);
 	free(child_data.line);

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/14 17:12:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/01/18 09:01:14 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 09:54:42 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*cleanup_libft(t_file *current_file, t_file *first_file)
 	if (!temp)
 		return (NULL);
 	current_file->first_file = NULL;
-	current_file->fd = 0;
+	current_file->fd = -1;
 	if (current_file != first_file && current_file)
 	{
 		temp = first_file;
@@ -67,6 +67,8 @@ int	my_str_cpy(char *dest, char *src, char *src2)
 
 	i2 = 0;
 	len = 0;
+	if (!dest)
+		return (0);
 	while (dest[len])
 		len++;
 	if (src)

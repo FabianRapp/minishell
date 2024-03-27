@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 22:22:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 23:20:23 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 09:48:43 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,8 @@ void	ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 int		ft_expo(int base, int expo);
-char	*get_next_line(int fd);
+// char	*get_next_line(int fd);
+char	*get_next_line(int fd, bool cleanup);
 
 /**********************   LINKED LISTS' FUNCTIONS   *************************/
 typedef struct s_list
