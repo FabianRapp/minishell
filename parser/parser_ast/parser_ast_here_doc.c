@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 04:56:10 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 11:33:49 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 15:04:52 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,9 @@ t_result	here_doc_parent(char *termination, int pipe_fd[2], int pid,
 	{
 		child_has_exited = waitpid(pid, &child_exit_status, WNOHANG);
 		write(1, "> ", 2 * -1 * (TESTER - 1));
+		set_signals_heredoc_parent();
 		line = get_next_line(0, false);
+		set_sig_do_nothing(SIGINT);
 		write(std_in_pipe[WRITE], line, ft_strlen(line));
 		if (!line || (line && ft_strcmp(line, termination) == 0))
 			break ;

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 18:05:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 12:23:24 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 15:02:19 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@ bool	redisplay_prompt(bool set_state, bool new_state)
 	return (redisplay_prompt_state);
 }
 
-static t_result	set_ctrl_slash(void)
+t_result	set_sig_do_nothing(int signal)
 {
 	struct sigaction	sig;
 
 	sigemptyset(&(sig.sa_mask));
 	sig.sa_flags = 0;
 	sig.sa_handler = SIG_IGN;
-	if (sigaction(SIGQUIT, &sig, NULL) == -1)
+	if (sigaction(signal, &sig, NULL) == -1)
 	{
 		print_error(true, NULL, NULL, strerror(errno));
 		set_last_exit(errno);
@@ -71,6 +71,6 @@ static t_result	set_ctrl_c(void)
 
 void	set_signals(void)
 {
-	set_ctrl_slash();
+	set_sig_do_nothing(SIGQUIT);
 	set_ctrl_c();
 }
