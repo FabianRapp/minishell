@@ -6,15 +6,17 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 19:47:45 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 12:22:56 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 18:20:44 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-static void	handle_operator_2ndscenario(t_parser *parser, bool *found_command)
+static void	handle_operator_2ndscenario(t_parser *parser, bool *found_command, bool semi)
 {
 	set_last_exit(2);
+	if (semi)
+		return ;
 	if ((!parser->next || parser->next->p_type == T_EOF) && *found_command)
 	{
 		if (sub_shell_mode(GET_SUB_SHELL_MODE) == true)
@@ -34,13 +36,16 @@ static void	handle_operator_2ndscenario(t_parser *parser, bool *found_command)
 static t_parser	*handle_operator(t_parser *parser,
 	bool *found_command, bool *found_redir, bool *found_subshell)
 {
+	bool	semi;
+
+	semi = (parser->p_type == SEMICOL);
 	if (!*found_command && !*found_redir)
 		return (set_last_exit(2), print_error(true, NULL, NULL,
 				type_to_error(parser->p_type)), NULL);
-	else if (!parser->next || is_operator(parser->next->p_type)
-		|| parser->next->p_type == T_EOF)
+	else if ((!parser->next || is_operator(parser->next->p_type)
+		|| parser->next->p_type == T_EOF) && !semi)
 	{
-		handle_operator_2ndscenario(parser, found_command);
+		handle_operator_2ndscenario(parser, found_command, semi);
 		return (NULL);
 	}
 	else if (!*found_command && insert_dummy_here(parser) == ERROR)
@@ -56,7 +61,9 @@ static t_parser	*handle_operator(t_parser *parser,
 static t_result	parser_handle_end(t_parser *parser, bool found_command,
 	bool found_redir)
 {
-	if (!found_redir && !found_command)
+	//print_error(0, "test", 0, 0);
+	if (!found_redir && !found_command && parser->p_type != SEMICOL
+		&& last_parser(parser)->p_type != SEMICOL)
 	{
 		print_error(true, NULL, NULL, type_to_error(T_EOF));
 		set_last_exit(2);

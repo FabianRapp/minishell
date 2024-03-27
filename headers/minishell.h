@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:24:35 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/27 16:49:42 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 18:50:59 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,7 @@ typedef struct s_shared_data
 	char				***env_exp;
 	t_cleanup_data		*cleanup_data;
 	struct sigaction	sig_set;
+	struct termios		base_term_settings;
 }	t_shared_data;
 
 typedef struct s_ast
@@ -243,6 +244,7 @@ void		set_signals(void);
 // t_result	set_ctrl_c(void);
 // void		signal_handler_ctrl_c(int signal, siginfo_t *info, void *data);
 // t_result	set_sig_do_nothing(void);
+t_result	set_ctrl_c(int nl_count);
 bool		redisplay_prompt(bool set_state, bool new_state);
 void		reset_signals(void);
 

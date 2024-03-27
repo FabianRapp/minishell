@@ -6,16 +6,46 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 14:55:07 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 19:14:00 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 
+// int main() {
+// 	struct termios	term_settings;
+// 	int fd = STDIN_FILENO;
+
+
+// 	// Change settings
+// 	// For example, disable EOF character by setting it to a non-existent value
+// 	term_settings.c_cc[VEOF] = _POSIX_VDISABLE; // Disable EOF character
+
+// 	// Apply the modified settings
+// 	if (tcsetattr(fd, TCSANOW, &term_settings) < 0)
+// 	{
+// 		perror("tcsetattr");
+// 		return 1;
+// 	}
+
+// 	printf("The EOF character is now disabled. Press Enter to restore settings...\n");
+// 	getchar(); // Wait for user input
+
+// 	// Restore original settings
+// 	if (tcsetattr(fd, TCSANOW, &term_settings) < 0) {
+// 		perror("tcsetattr");
+// 		return 1;
+// 	}
+
+// 	printf("Terminal settings restored.\n");
+// 	return 0;
+// }
+
 t_ast	*get_input(t_cleanup_data *cleanup_data)
 {
-	char	*input;
-	t_ast	*ast;
+	char			*input;
+	t_ast			*ast;
+	struct termios	term_settings;
 
 	cleanup_data->root = NULL;
 	cleanup_data->input = NULL;
@@ -32,7 +62,11 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 	if (!contains_non_white_spcace(input))
 		return (free(input), NULL);
 	add_history(input);
+	term_settings = cleanup_data->shared_data->base_term_settings;
+	term_settings.c_lflag &= ~ECHOCTL;
+	tcsetattr(0, TCSANOW, &term_settings);
 	ast = parser(input);
+	tcsetattr(0, TCSANOW, &cleanup_data->shared_data->base_term_settings);
 	errno = 0;
 	if (!ast)
 		return (free(input), NULL);
@@ -62,6 +96,7 @@ void	main_exit(t_cleanup_data *data, bool full_exit, bool ft_exit_call)
 {
 	t_shared_data	*shared_data;
 
+	tcsetattr(0, TCSANOW, &data->shared_data->base_term_settings);
 	shared_data = data->shared_data;
 	if (data && data->root && !ft_exit_call
 		&& data->root->exit_status == DEFAULT_EXIT_STATUS)

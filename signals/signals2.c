@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 09:58:09 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 15:06:12 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 18:10:22 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ t_result	set_ctrl_c_heredoc(void)
 		full_exit_status(true);
 		return (ERROR);
 	}
+	set_sig_do_nothing(SIGQUIT);
 	return (SUCCESS);
 }
 
@@ -59,6 +60,7 @@ t_result	set_signals_heredoc_parent(void)
 		full_exit_status(true);
 		return (ERROR);
 	}
+	set_sig_do_nothing(SIGQUIT);
 	return (SUCCESS);
 }
 

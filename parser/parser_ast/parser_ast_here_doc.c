@@ -6,18 +6,26 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 04:56:10 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 15:04:52 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 19:15:15 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 
+static void	free_close(char **line, char *termination, int *fd)
+{
+	ft_free((void **)line);
+	free(termination);
+	ft_close(fd);
+}
+
 t_result	here_doc_parent(char *termination, int pipe_fd[2], int pid,
 	int std_in_pipe[2])
 {
-	int		child_has_exited;
-	int		child_exit_status;
-	char	*line;
+	int				child_has_exited;
+	int				child_exit_status;
+	char			*line;
+	char			*tmp;
 
 	child_has_exited = 0;
 	while (child_has_exited == 0 && !here_doc_exit_state(false, false))
@@ -25,16 +33,22 @@ t_result	here_doc_parent(char *termination, int pipe_fd[2], int pid,
 		child_has_exited = waitpid(pid, &child_exit_status, WNOHANG);
 		write(1, "> ", 2 * -1 * (TESTER - 1));
 		set_signals_heredoc_parent();
+		//line = readline("> ");
 		line = get_next_line(0, false);
+		while (line && !ft_strchr(line, '\n'))
+		{
+			tmp = get_next_line(0, false);
+			ft_strjoin_inplace(&line, tmp);
+			rl_replace_line(line, 0);
+			free(tmp);
+		}
 		set_sig_do_nothing(SIGINT);
 		write(std_in_pipe[WRITE], line, ft_strlen(line));
 		if (!line || (line && ft_strcmp(line, termination) == 0))
 			break ;
 		ft_free((void **)&line);
 	}
-	ft_free((void **)&line);
-	free(termination);
-	ft_close(&std_in_pipe[WRITE]);
+	free_close(&line, termination, &std_in_pipe[WRITE]);
 	if (here_doc_exit_state(false, false))
 		return (ft_close(&pipe_fd[READ]), ERROR);
 	child_exit_status = WEXITSTATUS(child_exit_status);
@@ -46,8 +60,8 @@ t_result	here_doc_parent(char *termination, int pipe_fd[2], int pid,
 
 t_result	fork_here_doc(char *termination, int pipe_fd[2], t_redir *redir)
 {
-	int		pid;
-	int		std_in_pipe[2];
+	int				pid;
+	int				std_in_pipe[2];
 
 	here_doc_exit_state(true, false);
 	pipe(std_in_pipe);
@@ -84,6 +98,7 @@ t_result	parser_resovle_here_doc(t_redir *redir)
 	int				pipe_fd[2];
 	char			*termination;
 	char			*temp;
+	t_result		result;
 
 	termination = ft_strjoin(redir->token_str_data, "\n");
 	if (!termination)
@@ -101,5 +116,6 @@ t_result	parser_resovle_here_doc(t_redir *redir)
 	if (!redir->token_str_data)
 		return (close(pipe_fd[READ]), close(pipe_fd[WRITE]),
 			free(termination), ERROR);
-	return (fork_here_doc(termination, pipe_fd, redir));
+	result = fork_here_doc(termination, pipe_fd, redir);
+	return (result);
 }
