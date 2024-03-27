@@ -6,36 +6,11 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 09:01:03 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 12:16:11 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
-
-// t_ast	*handle_manunal_input(char **av, t_cleanup_data *cleanup_data)
-// {
-// 	char	*input;
-// 	t_ast	*ast;
-
-// 	cleanup_data->root = NULL;
-// 	cleanup_data->input = NULL;
-// 	input = ft_strdup(av[1]);
-// 	if (!input)
-// 		return (NULL);
-// 	if (!contains_non_white_spcace(input))
-// 	{
-// 		return (free(input), NULL);
-// 	}
-// 	add_history(input);
-// 	ast = parser(input);
-// 	if (ast)
-// 	{
-// 		cleanup_data->input = input;
-// 		cleanup_data->root = ast;
-// 		return (ast);
-// 	}
-// 	return (NULL);
-// }
 
 t_ast	*get_input(t_cleanup_data *cleanup_data)
 {
@@ -76,6 +51,8 @@ static void	free_and_exit(t_shared_data	*shared_data, bool full_exit)
 			system("leaks minishell");
 		rl_clear_history();
 		wait_all_children(NULL);
+		if (full_exit_status(false) && !TESTER)
+			ft_fprintf(2, "exit\n");
 		exit(get_last_exit());
 	}
 	if (LEAK_CHECK)
@@ -96,7 +73,6 @@ void	main_exit(t_cleanup_data *data, bool full_exit, bool ft_exit_call)
 		data->root->exit_status = WEXITSTATUS(data->root->exit_status);
 		set_last_exit(data->root->exit_status);
 	}
-	// wait_all_children(data->root);
 	if (data->root && data->root->shared_data)
 		data->root->shared_data->stop_execution = false;
 	free(data->input);

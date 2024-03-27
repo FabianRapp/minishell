@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 18:05:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 06:38:37 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 12:13:41 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static t_result	set_ctrl_slash(void)
 	sigemptyset(&(sig.sa_mask));
 	sig.sa_flags = 0;
 	sig.sa_handler = SIG_IGN;
+	full_exit_status(true);
 	if (sigaction(SIGQUIT, &sig, NULL) == -1)
 	{
 		print_error(true, NULL, NULL, strerror(errno));
