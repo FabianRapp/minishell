@@ -51,6 +51,8 @@ SRC_EXECUTION	=	execution/redirections/redir_error_handler.c \
 					execution/utils/subshell_bracket_verification.c \
 					execution/utils/get_pid.c
 
+SRC_SIGNALS		=	signals/signals.c signals/signals2.c
+
 SRC_UTILS		=	utils/signals.c utils/signals2.c utils/fd1.c utils/groups1.c \
 					utils/groups2.c utils/get_state.c utils/cleanup2.c \
 					utils/utils.c utils/exit_state.c utils/cleanup.c \
@@ -59,7 +61,7 @@ SRC_UTILS		=	utils/signals.c utils/signals2.c utils/fd1.c utils/groups1.c \
 					 
 
 SRCS	=	$(SRC_BUILTINS) $(SRC_ENVIRONMENT) $(SRC_LEXER) $(SRC_PARSER) \
-			$(SRC_EXPANSION) $(SRC_EXECUTION) $(SRC_UTILS) main.c
+			$(SRC_EXPANSION) $(SRC_EXECUTION) $(SRC_UTILS) $(SRC_SIGNALS) main.c
 
 OBJS	=	$(SRCS:%.c=%.o)
 
