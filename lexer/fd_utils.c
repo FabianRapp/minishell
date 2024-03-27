@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fd_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 15:34:51 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/26 22:34:47 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 06:03:19 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ char	*check_limis_potential_fd(char *left_redir_arg,
 
 void	print_error_redir_arg(t_lexer *lexer)
 {
-	print_error(true, NULL, "unexpected input", lexer->str + lexer->position);
+	ft_fprintf(2, "%s: syntax error near unexpected token `%c'\n",
+		SHELL_NAME, lexer->cur_char);
 	set_last_exit(2);
 }
