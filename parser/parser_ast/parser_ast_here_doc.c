@@ -6,56 +6,53 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 04:56:10 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 19:15:15 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 19:45:04 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 
-static void	free_close(char **line, char *termination, int *fd)
+static t_result	free_close(t_here_doc_norm *vars, char *termination,
+	int *fd, int pipe_fd[2])
 {
-	ft_free((void **)line);
+	ft_free((void **)&(vars->line));
 	free(termination);
 	ft_close(fd);
+	if (here_doc_exit_state(false, false))
+		return (ft_close(&pipe_fd[READ]), ERROR);
+	vars->child_exit_status = WEXITSTATUS(vars->child_exit_status);
+	if (vars->child_has_exited && vars->child_exit_status)
+		return (set_last_exit(vars->child_exit_status),
+			ft_close(&pipe_fd[READ]), ERROR);
+	return (SUCCESS);
 }
 
 t_result	here_doc_parent(char *termination, int pipe_fd[2], int pid,
 	int std_in_pipe[2])
 {
-	int				child_has_exited;
-	int				child_exit_status;
-	char			*line;
-	char			*tmp;
+	t_here_doc_norm	vars;
 
-	child_has_exited = 0;
-	while (child_has_exited == 0 && !here_doc_exit_state(false, false))
+	vars.child_has_exited = 0;
+	while (vars.child_has_exited == 0 && !here_doc_exit_state(false, false))
 	{
-		child_has_exited = waitpid(pid, &child_exit_status, WNOHANG);
+		vars.child_has_exited = waitpid(pid, &vars.child_exit_status, WNOHANG);
 		write(1, "> ", 2 * -1 * (TESTER - 1));
 		set_signals_heredoc_parent();
-		//line = readline("> ");
-		line = get_next_line(0, false);
-		while (line && !ft_strchr(line, '\n'))
+		vars.line = get_next_line(0, false);
+		while (vars.line && !ft_strchr(vars.line, '\n'))
 		{
-			tmp = get_next_line(0, false);
-			ft_strjoin_inplace(&line, tmp);
-			rl_replace_line(line, 0);
-			free(tmp);
+			vars.tmp = get_next_line(0, false);
+			ft_strjoin_inplace(&vars.line, vars.tmp);
+			rl_replace_line(vars.line, 0);
+			free(vars.tmp);
 		}
 		set_sig_do_nothing(SIGINT);
-		write(std_in_pipe[WRITE], line, ft_strlen(line));
-		if (!line || (line && ft_strcmp(line, termination) == 0))
+		write(std_in_pipe[WRITE], vars.line, ft_strlen(vars.line));
+		if (!vars.line || (vars.line && ft_strcmp(vars.line, termination) == 0))
 			break ;
-		ft_free((void **)&line);
+		ft_free((void **)&vars.line);
 	}
-	free_close(&line, termination, &std_in_pipe[WRITE]);
-	if (here_doc_exit_state(false, false))
-		return (ft_close(&pipe_fd[READ]), ERROR);
-	child_exit_status = WEXITSTATUS(child_exit_status);
-	if (child_has_exited && child_exit_status)
-		return (set_last_exit(child_exit_status),
-			ft_close(&pipe_fd[READ]), ERROR);
-	return (SUCCESS);
+	return (free_close(&vars, termination, &std_in_pipe[WRITE], pipe_fd));
 }
 
 t_result	fork_here_doc(char *termination, int pipe_fd[2], t_redir *redir)

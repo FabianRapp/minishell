@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 18:05:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 18:09:40 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 19:28:28 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,23 +52,6 @@ static void	signal_handler_ctrl_c(int signal, siginfo_t *info, void *data)
 		rl_redisplay();
 }
 
-// static void	signal_handler_ctrl_c2(int signal, siginfo_t *info, void *data)
-// {
-// 	(void)info;
-// 	(void)data;
-// 	(void)signal;
-// 	here_doc_exit_state(true, true);
-// 	set_last_exit(130);
-// 	rl_replace_line("123123123123", 0);
-// 	//rl_on_new_line();
-// 	ft_printf("123123\n");
-// 	// rl_replace_line("", 0);
-// 	rl_on_new_line();
-// 	ft_printf("test\n");
-// 	if (redisplay_prompt(false, false))
-// 		rl_redisplay();
-// }
-
 t_result	set_ctrl_c(int nl_count)
 {
 	struct sigaction	sig;
@@ -76,10 +59,7 @@ t_result	set_ctrl_c(int nl_count)
 	(void)nl_count;
 	sigemptyset(&(sig.sa_mask));
 	sig.sa_flags = SA_SIGINFO;
-	//if (nl_count == 1)
-		sig.sa_sigaction = signal_handler_ctrl_c;
-	// else if (nl_count == 2)
-	// 	sig.sa_sigaction = signal_handler_ctrl_c2;
+	sig.sa_sigaction = signal_handler_ctrl_c;
 	if (sigaction(SIGINT, &sig, NULL) == -1)
 	{
 		print_error(true, NULL, NULL, strerror(errno));

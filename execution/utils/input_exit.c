@@ -6,40 +6,11 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 19:14:00 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 19:43:44 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
-
-// int main() {
-// 	struct termios	term_settings;
-// 	int fd = STDIN_FILENO;
-
-
-// 	// Change settings
-// 	// For example, disable EOF character by setting it to a non-existent value
-// 	term_settings.c_cc[VEOF] = _POSIX_VDISABLE; // Disable EOF character
-
-// 	// Apply the modified settings
-// 	if (tcsetattr(fd, TCSANOW, &term_settings) < 0)
-// 	{
-// 		perror("tcsetattr");
-// 		return 1;
-// 	}
-
-// 	printf("The EOF character is now disabled. Press Enter to restore settings...\n");
-// 	getchar(); // Wait for user input
-
-// 	// Restore original settings
-// 	if (tcsetattr(fd, TCSANOW, &term_settings) < 0) {
-// 		perror("tcsetattr");
-// 		return 1;
-// 	}
-
-// 	printf("Terminal settings restored.\n");
-// 	return 0;
-// }
 
 t_ast	*get_input(t_cleanup_data *cleanup_data)
 {
@@ -64,7 +35,8 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 	add_history(input);
 	term_settings = cleanup_data->shared_data->base_term_settings;
 	term_settings.c_lflag &= ~ECHOCTL;
-	tcsetattr(0, TCSANOW, &term_settings);
+	if (isatty(0) && tcsetattr(0, TCSANOW, &term_settings) == -1)
+		return (free(input), NULL);
 	ast = parser(input);
 	tcsetattr(0, TCSANOW, &cleanup_data->shared_data->base_term_settings);
 	errno = 0;
