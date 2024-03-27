@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:24:35 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/27 05:13:26 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 08:04:58 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,11 +99,12 @@ typedef enum e_result
 /* ******************            GENERAL STRUCTS:           ***************** */
 /******************************************************************************/
 
-typedef struct s_token_list	t_token_list;
-typedef struct s_arg		t_arg;
-typedef struct s_redir		t_redir;
-typedef struct s_ast		t_ast;
-typedef enum e_type			t_type;
+typedef struct s_token_list				t_token_list;
+typedef struct s_arg					t_arg;
+typedef struct s_redir					t_redir;
+typedef struct s_ast					t_ast;
+typedef enum e_type						t_type;
+typedef struct s_here_doc_child_data	t_here_doc_child_data;
 
 typedef struct s_cleanup_data
 {
@@ -226,6 +227,7 @@ typedef struct s_status_handler
 	int		val;
 }	t_status_handler;
 
+t_result	set_ctrl_c_heredoc(void);
 t_result	insert_whitespace_before(t_token_list **head);
 t_result	insert_whitespace_end(t_token_list **list);
 t_result	add_token_back(t_token_list **list, t_token *token);
@@ -267,7 +269,7 @@ void		add_token_back_node(t_token_list **list, t_token_list *new_node);
 void		add_token_node_front(t_token_list **head, t_token_list *new_list);
 char		*ft_read_line(char *header);
 int			name_len(char *str);
-
+bool		here_doc_exit_state(bool change_state, bool new_state);
 //DEBUGGING FUNCTIONS??
 
 #endif	//MINISHELL_H

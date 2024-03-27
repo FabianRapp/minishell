@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 09:58:09 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 21:13:47 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 07:55:29 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,39 @@ void	reset_signals(void)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
+}
+
+static void	handler_ctrl_c_heredoc(int signal, siginfo_t *info, void *data)
+{
+	t_here_doc_child_data	*vars;
+
+	(void)info;
+	(void)data;
+	(void)signal;
+	here_doc_exit_state(true, true);
+	vars = heredoc_chil_data_state(NULL);
+	free(vars->line);
+	free(vars->termination);
+	if (vars->fd != INIT_VAL)
+		close(vars->fd);
+	exit(130);
+}
+
+t_result	set_ctrl_c_heredoc(void)
+{
+	struct sigaction	sig;
+
+	sigemptyset(&(sig.sa_mask));
+	sig.sa_flags = SA_SIGINFO;
+	sig.sa_sigaction = handler_ctrl_c_heredoc;
+	if (sigaction(SIGINT, &sig, NULL) == -1)
+	{
+		print_error(true, NULL, NULL, strerror(errno));
+		set_last_exit(errno);
+		full_exit_status(true);
+		return (ERROR);
+	}
+	return (SUCCESS);
 }
 
 // void	reset_terminal_settings(void)

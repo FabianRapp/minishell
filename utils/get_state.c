@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_state.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 00:30:16 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 22:37:45 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 07:56:02 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,4 +31,13 @@ int	line_counter(void)
 
 	line_count++;
 	return (line_count);
+}
+
+bool	here_doc_exit_state(bool change_state, bool new_state)
+{
+	static bool	here_doc_exit = false;
+
+	if (change_state)
+		here_doc_exit = new_state;
+	return (here_doc_exit);
 }

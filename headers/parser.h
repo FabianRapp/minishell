@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:24:35 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/27 04:30:09 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 08:06:47 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,13 @@
 /* *********************              PARSER:              ****************** */
 /******************************************************************************/
 
-typedef enum e_type			t_type;
-typedef struct s_token_list	t_token_list;
-typedef struct s_arg		t_arg;
-typedef struct s_token		t_token;
-typedef enum e_result		t_result;
-typedef struct s_ast		t_ast;
-typedef struct s_redir		t_redir;
+typedef enum e_type						t_type;
+typedef struct s_token_list				t_token_list;
+typedef struct s_arg					t_arg;
+typedef struct s_token					t_token;
+typedef enum e_result					t_result;
+typedef struct s_ast					t_ast;
+typedef struct s_redir					t_redir;
 
 typedef struct s_arg
 {
@@ -34,7 +34,7 @@ typedef struct s_arg
 	struct s_arg	*next;
 }	t_arg;
 
-typedef struct s_parser		t_parser;
+typedef struct s_parser					t_parser;
 typedef struct s_parser
 {
 	t_token		*token;
@@ -56,6 +56,16 @@ typedef struct s_left_right_parsers
 	t_parser	*left;
 	t_parser	*right;
 }	t_left_right_parsers;
+
+typedef struct s_here_doc_child_data
+{
+	char	*termination;
+	int		fd;
+	bool	expand_vars;
+	char	*line;
+	bool	start;
+	int		count;
+}	t_here_doc_child_data;
 
 //from directory list_operations:
 t_parser				*init_parser(char *str);
@@ -85,6 +95,10 @@ t_parser				*find_highest_operator(t_parser *parser);
 t_arg					*append_arg(t_parser *parser, t_arg *head_arg);
 char					*parser_expand_line(char *line);
 t_ast					*build_ast(t_parser *parser);
+void					init_here_doc_child(int pipe_fd[2], char *termination,
+							t_redir *redir);
+t_here_doc_child_data	*heredoc_chil_data_state(
+							t_here_doc_child_data *new_state);
 
 // rest in "parser" directory:
 t_ast					*parser(char *str);

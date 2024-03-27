@@ -3,76 +3,58 @@
 /*                                                        :::      ::::::::   */
 /*   parser_ast_here_doc.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 04:56:10 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 22:36:36 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 07:49:50 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 
-static char	*get_line(void)
+t_result	here_doc_parent(char *termination, int pipe_fd[2], int pid)
 {
-	char	*line;
-	char	*tmp;
+	int		child_has_exited;
+	int		child_exit_status;
 
-	line = NULL;
-	if (!isatty(0))
+	free(termination);
+	close(pipe_fd[WRITE]);
+	child_has_exited = 0;
+	while (child_has_exited == 0 && !here_doc_exit_state(false, false))
 	{
-		tmp = get_next_line(0);
-		line = ft_strtrim(tmp, "\n");
-		free(tmp);
+		child_has_exited = waitpid(pid, &child_exit_status, WNOHANG);
 	}
-	else
-		line = readline(">");
-	return (line);
+	if (here_doc_exit_state(false, false))
+	{
+		return (close(pipe_fd[READ]), ERROR);
+	}
+	child_exit_status = WEXITSTATUS(child_exit_status);
+	if (child_exit_status)
+		return (set_last_exit(child_exit_status), close(pipe_fd[READ]), ERROR);
+	return (SUCCESS);
 }
 
-static bool	handle_success(char **line, int count, char *termination)
+t_result	fork_here_doc(char *termination, int pipe_fd[2], t_redir *redir)
 {
-	char	*tmp;
+	int		pid;
 
-	if (!*line)
+	here_doc_exit_state(true, false);
+	pid = fork();
+	if (pid == -1)
 	{
-		tmp = ft_strtrim(termination, "\n");
-		ft_fprintf(2, "%s: warning: here-document at line %d delimited by "
-			"end-of-file (wanted `%s')\n", SHELL_NAME, count, tmp);
-		return (free(tmp), true);
+		free(termination);
+		close(pipe_fd[WRITE]);
+		close(pipe_fd[READ]);
+		set_last_exit(errno);
+		print_error(true, NULL, NULL, strerror(errno));
+		return (ERROR);
 	}
-	ft_strjoin_inplace(line, "\n");
-	if (ft_strcmp(*line, termination) == 0)
-		return (ft_free((void **)line), true);
-	return (false);
-}
-
-static t_result	parser_resolve_here_doc(char *termination,
-	int pipe_fd[2], bool expand_vars)
-{
-	char	*line;
-	bool	start;
-	int		count;
-
-	line = NULL;
-	start = true;
-	while (line || start)
+	else if (pid > 0)
 	{
-		start = false;
-		free(line);
-		line = get_line();
-		count = line_counter();
-		if (!line && errno)
-			return (set_last_exit(errno), ERROR);
-		if (handle_success(&line, count, termination) == true)
-			return (SUCCESS);
-		if (expand_vars)
-			line = parser_expand_line(line);
-		if (ft_fprintf(pipe_fd[WRITE], "%s", line) == -1)
-			return (set_last_exit(errno), ERROR);
+		return (here_doc_parent(termination, pipe_fd, pid));
 	}
-	if (errno)
-		return (free(line), set_last_exit(errno), ERROR);
-	return (free(line), set_last_exit(1), ERROR);
+	init_here_doc_child(pipe_fd, termination, redir);
+	return (ERROR);
 }
 
 // Initializes a pipe and captures input until
@@ -100,9 +82,8 @@ t_result	parser_resovle_here_doc(t_redir *redir)
 	temp = ft_strjoin("<<<<", redir->token_str_data);
 	free(redir->token_str_data);
 	redir->token_str_data = temp;
-	if (!redir->token_str_data || parser_resolve_here_doc(termination,
-			pipe_fd,!(redir->here_doc_literal)) == ERROR)
+	if (!redir->token_str_data)
 		return (close(pipe_fd[READ]), close(pipe_fd[WRITE]),
 			free(termination), ERROR);
-	return (close(pipe_fd[WRITE]), free(termination), SUCCESS);
+	return (fork_here_doc(termination, pipe_fd, redir));
 }

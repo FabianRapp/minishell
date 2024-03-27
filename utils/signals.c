@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 18:05:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 21:11:34 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 06:38:37 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ static void	signal_handler_ctrl_c(int signal, siginfo_t *info, void *data)
 	(void)info;
 	(void)data;
 	(void)signal;
+	here_doc_exit_state(true, true);
 	set_last_exit(130);
 	rl_replace_line("", 0);
 	rl_on_new_line();

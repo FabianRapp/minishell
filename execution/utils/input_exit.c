@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_exit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 18:54:00 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 07:28:56 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ static void	free_and_exit(t_shared_data	*shared_data, bool full_exit)
 		if (LEAK_CHECK)
 			system("leaks minishell");
 		rl_clear_history();
+		wait_all_children(NULL);
 		exit(get_last_exit());
 	}
 	if (LEAK_CHECK)
@@ -95,7 +96,7 @@ void	main_exit(t_cleanup_data *data, bool full_exit, bool ft_exit_call)
 		data->root->exit_status = WEXITSTATUS(data->root->exit_status);
 		set_last_exit(data->root->exit_status);
 	}
-	wait_all_children(data->root);
+	// wait_all_children(data->root);
 	if (data->root && data->root->shared_data)
 		data->root->shared_data->stop_execution = false;
 	free(data->input);

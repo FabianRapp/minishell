@@ -24,6 +24,7 @@ SRC_PARSER		=	parser/parser.c parser/parser_type_commands.c \
 					parser/parse_utils.c parser/parser_ast/parser_ast.c \
 					parser/parser_ast/parser_ast_redir.c \
 					parser/parser_ast/parser_ast_here_doc.c \
+					parser/parser_ast/parser_ast_here_doc_child.c \
 					parser/parser_ast/parser_ast_utils1.c \
 					parser/parser_ast/parser_ast_utils2.c \
 					parser/list_operations/add_new.c \
