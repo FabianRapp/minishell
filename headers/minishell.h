@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:24:35 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/27 17:54:20 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 18:50:59 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,7 @@ typedef struct s_shared_data
 	char				***env_exp;
 	t_cleanup_data		*cleanup_data;
 	struct sigaction	sig_set;
+	struct termios		base_term_settings;
 }	t_shared_data;
 
 typedef struct s_ast

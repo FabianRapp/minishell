@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 11:00:27 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 23:09:49 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 18:51:09 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ int	main(int ac, char **av, char **base_env)
 	char			**env_list;
 	char			**exp_list;
 
+	tcgetattr(0, &shared_data.base_term_settings);
 	cleanup_data.shared_data = &shared_data;
 	if (init_main(ac, &shared_data) == ERROR)
 		return (1);
