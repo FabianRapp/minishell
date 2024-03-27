@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 22:34:59 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 04:40:42 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +68,12 @@ t_result	literal_type(t_lexer *lexer, t_token *token)
 	}
 	if (!(lexer->str)[lexer->read_position])
 	{
-		print_error(true, NULL, NULL,
+		print_error(true, "AAAA", NULL,
 			"unexpected EOF while looking for matching `\'\'");
-		if (!TESTER)
-			print_error(false, NULL, NULL, "exit");
-		set_last_exit(true);
-		full_exit_status(true);
+		//if (!TESTER)
+		//	print_error(false, NULL, NULL, "exit");
+		set_last_exit(2);
+		//full_exit_status(true);
 		return (ERROR);
 	}
 	lexer->read_position++;
@@ -92,11 +92,12 @@ t_result	interpreted_type(t_lexer *lexer, t_token *token)
 	}
 	if (!(lexer->str)[lexer->read_position])
 	{
-		if (!TESTER)
-			ft_fprintf(2, "exit\n");
-		print_error(true, "debug interpreted_type",
+		//if (!TESTER)
+		//	ft_fprintf(2, "exit\n");
+		print_error(true, "QQQ",
 			NULL, "unexpected EOF while looking for matching `\"\'");
-		exit(2);
+		set_last_exit(2);
+		//exit(2);
 	}
 	lexer->position++;
 	token->str_data = extract_str_data(lexer);

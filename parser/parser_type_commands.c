@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 19:47:45 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 22:35:44 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 04:37:24 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@ static void	handle_operator_2ndscenario(t_parser *parser, bool *found_command)
 	set_last_exit(2);
 	if ((!parser->next || parser->next->p_type == T_EOF) && *found_command)
 	{
-		if (sub_shell_mode(GET_SUB_SHELL_MODE) == true)
+		//if (sub_shell_mode(GET_SUB_SHELL_MODE) == true)
 			print_error(true, NULL, NULL,
 				"syntax error near unexpected token `)'");
-		else if (full_exit_status(true))
-			print_error(true, NULL, NULL,
-				"syntax error: unexpected end of file\nexit");
+		//else if (full_exit_status(true))
+		//	print_error(true, NULL, NULL,
+	//			"syntax error: unexpected end of file\nexit");
 	}
 	else if (parser->next)
 		print_error(true, NULL, NULL, type_to_error(parser->next->p_type));

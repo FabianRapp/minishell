@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 01:05:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 07:58:33 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 04:46:44 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ bool	next_path(t_path *path_ob)
 					"Permission denied"), ft_cur_exit(path_ob->ast, 126),
 				false);
 		return (print_error(SHELL_NAME, path_ob->command_name, NULL,
-				"No such file or directory"), ft_cur_exit(path_ob->ast, 127),
+				"command not found"), ft_cur_exit(path_ob->ast, 127),
 			false);
 	}
 	path_ob->position = path_ob->read_postion;

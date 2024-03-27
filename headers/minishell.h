@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:24:35 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/27 00:34:26 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 04:33:14 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@
 
 /* *************************    MACROS' DEFINITIONS    ********************* */
 # ifndef TESTER
-#  define TESTER 1
+#  define TESTER 0
 # endif
 
 # ifndef SHELL_NAME
@@ -232,7 +232,6 @@ t_result	add_token_back(t_token_list **list, t_token *token);
 t_token		*new_dummy_token(void);
 void		free_token_list(t_token_list *list);
 void		free_arg_list(t_arg *list);
-// void		free_redir(t_redir *redir);
 void		free_ast(t_ast *ast);
 t_result	wait_all_children(t_ast *ast);
 void		free_token(t_token *token);

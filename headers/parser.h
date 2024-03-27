@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:24:35 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/27 00:34:46 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 04:30:09 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,6 @@ t_result				type_commands(t_parser *parser);
 t_result				parse_redir_paths(t_parser *parser);
 void					type_args(t_parser *parser);
 t_result				has_content(t_parser *parser);
-// bool					has_redir_arg(t_parser *parser);
 t_parser				*has_none_redir_arg(t_parser *parser);
 void					type_command(t_parser *parser, bool *found_command);
 
