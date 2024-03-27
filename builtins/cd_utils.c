@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:26:07 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/23 07:05:02 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 02:27:43 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@ t_result	check_path_len(t_ast *ast, char *path)
 {
 	if (ft_strlen(path) <= PATH_MAX)
 		return (SUCCESS);
-	ast->exit_status = 36;
-	set_last_exit(36);
+	ft_cur_exit(ast, 36);
 	print_error(true, NULL, NULL, strerror(36));
 	return (ERROR);
 }
