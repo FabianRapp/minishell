@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ident_type.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 04:40:42 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 05:42:11 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ t_result	literal_type(t_lexer *lexer, t_token *token)
 		//	print_error(false, NULL, NULL, "exit");
 		set_last_exit(2);
 		//full_exit_status(true);
+		token->type = false;
 		return (ERROR);
 	}
 	lexer->read_position++;
@@ -97,7 +98,8 @@ t_result	interpreted_type(t_lexer *lexer, t_token *token)
 		print_error(true, "QQQ",
 			NULL, "unexpected EOF while looking for matching `\"\'");
 		set_last_exit(2);
-		//exit(2);
+		token->type = false;
+		return (ERROR);
 	}
 	lexer->position++;
 	token->str_data = extract_str_data(lexer);

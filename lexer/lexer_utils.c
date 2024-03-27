@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:46:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 22:35:16 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 05:49:42 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,26 +55,16 @@ void	lexer_error(t_token *token)
 // util for new_lexer
 static void	skip_leading_void_whitespace(t_lexer *lexer)
 {
-	t_lexer	last;
-	t_token	*token;
-	char	*tmp;
-
 	read_char(lexer);
-	last = *lexer;
-	token = next_new_token(lexer, false);
-	while (token && (token->type == WHITE_SPACE || token->type == VOID))
+	while (lexer->cur_char && ft_iswhitespace(lexer->cur_char))
 	{
-		free_token(token);
-		last = *lexer;
-		token = next_new_token(lexer, false);
+		read_char(lexer);
 	}
-	if (!token)
-		last.str = NULL;
-	else
-		free_token(token);
-	tmp = lexer->str;
-	*lexer = last;
-	lexer->str = tmp;
+	if (!lexer->cur_char)
+	{
+		free(lexer->str);
+		lexer->str = NULL;
+	}
 }
 
 // inits a lexer object, returns the object
