@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:46:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 12:40:47 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 23:06:35 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,7 @@ void	read_char(t_lexer *lexer)
 {
 	if (lexer->read_position > ((int)ft_strlen(lexer->str)))
 	{
-		printf("debug read_char\n");
-		exit(1);
+		lexer->read_position = (int)ft_strlen(lexer->str);
 	}
 	lexer->last_char = lexer->cur_char;
 	if (lexer->str)

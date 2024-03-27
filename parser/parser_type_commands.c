@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 19:47:45 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 21:49:18 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 23:06:42 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ static t_result	handle_subshell(t_parser *parser, bool *found_command,
 	if (*found_command || *found_redir)
 	{
 		set_last_exit(2);
-		print_error(true, "DEBUG 2", NULL,
+		print_error(true, NULL, NULL,
 			"syntax error near unexpected token `('");
 		return (ERROR);
 	}

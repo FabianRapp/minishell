@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 04:42:58 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 13:27:19 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 23:05:40 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,6 @@ t_token	*next_new_token(t_lexer *lexer, bool recursive_call)
 		return (NULL);
 	if (token->type)
 		return (token);
-	printf("DEBUG: no function IDed the type\n");
-	printf("%s\n", lexer->str + lexer->position);
-	return (lexer_error(token), exit(1), NULL);
+	ft_fprintf(2, "%s: unexpected token: %s\n", SHELL_NAME, lexer->str + lexer->position);
+	return (lexer_error(token), set_last_exit(2), NULL);
 }
