@@ -41,24 +41,22 @@ SRC_EXPANSION	=	expansion/expansion.c expansion/word_splitting.c \
 					expansion/utils3.c
 
 SRC_EXECUTION	=	execution/redirections/redir_error_handler.c \
-					execution/run_command.c \
 					execution/redirections/redir_main.c \
 					execution/redirections/redir_utils.c \
 					execution/pipes.c execution/run_ast.c \
+					execution/run_command.c execution/utils/get_pid.c \
 					execution/exec_subshell.c execution/utils/pipe_utils.c \
 					execution/utils/data_utils.c execution/utils/input_exit.c \
 					execution/utils/path.c execution/utils/path_utils.c \
-					execution/utils/subshell_bracket_verification.c \
-					execution/utils/get_pid.c
+					execution/utils/subshell_bracket_verification.c
 
 SRC_SIGNALS		=	signals/signals.c signals/signals2.c
 
-SRC_UTILS		=	utils/signals.c utils/signals2.c utils/fd1.c utils/groups1.c \
+SRC_UTILS		=	utils/fd1.c utils/groups1.c utils/ft_read_line.c \
 					utils/groups2.c utils/get_state.c utils/cleanup2.c \
 					utils/utils.c utils/exit_state.c utils/cleanup.c \
 					utils/error_handlers.c utils/alloc_utils.c \
-					utils/type_to_error.c utils/ft_read_line.c
-					 
+					utils/type_to_error.c 
 
 SRCS	=	$(SRC_BUILTINS) $(SRC_ENVIRONMENT) $(SRC_LEXER) $(SRC_PARSER) \
 			$(SRC_EXPANSION) $(SRC_EXECUTION) $(SRC_UTILS) $(SRC_SIGNALS) main.c
@@ -82,15 +80,14 @@ flags: $(OBJS)
 	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT) -lreadline -o $(NAME)
 	@echo "$(GREEN)minishell compiled!$(CLEAR)"
 
-#-DLEAK_CHECK=1
-leaks: CFLAGS +=  -g
+leaks: CFLAGS += -g
 leaks: $(OBJS)
 	@cd libft && make leaks
 	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT) -lreadline -o $(NAME)
 	@echo "$(GREEN)minishell compiled!$(CLEAR)"
 
 tester: CFLAGS += -DTESTER=1
-tester: $(NAME)
+tester: fclean $(NAME)
 
 clean:
 	@cd libft && make clean

@@ -1,14 +1,6 @@
-
-FLAGS_NO_LEAK_CHECK =
-#  -fsanitize=undefined -fsanitize=address -g
-CFLAGS=-Wall -Wextra -Werror
-
-LDFLAGS =
-# -fsanitize=undefined -fsanitize=address -g
-#
 NAME	=	libft.a
 CFLAGS	=	-Wall -Wextra -Werror
-CC		=	clang
+CC		=	cc
 
 GREEN	=	\033[0;32m
 YELLOW	=	\033[33m
@@ -60,12 +52,7 @@ flags: CFLAGS += -fsanitize=undefined -fsanitize=address -g
 flags: LDFLAGS += -fsanitize=undefined -fsanitize=address -g
 flags: $(NAME)
 
-
-build: CFLAGS += $(FLAGS_NO_LEAK_CHECK)
-build: LDFLAGS += $(FLAGS_NO_LEAK_CHECK)
-build: $(NAME) $(OBJS)
-
 leaks: CFLAGS += -DLEAK_CHECK=1
 leaks: $(NAME) $(OBJS)
 
-.PHONY: all clean fclean re build
+.PHONY: all clean fclean re
