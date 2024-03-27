@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 21:54:51 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 22:33:58 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,15 @@ static void	free_and_exit(t_shared_data	*shared_data, bool full_exit)
 		rl_clear_history();
 		wait_all_children(NULL);
 		exit(get_last_exit());
+	}
+	if (shared_data->cleanup_data->root
+		&& shared_data->cleanup_data->root->pid != INIT_VAL)
+	{
+		waitpid(shared_data->cleanup_data->root->pid,
+			&shared_data->cleanup_data->root->exit_status, 0);
+		shared_data->cleanup_data->root->exit_status
+			= WEXITSTATUS(shared_data->cleanup_data->root->exit_status);
+		set_last_exit(shared_data->cleanup_data->root->exit_status);
 	}
 	errno = 0;
 }
