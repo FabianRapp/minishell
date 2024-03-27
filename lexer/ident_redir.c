@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ident_redir.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 00:06:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 22:34:53 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 12:42:41 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static bool	valid_redir_arg(t_lexer *lexer, t_type type)
 	temp = *lexer;
 	if (type != HERE_DOC)
 		read_char(lexer);
-	while (ft_iswhitespace(lexer->cur_char))
+	while (ft_iswhitespace_minishell(lexer->cur_char))
 		read_char(lexer);
 	if (!is_redir_terminator_char(lexer->cur_char))
 	{
@@ -51,7 +51,7 @@ static t_result	lexer_here_doc(t_lexer *lexer, t_token *token)
 {
 	if (token->type != HERE_DOC)
 		return (SUCCESS);
-	while (ft_iswhitespace(lexer->cur_char))
+	while (ft_iswhitespace_minishell(lexer->cur_char))
 		read_char(lexer);
 	while (!is_redir_terminator_char(lexer->cur_char))
 	{

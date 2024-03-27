@@ -6,23 +6,42 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 12:26:54 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 12:30:40 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 13:14:27 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
+static t_result	handle_brackets(char *line, int *bracket_lvl, int i)
+{
+	if (line[i] == '(')
+		(*bracket_lvl)++;
+	if (line[i] == ')')
+		(*bracket_lvl)--;
+	if (*bracket_lvl < 0)
+	{
+		ft_fprintf(2, "%s : syntax error near unexpected token `)'\n", SHELL_NAME);
+		line[0] = 0;
+		return (set_last_exit(2), ERROR);
+	}
+	return (SUCCESS);
+}
 
 static bool	unopend_quote(char *line)
 {
 	bool	except;
 	int		i;
 	char	quote_type;
+	int		bracket_lvl;
 
-	i = 0;
 	except = false;
 	quote_type = 0;
-	while (line && line[i])
+	bracket_lvl = 0;
+	i = -1;
+	while (line && line[++i])
 	{
+		if (handle_brackets(line, &bracket_lvl, i) == ERROR)
+			return (false);
 		if (quote_type == line[i] && !except)
 			quote_type = 0;
 		else if (!except && ! quote_type)
@@ -30,15 +49,9 @@ static bool	unopend_quote(char *line)
 			if (line[i] == '\'' || line[i] == '\"')
 				quote_type = line[i];
 		}
-		if (!except && line[i] == '\\')
-			except = true;
-		else
-			except = false;
-		i++;
+		except = (!except && line[i] == '\\');
 	}
-	if (quote_type || (line && i && line[i - 1] == '\\'))
-		return (true);
-	return (false);
+	return (quote_type || except || (bracket_lvl && !TESTER));
 }
 
 static char	*handle_multi_line(char *line)

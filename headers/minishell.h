@@ -6,13 +6,38 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:24:35 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/27 12:34:25 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 13:29:58 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+/* additional stuff:
+- multi line for double quotes, single quotes and round brackets
+- semicolon
+- Real subshells like bash does
+- env -i
+- HERE-STR (<<<)
+- our own get_pid function and $$ expansion
+
+weird things that bash does that we do:
+- if the HERE-DOC (<<) arg is in duble quotes the lines are expanded
+	before written to a pipe
+- HERE-DOC is executed halvly during parsing and half during redirection
+- HERE-DOC gives waring when ctrl + D is pressed that shows the total lines
+	(of the entire shell) read so far
+- redirs can have two args: left and right. the left can be any open fd
+	(ech 2>a redirs the error message to a)
+- the right HERE-DOC arg is not expanded
+- env vars with whitespace as redir args without double quotes leads to
+	multiple arugments for a redir which results in an error
+- if export is not successfull the env is not added but when export is
+	ran without args the input is still displayed
+- newline is not whitespace
+- redirs on the left of a subshell are invalid while redirs on the right
+	redir the entire subshell
+*/
 # ifdef __linux__
 #  include <sys/types.h>
 #  include <sys/wait.h>

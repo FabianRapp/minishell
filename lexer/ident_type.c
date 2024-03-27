@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:29:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 05:56:11 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 12:41:00 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	basic_sign_type(t_lexer *lexer, t_token *token)
 {
 	if (lexer->cur_char == 0)
 		token->type = T_EOF;
-	else if (ft_iswhitespace(lexer->cur_char))
+	else if (ft_iswhitespace_minishell(lexer->cur_char))
 		token->type = WHITE_SPACE;
 	else if (lexer->cur_char == '&' && (lexer->str)[lexer->position + 1] == '&')
 		set_type_and_position(lexer, token, AND);

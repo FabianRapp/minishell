@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 06:59:45 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/06 08:14:17 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 12:40:02 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ bool	contains_non_white_spcace(char *str)
 		return (false);
 	while (*str)
 	{
-		if (!ft_iswhitespace(*str))
+		if (!ft_iswhitespace(*str) || *str == '\n')
 			return (true);
 		str++;
 	}

@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 00:15:26 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 12:35:27 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 12:39:14 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ bool	is_termination_char(char c)
 		|| c == '<'
 		|| c == '$'
 		|| c == '&'
-		|| ft_iswhitespace(c)
+		|| ft_iswhitespace_minishell(c)
 		|| c == ';'
 	)
 	{
@@ -43,7 +43,7 @@ bool	is_wildcard_block_termination(char c)
 		|| c == '<'
 		|| c == '$'
 		|| c == '&'
-		|| ft_iswhitespace(c)
+		|| ft_iswhitespace_minishell(c)
 		|| c == ';'
 	)
 	{
