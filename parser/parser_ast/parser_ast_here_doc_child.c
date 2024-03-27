@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 07:49:52 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 11:35:01 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 18:14:51 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ void	init_here_doc_child(int pipe_fd[2], char *termination,
 	t_here_doc_child_data	child_data;
 
 	errno = 0;
+	set_sig_do_nothing(SIGQUIT);
 	set_last_exit(0);
 	close(pipe_fd[READ]);
 	close(std_in_pipe[WRITE]);
@@ -95,6 +96,7 @@ void	init_here_doc_child(int pipe_fd[2], char *termination,
 	set_ctrl_c_heredoc();
 	parser_resolve_here_doc(&child_data);
 	set_signals();
+	set_sig_do_nothing(SIGQUIT);
 	close(std_in_pipe[READ]);
 	free(child_data.line);
 	close(pipe_fd[WRITE]);

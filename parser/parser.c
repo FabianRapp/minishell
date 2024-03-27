@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 22:35:39 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 17:49:33 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,11 @@ t_ast	*parser(char *str)
 	if (parse_redir_paths(parser) == ERROR)
 		return (free_parser_main(parser, true), NULL);
 	if (type_commands(parser) == ERROR)
+	{
+		
 		return (free_parser_main(parser, true), NULL);
+	}
+	
 	move_commands_infront(parser);
 	type_args(parser);
 	if (validate_command_order(parser) == ERROR)

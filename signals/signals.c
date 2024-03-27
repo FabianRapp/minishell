@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 18:05:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 15:02:19 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 18:09:40 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,18 +47,39 @@ static void	signal_handler_ctrl_c(int signal, siginfo_t *info, void *data)
 	set_last_exit(130);
 	rl_replace_line("", 0);
 	rl_on_new_line();
-	printf("\n");
+	ft_printf("\n");
 	if (redisplay_prompt(false, false))
 		rl_redisplay();
 }
 
-static t_result	set_ctrl_c(void)
+// static void	signal_handler_ctrl_c2(int signal, siginfo_t *info, void *data)
+// {
+// 	(void)info;
+// 	(void)data;
+// 	(void)signal;
+// 	here_doc_exit_state(true, true);
+// 	set_last_exit(130);
+// 	rl_replace_line("123123123123", 0);
+// 	//rl_on_new_line();
+// 	ft_printf("123123\n");
+// 	// rl_replace_line("", 0);
+// 	rl_on_new_line();
+// 	ft_printf("test\n");
+// 	if (redisplay_prompt(false, false))
+// 		rl_redisplay();
+// }
+
+t_result	set_ctrl_c(int nl_count)
 {
 	struct sigaction	sig;
 
+	(void)nl_count;
 	sigemptyset(&(sig.sa_mask));
 	sig.sa_flags = SA_SIGINFO;
-	sig.sa_sigaction = signal_handler_ctrl_c;
+	//if (nl_count == 1)
+		sig.sa_sigaction = signal_handler_ctrl_c;
+	// else if (nl_count == 2)
+	// 	sig.sa_sigaction = signal_handler_ctrl_c2;
 	if (sigaction(SIGINT, &sig, NULL) == -1)
 	{
 		print_error(true, NULL, NULL, strerror(errno));
@@ -71,6 +92,6 @@ static t_result	set_ctrl_c(void)
 
 void	set_signals(void)
 {
+	set_ctrl_c(1);
 	set_sig_do_nothing(SIGQUIT);
-	set_ctrl_c();
 }

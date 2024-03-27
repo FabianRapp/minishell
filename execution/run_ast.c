@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_ast.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 12:08:53 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 18:47:33 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 18:24:21 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,8 @@ static void	ft_semicol(t_ast *ast)
 			ast->exit_status = ast->left->exit_status;
 		else
 			ast->pid = ast->left->pid;
+		if (ast->left->pid != INIT_VAL)
+			waitpid(ast->left->pid, &ast->exit_status, 0);
 	}
 	if (ast->right)
 	{

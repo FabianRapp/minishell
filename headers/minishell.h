@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:24:35 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/27 17:23:03 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 17:54:20 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,6 +243,7 @@ void		set_signals(void);
 // t_result	set_ctrl_c(void);
 // void		signal_handler_ctrl_c(int signal, siginfo_t *info, void *data);
 // t_result	set_sig_do_nothing(void);
+t_result	set_ctrl_c(int nl_count);
 bool		redisplay_prompt(bool set_state, bool new_state);
 void		reset_signals(void);
 
