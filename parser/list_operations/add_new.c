@@ -6,28 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 22:13:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 22:36:01 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 15:32:21 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
-
-// t_result	insert_dummy_after(t_parser *parser)
-// {
-// 	t_parser	*dummy;
-
-// 	dummy = ft_calloc(1, sizeof(t_parser));
-// 	if (!dummy)
-// 		return (ERROR);
-// 	dummy->next = parser->next;
-// 	dummy->p_type = COMMAND;
-// 	dummy->token = new_dummy_token();
-// 	if (!dummy->token)
-// 		return (free(dummy), ERROR);
-// 	dummy->token->type = DUMMY_COMMAND;
-// 	parser->next = dummy;
-// 	return (SUCCESS);
-// }
 
 t_result	insert_dummy_here(t_parser *parser)
 {
@@ -78,3 +61,20 @@ t_parser	*init_parser(char *str)
 		return (free(lexer.str), parser->next);
 	return (free(lexer.str), NULL);
 }
+
+// t_result	insert_dummy_after(t_parser *parser)
+// {
+// 	t_parser	*dummy;
+
+// 	dummy = ft_calloc(1, sizeof(t_parser));
+// 	if (!dummy)
+// 		return (ERROR);
+// 	dummy->next = parser->next;
+// 	dummy->p_type = COMMAND;
+// 	dummy->token = new_dummy_token();
+// 	if (!dummy->token)
+// 		return (free(dummy), ERROR);
+// 	dummy->token->type = DUMMY_COMMAND;
+// 	parser->next = dummy;
+// 	return (SUCCESS);
+// }

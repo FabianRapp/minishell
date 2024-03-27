@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ident_redir.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 00:06:31 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 12:42:41 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 15:23:57 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,10 @@ t_result	redir_type(t_lexer *lexer, t_token *token, bool recursive_call)
 	{
 		token->type = REDIR_OUT;
 		if (lexer->str[lexer->read_position] == '>')
-			(read_char(lexer), token->type = REDIR_APPEND);
+		{
+			read_char(lexer);
+			token->type = REDIR_APPEND;
+		}
 	}
 	if (!recursive_call && !valid_redir_arg(lexer, token->type))
 		return (ERROR);

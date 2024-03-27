@@ -3,41 +3,45 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:24:35 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/27 13:29:58 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 15:09:54 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-/* additional stuff:
-- multi line for double quotes, single quotes and round brackets
-- semicolon
-- Real subshells like bash does
-- env -i
-- HERE-STR (<<<)
-- our own get_pid function and $$ expansion
+/* **************************   ADDITIONAL STUFF:    **************************
+-	multi line for double quotes, single quotes and round brackets
+-	semicolon
+-	Real subshells like bash does
+-	$SHLVL
+-	env -i
+-	HERE-STR (<<<)
+-	our own get_pid function and $$ expansion
+-	export +=
+-	$_
 
-weird things that bash does that we do:
-- if the HERE-DOC (<<) arg is in duble quotes the lines are expanded
+Weird things bash does that we do:
+-	if the HERE-DOC (<<) arg is in duble quotes the lines are expanded
 	before written to a pipe
-- HERE-DOC is executed halvly during parsing and half during redirection
-- HERE-DOC gives waring when ctrl + D is pressed that shows the total lines
+-	HERE-DOC is executed halfly during parsing and half during redirection
+-	HERE-DOC gives waring when ctrl + D is pressed that shows the total lines
 	(of the entire shell) read so far
-- redirs can have two args: left and right. the left can be any open fd
+-	redirs can have two args: left and right. the left can be any open fd
 	(ech 2>a redirs the error message to a)
-- the right HERE-DOC arg is not expanded
-- env vars with whitespace as redir args without double quotes leads to
-	multiple arugments for a redir which results in an error
-- if export is not successfull the env is not added but when export is
+-	the right HERE-DOC arg is not expanded
+-	env vars with whitespace as redir args without double quotes leads to
+	multiple arguments for a redir which results in an error
+-	if export is not successfull the env is not added but when export is
 	ran without args the input is still displayed
-- newline is not whitespace
-- redirs on the left of a subshell are invalid while redirs on the right
+-	newline is not whitespace
+-	redirs on the left of a subshell are invalid while redirs on the right
 	redir the entire subshell
 */
+
 # ifdef __linux__
 #  include <sys/types.h>
 #  include <sys/wait.h>
@@ -234,12 +238,7 @@ char		***get_env_list(char ***set_new_env);
 /******************************************************************************/
 
 void		set_signals(void);
-// t_result	set_ctrl_c(void);
-// void		signal_handler_ctrl_c(int signal, siginfo_t *info, void *data);
-// t_result	set_ctrl_slash(void);
 bool		redisplay_prompt(bool set_state, bool new_state);
-// void		init_terminal_settings(void); //? it doesn't seem to be used
-// void		reset_terminal_settings(void);//? goes with the above uncalled
 void		reset_signals(void);
 
 /******************************************************************************/
@@ -251,6 +250,7 @@ typedef struct s_status_handler
 	bool	set;
 	int		val;
 }	t_status_handler;
+
 char		*ft_read_line(char *header);
 t_result	set_ctrl_c_heredoc(void);
 t_result	insert_whitespace_before(t_token_list **head);
@@ -297,6 +297,5 @@ int			name_len(char *str);
 bool		here_doc_exit_state(bool change_state, bool new_state);
 bool		ignore_empty_line(bool set_next_to_ignore);
 bool		ft_iswhitespace_minishell(char c);
-//DEBUGGING FUNCTIONS??
 
 #endif	//MINISHELL_H

@@ -6,27 +6,11 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 19:22:05 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 22:33:19 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 15:14:46 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
-
-// void	print_wildcard_data(t_wildcard_parameters *data)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	printf("pre: %s\n", data->prefix);
-// 	printf("mid: ");
-// 	if (!data->sub_str || !data->sub_str[i])
-// 		printf("%s\n", (char *) NULL);
-// 	else
-// 		printf("\n");
-// 	while (data->sub_str && data->sub_str[i])
-// 		printf("%s\n", data->sub_str[i++]);
-// 	printf("su: %s\n", data->suffix);
-// }
 
 static t_result	fill_prefix(char **str, t_wildcard_parameters *w_para)
 {
@@ -102,3 +86,19 @@ bool	matches_wildcard(char *str, t_wildcard_parameters *w_para)
 		return (false);
 	return (true);
 }
+
+// void	print_wildcard_data(t_wildcard_parameters *data)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	printf("pre: %s\n", data->prefix);
+// 	printf("mid: ");
+// 	if (!data->sub_str || !data->sub_str[i])
+// 		printf("%s\n", (char *) NULL);
+// 	else
+// 		printf("\n");
+// 	while (data->sub_str && data->sub_str[i])
+// 		printf("%s\n", data->sub_str[i++]);
+// 	printf("su: %s\n", data->suffix);
+// }

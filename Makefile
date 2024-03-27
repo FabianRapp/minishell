@@ -51,12 +51,12 @@ SRC_EXECUTION	=	execution/redirections/redir_error_handler.c \
 					execution/utils/subshell_bracket_verification.c \
 					execution/utils/get_pid.c
 
-SRC_UTILS		=	utils/signals.c utils/debugging.c utils/fd1.c utils/groups1.c \
+SRC_UTILS		=	utils/signals.c utils/signals2.c utils/fd1.c utils/groups1.c \
 					utils/groups2.c utils/get_state.c utils/cleanup2.c \
 					utils/utils.c utils/exit_state.c utils/cleanup.c \
 					utils/error_handlers.c utils/alloc_utils.c \
-					utils/type_to_error.c utils/ft_read_line.c \
-					utils/signals2.c 
+					utils/type_to_error.c utils/ft_read_line.c
+					 
 
 SRCS	=	$(SRC_BUILTINS) $(SRC_ENVIRONMENT) $(SRC_LEXER) $(SRC_PARSER) \
 			$(SRC_EXPANSION) $(SRC_EXECUTION) $(SRC_UTILS) main.c

@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:49:22 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/26 22:33:32 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 15:16:32 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,7 @@ static t_result	expand_wildcard_node(t_token_list *node)
 		return (free(data.w_str), clean_wildcard_data(&(data.w_para)),
 			closedir(data.cur_dir), errno_to_result());
 	data.cur = data.w_head;
-	data.cur->next = next_wildcard_token(
-			data.cur_dir, &(data.w_para));
+	data.cur->next = next_wildcard_token(data.cur_dir, &(data.w_para));
 	while (data.cur->next)
 	{
 		data.cur = data.cur->next;
