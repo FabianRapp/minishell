@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 04:56:10 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 19:45:04 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 21:24:54 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ t_result	here_doc_parent(char *termination, int pipe_fd[2], int pid,
 			rl_replace_line(vars.line, 0);
 			free(vars.tmp);
 		}
+		line_counter();
 		set_sig_do_nothing(SIGINT);
 		write(std_in_pipe[WRITE], vars.line, ft_strlen(vars.line));
 		if (!vars.line || (vars.line && ft_strcmp(vars.line, termination) == 0))

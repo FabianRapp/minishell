@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 08:53:04 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 10:24:43 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 21:57:32 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,29 @@ static int	catch_pid(int fd[2])
 // always calls exit()
 static void	send_pid(int fd[2], int pid)
 {
-	int	exit_status;
+	int				exit_status;
+	struct termios	base_term;
 
+	if (isatty(0) && tcgetattr(0, &base_term) == -1)
+	{
+		tcsetattr(0, TCSANOW, &base_term);
+		exit(errno);
+	}
 	if (pid == -1 || close(fd[READ]) == -1 || write(fd[WRITE],
 			&pid, sizeof(pid_t)) == -1 || close(fd[WRITE]) == -1)
 	{
+		if (isatty(0))
+			tcsetattr(0, TCSANOW, &base_term);
 		exit(errno);
 	}
 	if (waitpid(pid, &exit_status, 0) == -1)
+	{
+		tcsetattr(0, TCSANOW, &base_term);
 		exit(errno);
+	}
 	exit_status = WEXITSTATUS(exit_status);
+	if (isatty(0))
+		tcsetattr(0, TCSANOW, &base_term);
 	exit(exit_status);
 }
 

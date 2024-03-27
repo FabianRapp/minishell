@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 09:58:09 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 18:10:22 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 21:48:15 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,19 @@ void	reset_signals(void)
 
 static void	handler_ctrl_c_heredoc(int signal, siginfo_t *info, void *data)
 {
+	struct termios	base_term;
+	struct termios	cur_term;
+
 	(void)info;
 	(void)data;
 	(void)signal;
+	tcgetattr(0, &cur_term);
+	get_base_term(false, &base_term);
+	base_term.c_lflag &= ECHOCTL;
+	tcsetattr(0, TCSANOW, &base_term);
 	here_doc_exit_state(true, true);
 	set_last_exit(130);
+	tcsetattr(0, TCSANOW, &cur_term);
 }
 
 t_result	set_ctrl_c_heredoc(void)
@@ -64,46 +72,19 @@ t_result	set_signals_heredoc_parent(void)
 	return (SUCCESS);
 }
 
-// void	reset_terminal_settings(void)
-// {
-// 	struct termios	terminal;
+t_result	set_sig_do_nothing(int signal)
+{
+	struct sigaction	sig;
 
-// 	if (tcgetattr(STDIN_FILENO, &terminal) == -1)
-// 	{
-// 		print_error(true, NULL, NULL, strerror(errno));
-// 		set_last_exit(errno);
-// 		full_exit_status(true);
-// 		return ;
-// 	}
-// 	terminal.c_lflag |= ECHO;
-// 	if (tcsetattr(STDIN_FILENO, TCSANOW, &terminal) == -1)
-// 	{
-// 		print_error(true, NULL, NULL, strerror(errno));
-// 		set_last_exit(errno);
-// 		full_exit_status(true);
-// 		return ;
-// 	}
-// }
-
-// void	init_terminal_settings(void)
-// {
-// 	struct termios	terminal;
-
-// 	if (tcgetattr(STDIN_FILENO, &terminal) == -1)
-// 	{
-// 		print_error(true, NULL, NULL, strerror(errno));
-// 		set_last_exit(errno);
-// 		full_exit_status(true);
-// 		return ;
-// 	}
-// 	terminal.c_lflag &= ~ECHO;
-// 	terminal.c_lflag &= ~ISIG;
-// 	if (tcsetattr(STDIN_FILENO, TCSANOW, &terminal) == -1)
-// 	{
-// 		reset_terminal_settings();
-// 		print_error(true, NULL, NULL, strerror(errno));
-// 		set_last_exit(errno);
-// 		full_exit_status(true);
-// 		return ;
-// 	}
-// }
+	sigemptyset(&(sig.sa_mask));
+	sig.sa_flags = 0;
+	sig.sa_handler = SIG_IGN;
+	if (sigaction(signal, &sig, NULL) == -1)
+	{
+		print_error(true, NULL, NULL, strerror(errno));
+		set_last_exit(errno);
+		full_exit_status(true);
+		return (ERROR);
+	}
+	return (SUCCESS);
+}

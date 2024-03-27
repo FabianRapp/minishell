@@ -6,11 +6,26 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 19:43:44 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 21:54:51 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
+
+static char	*get_input_util(char *input, t_cleanup_data *cleanup_data)
+{
+	if (!input && !ignore_empty_line(false))
+	{
+		if (!TESTER)
+			ft_fprintf(2, "exit\n");
+		main_exit(cleanup_data, true, true);
+	}
+	errno = 0;
+	if (!contains_non_white_spcace(input))
+		return (free(input), NULL);
+	add_history(input);
+	return (input);
+}
 
 t_ast	*get_input(t_cleanup_data *cleanup_data)
 {
@@ -23,16 +38,8 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 	set_signals();
 	input = ft_read_line("minishell-$: ");
 	set_sig_do_nothing(SIGINT);
-	if (!input && !ignore_empty_line(false))
-	{
-		if (!TESTER)
-			ft_fprintf(2, "exit\n");
-		main_exit(cleanup_data, true, true);
-	}
-	errno = 0;
-	if (!contains_non_white_spcace(input))
-		return (free(input), NULL);
-	add_history(input);
+	if (!get_input_util(input, cleanup_data))
+		return (NULL);
 	term_settings = cleanup_data->shared_data->base_term_settings;
 	term_settings.c_lflag &= ~ECHOCTL;
 	if (isatty(0) && tcsetattr(0, TCSANOW, &term_settings) == -1)
