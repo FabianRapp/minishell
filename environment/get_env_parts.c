@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_env_parts.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/27 05:21:33 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 22:48:20 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,9 @@ static char	*handle_buffer(char *value, char *buffer, int buf_size)
 	return (buffer);
 }
 
-// enters the value into the buffer
-// unless strlen(value) >= buf_size ||
-// buffer == NULL, in that case the value
-// is allotcated
-// even without allocated return internally allocation
+// enters the value into the buffer unless strlen(value) >= buf_size 
+// or buffer == NULL. in that case the value is allotcated
+// even without allocated return. internally allocation
 // if the value does not fit in the buffer and a buffer is given NULL is
 // retured
 // returns the pointer to the value
