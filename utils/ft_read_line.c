@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 12:26:54 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 13:42:31 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 18:30:12 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ static bool	unopend_quote(char *line)
 		}
 		except = (!except && line[i] == '\\');
 	}
+	if (line && i && (line[i - 1] == '|' || line[i - 1] == '&'))
+		return (true);
 	return (quote_type || except || (bracket_lvl && !TESTER));
 }
 
