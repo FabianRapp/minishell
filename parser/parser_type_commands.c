@@ -6,13 +6,14 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 19:47:45 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 18:20:44 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 21:49:18 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-static void	handle_operator_2ndscenario(t_parser *parser, bool *found_command, bool semi)
+static void	handle_operator_2ndscenario(t_parser *parser, bool *found_command,
+	bool semi)
 {
 	set_last_exit(2);
 	if (semi)
@@ -43,7 +44,7 @@ static t_parser	*handle_operator(t_parser *parser,
 		return (set_last_exit(2), print_error(true, NULL, NULL,
 				type_to_error(parser->p_type)), NULL);
 	else if ((!parser->next || is_operator(parser->next->p_type)
-		|| parser->next->p_type == T_EOF) && !semi)
+			|| parser->next->p_type == T_EOF) && !semi)
 	{
 		handle_operator_2ndscenario(parser, found_command, semi);
 		return (NULL);
@@ -61,7 +62,6 @@ static t_parser	*handle_operator(t_parser *parser,
 static t_result	parser_handle_end(t_parser *parser, bool found_command,
 	bool found_redir)
 {
-	//print_error(0, "test", 0, 0);
 	if (!found_redir && !found_command && parser->p_type != SEMICOL
 		&& last_parser(parser)->p_type != SEMICOL)
 	{

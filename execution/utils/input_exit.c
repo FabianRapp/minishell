@@ -6,40 +6,26 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 19:14:00 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 22:33:58 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 
-// int main() {
-// 	struct termios	term_settings;
-// 	int fd = STDIN_FILENO;
-
-
-// 	// Change settings
-// 	// For example, disable EOF character by setting it to a non-existent value
-// 	term_settings.c_cc[VEOF] = _POSIX_VDISABLE; // Disable EOF character
-
-// 	// Apply the modified settings
-// 	if (tcsetattr(fd, TCSANOW, &term_settings) < 0)
-// 	{
-// 		perror("tcsetattr");
-// 		return 1;
-// 	}
-
-// 	printf("The EOF character is now disabled. Press Enter to restore settings...\n");
-// 	getchar(); // Wait for user input
-
-// 	// Restore original settings
-// 	if (tcsetattr(fd, TCSANOW, &term_settings) < 0) {
-// 		perror("tcsetattr");
-// 		return 1;
-// 	}
-
-// 	printf("Terminal settings restored.\n");
-// 	return 0;
-// }
+static char	*get_input_util(char *input, t_cleanup_data *cleanup_data)
+{
+	if (!input && !ignore_empty_line(false))
+	{
+		if (!TESTER)
+			ft_fprintf(2, "exit\n");
+		main_exit(cleanup_data, true, true);
+	}
+	errno = 0;
+	if (!contains_non_white_spcace(input))
+		return (free(input), NULL);
+	add_history(input);
+	return (input);
+}
 
 t_ast	*get_input(t_cleanup_data *cleanup_data)
 {
@@ -52,19 +38,12 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 	set_signals();
 	input = ft_read_line("minishell-$: ");
 	set_sig_do_nothing(SIGINT);
-	if (!input && !ignore_empty_line(false))
-	{
-		if (!TESTER)
-			ft_fprintf(2, "exit\n");
-		main_exit(cleanup_data, true, true);
-	}
-	errno = 0;
-	if (!contains_non_white_spcace(input))
-		return (free(input), NULL);
-	add_history(input);
+	if (!get_input_util(input, cleanup_data))
+		return (NULL);
 	term_settings = cleanup_data->shared_data->base_term_settings;
 	term_settings.c_lflag &= ~ECHOCTL;
-	tcsetattr(0, TCSANOW, &term_settings);
+	if (isatty(0) && tcsetattr(0, TCSANOW, &term_settings) == -1)
+		return (free(input), NULL);
 	ast = parser(input);
 	tcsetattr(0, TCSANOW, &cleanup_data->shared_data->base_term_settings);
 	errno = 0;
@@ -88,6 +67,15 @@ static void	free_and_exit(t_shared_data	*shared_data, bool full_exit)
 		rl_clear_history();
 		wait_all_children(NULL);
 		exit(get_last_exit());
+	}
+	if (shared_data->cleanup_data->root
+		&& shared_data->cleanup_data->root->pid != INIT_VAL)
+	{
+		waitpid(shared_data->cleanup_data->root->pid,
+			&shared_data->cleanup_data->root->exit_status, 0);
+		shared_data->cleanup_data->root->exit_status
+			= WEXITSTATUS(shared_data->cleanup_data->root->exit_status);
+		set_last_exit(shared_data->cleanup_data->root->exit_status);
 	}
 	errno = 0;
 }

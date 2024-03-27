@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 06:04:52 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 17:54:14 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 20:52:05 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,11 +100,12 @@ int	run_command_node(t_ast *ast)
 		return (set_errno_as_exit(ast, true), free_child_data(&data), 0);
 	if (ast->pid != 0)
 		return (free_child_data(&data), 1);
-	reset_signals();
 	set_ctrl_c(2);
 	ft_close(&(ast->fd_to_close));
 	ft_close(&(ast->fd_to_close_write));
 	ft_close(&(ast->fd_to_close_read));
+	reset_signals();
+	set_ctrl_c(2);
 	if (ast->shared_data->envs)
 		execve(data.path, data.argv, *(ast->shared_data->envs));
 	else

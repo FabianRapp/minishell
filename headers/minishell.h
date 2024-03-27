@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:24:35 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/27 18:50:59 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 21:07:46 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,6 +216,14 @@ typedef struct s_cd_step_data
 	char	old_pwd[PATH_MAX + 1];
 }	t_cd_step_data;
 
+typedef struct s_here_doc_norm
+{
+	int				child_has_exited;
+	int				child_exit_status;
+	char			*line;
+	char			*tmp;
+}	t_here_doc_norm;
+
 t_result	check_path_len(t_ast *ast, char *path);
 char		*get_parent_dir_path(void);
 int			ft_update_dir_vars(t_ast *ast, char *before, char *after);
@@ -247,6 +255,7 @@ void		set_signals(void);
 t_result	set_ctrl_c(int nl_count);
 bool		redisplay_prompt(bool set_state, bool new_state);
 void		reset_signals(void);
+void		get_base_term(bool set, struct termios *new_term);
 
 /******************************************************************************/
 /* *********************               UTILS:              ****************** */

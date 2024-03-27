@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 08:54:59 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 17:49:33 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 21:48:50 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,10 +127,8 @@ t_ast	*parser(char *str)
 		return (free_parser_main(parser, true), NULL);
 	if (type_commands(parser) == ERROR)
 	{
-		
 		return (free_parser_main(parser, true), NULL);
 	}
-	
 	move_commands_infront(parser);
 	type_args(parser);
 	if (validate_command_order(parser) == ERROR)
