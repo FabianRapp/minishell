@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:24:35 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/27 08:04:58 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 08:59:35 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,6 +270,7 @@ void		add_token_node_front(t_token_list **head, t_token_list *new_list);
 char		*ft_read_line(char *header);
 int			name_len(char *str);
 bool		here_doc_exit_state(bool change_state, bool new_state);
+bool		ignore_empty_line(bool set_next_to_ignore);
 //DEBUGGING FUNCTIONS??
 
 #endif	//MINISHELL_H

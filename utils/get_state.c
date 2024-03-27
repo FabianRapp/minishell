@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 00:30:16 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 07:56:02 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 08:57:57 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,14 @@ bool	here_doc_exit_state(bool change_state, bool new_state)
 	if (change_state)
 		here_doc_exit = new_state;
 	return (here_doc_exit);
+}
+
+bool	ignore_empty_line(bool set_next_to_ignore)
+{
+	static bool	ignore_next_emtpy = false;
+	bool		return_val;
+
+	return_val = ignore_next_emtpy;
+	ignore_next_emtpy = set_next_to_ignore;
+	return (return_val);
 }

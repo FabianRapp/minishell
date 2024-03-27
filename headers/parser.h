@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:24:35 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/27 08:06:47 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 08:15:02 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ typedef struct s_left_right_parsers
 typedef struct s_here_doc_child_data
 {
 	char	*termination;
-	int		fd;
+	int		fd[2];
 	bool	expand_vars;
 	char	*line;
 	bool	start;
@@ -96,7 +96,7 @@ t_arg					*append_arg(t_parser *parser, t_arg *head_arg);
 char					*parser_expand_line(char *line);
 t_ast					*build_ast(t_parser *parser);
 void					init_here_doc_child(int pipe_fd[2], char *termination,
-							t_redir *redir);
+							t_redir *redir, int std_in_pipe[2]);
 t_here_doc_child_data	*heredoc_chil_data_state(
 							t_here_doc_child_data *new_state);
 

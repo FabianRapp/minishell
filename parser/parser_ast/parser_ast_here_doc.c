@@ -6,54 +6,92 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 04:56:10 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 07:49:50 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 09:06:47 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 
-t_result	here_doc_parent(char *termination, int pipe_fd[2], int pid)
+t_result	here_doc_parent(char *termination, int pipe_fd[2], int pid, int std_in_pipe[2])
 {
 	int		child_has_exited;
 	int		child_exit_status;
+	char	*line;
+	char	*tmp;
 
+	close(std_in_pipe[READ]);
+	tmp = ft_strtrim(termination, "\n");
 	free(termination);
-	close(pipe_fd[WRITE]);
+	termination = tmp;
+	ft_close(&pipe_fd[WRITE]);
 	child_has_exited = 0;
 	while (child_has_exited == 0 && !here_doc_exit_state(false, false))
 	{
 		child_has_exited = waitpid(pid, &child_exit_status, WNOHANG);
+		// read(0, , 1);
+		line = ft_read_line("> ");
+		if (!line)
+		{
+			ignore_empty_line(true);
+			break ;
+		}
+		if (line)
+			write(std_in_pipe[WRITE], line, ft_strlen(line));
+		write(std_in_pipe[WRITE], "\n", 1);
+		if (line && ft_strcmp(line, termination) == 0)
+		{
+			free(line);
+			break ;
+		}
+		// 	write(std_in_pipe[WRITE], "\n", 1);
+		//else
+		//	write(std_in_pipe[WRITE], "\0", 1);
+		free(line);
+		line = NULL;
+		printf("here\n");
+		// else
+		// 	break
+		//printf("line: %s\n", line);
 	}
+	//ignore_empty_line(true);
+	
+	free(termination);
+	printf("here2\n");
+	close(std_in_pipe[WRITE]);
 	if (here_doc_exit_state(false, false))
 	{
-		return (close(pipe_fd[READ]), ERROR);
+		return (ft_close(&pipe_fd[READ]), ERROR);
 	}
 	child_exit_status = WEXITSTATUS(child_exit_status);
-	if (child_exit_status)
-		return (set_last_exit(child_exit_status), close(pipe_fd[READ]), ERROR);
+	if (child_has_exited && child_exit_status)
+		return (set_last_exit(child_exit_status), ft_close(&pipe_fd[READ]), ERROR);
 	return (SUCCESS);
 }
 
 t_result	fork_here_doc(char *termination, int pipe_fd[2], t_redir *redir)
 {
 	int		pid;
+	int		std_in_pipe[2];
 
 	here_doc_exit_state(true, false);
+	pipe(std_in_pipe);
 	pid = fork();
 	if (pid == -1)
 	{
+		close(std_in_pipe[READ]);
+		close(std_in_pipe[WRITE]);
 		free(termination);
-		close(pipe_fd[WRITE]);
-		close(pipe_fd[READ]);
+		ft_close(&pipe_fd[WRITE]);
+		ft_close(&pipe_fd[READ]);
 		set_last_exit(errno);
 		print_error(true, NULL, NULL, strerror(errno));
 		return (ERROR);
 	}
 	else if (pid > 0)
 	{
-		return (here_doc_parent(termination, pipe_fd, pid));
+		return (here_doc_parent(termination, pipe_fd, pid, std_in_pipe));
 	}
-	init_here_doc_child(pipe_fd, termination, redir);
+	init_here_doc_child(pipe_fd, termination, redir, std_in_pipe);
 	return (ERROR);
 }
 

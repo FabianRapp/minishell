@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 07:49:52 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 07:57:49 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 08:44:56 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,22 @@ t_here_doc_child_data	*heredoc_chil_data_state(
 	return (vars);
 }
 
-static char	*get_line(void)
+static char	*get_line(int fd)
 {
 	char	*line;
 	char	*tmp;
 
 	line = NULL;
-	if (!isatty(0))
+	//if (!isatty(0))
 	{
-		tmp = get_next_line(0);
+		tmp = get_next_line(fd);
 		set_signals();
 		line = ft_strtrim(tmp, "\n");
 		free(tmp);
 		set_ctrl_c_heredoc();
 	}
-	else
-		line = readline(">");
+	//else
+	//	line = readline(">");
 	return (line);
 }
 
@@ -46,7 +46,7 @@ static bool	handle_success(char **line, int count, char *termination)
 	char	*tmp;
 
 	set_signals();
-	if (!*line)
+	if (!*line || !**line)
 	{
 		tmp = ft_strtrim(termination, "\n");
 		ft_fprintf(2, "%s: warning: here-document at line %d delimited by "
@@ -69,7 +69,7 @@ static t_result	parser_resolve_here_doc(t_here_doc_child_data *vars)
 		set_signals();
 		ft_free((void **)&(vars->line));
 		set_ctrl_c_heredoc();
-		vars->line = get_line();
+		vars->line = get_line(vars->fd[READ]);
 		vars->count = line_counter();
 		if (here_doc_exit_state(false, false))
 			return (ERROR);
@@ -79,7 +79,7 @@ static t_result	parser_resolve_here_doc(t_here_doc_child_data *vars)
 			return (SUCCESS);
 		if (vars->expand_vars)
 			vars->line = parser_expand_line(vars->line);
-		if (ft_fprintf(vars->fd, "%s", vars->line) == -1)
+		if (ft_fprintf(vars->fd[WRITE], "%s", vars->line) == -1)
 			return (set_last_exit(errno), ERROR);
 	}
 	if (errno)
@@ -87,21 +87,27 @@ static t_result	parser_resolve_here_doc(t_here_doc_child_data *vars)
 	return (set_last_exit(1), ERROR);
 }
 
-void	init_here_doc_child(int pipe_fd[2], char *termination, t_redir *redir)
+void	init_here_doc_child(int pipe_fd[2], char *termination, t_redir *redir, int std_in_pipe[2])
 {
 	t_here_doc_child_data	child_data;
 
 	errno = 0;
 	set_last_exit(0);
 	close(pipe_fd[READ]);
-	child_data.fd = pipe_fd[WRITE];
+	close(std_in_pipe[WRITE]);
+	child_data.fd[WRITE] = pipe_fd[WRITE];
+	child_data.fd[READ] = std_in_pipe[READ];
 	child_data.termination = termination;
 	child_data.expand_vars = !(redir->here_doc_literal);
 	child_data.line = NULL;
 	heredoc_chil_data_state(&child_data);
 	set_ctrl_c_heredoc();
-	parser_resolve_here_doc(&child_data);
+	if (parser_resolve_here_doc(&child_data) == ERROR)
+		printf("child resolving returned WITH error (exit status: %d)\n", get_last_exit());
+	else
+		printf("child resolving returned with no error (exit status: %d)\n", get_last_exit());
 	set_signals();
+	close(std_in_pipe[READ]);
 	free(child_data.line);
 	close(pipe_fd[WRITE]);
 	free(termination);
