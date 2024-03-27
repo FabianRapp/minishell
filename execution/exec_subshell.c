@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 07:36:56 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 07:04:26 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 13:43:48 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ static void	run_sub_shell(t_shared_data shared_sub_vars,
 		waitpid(sub_ast->pid, &(sub_ast->exit_status), 0);
 		sub_ast->exit_status = WEXITSTATUS(sub_ast->exit_status);
 	}
-	//wait_all_children(sub_ast);
 	set_last_exit(sub_ast->exit_status);
 	ast->exit_status = sub_ast->exit_status;
 	free_ast(sub_ast);

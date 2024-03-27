@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 12:26:54 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 13:14:27 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 13:42:31 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ static t_result	handle_brackets(char *line, int *bracket_lvl, int i)
 		(*bracket_lvl)--;
 	if (*bracket_lvl < 0)
 	{
-		ft_fprintf(2, "%s : syntax error near unexpected token `)'\n", SHELL_NAME);
+		ft_fprintf(2, "%s : syntax error near unexpected token `)'\n",
+			SHELL_NAME);
 		line[0] = 0;
 		return (set_last_exit(2), ERROR);
 	}
