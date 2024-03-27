@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/27 02:29:41 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 13:57:53 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	handle_args(t_arg *arg, t_shared_data *shared_data)
 	t_shared_data	new_shared_data;
 	char			**empty_env;
 
-	empty_env = ft_calloc(40, sizeof(char *));
+	empty_env = ft_calloc(60, sizeof(char *));
 	new_shared_data = *shared_data;
 	new_shared_data.envs = &empty_env;
 	ast = init_val;
@@ -65,7 +65,7 @@ int	ft_env(t_ast *ast)
 		tmp = *(get_env_list(NULL));
 	i = -1;
 	while (tmp[++i])
-		printf("%s\n", tmp[i]);
+		ft_printf("%s\n", tmp[i]);
 	ft_cur_exit(ast, 0);
 	return (free(path), 0);
 }

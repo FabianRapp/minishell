@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 12:16:11 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 14:12:23 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,12 @@ static void	free_and_exit(t_shared_data	*shared_data, bool full_exit)
 			ft_free_2darr(*(shared_data->env_exp));
 		if (shared_data->envs)
 			ft_free_2darr(*(shared_data->envs));
-		if (LEAK_CHECK)
-			system("leaks minishell");
-		rl_clear_history();
-		wait_all_children(NULL);
 		if (full_exit_status(false) && !TESTER)
 			ft_fprintf(2, "exit\n");
+		rl_clear_history();
+		wait_all_children(NULL);
 		exit(get_last_exit());
 	}
-	if (LEAK_CHECK)
-		system("leaks minishell");
 	errno = 0;
 }
 

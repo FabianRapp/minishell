@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:24:35 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/27 02:30:15 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 13:56:18 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	ft_pwd(t_ast *ast)
 
 	if (getcwd(cwd, PATH_MAX))
 	{
-		printf("%s\n", cwd);
+		ft_printf("%s\n", cwd);
 		ft_cur_exit(ast, 0);
 		return (SUCCESS);
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 08:00:49 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/27 02:28:50 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 13:57:17 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ static bool	is_the_n_option(char *arg)
 static bool	print_with_or_without_space(t_arg *cur_arg, char *str_value)
 {
 	if (cur_arg->next)
-		printf("%s ", str_value);
+		ft_printf("%s ", str_value);
 	else
-		printf("%s", str_value);
+		ft_printf("%s", str_value);
 	return (true);
 }
 
@@ -70,7 +70,7 @@ t_result	ft_echo(t_ast *ast, t_arg *cur_arg)
 		cur_arg = cur_arg->next;
 	}
 	if (no_new_line == false)
-		printf("\n");
+		ft_printf("\n");
 	return (ft_cur_exit(ast, 0));
 }
 
@@ -81,7 +81,7 @@ t_result	ft_cap_echo(t_ast *ast, t_arg *cur_arg)
 
 	ft_cur_exit(ast, 0);
 	if (!cur_arg)
-		return (printf("\n"), 0);
+		return (ft_printf("\n"), 0);
 	no_new_line = false;
 	str = cur_arg->name->token->str_data;
 	if (*str && *str == '-' && *(str + 1) == 'n' && !*(str + 2))
@@ -99,6 +99,6 @@ t_result	ft_cap_echo(t_ast *ast, t_arg *cur_arg)
 		cur_arg = cur_arg->next;
 	}
 	if (no_new_line == false)
-		printf("\n");
+		ft_printf("\n");
 	return (SUCCESS);
 }
