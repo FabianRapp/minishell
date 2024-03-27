@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:24:35 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/27 04:33:14 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 05:13:26 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# ifdef __linux__ //? is it on purpose ifdef instead of ifndef?
+# ifdef __linux__
 #  include <sys/types.h>
 #  include <sys/wait.h>
 # endif
@@ -198,7 +198,7 @@ char		**ft_initialize_env(char **base_env);
 char		*get_env_value(char **env, char *var_name,
 				char *buffer, int buf_size);
 char		**new_env_list_after_add(char *str_to_add, char **env, bool plus);
-char		*get_env_var_name(char *line);
+char		*get_env_var_name(char *line, bool plus);
 char		**new_env_list_after_delete(char *var_to_rm, char **env_before);
 void		ft_update_env(char *var_name, char *new_value, char **env);
 char		***get_env_list(char ***set_new_env);

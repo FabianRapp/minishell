@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   modify_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/27 04:17:27 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 05:35:12 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,16 @@ static bool	if_already_in_env(char **env, char *str_to_add, bool plus)
 	i = 0;
 	if (!env)
 		return (false);
-	var_to_add = get_env_var_name(str_to_add);
-	line_name = get_env_var_name(env[i]);
+	// if (plus)
+	// 	printf("plus: %s\n", str_to_add);
+	// else
+	// 	printf("no plus: %s\n", str_to_add);
+	var_to_add = get_env_var_name(str_to_add, plus);
+	line_name = get_env_var_name(env[i], plus);
 	while (env[i] && ft_strcmp(line_name, var_to_add))
 	{
 		free(line_name);
-		line_name = get_env_var_name(env[++i]);
+		line_name = get_env_var_name(env[++i], plus);
 	}
 	free(line_name);
 	if (!env[i])
@@ -41,16 +45,19 @@ static bool	if_already_in_env(char **env, char *str_to_add, bool plus)
 	return (free(var_to_add), true);
 }
 
-static char	*ft_rm_the_plus_from_str(char *str)
+static void	ft_rm_the_plus_from_str(char *str)
 {
-	char	*var_name;
-	char	*value;
+	int		i;
 
-	var_name = get_env_var_name(str);
-	value = ft_substr(str, ft_strlen(var_name) + 1, ft_strlen(str)
-			- ft_strlen(var_name) - 1);
-	free(str);
-	return (ft_strjoin_free_both(var_name, value));
+	i = 0;
+	while (str[i] && str[i] != '=')
+	{
+		if (str[i] == '+')
+		{
+			ft_memmove(str + i, str + i + 1, ft_strlen(str) - i);
+		}
+		i++;
+	}
 }
 
 char	**new_env_list_after_add(char *str_to_add, char **env, bool plus)
@@ -63,8 +70,7 @@ char	**new_env_list_after_add(char *str_to_add, char **env, bool plus)
 	env_before = env;
 	if (if_already_in_env(env, str_to_add, plus))
 		return (env_before);
-	if (ft_strchr(str_to_add, '+'))
-		str_to_add = ft_rm_the_plus_from_str(str_to_add);
+	ft_rm_the_plus_from_str(str_to_add);
 	while (env_before[i])
 		i++;
 	new = (char **)ft_calloc((i + 2), sizeof(char *));
@@ -87,11 +93,11 @@ char	**new_env_list_after_delete(char *var_to_rm, char **env_before)
 	char	*line_name;
 
 	i = 0;
-	line_name = get_env_var_name(env_before[i]);
+	line_name = get_env_var_name(env_before[i], false);
 	while (env_before[i] && ft_strcmp(var_to_rm, line_name))
 	{
 		free(line_name);
-		line_name = get_env_var_name(env_before[++i]);
+		line_name = get_env_var_name(env_before[++i], false);
 	}
 	if (env_before[i] == NULL)
 		return (free(line_name), env_before);

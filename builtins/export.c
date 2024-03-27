@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:29:13 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/26 16:19:26 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 05:34:11 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static void	ft_export_no_args(t_ast *ast)
 			printf("%s\n", sorted_env[i]);
 			continue ;
 		}
-		var_name = get_env_var_name(sorted_env[i]);
+		var_name = get_env_var_name(sorted_env[i], false);
 		var_value = get_env_value(*(ast->shared_data->envs), var_name, 0, 0);
 		printf("%s=\"%s\"\n", var_name, var_value);
 		free(var_name);
@@ -124,8 +124,10 @@ void	ft_export(t_ast *ast, t_arg *cur_arg)
 			*(ast->shared_data->env_exp) = new_env_list_after_add(str_value,
 					*(ast->shared_data->env_exp), false);
 		if (res == 1 || res == 4)
+		{
 			*(ast->shared_data->envs) = new_env_list_after_add(str_value,
 					*(ast->shared_data->envs), res == 4);
+		}
 		num++;
 		cur_arg = cur_arg->next;
 	}

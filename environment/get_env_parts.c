@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_env_parts.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/26 14:29:19 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/03/27 05:21:33 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-char	*get_env_var_name(char *line)
+char	*get_env_var_name(char *line, bool plus)
 {
 	int		len;
 	char	*var_name;
@@ -20,7 +20,7 @@ char	*get_env_var_name(char *line)
 	len = 0;
 	if (!line)
 		return (NULL);
-	while (line[len] != '=' && line[len] != '\0')
+	while (line[len] && line[len] != '=' && !(plus && line[len] == '+'))
 	{
 		if (line[len] == '+' && line[len + 1] == '=')
 			break ;
@@ -78,7 +78,7 @@ char	*get_env_value(char **env, char *var_name, char *buffer, int buf_size)
 	i = -1;
 	while (env[++i])
 	{
-		line_name = get_env_var_name(env[i]);
+		line_name = get_env_var_name(env[i], false);
 		if (ft_strcmp(line_name, var_name) == 0)
 		{
 			free(line_name);
