@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 09:58:09 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 10:48:27 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 15:06:12 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,24 @@ t_result	set_ctrl_c_heredoc(void)
 {
 	struct sigaction	sig;
 
+	sigemptyset(&(sig.sa_mask));
+	sig.sa_flags = SA_SIGINFO;
+	sig.sa_sigaction = handler_ctrl_c_heredoc;
+	if (sigaction(SIGINT, &sig, NULL) == -1)
+	{
+		print_error(true, NULL, NULL, strerror(errno));
+		set_last_exit(errno);
+		full_exit_status(true);
+		return (ERROR);
+	}
+	return (SUCCESS);
+}
+
+t_result	set_signals_heredoc_parent(void)
+{
+	struct sigaction	sig;
+
+	set_sig_do_nothing(SIGQUIT);
 	sigemptyset(&(sig.sa_mask));
 	sig.sa_flags = SA_SIGINFO;
 	sig.sa_sigaction = handler_ctrl_c_heredoc;

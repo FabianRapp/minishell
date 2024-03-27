@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:36:01 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 14:12:23 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 14:55:07 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 
 	cleanup_data->root = NULL;
 	cleanup_data->input = NULL;
+	set_signals();
 	input = ft_read_line("minishell-$: ");
+	set_sig_do_nothing(SIGINT);
 	if (!input && !ignore_empty_line(false))
 	{
 		if (!TESTER)

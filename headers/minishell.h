@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:24:35 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/27 13:29:58 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 15:03:52 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,10 +233,12 @@ char		***get_env_list(char ***set_new_env);
 /* *********************              SIGNALS:             ****************** */
 /******************************************************************************/
 
+t_result	set_sig_do_nothing(int signal);
+t_result	set_signals_heredoc_parent(void);
 void		set_signals(void);
 // t_result	set_ctrl_c(void);
 // void		signal_handler_ctrl_c(int signal, siginfo_t *info, void *data);
-// t_result	set_ctrl_slash(void);
+// t_result	set_sig_do_nothing(void);
 bool		redisplay_prompt(bool set_state, bool new_state);
 // void		init_terminal_settings(void); //? it doesn't seem to be used
 // void		reset_terminal_settings(void);//? goes with the above uncalled
