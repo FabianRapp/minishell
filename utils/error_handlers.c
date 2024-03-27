@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 00:23:28 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/25 10:32:19 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 12:22:20 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,9 @@ bool	full_exit_status(bool set_full_exit)
 	static bool	full_exit = false;
 
 	if (set_full_exit)
+	{
+		printf("setting full exit\n");
 		full_exit = true;
+	}
 	return (full_exit);
 }

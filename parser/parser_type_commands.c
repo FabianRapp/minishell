@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 19:47:45 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 06:06:37 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 12:22:56 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	handle_operator_2ndscenario(t_parser *parser, bool *found_command)
 		if (sub_shell_mode(GET_SUB_SHELL_MODE) == true)
 			print_error(true, NULL, NULL,
 				"syntax error near unexpected token `)'");
-		else// if (full_exit_status(true))
+		else
 			print_error(true, NULL, NULL,
 				"syntax error: unexpected end of file");
 	}
