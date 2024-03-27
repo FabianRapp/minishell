@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/27 05:35:12 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 11:35:19 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,6 @@ static bool	if_already_in_env(char **env, char *str_to_add, bool plus)
 	i = 0;
 	if (!env)
 		return (false);
-	// if (plus)
-	// 	printf("plus: %s\n", str_to_add);
-	// else
-	// 	printf("no plus: %s\n", str_to_add);
 	var_to_add = get_env_var_name(str_to_add, plus);
 	line_name = get_env_var_name(env[i], plus);
 	while (env[i] && ft_strcmp(line_name, var_to_add))

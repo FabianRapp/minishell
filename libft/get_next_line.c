@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/14 17:12:34 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 09:54:30 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 11:28:19 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ char	*get_next_line(int fd, bool cleanup)
 {
 	static t_file	first_file = {{}, {}, 0, -1, 0, 0, 0, 0, 0, 0, 0};
 	t_file			*current_file;
+	char			*line;
 
 	if (cleanup)
 		return (cleanup_all(&first_file, &first_file), NULL);
@@ -95,5 +96,7 @@ char	*get_next_line(int fd, bool cleanup)
 			first_file.cur_all_c = 1;
 		}
 	}
-	return (shrink_out(fd, &first_file));
+	line = shrink_out(fd, &first_file);
+	cleanup_all(&first_file, &first_file);
+	return (line);
 }
