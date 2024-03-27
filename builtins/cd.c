@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:26:07 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/27 13:38:48 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 18:51:23 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static int	ft_cd_step(t_cd_step_data data)
 	if (chdir(data.to_go) < 0)
 		return (chdir(data.old_pwd), ft_cur_exit(data.ast, 1),
 			print_error(true, "cd",
-				data.cd_arg, "No such file or directory"), 0);
+				data.cd_arg, strerror(errno)), 0);
 	getcwd(data.after, PATH_MAX);
 	if (data.first)
 		ft_update_dir_vars(data.ast, data.before, data.after);
