@@ -6,11 +6,18 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 04:56:10 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 15:04:52 by frapp            ###   ########.fr       */
+/*   Updated: 2024/03/27 17:30:56 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
+
+static void	free_close(char **line, char *termination, int *fd)
+{
+	ft_free((void **)line);
+	free(termination);
+	ft_close(fd);
+}
 
 t_result	here_doc_parent(char *termination, int pipe_fd[2], int pid,
 	int std_in_pipe[2])
@@ -32,9 +39,7 @@ t_result	here_doc_parent(char *termination, int pipe_fd[2], int pid,
 			break ;
 		ft_free((void **)&line);
 	}
-	ft_free((void **)&line);
-	free(termination);
-	ft_close(&std_in_pipe[WRITE]);
+	free_close(&line, termination, &std_in_pipe[WRITE]);
 	if (here_doc_exit_state(false, false))
 		return (ft_close(&pipe_fd[READ]), ERROR);
 	child_exit_status = WEXITSTATUS(child_exit_status);
