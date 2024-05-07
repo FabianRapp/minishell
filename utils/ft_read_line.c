@@ -6,7 +6,7 @@
 /*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 12:26:54 by frapp             #+#    #+#             */
-/*   Updated: 2024/03/27 19:19:22 by frapp            ###   ########.fr       */
+/*   Updated: 2024/05/07 22:45:14 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,11 @@ static bool	unopend_quote(char *line)
 	i = -1;
 	while (line && line[++i])
 	{
-		if (handle_brackets(line, &bracket_lvl, i) == ERROR)
+		if (!quote_type && !except && handle_brackets(line, &bracket_lvl, i) == ERROR)
 			return (false);
 		if (quote_type == line[i] && !except)
 			quote_type = 0;
-		else if (!except && ! quote_type)
+		else if (!except && !quote_type)
 		{
 			if (line[i] == '\'' || line[i] == '\"')
 				quote_type = line[i];
