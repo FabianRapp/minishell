@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   modify_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mevangel <mevangel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: frapp <frapp@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 17:36:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/03/27 22:49:03 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/05/07 23:59:07 by frapp            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ char	**new_env_list_after_add(char *str_to_add, char **env, bool plus)
 	ft_rm_the_plus_from_str(str_to_add);
 	while (env_before[i])
 		i++;
-	new = (char **)ft_calloc((i + 2), sizeof(char *));
+	new = (char **)ft_calloc((i + 40), sizeof(char *));
 	if (new == NULL)
 		return (NULL);
 	new[i + 1] = NULL;
@@ -97,7 +97,7 @@ char	**new_env_list_after_delete(char *var_to_rm, char **env_before)
 	}
 	if (env_before[i] == NULL)
 		return (free(line_name), env_before);
-	new = (char **)ft_calloc(ft_strarr_size(env_before) + 1, sizeof(char *));
+	new = (char **)ft_calloc(ft_strarr_size(env_before) + 40, sizeof(char *));
 	if (new == NULL)
 		return (NULL);
 	del_index = i;
