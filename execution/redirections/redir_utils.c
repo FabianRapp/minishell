@@ -55,7 +55,7 @@ static t_result	find_and_replace_existing(t_fd_set *fds,
 	int	i;
 
 	i = 0;
-	while (fds + i && !is_buffer_all_zeros(fds + i, sizeof(t_fd_set)))
+	while (fds && !is_buffer_all_zeros(fds + i, sizeof(t_fd_set)))
 	{
 		if (fds[i].base_fd == base_fd)
 		{
@@ -76,7 +76,7 @@ int	extend_fd_array(t_fd_set **fds)
 	t_fd_set	*new;
 
 	len = 0;
-	while ((*fds) + len && !is_buffer_all_zeros((*fds)
+	while (*fds && !is_buffer_all_zeros((*fds)
 			+ len, sizeof(t_fd_set)))
 	{
 		len++;
