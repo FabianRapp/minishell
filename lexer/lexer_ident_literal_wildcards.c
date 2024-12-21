@@ -12,77 +12,81 @@
 
 #include "../headers/minishell.h"
 
-static bool	contains_more_wildcards(char *str)
-{
-	bool	except;
+//static bool	contains_more_wildcards(char *str)
+//{
+//	bool	except;
+//
+//	except = false;
+//	str++;
+//	while (!is_wildcard_block_termination(*str) || except)
+//	{
+//		if (*str == '\\')
+//			except = true;
+//		if (!except && *str == '*')
+//			return (true);
+//		str++;
+//	}
+//	return (false);
+//}
+//
+//static bool	contained_a_wildcard(t_lexer lexer)
+//{
+//	lexer.position -= 1;
+//	while (lexer.position >= 0
+//		&& (!is_wildcard_block_termination(lexer.str[lexer.position])
+//			&& lexer.position - 1 >= 0
+//			&& lexer.str[lexer.position - 1] != '\\'))
+//	{
+//		if (lexer.str[lexer.position] == '*' && lexer.position - 1 >= 0
+//			&& lexer.str[lexer.position - 1] != '\\')
+//			return (true);
+//		lexer.position -= 1;
+//	}
+//	return (false);
+//}
 
-	except = false;
-	str++;
-	while (!is_wildcard_block_termination(*str) || except)
-	{
-		if (*str == '\\')
-			except = true;
-		if (!except && *str == '*')
-			return (true);
-		str++;
-	}
-	return (false);
-}
-
-static bool	contained_a_wildcard(t_lexer lexer)
-{
-	lexer.position -= 1;
-	while (lexer.position >= 0
-		&& (!is_wildcard_block_termination(lexer.str[lexer.position])
-			&& lexer.position - 1 >= 0
-			&& lexer.str[lexer.position - 1] != '\\'))
-	{
-		if (lexer.str[lexer.position] == '*' && lexer.position - 1 >= 0
-			&& lexer.str[lexer.position - 1] != '\\')
-			return (true);
-		lexer.position -= 1;
-	}
-	return (false);
-}
-
-static t_result	handle_wildcard(t_lexer *lexer, bool is_start, t_token *token)
-{
-	char	*tmp;
-
-	if (!is_start && !contained_a_wildcard(*lexer))
-	{
-		if (!ft_strjoin_inplace(&(token->str_data), "1}{"))
-			return (ERROR);
-		if (!contains_more_wildcards(lexer->str + lexer->position))
-		{
-			tmp = ft_strndup(lexer->str, lexer->position + 1);
-			if (!ft_strjoin_inplace(&tmp, "3}{!") || !ft_strjoin_inplace(&tmp,
-					lexer->str + lexer->position + 1))
-				return (ERROR);
-			free(lexer->str);
-			lexer->str = tmp;
-		}
-	}
-	else if (contains_more_wildcards(lexer->str + lexer->position))
-	{
-		if (!ft_strjoin_inplace(&(token->str_data), "2}{"))
-			return (ERROR);
-	}
-	else
-		if (!ft_strjoin_inplace(&(token->str_data), "3}{"))
-			return (ERROR);
-	return (SUCCESS);
-}
+//static t_result	handle_wildcard(t_lexer *lexer, bool is_start, t_token *token)
+//{
+//	char	*tmp;
+//
+//	if (!is_start && !contained_a_wildcard(*lexer))
+//	{
+//		if (!ft_strjoin_inplace(&(token->str_data), "1}{"))
+//			return (ERROR);
+//		if (!contains_more_wildcards(lexer->str + lexer->position))
+//		{
+//			tmp = ft_strndup(lexer->str, lexer->position + 1);
+//			if (!ft_strjoin_inplace(&tmp, "3}{!") || !ft_strjoin_inplace(&tmp,
+//					lexer->str + lexer->position + 1))
+//				return (ERROR);
+//			free(lexer->str);
+//			lexer->str = tmp;
+//		}
+//	}
+//	else if (contains_more_wildcards(lexer->str + lexer->position))
+//	{
+//		if (!ft_strjoin_inplace(&(token->str_data), "2}{"))
+//			return (ERROR);
+//	}
+//	else
+//		if (!ft_strjoin_inplace(&(token->str_data), "3}{"))
+//			return (ERROR);
+//	return (SUCCESS);
+//}
 
 static t_result	copy_str(t_lexer *lexer,
 	t_token *token, bool skip_next_term, bool is_start)
 {
+	(void)is_start;
 	while (lexer->cur_char && ((!is_termination_char(lexer->cur_char)
 				|| skip_next_term)))
 	{
-		if (!skip_next_term && lexer->cur_char == '*'
-			&& handle_wildcard(lexer, is_start, token) == ERROR)
+		if (!skip_next_term && lexer->cur_char == '*')
+			//&& handle_wildcard(lexer, is_start, token) == ERROR)
+		{
+			fprintf(stderr, "SHELL: ERROR: Wildcards are not allowed!\n");
 			return (ERROR);
+		}
 		if (!skip_next_term && lexer->cur_char == '\\')
 		{
 			skip_next_term = true;

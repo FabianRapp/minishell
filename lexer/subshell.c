@@ -41,6 +41,9 @@ t_result	subshell_type(t_lexer *lexer, t_token *token)
 {
 	if (lexer->cur_char != '(')
 		return (SUCCESS);
+	fprintf(stderr, "SHELL: ERROR: Subshells like 'echo q | (cat)' are not "
+		"allowed!");
+	return (ERROR);
 	if (verify_subshell_chars(lexer) == ERROR)
 		return (ERROR);
 	token->type = SUBSHELL;

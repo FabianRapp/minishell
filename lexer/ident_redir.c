@@ -98,6 +98,8 @@ t_result	redir_type(t_lexer *lexer, t_token *token, bool recursive_call)
 		return (ERROR);
 	if (lexer->cur_char != '<' && lexer->cur_char != '>')
 		return (SUCCESS);
+	fprintf(stderr, "SHELL: ERROR: Redirections are not allowed!\n");
+	return (ERROR);
 	if (lexer->cur_char == '<')
 		ft_redir_in(lexer, token);
 	else if (lexer->cur_char == '>')

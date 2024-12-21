@@ -71,7 +71,7 @@ t_result	dollar_lexing(t_lexer *lexer, t_token *token)
 {
 	if (lexer->cur_char != '$')
 		return (SUCCESS);
-	fprintf(stderr, "Shell: Error: no '$' expansion allowed!\n");
+	fprintf(stderr, "SHELL: ERROR: no '$' expansion allowed!\n");
 	(void)token;
 	return (ERROR);
 	//if (pid_req(lexer, token))
