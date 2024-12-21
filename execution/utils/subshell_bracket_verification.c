@@ -69,7 +69,7 @@ t_result	check_brackets(t_ast *ast, char *input)
 	if (count_brackets_subshell(input) == SUCCESS)
 		return (SUCCESS);
 	tmp = ft_strndup(input, ft_strlen(input) - 1);
-	ft_fprintf(2, "%s: ((: %s: syntax error in expression (error token is"
+	fprintf(stderr, "%s: ((: %s: syntax error in expression (error token is"
 		" \"%s\")\n", SHELL_NAME, tmp, input);
 	return (ft_cur_exit(ast, 1), free(tmp), ERROR);
 }

@@ -22,7 +22,7 @@ static bool	arg_is_valid_unset(char *arg, t_ast *ast, char *cmd_name)
 	if (*arg == '-')
 	{
 		print_error(true, "unset", save, "invalid option");
-		ft_fprintf(2, "no options supported\n");
+		fprintf(stderr, "no options supported\n");
 		return (false);
 	}
 	while (*arg && *arg != '=')

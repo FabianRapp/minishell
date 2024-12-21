@@ -16,9 +16,9 @@ static t_token_list	*expand_list(t_shared_data *env, t_token_list *list)
 {
 	if (!list)
 		return (NULL);
-	if (list->token->type == INTERPRETED
-		&& expand_interpreted(list->token) == ERROR)
-		return (list);
+	//if (list->token->type == INTERPRETED
+	//	&& expand_interpreted(list->token) == ERROR)
+	//	return (list);
 	if (list->token->type == ENV_VAR && env_to_word_token(list->token) == ERROR)
 		return (list);
 	if (list->token->type == PID_REQUEST

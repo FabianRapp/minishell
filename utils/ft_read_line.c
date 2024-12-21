@@ -20,7 +20,7 @@ static t_result	handle_brackets(char *line, int *bracket_lvl, int i)
 		(*bracket_lvl)--;
 	if (*bracket_lvl < 0)
 	{
-		ft_fprintf(2, "%s : syntax error near unexpected token `)'\n",
+		fprintf(stderr, "%s : syntax error near unexpected token `)'\n",
 			SHELL_NAME);
 		line[0] = 0;
 		return (set_last_exit(2), ERROR);

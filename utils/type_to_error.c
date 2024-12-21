@@ -59,8 +59,8 @@ static char	*type_to_error_1(t_type type)
 		return ("syntax error near unexpected token `*'");
 	if (type == WORD)
 		return ("syntax error near unexpected word token");
-	if (type == INTERPRETED)
-		return ("syntax error near unexpected token `\"'");
+	//if (type == INTERPRETED)
+	//	return ("syntax error near unexpected token `\"'");
 	return (type_to_error_2(type));
 }
 

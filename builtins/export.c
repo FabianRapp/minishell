@@ -88,7 +88,7 @@ static int	arg_is_valid(char *arg, t_ast *ast, char *cmd_name)
 		return (0);
 	if (*arg == '-')
 		return (print_error(true, "unset", save, "invalid option"),
-			ft_fprintf(2, "no options supported\n"), ft_cur_exit(ast, 2), 3);
+			fprintf(stderr, "no options supported\n"), ft_cur_exit(ast, 2), 3);
 	if (!(ft_isalpha((int) *arg) || *arg == '_'))
 		return (ft_cur_exit(ast, 1), print_error_weird_quotes(true, cmd_name,
 				save, "not a valid identifier"), 0);

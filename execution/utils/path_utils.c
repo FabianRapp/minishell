@@ -38,7 +38,7 @@ char	*handle_absolute_path(char *path)
 	{
 		return (ft_strdup(path));
 	}
-	ft_fprintf(2, "%s: %s\n", SHELL_NAME, strerror(errno));
+	fprintf(stderr, "%s: %s\n", SHELL_NAME, strerror(errno));
 	set_last_exit(127);
 	if (errno == 20 || errno == 13)
 		set_last_exit(126);

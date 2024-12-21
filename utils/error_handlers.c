@@ -36,28 +36,28 @@ t_result	set_errno_as_exit(t_ast *ast, bool msg)
 void	print_error(bool shell_name, char *command_name, char *arg, char *str)
 {
 	if (shell_name)
-		ft_fprintf(2, "%s: ", SHELL_NAME);
+		fprintf(stderr, "%s: ", SHELL_NAME);
 	if (command_name)
-		ft_fprintf(2, "%s: ", command_name);
+		fprintf(stderr, "%s: ", command_name);
 	if (arg)
-		ft_fprintf(2, "%s: ", arg);
+		fprintf(stderr, "%s: ", arg);
 	if (str)
-		ft_fprintf(2, "%s", str);
-	ft_fprintf(2, "\n");
+		fprintf(stderr, "%s", str);
+	fprintf(stderr, "\n");
 }
 
 void	print_error_weird_quotes(bool shell_name,
 	char *command_name, char *arg, char *str)
 {
 	if (shell_name)
-		ft_fprintf(2, "%s: ", SHELL_NAME);
+		fprintf(stderr, "%s: ", SHELL_NAME);
 	if (command_name)
-		ft_fprintf(2, "%s: ", command_name);
+		fprintf(stderr, "%s: ", command_name);
 	if (arg)
-		ft_fprintf(2, "`%s': ", arg);
+		fprintf(stderr, "`%s': ", arg);
 	if (str)
-		ft_fprintf(2, "%s", str);
-	ft_fprintf(2, "\n");
+		fprintf(stderr, "%s", str);
+	fprintf(stderr, "\n");
 }
 
 // when this function is given true the current process

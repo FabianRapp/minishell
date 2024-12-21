@@ -78,9 +78,9 @@ static char	*init_path(t_ast *ast, char *command_name, t_path *path_ob,
 	if (command_name && (*command_name == '/' || (*command_name == '.'
 				&& ft_strlen(command_name) == 1)))
 	{
-		ft_fprintf(2, "%s: %c: filename argument required\n", SHELL_NAME,
+		fprintf(stderr, "%s: %c: filename argument required\n", SHELL_NAME,
 			*command_name);
-		ft_fprintf(2, "%c: usage: %c filename [arguments]\n", *command_name,
+		fprintf(stderr, "%c: usage: %c filename [arguments]\n", *command_name,
 			*command_name);
 		return (ft_cur_exit(ast, 2), NULL);
 	}

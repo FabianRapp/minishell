@@ -17,7 +17,7 @@ static char	*get_input_util(char *input, t_cleanup_data *cleanup_data)
 	if (!input && !ignore_empty_line(false))
 	{
 		if (!TESTER)
-			ft_fprintf(2, "exit\n");
+			fprintf(stderr, "exit\n");
 		main_exit(cleanup_data, true, true);
 	}
 	errno = 0;
@@ -63,7 +63,7 @@ static void	free_and_exit(t_shared_data	*shared_data, bool full_exit)
 		if (shared_data->envs)
 			ft_free_2darr(*(shared_data->envs));
 		if (full_exit_status(false) && !TESTER)
-			ft_fprintf(2, "exit\n");
+			fprintf(stderr, "exit\n");
 		rl_clear_history();
 		wait_all_children(NULL);
 		exit(get_last_exit());

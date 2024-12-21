@@ -91,6 +91,6 @@ t_token	*next_new_token(t_lexer *lexer, bool recursive_call)
 		return (NULL);
 	if (token->type)
 		return (token);
-	ft_fprintf(2, "%s: unexpected token: %s\n", SHELL_NAME, lexer->str + lexer->position);
+	fprintf(stderr, "%s: unexpected token: %s\n", SHELL_NAME, lexer->str + lexer->position);
 	return (lexer_error(token), set_last_exit(2), NULL);
 }

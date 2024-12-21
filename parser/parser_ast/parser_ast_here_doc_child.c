@@ -40,7 +40,7 @@ static bool	handle_success(char **line, int count, char *termination)
 	if (!*line)
 	{
 		tmp = ft_strtrim(termination, "\n");
-		ft_fprintf(2, "%s: warning: here-document at line %d delimited by "
+		fprintf(stderr, "%s: warning: here-document at line %d delimited by "
 			"end-of-file (wanted `%s')\n", SHELL_NAME, count, tmp);
 		return (free(tmp), true);
 	}

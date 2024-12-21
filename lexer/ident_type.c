@@ -82,6 +82,8 @@ t_result	interpreted_type(t_lexer *lexer, t_token *token)
 {
 	if (lexer->cur_char != '\"')
 		return (SUCCESS);
+	fprintf(stderr, "WARNING: double quoted string detected: treated as single"
+		" quoted string!\n");
 	while ((lexer->str)[lexer->read_position]
 			&& (lexer->str)[lexer->read_position] != '\"')
 	{
@@ -99,7 +101,8 @@ t_result	interpreted_type(t_lexer *lexer, t_token *token)
 	if (!token->str_data)
 		return (ERROR);
 	lexer->read_position++;
-	token->type = INTERPRETED;
+	//token->type = INTERPRETED;
+	token->type = LITERAL;
 	read_char(lexer);
 	return (SUCCESS);
 }

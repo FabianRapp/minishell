@@ -45,7 +45,7 @@ char	*check_limis_potential_fd(char *left_redir_arg,
 
 void	print_error_redir_arg(t_lexer *lexer)
 {
-	ft_fprintf(2, "%s: syntax error near unexpected token `%c'\n",
+	fprintf(stderr, "%s: syntax error near unexpected token `%c'\n",
 		SHELL_NAME, lexer->cur_char);
 	set_last_exit(2);
 }
