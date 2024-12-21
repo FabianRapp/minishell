@@ -1,4 +1,4 @@
-NAME	=	minishell
+NAME	=	cut_shell
 
 CFLAGS	=	-Wall -Wextra -Werror
 CC		=	cc
@@ -69,7 +69,7 @@ OBJS	=	$(SRCS:%.c=%.o)
 $(NAME): $(OBJS)
 	@cd libft && make
 	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT) -lreadline -o $(NAME)
-	@echo "$(GREEN)minishell compiled!$(CLEAR)"
+	@echo "$(GREEN)$(NAME) compiled!$(CLEAR)"
 
 all: $(NAME)
 
@@ -78,13 +78,13 @@ flags: LDFLAGS += -fsanitize=undefined -fsanitize=address -g
 flags: $(OBJS)
 	@cd libft && make flags
 	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT) -lreadline -o $(NAME)
-	@echo "$(GREEN)minishell compiled!$(CLEAR)"
+	@echo "$(GREEN)$(NAME) compiled!$(CLEAR)"
 
 leaks: CFLAGS += -g
 leaks: $(OBJS)
 	@cd libft && make leaks
 	@$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT) -lreadline -o $(NAME)
-	@echo "$(GREEN)minishell compiled!$(CLEAR)"
+	@echo "$(GREEN)$(NAME) compiled!$(CLEAR)"
 
 tester: CFLAGS += -DTESTER=1
 tester: fclean $(NAME)
@@ -92,13 +92,14 @@ tester: fclean $(NAME)
 clean:
 	@cd libft && make clean
 	@rm -f $(OBJS)
+	@rm -rf ./.cache
 	@echo "$(CYAN)object files cleaned$(CLEAR)"
 
 fclean:
 	@cd libft && make fclean
 	@rm -f $(OBJS)
 	@rm -f $(NAME)
-	@echo "$(CYAN)minishell fclean$(CLEAR)"
+	@echo "$(CYAN)$(NAME) fclean$(CLEAR)"
 
 re: fclean all
 

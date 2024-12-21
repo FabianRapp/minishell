@@ -114,6 +114,7 @@ char		*extract_command_name(char *path);
 int			ft_pid(int set);
 int			get_pid(void);
 // t_ast	*handle_manunal_input(char **av, t_cleanup_data *cleanup_data);//?
+t_ast		*get_input2(t_cleanup_data *cleanup_data, char *first_input);
 t_ast		*get_input(t_cleanup_data *cleanup_data);
 void		main_exit(t_cleanup_data *data, bool full_exit, bool ft_exit_call);
 bool		file_in_pwd(char *file);

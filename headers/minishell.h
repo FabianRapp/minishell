@@ -76,11 +76,11 @@ Weird things bash does that we do:
 # endif
 
 # ifndef SHELL_NAME
-#  define SHELL_NAME "minishell\0"
+#  define SHELL_NAME "cut_shell\0"
 # endif
 
 # ifndef SHELL_PROMPT
-#  define SHELL_PROMPT "minishell-$: \0"
+#  define SHELL_PROMPT "cut_shell-$: \0"
 # endif
 
 # ifndef NEW_FILE_PERMISSIONS

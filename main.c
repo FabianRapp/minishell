@@ -51,14 +51,38 @@ t_result	init_main(int ac, t_shared_data *shared_data)
 	shared_data->env_exp = NULL;
 	shared_data->envs = NULL;
 	shared_data->main_pid = get_pid();
-	if (ac > 2)
+	if (ac > 3 || ac == 2)
 	{
-		print_error(true, NULL, NULL, "max one arg allowed");
+		print_error(true, NULL, NULL, "max two args allowed");
 		exit(1);
 	}
 	if (!shared_data->main_pid)
 		return (1);
 	return (SUCCESS);
+}
+
+void	main_loop2(t_cleanup_data *cleanup_data, t_shared_data *shared_data, char *first_input)
+{
+	t_ast	*ast;
+
+	ast = get_input2(cleanup_data, first_input);
+	if (TESTER && !cleanup_data->input)
+		main_exit(cleanup_data, true, false);
+	if (!ast)
+		main_exit(cleanup_data, full_exit_status(false) == true, false);
+	while (1)
+	{
+		if (ast)
+		{
+			add_global_data(ast, shared_data);
+			ast->shared_data->cleanup_data = cleanup_data;
+			run_node(ast);
+			main_exit(cleanup_data, full_exit_status(false) == true, false);
+		}
+		ast = get_input(cleanup_data);
+		if (!ast)
+			main_exit(cleanup_data, full_exit_status(false) == true, false);
+	}
 }
 
 void	main_loop(t_cleanup_data *cleanup_data, t_shared_data *shared_data)
@@ -92,6 +116,11 @@ int	main(int ac, char **av, char **base_env)
 	char			**env_list;
 	char			**exp_list;
 
+	bool			minus_c = false;
+	if (ac > 1 && !strcmp("-c", av[1])) {
+		minus_c = true;
+	}
+
 	if (isatty(0) && tcgetattr(0, &shared_data.base_term_settings) == -1)
 		return (errno);
 	get_base_term(true, &shared_data.base_term_settings);
@@ -102,6 +131,10 @@ int	main(int ac, char **av, char **base_env)
 		return (ERROR);
 	(void)av;
 	shared_data.cleanup_data = &cleanup_data;
+	if (minus_c && ac >= 3) {
+		main_loop2(&cleanup_data, &shared_data, av[2]);
+		return (0);
+	}
 	main_loop(&cleanup_data, &shared_data);
 	return (1);
 }

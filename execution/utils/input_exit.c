@@ -27,6 +27,33 @@ static char	*get_input_util(char *input, t_cleanup_data *cleanup_data)
 	return (input);
 }
 
+t_ast	*get_input2(t_cleanup_data *cleanup_data, char *first_input)
+{
+	char			*input;
+	t_ast			*ast;
+	struct termios	term_settings;
+
+	cleanup_data->root = NULL;
+	cleanup_data->input = NULL;
+	set_signals();
+	input = strdup(first_input);;
+	set_sig_do_nothing(SIGINT);
+	if (!get_input_util(input, cleanup_data))
+		return (NULL);
+	term_settings = cleanup_data->shared_data->base_term_settings;
+	term_settings.c_lflag &= ~ECHOCTL;
+	if (isatty(0) && tcsetattr(0, TCSANOW, &term_settings) == -1)
+		return (free(input), NULL);
+	ast = parser(input);
+	tcsetattr(0, TCSANOW, &cleanup_data->shared_data->base_term_settings);
+	errno = 0;
+	if (!ast)
+		return (free(input), NULL);
+	cleanup_data->input = input;
+	cleanup_data->root = ast;
+	return (ast);
+}
+
 t_ast	*get_input(t_cleanup_data *cleanup_data)
 {
 	char			*input;
@@ -53,7 +80,6 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 	cleanup_data->root = ast;
 	return (ast);
 }
-
 static void	free_and_exit(t_shared_data	*shared_data, bool full_exit)
 {
 	if (full_exit)
