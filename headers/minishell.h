@@ -13,33 +13,12 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-/* **************************   ADDITIONAL STUFF:    **************************
--	multi line for double quotes, single quotes and round brackets
--	semicolon
--	Real subshells like bash does
--	$SHLVL
--	env -i
--	HERE-STR (<<<)
--	our own get_pid function and $$ expansion
--	export +=
--	$_
-
-Weird things bash does that we do:
--	if the HERE-DOC (<<) arg is in duble quotes the lines are expanded
-	before written to a pipe
--	HERE-DOC is executed halfly during parsing and half during redirection
--	HERE-DOC gives waring when ctrl + D is pressed that shows the total lines
-	(of the entire shell) read so far
--	redirs can have two args: left and right. the left can be any open fd
-	(ech 2>a redirs the error message to a)
--	the right HERE-DOC arg is not expanded
--	env vars with whitespace as redir args without double quotes leads to
-	multiple arguments for a redir which results in an error
--	if export is not successfull the env is not added but when export is
-	ran without args the input is still displayed
--	newline is not whitespace
--	redirs on the left of a subshell are invalid while redirs on the right
-	redir the entire subshell
+extern char	*allowed_execs;
+/* **************************   syntax    *************************************
+ * like bash but cut down, allowed syntax:
+ * && : and
+ * | : pipe
+ * ; : semicolon in bash
 */
 
 # ifdef __linux__

@@ -12,6 +12,8 @@
 
 #include "headers/minishell.h"
 
+char	*allowed_execs = NULL;
+
 void	add_global_data(t_ast *ast, t_shared_data *shared_data)
 {
 	if (!ast)
@@ -43,7 +45,7 @@ static bool	init_shared_data(t_shared_data *shared_data,
 	return (true);
 }
 
-t_result	init_main(int ac, t_shared_data *shared_data)
+t_result	init_main(int ac, t_shared_data *shared_data, char **argv)
 {
 	errno = 0;
 	set_signals();
@@ -51,9 +53,9 @@ t_result	init_main(int ac, t_shared_data *shared_data)
 	shared_data->env_exp = NULL;
 	shared_data->envs = NULL;
 	shared_data->main_pid = get_pid();
-	if (ac > 3 || ac == 2)
+	if (ac > 2 && (ac != 4 || (strcmp(argv[1], "--COMPILE--ONLY"))))
 	{
-		print_error(true, NULL, NULL, "max two args allowed");
+		print_error(true, NULL, NULL, "max one arg allowed");
 		exit(1);
 	}
 	if (!shared_data->main_pid)
@@ -109,6 +111,7 @@ void	main_loop(t_cleanup_data *cleanup_data, t_shared_data *shared_data)
 	}
 }
 
+
 int	main(int ac, char **av, char **base_env)
 {
 	t_cleanup_data	cleanup_data;
@@ -116,23 +119,24 @@ int	main(int ac, char **av, char **base_env)
 	char			**env_list;
 	char			**exp_list;
 
-	bool			minus_c = false;
-	if (ac > 1 && !strcmp("-c", av[1])) {
-		minus_c = true;
+	bool			compile_only = false;
+	if (ac > 1 && (!strcmp("--COMPILE--ONLY", av[1]))) {
+		compile_only = true;
 	}
 
 	if (isatty(0) && tcgetattr(0, &shared_data.base_term_settings) == -1)
 		return (errno);
 	get_base_term(true, &shared_data.base_term_settings);
 	cleanup_data.shared_data = &shared_data;
-	if (init_main(ac, &shared_data) == ERROR)
+	if (init_main(ac, &shared_data, av) == ERROR)
 		return (1);
 	if (!init_shared_data(&shared_data, base_env, &env_list, &exp_list))
 		return (ERROR);
 	(void)av;
 	shared_data.cleanup_data = &cleanup_data;
-	if (minus_c && ac >= 3) {
-		main_loop2(&cleanup_data, &shared_data, av[2]);
+	if (compile_only && ac >= 4) {
+		allowed_execs = av[2];
+		main_loop2(&cleanup_data, &shared_data, av[3]);
 		return (0);
 	}
 	main_loop(&cleanup_data, &shared_data);

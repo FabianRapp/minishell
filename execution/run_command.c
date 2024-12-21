@@ -94,6 +94,30 @@ int	run_command_node(t_ast *ast)
 	init_child_data(&data, ast);
 	if (!data.path || ast->exit_status != DEFAULT_EXIT_STATUS)
 		return (free_child_data(&data), 1);
+	if (allowed_execs) {
+		char **allowed = ft_split(allowed_execs, ' ');
+		if (!allowed) {
+			if (errno)
+				return (exit(errno), 0);
+			return (exit(1), 0);
+		}
+		size_t i = 0;
+		if (!allowed[0]) {
+			fprintf(stderr, "empty\n");
+		}
+		for (; allowed[i]; i++) {
+			fprintf(stderr, "allowed: %s vs actual: %s\n", allowed[i], data.path);
+			if (!strcmp(allowed[i], data.path)) {
+				ft_free_2darr(allowed);
+				break ;
+			}
+		}
+		if (!allowed[i]) {
+			fprintf(stderr, "SHELL: ERROR: Unallowed binary called!\n");
+			ft_free_2darr(allowed);
+			exit(1);
+		}
+	}
 	ast->pid = fork();
 	errno = 0;
 	if (ast->pid == -1)

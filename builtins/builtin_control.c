@@ -20,9 +20,9 @@ bool	ft_builtin_control(t_ast *ast)
 		return (ft_exit(ast), true);
 	if (!ft_strcmp(ast->name->token->str_data, "cd"))
 		return (ft_cd(ast), true);
-	if (!ft_strcmp(ast->name->token->str_data, "export"))
+	if (!allowed_execs && !ft_strcmp(ast->name->token->str_data, "export"))
 		return (ft_export(ast, ast->arg), true);
-	if (!ft_strcmp(ast->name->token->str_data, "unset"))
+	if (!allowed_execs && !ft_strcmp(ast->name->token->str_data, "unset"))
 		return (ft_unset(ast), true);
 	if (!ft_strcmp(ast->name->token->str_data, "echo"))
 		return (ft_echo(ast, ast->arg), true);
@@ -32,9 +32,9 @@ bool	ft_builtin_control(t_ast *ast)
 	ft_strtolower(cmd_name);
 	if (!ft_strcmp(cmd_name, "echo"))
 		return (free(cmd_name), ft_cap_echo(ast, ast->arg), true);
-	if (!ft_strcmp(cmd_name, "pwd"))
+	if (!allowed_execs && !ft_strcmp(cmd_name, "pwd"))
 		return (free(cmd_name), ft_pwd(ast), true);
-	if (!ft_strcmp(cmd_name, "env"))
+	if (!allowed_execs && !ft_strcmp(cmd_name, "env"))
 		return (free(cmd_name), ft_env(ast), true);
 	return (free(cmd_name), false);
 }
