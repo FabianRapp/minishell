@@ -1,3 +1,4 @@
+cut_shell
 compile_commands.json
 .cache
 testing.c
