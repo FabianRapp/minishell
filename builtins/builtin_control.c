@@ -18,7 +18,7 @@ bool	ft_builtin_control(t_ast *ast)
 
 	if (!ft_strcmp(ast->name->token->str_data, "exit"))
 		return (ft_exit(ast), true);
-	if (!ft_strcmp(ast->name->token->str_data, "cd"))
+	if (!allowed_execs && !ft_strcmp(ast->name->token->str_data, "cd"))
 		return (ft_cd(ast), true);
 	if (!allowed_execs && !ft_strcmp(ast->name->token->str_data, "export"))
 		return (ft_export(ast, ast->arg), true);
