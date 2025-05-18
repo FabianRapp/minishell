@@ -36,7 +36,7 @@ t_ast	*get_input(t_cleanup_data *cleanup_data)
 	cleanup_data->root = NULL;
 	cleanup_data->input = NULL;
 	set_signals();
-	input = ft_read_line("minishell-$: ");
+	input = ft_read_line(SHELL_PROMPT);
 	set_sig_do_nothing(SIGINT);
 	if (!get_input_util(input, cleanup_data))
 		return (NULL);

@@ -1,6 +1,8 @@
 NAME	=	minishell
+SHELL_PROMPT := minishell-$$: 
+SHELL_NAME := minishell
 
-CFLAGS	=	-Wall -Wextra -Werror
+CFLAGS	=	-Wall -Wextra -Werror -DSHELL_PROMPT=\""$(SHELL_PROMPT)"\" -DSHELL_NAME=\""$(SHELL_NAME)"\"
 CC		=	cc
 LIBFT 	=	libft/libft.a
 
